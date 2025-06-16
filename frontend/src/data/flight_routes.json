@@ -1,0 +1,1436 @@
+{
+  "routes": {
+    "BLR-DEL": {
+      "onward": [
+        {
+          "id": "AI101",
+          "airline": "Air India",
+          "flightNumber": "AI101",
+          "aircraft": "Airbus A320",
+          "origin": {
+            "city": "Bangalore",
+            "airport": "Kempegowda International Airport",
+            "iata_code": "BLR",
+            "country_code": "IN"
+          },
+          "destination": {
+            "city": "Delhi",
+            "airport": "Indira Gandhi International Airport",
+            "iata_code": "DEL",
+            "country_code": "IN"
+          },
+          "departureTime": "06:00",
+          "arrivalTime": "08:30",
+          "duration": "2h 30m",
+          "stops": 0,
+          "price": {
+            "amount": 4500,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "business"],
+          "mealOptions": ["vegetarian", "non_vegetarian"],
+          "availableSeats": {
+            "economy": 150,
+            "business": 20
+          },
+          "operatingDays": ["Daily"]
+        },
+        {
+          "id": "6E101",
+          "airline": "IndiGo",
+          "flightNumber": "6E101",
+          "aircraft": "Airbus A320",
+          "origin": {
+            "city": "Bangalore",
+            "airport": "Kempegowda International Airport",
+            "iata_code": "BLR",
+            "country_code": "IN"
+          },
+          "destination": {
+            "city": "Delhi",
+            "airport": "Indira Gandhi International Airport",
+            "iata_code": "DEL",
+            "country_code": "IN"
+          },
+          "departureTime": "08:30",
+          "arrivalTime": "11:00",
+          "duration": "2h 30m",
+          "stops": 0,
+          "price": {
+            "amount": 4200,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy"],
+          "mealOptions": ["vegetarian", "non_vegetarian"],
+          "availableSeats": {
+            "economy": 180
+          },
+          "operatingDays": ["Daily"]
+        }
+      ],
+      "return": [
+        {
+          "id": "AI102",
+          "airline": "Air India",
+          "flightNumber": "AI102",
+          "aircraft": "Airbus A320",
+          "origin": {
+            "city": "Delhi",
+            "airport": "Indira Gandhi International Airport",
+            "iata_code": "DEL",
+            "country_code": "IN"
+          },
+          "destination": {
+            "city": "Bangalore",
+            "airport": "Kempegowda International Airport",
+            "iata_code": "BLR",
+            "country_code": "IN"
+          },
+          "departureTime": "10:00",
+          "arrivalTime": "12:30",
+          "duration": "2h 30m",
+          "stops": 0,
+          "price": {
+            "amount": 4500,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "business"],
+          "mealOptions": ["vegetarian", "non_vegetarian"],
+          "availableSeats": {
+            "economy": 150,
+            "business": 20
+          },
+          "operatingDays": ["Daily"]
+        }
+      ]
+    },
+    "BLR-BOM": {
+      "onward": [
+        {
+          "id": "AI201",
+          "airline": "Air India",
+          "flightNumber": "AI201",
+          "aircraft": "Airbus A320",
+          "origin": {
+            "city": "Bangalore",
+            "airport": "Kempegowda International Airport",
+            "iata_code": "BLR",
+            "country_code": "IN"
+          },
+          "destination": {
+            "city": "Mumbai",
+            "airport": "Chhatrapati Shivaji Maharaj International Airport",
+            "iata_code": "BOM",
+            "country_code": "IN"
+          },
+          "departureTime": "07:00",
+          "arrivalTime": "08:45",
+          "duration": "1h 45m",
+          "stops": 0,
+          "price": {
+            "amount": 3800,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "business"],
+          "mealOptions": ["vegetarian", "non_vegetarian"],
+          "availableSeats": {
+            "economy": 150,
+            "business": 20
+          },
+          "operatingDays": ["Daily"]
+        }
+      ],
+      "return": [
+        {
+          "id": "AI202",
+          "airline": "Air India",
+          "flightNumber": "AI202",
+          "aircraft": "Airbus A320",
+          "origin": {
+            "city": "Mumbai",
+            "airport": "Chhatrapati Shivaji Maharaj International Airport",
+            "iata_code": "BOM",
+            "country_code": "IN"
+          },
+          "destination": {
+            "city": "Bangalore",
+            "airport": "Kempegowda International Airport",
+            "iata_code": "BLR",
+            "country_code": "IN"
+          },
+          "departureTime": "09:00",
+          "arrivalTime": "10:45",
+          "duration": "1h 45m",
+          "stops": 0,
+          "price": {
+            "amount": 3800,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "business"],
+          "mealOptions": ["vegetarian", "non_vegetarian"],
+          "availableSeats": {
+            "economy": 150,
+            "business": 20
+          },
+          "operatingDays": ["Daily"]
+        }
+      ]
+    },
+    "BLR-DXB": {
+      "onward": [
+        {
+          "id": "EK501",
+          "airline": "Emirates",
+          "flightNumber": "EK501",
+          "aircraft": "Boeing 777-300ER",
+          "origin": {
+            "city": "Bangalore",
+            "airport": "Kempegowda International Airport",
+            "iata_code": "BLR",
+            "country_code": "IN"
+          },
+          "destination": {
+            "city": "Dubai",
+            "airport": "Dubai International Airport",
+            "iata_code": "DXB",
+            "country_code": "AE"
+          },
+          "departureTime": "02:15",
+          "arrivalTime": "04:45",
+          "duration": "3h 30m",
+          "stops": 0,
+          "price": {
+            "amount": 25000,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "business", "first"],
+          "mealOptions": ["vegetarian", "non_vegetarian", "special_meal"],
+          "availableSeats": {
+            "economy": 200,
+            "business": 30,
+            "first": 10
+          },
+          "operatingDays": ["Daily"]
+        }
+      ],
+      "return": [
+        {
+          "id": "EK502",
+          "airline": "Emirates",
+          "flightNumber": "EK502",
+          "aircraft": "Boeing 777-300ER",
+          "origin": {
+            "city": "Dubai",
+            "airport": "Dubai International Airport",
+            "iata_code": "DXB",
+            "country_code": "AE"
+          },
+          "destination": {
+            "city": "Bangalore",
+            "airport": "Kempegowda International Airport",
+            "iata_code": "BLR",
+            "country_code": "IN"
+          },
+          "departureTime": "08:15",
+          "arrivalTime": "13:45",
+          "duration": "3h 30m",
+          "stops": 0,
+          "price": {
+            "amount": 25000,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "business", "first"],
+          "mealOptions": ["vegetarian", "non_vegetarian", "special_meal"],
+          "availableSeats": {
+            "economy": 200,
+            "business": 30,
+            "first": 10
+          },
+          "operatingDays": ["Daily"]
+        }
+      ]
+    },
+    "BLR-SIN": {
+      "onward": [
+        {
+          "id": "SQ501",
+          "airline": "Singapore Airlines",
+          "flightNumber": "SQ501",
+          "aircraft": "Boeing 787-10",
+          "origin": {
+            "city": "Bangalore",
+            "airport": "Kempegowda International Airport",
+            "iata_code": "BLR",
+            "country_code": "IN"
+          },
+          "destination": {
+            "city": "Singapore",
+            "airport": "Changi Airport",
+            "iata_code": "SIN",
+            "country_code": "SG"
+          },
+          "departureTime": "01:30",
+          "arrivalTime": "07:45",
+          "duration": "4h 15m",
+          "stops": 0,
+          "price": {
+            "amount": 28000,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "premium_economy", "business"],
+          "mealOptions": ["vegetarian", "non_vegetarian", "special_meal"],
+          "availableSeats": {
+            "economy": 180,
+            "premium_economy": 40,
+            "business": 30
+          },
+          "operatingDays": ["Daily"]
+        }
+      ],
+      "return": [
+        {
+          "id": "SQ502",
+          "airline": "Singapore Airlines",
+          "flightNumber": "SQ502",
+          "aircraft": "Boeing 787-10",
+          "origin": {
+            "city": "Singapore",
+            "airport": "Changi Airport",
+            "iata_code": "SIN",
+            "country_code": "SG"
+          },
+          "destination": {
+            "city": "Bangalore",
+            "airport": "Kempegowda International Airport",
+            "iata_code": "BLR",
+            "country_code": "IN"
+          },
+          "departureTime": "09:30",
+          "arrivalTime": "11:45",
+          "duration": "4h 15m",
+          "stops": 0,
+          "price": {
+            "amount": 28000,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "premium_economy", "business"],
+          "mealOptions": ["vegetarian", "non_vegetarian", "special_meal"],
+          "availableSeats": {
+            "economy": 180,
+            "premium_economy": 40,
+            "business": 30
+          },
+          "operatingDays": ["Daily"]
+        }
+      ]
+    },
+    "BLR-LHR": {
+      "onward": [
+        {
+          "id": "BA101",
+          "airline": "British Airways",
+          "flightNumber": "BA101",
+          "aircraft": "Boeing 787-9",
+          "origin": {
+            "city": "Bangalore",
+            "airport": "Kempegowda International Airport",
+            "iata_code": "BLR",
+            "country_code": "IN"
+          },
+          "destination": {
+            "city": "London",
+            "airport": "Heathrow Airport",
+            "iata_code": "LHR",
+            "country_code": "GB"
+          },
+          "departureTime": "02:45",
+          "arrivalTime": "08:15",
+          "duration": "9h 30m",
+          "stops": 0,
+          "price": {
+            "amount": 65000,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "premium_economy", "business"],
+          "mealOptions": ["vegetarian", "non_vegetarian", "special_meal"],
+          "availableSeats": {
+            "economy": 150,
+            "premium_economy": 35,
+            "business": 25
+          },
+          "operatingDays": ["Daily"]
+        }
+      ],
+      "return": [
+        {
+          "id": "BA102",
+          "airline": "British Airways",
+          "flightNumber": "BA102",
+          "aircraft": "Boeing 787-9",
+          "origin": {
+            "city": "London",
+            "airport": "Heathrow Airport",
+            "iata_code": "LHR",
+            "country_code": "GB"
+          },
+          "destination": {
+            "city": "Bangalore",
+            "airport": "Kempegowda International Airport",
+            "iata_code": "BLR",
+            "country_code": "IN"
+          },
+          "departureTime": "10:45",
+          "arrivalTime": "02:15",
+          "duration": "9h 30m",
+          "stops": 0,
+          "price": {
+            "amount": 65000,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "premium_economy", "business"],
+          "mealOptions": ["vegetarian", "non_vegetarian", "special_meal"],
+          "availableSeats": {
+            "economy": 150,
+            "premium_economy": 35,
+            "business": 25
+          },
+          "operatingDays": ["Daily"]
+        }
+      ]
+    },
+    "DEL-BOM": {
+      "onward": [
+        {
+          "id": "AI301",
+          "airline": "Air India",
+          "flightNumber": "AI301",
+          "aircraft": "Airbus A320",
+          "origin": {
+            "city": "Delhi",
+            "airport": "Indira Gandhi International Airport",
+            "iata_code": "DEL",
+            "country_code": "IN"
+          },
+          "destination": {
+            "city": "Mumbai",
+            "airport": "Chhatrapati Shivaji Maharaj International Airport",
+            "iata_code": "BOM",
+            "country_code": "IN"
+          },
+          "departureTime": "07:30",
+          "arrivalTime": "09:45",
+          "duration": "2h 15m",
+          "stops": 0,
+          "price": {
+            "amount": 4200,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "business"],
+          "mealOptions": ["vegetarian", "non_vegetarian"],
+          "availableSeats": {
+            "economy": 150,
+            "business": 20
+          },
+          "operatingDays": ["Daily"]
+        }
+      ],
+      "return": [
+        {
+          "id": "AI302",
+          "airline": "Air India",
+          "flightNumber": "AI302",
+          "aircraft": "Airbus A320",
+          "origin": {
+            "city": "Mumbai",
+            "airport": "Chhatrapati Shivaji Maharaj International Airport",
+            "iata_code": "BOM",
+            "country_code": "IN"
+          },
+          "destination": {
+            "city": "Delhi",
+            "airport": "Indira Gandhi International Airport",
+            "iata_code": "DEL",
+            "country_code": "IN"
+          },
+          "departureTime": "11:00",
+          "arrivalTime": "13:15",
+          "duration": "2h 15m",
+          "stops": 0,
+          "price": {
+            "amount": 4200,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "business"],
+          "mealOptions": ["vegetarian", "non_vegetarian"],
+          "availableSeats": {
+            "economy": 150,
+            "business": 20
+          },
+          "operatingDays": ["Daily"]
+        }
+      ]
+    },
+    "DEL-LHR": {
+      "onward": [
+        {
+          "id": "BA101",
+          "airline": "British Airways",
+          "flightNumber": "BA101",
+          "aircraft": "Boeing 777-300ER",
+          "origin": {
+            "city": "Delhi",
+            "airport": "Indira Gandhi International Airport",
+            "iata_code": "DEL",
+            "country_code": "IN"
+          },
+          "destination": {
+            "city": "London",
+            "airport": "Heathrow Airport",
+            "iata_code": "LHR",
+            "country_code": "GB"
+          },
+          "departureTime": "02:30",
+          "arrivalTime": "07:15",
+          "duration": "8h 45m",
+          "stops": 0,
+          "price": {
+            "amount": 65000,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "business", "first"],
+          "mealOptions": ["vegetarian", "non_vegetarian", "special_meal"],
+          "availableSeats": {
+            "economy": 200,
+            "business": 30,
+            "first": 10
+          },
+          "operatingDays": ["Daily"]
+        }
+      ],
+      "return": [
+        {
+          "id": "BA102",
+          "airline": "British Airways",
+          "flightNumber": "BA102",
+          "aircraft": "Boeing 777-300ER",
+          "origin": {
+            "city": "London",
+            "airport": "Heathrow Airport",
+            "iata_code": "LHR",
+            "country_code": "GB"
+          },
+          "destination": {
+            "city": "Delhi",
+            "airport": "Indira Gandhi International Airport",
+            "iata_code": "DEL",
+            "country_code": "IN"
+          },
+          "departureTime": "21:30",
+          "arrivalTime": "10:15",
+          "duration": "8h 45m",
+          "stops": 0,
+          "price": {
+            "amount": 65000,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "business", "first"],
+          "mealOptions": ["vegetarian", "non_vegetarian", "special_meal"],
+          "availableSeats": {
+            "economy": 200,
+            "business": 30,
+            "first": 10
+          },
+          "operatingDays": ["Daily"]
+        }
+      ]
+    },
+    "DEL-SIN": {
+      "onward": [
+        {
+          "id": "SQ201",
+          "airline": "Singapore Airlines",
+          "flightNumber": "SQ201",
+          "aircraft": "Airbus A350",
+          "origin": {
+            "city": "Delhi",
+            "airport": "Indira Gandhi International Airport",
+            "iata_code": "DEL",
+            "country_code": "IN"
+          },
+          "destination": {
+            "city": "Singapore",
+            "airport": "Changi Airport",
+            "iata_code": "SIN",
+            "country_code": "SG"
+          },
+          "departureTime": "01:45",
+          "arrivalTime": "08:15",
+          "duration": "6h 30m",
+          "stops": 0,
+          "price": {
+            "amount": 32000,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "business"],
+          "mealOptions": ["vegetarian", "non_vegetarian", "special_meal"],
+          "availableSeats": {
+            "economy": 220,
+            "business": 40
+          },
+          "operatingDays": ["Daily"]
+        }
+      ],
+      "return": [
+        {
+          "id": "SQ202",
+          "airline": "Singapore Airlines",
+          "flightNumber": "SQ202",
+          "aircraft": "Airbus A350",
+          "origin": {
+            "city": "Singapore",
+            "airport": "Changi Airport",
+            "iata_code": "SIN",
+            "country_code": "SG"
+          },
+          "destination": {
+            "city": "Delhi",
+            "airport": "Indira Gandhi International Airport",
+            "iata_code": "DEL",
+            "country_code": "IN"
+          },
+          "departureTime": "10:30",
+          "arrivalTime": "14:00",
+          "duration": "6h 30m",
+          "stops": 0,
+          "price": {
+            "amount": 32000,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "business"],
+          "mealOptions": ["vegetarian", "non_vegetarian", "special_meal"],
+          "availableSeats": {
+            "economy": 220,
+            "business": 40
+          },
+          "operatingDays": ["Daily"]
+        }
+      ]
+    },
+    "DEL-SYD": {
+      "onward": [
+        {
+          "id": "QF101",
+          "airline": "Qantas",
+          "flightNumber": "QF101",
+          "aircraft": "Boeing 787-9",
+          "origin": {
+            "city": "Delhi",
+            "airport": "Indira Gandhi International Airport",
+            "iata_code": "DEL",
+            "country_code": "IN"
+          },
+          "destination": {
+            "city": "Sydney",
+            "airport": "Sydney Kingsford Smith Airport",
+            "iata_code": "SYD",
+            "country_code": "AU"
+          },
+          "departureTime": "23:30",
+          "arrivalTime": "15:45",
+          "duration": "12h 15m",
+          "stops": 1,
+          "stopDetails": [
+            {
+              "airport": "Singapore Changi Airport",
+              "iata_code": "SIN",
+              "duration": "2h 00m"
+            }
+          ],
+          "price": {
+            "amount": 75000,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "business"],
+          "mealOptions": ["vegetarian", "non_vegetarian", "special_meal"],
+          "availableSeats": {
+            "economy": 200,
+            "business": 30
+          },
+          "operatingDays": ["Daily"]
+        }
+      ],
+      "return": [
+        {
+          "id": "QF102",
+          "airline": "Qantas",
+          "flightNumber": "QF102",
+          "aircraft": "Boeing 787-9",
+          "origin": {
+            "city": "Sydney",
+            "airport": "Sydney Kingsford Smith Airport",
+            "iata_code": "SYD",
+            "country_code": "AU"
+          },
+          "destination": {
+            "city": "Delhi",
+            "airport": "Indira Gandhi International Airport",
+            "iata_code": "DEL",
+            "country_code": "IN"
+          },
+          "departureTime": "21:00",
+          "arrivalTime": "05:30",
+          "duration": "12h 30m",
+          "stops": 1,
+          "stopDetails": [
+            {
+              "airport": "Singapore Changi Airport",
+              "iata_code": "SIN",
+              "duration": "2h 00m"
+            }
+          ],
+          "price": {
+            "amount": 75000,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "business"],
+          "mealOptions": ["vegetarian", "non_vegetarian", "special_meal"],
+          "availableSeats": {
+            "economy": 200,
+            "business": 30
+          },
+          "operatingDays": ["Daily"]
+        }
+      ]
+    },
+    "DEL-PEK": {
+      "onward": [
+        {
+          "id": "CA101",
+          "airline": "Air China",
+          "flightNumber": "CA101",
+          "aircraft": "Airbus A330",
+          "origin": {
+            "city": "Delhi",
+            "airport": "Indira Gandhi International Airport",
+            "iata_code": "DEL",
+            "country_code": "IN"
+          },
+          "destination": {
+            "city": "Beijing",
+            "airport": "Beijing Capital International Airport",
+            "iata_code": "PEK",
+            "country_code": "CN"
+          },
+          "departureTime": "01:30",
+          "arrivalTime": "08:45",
+          "duration": "7h 15m",
+          "stops": 0,
+          "price": {
+            "amount": 45000,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "business"],
+          "mealOptions": ["vegetarian", "non_vegetarian", "special_meal"],
+          "availableSeats": {
+            "economy": 200,
+            "business": 30
+          },
+          "operatingDays": ["Daily"]
+        }
+      ],
+      "return": [
+        {
+          "id": "CA102",
+          "airline": "Air China",
+          "flightNumber": "CA102",
+          "aircraft": "Airbus A330",
+          "origin": {
+            "city": "Beijing",
+            "airport": "Beijing Capital International Airport",
+            "iata_code": "PEK",
+            "country_code": "CN"
+          },
+          "destination": {
+            "city": "Delhi",
+            "airport": "Indira Gandhi International Airport",
+            "iata_code": "DEL",
+            "country_code": "IN"
+          },
+          "departureTime": "10:30",
+          "arrivalTime": "14:45",
+          "duration": "7h 15m",
+          "stops": 0,
+          "price": {
+            "amount": 45000,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "business"],
+          "mealOptions": ["vegetarian", "non_vegetarian", "special_meal"],
+          "availableSeats": {
+            "economy": 200,
+            "business": 30
+          },
+          "operatingDays": ["Daily"]
+        }
+      ]
+    },
+    "BOM-LHR": {
+      "onward": [
+        {
+          "id": "BA201",
+          "airline": "British Airways",
+          "flightNumber": "BA201",
+          "aircraft": "Boeing 777-300ER",
+          "origin": {
+            "city": "Mumbai",
+            "airport": "Chhatrapati Shivaji Maharaj International Airport",
+            "iata_code": "BOM",
+            "country_code": "IN"
+          },
+          "destination": {
+            "city": "London",
+            "airport": "Heathrow Airport",
+            "iata_code": "LHR",
+            "country_code": "GB"
+          },
+          "departureTime": "02:30",
+          "arrivalTime": "07:15",
+          "duration": "9h 45m",
+          "stops": 0,
+          "price": {
+            "amount": 68000,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "business", "first"],
+          "mealOptions": ["vegetarian", "non_vegetarian", "special_meal"],
+          "availableSeats": {
+            "economy": 200,
+            "business": 30,
+            "first": 10
+          },
+          "operatingDays": ["Daily"]
+        }
+      ],
+      "return": [
+        {
+          "id": "BA202",
+          "airline": "British Airways",
+          "flightNumber": "BA202",
+          "aircraft": "Boeing 777-300ER",
+          "origin": {
+            "city": "London",
+            "airport": "Heathrow Airport",
+            "iata_code": "LHR",
+            "country_code": "GB"
+          },
+          "destination": {
+            "city": "Mumbai",
+            "airport": "Chhatrapati Shivaji Maharaj International Airport",
+            "iata_code": "BOM",
+            "country_code": "IN"
+          },
+          "departureTime": "21:30",
+          "arrivalTime": "11:15",
+          "duration": "9h 45m",
+          "stops": 0,
+          "price": {
+            "amount": 68000,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "business", "first"],
+          "mealOptions": ["vegetarian", "non_vegetarian", "special_meal"],
+          "availableSeats": {
+            "economy": 200,
+            "business": 30,
+            "first": 10
+          },
+          "operatingDays": ["Daily"]
+        }
+      ]
+    },
+    "BOM-HKG": {
+      "onward": [
+        {
+          "id": "CX101",
+          "airline": "Cathay Pacific",
+          "flightNumber": "CX101",
+          "aircraft": "Boeing 777-300ER",
+          "origin": {
+            "city": "Mumbai",
+            "airport": "Chhatrapati Shivaji Maharaj International Airport",
+            "iata_code": "BOM",
+            "country_code": "IN"
+          },
+          "destination": {
+            "city": "Hong Kong",
+            "airport": "Hong Kong International Airport",
+            "iata_code": "HKG",
+            "country_code": "HK"
+          },
+          "departureTime": "02:15",
+          "arrivalTime": "09:45",
+          "duration": "7h 30m",
+          "stops": 0,
+          "price": {
+            "amount": 42000,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "business"],
+          "mealOptions": ["vegetarian", "non_vegetarian", "special_meal"],
+          "availableSeats": {
+            "economy": 200,
+            "business": 30
+          },
+          "operatingDays": ["Daily"]
+        }
+      ],
+      "return": [
+        {
+          "id": "CX102",
+          "airline": "Cathay Pacific",
+          "flightNumber": "CX102",
+          "aircraft": "Boeing 777-300ER",
+          "origin": {
+            "city": "Hong Kong",
+            "airport": "Hong Kong International Airport",
+            "iata_code": "HKG",
+            "country_code": "HK"
+          },
+          "destination": {
+            "city": "Mumbai",
+            "airport": "Chhatrapati Shivaji Maharaj International Airport",
+            "iata_code": "BOM",
+            "country_code": "IN"
+          },
+          "departureTime": "11:30",
+          "arrivalTime": "15:00",
+          "duration": "7h 30m",
+          "stops": 0,
+          "price": {
+            "amount": 42000,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "business"],
+          "mealOptions": ["vegetarian", "non_vegetarian", "special_meal"],
+          "availableSeats": {
+            "economy": 200,
+            "business": 30
+          },
+          "operatingDays": ["Daily"]
+        }
+      ]
+    },
+    "DEL-ICN": {
+      "onward": [
+        {
+          "id": "KE101",
+          "airline": "Korean Air",
+          "flightNumber": "KE101",
+          "aircraft": "Boeing 777-300ER",
+          "origin": {
+            "city": "Delhi",
+            "airport": "Indira Gandhi International Airport",
+            "iata_code": "DEL",
+            "country_code": "IN"
+          },
+          "destination": {
+            "city": "Seoul",
+            "airport": "Incheon International Airport",
+            "iata_code": "ICN",
+            "country_code": "KR"
+          },
+          "departureTime": "01:45",
+          "arrivalTime": "09:15",
+          "duration": "7h 30m",
+          "stops": 0,
+          "price": {
+            "amount": 48000,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "business"],
+          "mealOptions": ["vegetarian", "non_vegetarian", "special_meal"],
+          "availableSeats": {
+            "economy": 200,
+            "business": 30
+          },
+          "operatingDays": ["Daily"]
+        }
+      ],
+      "return": [
+        {
+          "id": "KE102",
+          "airline": "Korean Air",
+          "flightNumber": "KE102",
+          "aircraft": "Boeing 777-300ER",
+          "origin": {
+            "city": "Seoul",
+            "airport": "Incheon International Airport",
+            "iata_code": "ICN",
+            "country_code": "KR"
+          },
+          "destination": {
+            "city": "Delhi",
+            "airport": "Indira Gandhi International Airport",
+            "iata_code": "DEL",
+            "country_code": "IN"
+          },
+          "departureTime": "10:30",
+          "arrivalTime": "14:00",
+          "duration": "7h 30m",
+          "stops": 0,
+          "price": {
+            "amount": 48000,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "business"],
+          "mealOptions": ["vegetarian", "non_vegetarian", "special_meal"],
+          "availableSeats": {
+            "economy": 200,
+            "business": 30
+          },
+          "operatingDays": ["Daily"]
+        }
+      ]
+    },
+    "DEL-BLR": {
+      "onward": [
+        {
+          "id": "AI103",
+          "airline": "Air India",
+          "flightNumber": "AI103",
+          "aircraft": "Airbus A320",
+          "origin": {
+            "city": "Delhi",
+            "airport": "Indira Gandhi International Airport",
+            "iata_code": "DEL",
+            "country_code": "IN"
+          },
+          "destination": {
+            "city": "Bangalore",
+            "airport": "Kempegowda International Airport",
+            "iata_code": "BLR",
+            "country_code": "IN"
+          },
+          "departureTime": "10:00",
+          "arrivalTime": "12:30",
+          "duration": "2h 30m",
+          "stops": 0,
+          "price": {
+            "amount": 4500,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "business"],
+          "mealOptions": ["vegetarian", "non_vegetarian"],
+          "availableSeats": {
+            "economy": 150,
+            "business": 20
+          },
+          "operatingDays": ["Daily"]
+        }
+      ],
+      "return": [
+        {
+          "id": "AI104",
+          "airline": "Air India",
+          "flightNumber": "AI104",
+          "aircraft": "Airbus A320",
+          "origin": {
+            "city": "Bangalore",
+            "airport": "Kempegowda International Airport",
+            "iata_code": "BLR",
+            "country_code": "IN"
+          },
+          "destination": {
+            "city": "Delhi",
+            "airport": "Indira Gandhi International Airport",
+            "iata_code": "DEL",
+            "country_code": "IN"
+          },
+          "departureTime": "13:00",
+          "arrivalTime": "15:30",
+          "duration": "2h 30m",
+          "stops": 0,
+          "price": {
+            "amount": 4500,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "business"],
+          "mealOptions": ["vegetarian", "non_vegetarian"],
+          "availableSeats": {
+            "economy": 150,
+            "business": 20
+          },
+          "operatingDays": ["Daily"]
+        }
+      ]
+    },
+    "BOM-BLR": {
+      "onward": [
+        {
+          "id": "AI203",
+          "airline": "Air India",
+          "flightNumber": "AI203",
+          "aircraft": "Airbus A320",
+          "origin": {
+            "city": "Mumbai",
+            "airport": "Chhatrapati Shivaji Maharaj International Airport",
+            "iata_code": "BOM",
+            "country_code": "IN"
+          },
+          "destination": {
+            "city": "Bangalore",
+            "airport": "Kempegowda International Airport",
+            "iata_code": "BLR",
+            "country_code": "IN"
+          },
+          "departureTime": "09:00",
+          "arrivalTime": "10:45",
+          "duration": "1h 45m",
+          "stops": 0,
+          "price": {
+            "amount": 3800,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "business"],
+          "mealOptions": ["vegetarian", "non_vegetarian"],
+          "availableSeats": {
+            "economy": 150,
+            "business": 20
+          },
+          "operatingDays": ["Daily"]
+        }
+      ],
+      "return": [
+        {
+          "id": "AI204",
+          "airline": "Air India",
+          "flightNumber": "AI204",
+          "aircraft": "Airbus A320",
+          "origin": {
+            "city": "Bangalore",
+            "airport": "Kempegowda International Airport",
+            "iata_code": "BLR",
+            "country_code": "IN"
+          },
+          "destination": {
+            "city": "Mumbai",
+            "airport": "Chhatrapati Shivaji Maharaj International Airport",
+            "iata_code": "BOM",
+            "country_code": "IN"
+          },
+          "departureTime": "11:00",
+          "arrivalTime": "12:45",
+          "duration": "1h 45m",
+          "stops": 0,
+          "price": {
+            "amount": 3800,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "business"],
+          "mealOptions": ["vegetarian", "non_vegetarian"],
+          "availableSeats": {
+            "economy": 150,
+            "business": 20
+          },
+          "operatingDays": ["Daily"]
+        }
+      ]
+    },
+    "DXB-BLR": {
+      "onward": [
+        {
+          "id": "EK503",
+          "airline": "Emirates",
+          "flightNumber": "EK503",
+          "aircraft": "Boeing 777-300ER",
+          "origin": {
+            "city": "Dubai",
+            "airport": "Dubai International Airport",
+            "iata_code": "DXB",
+            "country_code": "AE"
+          },
+          "destination": {
+            "city": "Bangalore",
+            "airport": "Kempegowda International Airport",
+            "iata_code": "BLR",
+            "country_code": "IN"
+          },
+          "departureTime": "08:15",
+          "arrivalTime": "13:45",
+          "duration": "3h 30m",
+          "stops": 0,
+          "price": {
+            "amount": 25000,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "business", "first"],
+          "mealOptions": ["vegetarian", "non_vegetarian", "special_meal"],
+          "availableSeats": {
+            "economy": 200,
+            "business": 30,
+            "first": 10
+          },
+          "operatingDays": ["Daily"]
+        }
+      ],
+      "return": [
+        {
+          "id": "EK504",
+          "airline": "Emirates",
+          "flightNumber": "EK504",
+          "aircraft": "Boeing 777-300ER",
+          "origin": {
+            "city": "Bangalore",
+            "airport": "Kempegowda International Airport",
+            "iata_code": "BLR",
+            "country_code": "IN"
+          },
+          "destination": {
+            "city": "Dubai",
+            "airport": "Dubai International Airport",
+            "iata_code": "DXB",
+            "country_code": "AE"
+          },
+          "departureTime": "15:00",
+          "arrivalTime": "17:30",
+          "duration": "3h 30m",
+          "stops": 0,
+          "price": {
+            "amount": 25000,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "business", "first"],
+          "mealOptions": ["vegetarian", "non_vegetarian", "special_meal"],
+          "availableSeats": {
+            "economy": 200,
+            "business": 30,
+            "first": 10
+          },
+          "operatingDays": ["Daily"]
+        }
+      ]
+    },
+    "SIN-BLR": {
+      "onward": [
+        {
+          "id": "SQ503",
+          "airline": "Singapore Airlines",
+          "flightNumber": "SQ503",
+          "aircraft": "Boeing 787-10",
+          "origin": {
+            "city": "Singapore",
+            "airport": "Changi Airport",
+            "iata_code": "SIN",
+            "country_code": "SG"
+          },
+          "destination": {
+            "city": "Bangalore",
+            "airport": "Kempegowda International Airport",
+            "iata_code": "BLR",
+            "country_code": "IN"
+          },
+          "departureTime": "09:30",
+          "arrivalTime": "11:45",
+          "duration": "4h 15m",
+          "stops": 0,
+          "price": {
+            "amount": 28000,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "premium_economy", "business"],
+          "mealOptions": ["vegetarian", "non_vegetarian", "special_meal"],
+          "availableSeats": {
+            "economy": 180,
+            "premium_economy": 40,
+            "business": 30
+          },
+          "operatingDays": ["Daily"]
+        }
+      ],
+      "return": [
+        {
+          "id": "SQ504",
+          "airline": "Singapore Airlines",
+          "flightNumber": "SQ504",
+          "aircraft": "Boeing 787-10",
+          "origin": {
+            "city": "Bangalore",
+            "airport": "Kempegowda International Airport",
+            "iata_code": "BLR",
+            "country_code": "IN"
+          },
+          "destination": {
+            "city": "Singapore",
+            "airport": "Changi Airport",
+            "iata_code": "SIN",
+            "country_code": "SG"
+          },
+          "departureTime": "13:00",
+          "arrivalTime": "19:15",
+          "duration": "4h 15m",
+          "stops": 0,
+          "price": {
+            "amount": 28000,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "premium_economy", "business"],
+          "mealOptions": ["vegetarian", "non_vegetarian", "special_meal"],
+          "availableSeats": {
+            "economy": 180,
+            "premium_economy": 40,
+            "business": 30
+          },
+          "operatingDays": ["Daily"]
+        }
+      ]
+    },
+    "LHR-BLR": {
+      "onward": [
+        {
+          "id": "BA103",
+          "airline": "British Airways",
+          "flightNumber": "BA103",
+          "aircraft": "Boeing 787-9",
+          "origin": {
+            "city": "London",
+            "airport": "Heathrow Airport",
+            "iata_code": "LHR",
+            "country_code": "GB"
+          },
+          "destination": {
+            "city": "Bangalore",
+            "airport": "Kempegowda International Airport",
+            "iata_code": "BLR",
+            "country_code": "IN"
+          },
+          "departureTime": "10:45",
+          "arrivalTime": "02:15",
+          "duration": "9h 30m",
+          "stops": 0,
+          "price": {
+            "amount": 65000,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "premium_economy", "business"],
+          "mealOptions": ["vegetarian", "non_vegetarian", "special_meal"],
+          "availableSeats": {
+            "economy": 150,
+            "premium_economy": 35,
+            "business": 25
+          },
+          "operatingDays": ["Daily"]
+        }
+      ],
+      "return": [
+        {
+          "id": "BA104",
+          "airline": "British Airways",
+          "flightNumber": "BA104",
+          "aircraft": "Boeing 787-9",
+          "origin": {
+            "city": "Bangalore",
+            "airport": "Kempegowda International Airport",
+            "iata_code": "BLR",
+            "country_code": "IN"
+          },
+          "destination": {
+            "city": "London",
+            "airport": "Heathrow Airport",
+            "iata_code": "LHR",
+            "country_code": "GB"
+          },
+          "departureTime": "03:30",
+          "arrivalTime": "09:00",
+          "duration": "9h 30m",
+          "stops": 0,
+          "price": {
+            "amount": 65000,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "premium_economy", "business"],
+          "mealOptions": ["vegetarian", "non_vegetarian", "special_meal"],
+          "availableSeats": {
+            "economy": 150,
+            "premium_economy": 35,
+            "business": 25
+          },
+          "operatingDays": ["Daily"]
+        }
+      ]
+    },
+    "JFK-BLR": {
+      "onward": [
+        {
+          "id": "AI103",
+          "airline": "Air India",
+          "flightNumber": "AI103",
+          "aircraft": "Boeing 777-300ER",
+          "origin": {
+            "city": "New York",
+            "airport": "John F. Kennedy International Airport",
+            "iata_code": "JFK",
+            "country_code": "US"
+          },
+          "destination": {
+            "city": "Bangalore",
+            "airport": "Kempegowda International Airport",
+            "iata_code": "BLR",
+            "country_code": "IN"
+          },
+          "departureTime": "22:30",
+          "arrivalTime": "23:45",
+          "duration": "15h 15m",
+          "stops": 0,
+          "price": {
+            "amount": 85000,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "business", "first"],
+          "mealOptions": ["vegetarian", "non_vegetarian", "special_meal"],
+          "availableSeats": {
+            "economy": 250,
+            "business": 35,
+            "first": 8
+          },
+          "operatingDays": ["Daily"]
+        }
+      ],
+      "return": [
+        {
+          "id": "AI104",
+          "airline": "Air India",
+          "flightNumber": "AI104",
+          "aircraft": "Boeing 777-300ER",
+          "origin": {
+            "city": "Bangalore",
+            "airport": "Kempegowda International Airport",
+            "iata_code": "BLR",
+            "country_code": "IN"
+          },
+          "destination": {
+            "city": "New York",
+            "airport": "John F. Kennedy International Airport",
+            "iata_code": "JFK",
+            "country_code": "US"
+          },
+          "departureTime": "01:30",
+          "arrivalTime": "06:45",
+          "duration": "15h 15m",
+          "stops": 0,
+          "price": {
+            "amount": 85000,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "business", "first"],
+          "mealOptions": ["vegetarian", "non_vegetarian", "special_meal"],
+          "availableSeats": {
+            "economy": 250,
+            "business": 35,
+            "first": 8
+          },
+          "operatingDays": ["Daily"]
+        }
+      ]
+    }
+  }
+} 

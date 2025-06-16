@@ -1,0 +1,24 @@
+{
+  "name": "tlpairways",
+  "version": "1.0.0",
+  "description": "A dummy airline booking and check-in system",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd backend && npm run dev",
+    "client": "cd frontend && npm start",
+    "install-all": "npm install && cd frontend && npm install && cd ../backend && npm install"
+  },
+  "keywords": [
+    "airline",
+    "booking",
+    "mern",
+    "react",
+    "node"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+} 

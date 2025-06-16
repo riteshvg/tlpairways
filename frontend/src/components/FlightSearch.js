@@ -1,0 +1,291 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+  Container,
+  Paper,
+  Typography,
+  TextField,
+  Button,
+  Grid,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Box,
+  Autocomplete,
+} from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import airports from '../data/airports.json';
+import flightRoutes from '../data/flight_routes.json';
+import analytics from '../services/analytics';
+import withAnalytics from './withAnalytics';
+
+const getUniqueLocations = () => {
+  const locations = airports.map(airport => ({
+    value: airport.iata_code,
+    label: `${airport.city}, ${airport.country}`,
+    city: airport.city,
+    country: airport.country,
+    iata_code: airport.iata_code
+  }));
+  return locations;
+};
+
+const paymentTypes = [
+  { value: 'cash', label: 'Cash' },
+  { value: 'cash_points', label: 'Cash + Points' },
+  { value: 'points', label: 'Points' }
+];
+
+const cabinClasses = [
+  { value: 'economy', label: 'Economy' },
+  { value: 'premium_economy', label: 'Premium Economy' },
+  { value: 'business', label: 'Business' },
+  { value: 'first', label: 'First' }
+];
+
+const FlightSearch = () => {
+  const navigate = useNavigate();
+  const [origin, setOrigin] = useState(null);
+  const [destination, setDestination] = useState(null);
+  const [date, setDate] = useState(null);
+  const [returnDate, setReturnDate] = useState(null);
+  const [passengers, setPassengers] = useState(1);
+  const [paymentType, setPaymentType] = useState('');
+  const [tripType, setTripType] = useState('oneway');
+  const [cabinClass, setCabinClass] = useState('economy');
+  const [availableRoutes, setAvailableRoutes] = useState([]);
+
+  // Get available routes on component mount
+  React.useEffect(() => {
+    const routes = new Set();
+    Object.entries(flightRoutes.routes).forEach(([routeKey, routeData]) => {
+      // Add direct routes from onward flights
+      routeData.onward.forEach(flight => {
+        routes.add(`${flight.origin.iata_code}-${flight.destination.iata_code}`);
+      });
+      
+      // Add direct routes from return flights
+      routeData.return.forEach(flight => {
+        routes.add(`${flight.origin.iata_code}-${flight.destination.iata_code}`);
+      });
+    });
+    setAvailableRoutes(Array.from(routes));
+  }, []);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (!origin || !destination || !date || !paymentType) {
+      return;
+    }
+    if (tripType === 'roundtrip' && !returnDate) {
+      return;
+    }
+
+    // Check if the selected route exists
+    const routeExists = availableRoutes.includes(`${origin.iata_code}-${destination.iata_code}`);
+
+    if (!routeExists) {
+      alert('No flights available for the selected route.');
+      return;
+    }
+
+    const searchParams = {
+        originCode: origin.iata_code,
+        destinationCode: destination.iata_code,
+        date: date.toISOString(),
+        returnDate: returnDate ? returnDate.toISOString() : null,
+        passengers,
+        paymentType,
+        tripType,
+        cabinClass
+    };
+
+    // Track search initiation
+    analytics.searchInitiated(searchParams);
+
+    // Navigate to search results
+    navigate('/search-results', {
+      state: {
+        ...searchParams,
+        previousPage: 'Flight Search'
+      }
+    });
+  };
+
+  // Filter available destinations based on selected origin
+  const getAvailableDestinations = () => {
+    if (!origin) return getUniqueLocations();
+    
+    return getUniqueLocations().filter(location => {
+      return availableRoutes.includes(`${origin.iata_code}-${location.iata_code}`);
+    });
+  };
+
+  return (
+    <Container maxWidth="md" sx={{ mt: 4 }}>
+      <Paper elevation={3} sx={{ p: 4 }}>
+        <Typography variant="h4" gutterBottom align="center">
+          Search Flights
+        </Typography>
+        <form onSubmit={handleSearch}>
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <FormControl component="fieldset">
+                <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', mb: 2 }}>
+                  <Button
+                    variant={tripType === 'oneway' ? 'contained' : 'outlined'}
+                    onClick={() => setTripType('oneway')}
+                  >
+                    One Way
+                  </Button>
+                  <Button
+                    variant={tripType === 'roundtrip' ? 'contained' : 'outlined'}
+                    onClick={() => setTripType('roundtrip')}
+                  >
+                    Round Trip
+                  </Button>
+                </Box>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Autocomplete
+                options={getUniqueLocations()}
+                getOptionLabel={(option) => option.label}
+                value={origin}
+                onChange={(event, newValue) => {
+                  setOrigin(newValue);
+                  setDestination(null); // Reset destination when origin changes
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="From"
+                    required
+                    fullWidth
+                  />
+                )}
+                isOptionEqualToValue={(option, value) => option.iata_code === value.iata_code}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Autocomplete
+                options={getAvailableDestinations()}
+                getOptionLabel={(option) => option.label}
+                value={destination}
+                onChange={(event, newValue) => setDestination(newValue)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="To"
+                    required
+                    fullWidth
+                    disabled={!origin}
+                  />
+                )}
+                isOptionEqualToValue={(option, value) => option.iata_code === value.iata_code}
+                disabled={!origin}
+              />
+            </Grid>
+            <Grid item xs={12} md={tripType === 'roundtrip' ? 6 : 12}>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DatePicker
+                  label="Departure Date"
+                  value={date}
+                  onChange={(newValue) => setDate(newValue)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      fullWidth
+                      required
+                    />
+                  )}
+                  minDate={new Date()}
+                />
+              </LocalizationProvider>
+            </Grid>
+            {tripType === 'roundtrip' && (
+              <Grid item xs={12} md={6}>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DatePicker
+                    label="Return Date"
+                    value={returnDate}
+                    onChange={(newValue) => setReturnDate(newValue)}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        fullWidth
+                        required
+                      />
+                    )}
+                    minDate={date || new Date()}
+                  />
+                </LocalizationProvider>
+              </Grid>
+            )}
+            <Grid item xs={12} md={4}>
+              <TextField
+                fullWidth
+                type="number"
+                label="Number of Passengers"
+                value={passengers}
+                onChange={(e) => setPassengers(Math.max(1, Math.min(9, parseInt(e.target.value) || 1)))}
+                inputProps={{ min: 1, max: 9 }}
+                required
+              />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <FormControl fullWidth required>
+                <InputLabel>Payment Type</InputLabel>
+                <Select
+                  value={paymentType}
+                  label="Payment Type"
+                  onChange={(e) => setPaymentType(e.target.value)}
+                >
+                  {paymentTypes.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <FormControl fullWidth required>
+                <InputLabel>Cabin Class</InputLabel>
+                <Select
+                  value={cabinClass}
+                  label="Cabin Class"
+                  onChange={(e) => setCabinClass(e.target.value)}
+                >
+                  {cabinClasses.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                fullWidth
+                size="large"
+                disabled={!origin || !destination || !date || !paymentType || (tripType === 'roundtrip' && !returnDate)}
+              >
+                Search Flights
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
+      </Paper>
+    </Container>
+  );
+};
+
+// Export with analytics HOC
+export default withAnalytics(FlightSearch, 'Flight Search'); 
