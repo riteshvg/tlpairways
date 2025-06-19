@@ -25,7 +25,6 @@ import {
 import { Add as AddIcon, Remove as RemoveIcon } from '@mui/icons-material';
 import { format } from 'date-fns';
 import analytics from '../services/analytics';
-import withAnalytics from './withAnalytics';
 
 const TravellerDetails = () => {
   const location = useLocation();
@@ -697,4 +696,4 @@ const TravellerDetails = () => {
   );
 };
 
-export default withAnalytics(TravellerDetails, 'Traveller Details'); 
+export default TravellerDetails; 

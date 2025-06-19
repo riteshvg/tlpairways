@@ -20,7 +20,6 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import airports from '../data/airports.json';
 import flightRoutes from '../data/flight_routes.json';
 import analytics from '../services/analytics';
-import withAnalytics from './withAnalytics';
 
 const getUniqueLocations = () => {
   const locations = airports.map(airport => ({
@@ -287,5 +286,4 @@ const FlightSearch = () => {
   );
 };
 
-// Export with analytics HOC
-export default withAnalytics(FlightSearch, 'Flight Search'); 
+export default FlightSearch; 

@@ -3,6 +3,7 @@ import { Box, Container, Typography, Grid } from '@mui/material';
 import HomeBanner from '../components/HomeBanner';
 
 const HomePage = () => {
+  console.log('HomePage rendered');
   return (
     <Box>
       {/* Hero Banner */}

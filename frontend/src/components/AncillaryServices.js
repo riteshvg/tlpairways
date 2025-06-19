@@ -44,7 +44,6 @@ import { format } from 'date-fns';
 import seatConfigurations from '../data/ancillary/seat_configurations.json';
 import baggageRulesData from '../data/ancillary/baggage_rules.json';
 import analytics from '../services/analytics';
-import withAnalytics from './withAnalytics';
 
 const AncillaryServices = () => {
   const location = useLocation();
@@ -1205,4 +1204,4 @@ Price: ₹${seatPrice}`}
   );
 };
 
-export default withAnalytics(AncillaryServices, 'Ancillary Services'); 
+export default AncillaryServices; 

@@ -29,7 +29,6 @@ import {
 } from '@mui/material';
 import { format, isValid, parseISO } from 'date-fns';
 import analytics from '../services/analytics';
-import withAnalytics from './withAnalytics';
 
 const Payment = () => {
   const location = useLocation();
@@ -503,4 +502,4 @@ const Payment = () => {
   );
 };
 
-export default withAnalytics(Payment, 'Payment'); 
+export default Payment; 

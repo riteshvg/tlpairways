@@ -11,13 +11,21 @@
             "city": "Bangalore",
             "airport": "Kempegowda International Airport",
             "iata_code": "BLR",
-            "country_code": "IN"
+            "country_code": "IN",
+            "coordinates": {
+              "latitude": 13.1986,
+              "longitude": 77.7066
+            }
           },
           "destination": {
             "city": "Delhi",
             "airport": "Indira Gandhi International Airport",
             "iata_code": "DEL",
-            "country_code": "IN"
+            "country_code": "IN",
+            "coordinates": {
+              "latitude": 28.5562,
+              "longitude": 77.1000
+            }
           },
           "departureTime": "06:00",
           "arrivalTime": "08:30",
@@ -44,13 +52,21 @@
             "city": "Bangalore",
             "airport": "Kempegowda International Airport",
             "iata_code": "BLR",
-            "country_code": "IN"
+            "country_code": "IN",
+            "coordinates": {
+              "latitude": 13.1986,
+              "longitude": 77.7066
+            }
           },
           "destination": {
             "city": "Delhi",
             "airport": "Indira Gandhi International Airport",
             "iata_code": "DEL",
-            "country_code": "IN"
+            "country_code": "IN",
+            "coordinates": {
+              "latitude": 28.5562,
+              "longitude": 77.1000
+            }
           },
           "departureTime": "08:30",
           "arrivalTime": "11:00",
@@ -78,13 +94,21 @@
             "city": "Delhi",
             "airport": "Indira Gandhi International Airport",
             "iata_code": "DEL",
-            "country_code": "IN"
+            "country_code": "IN",
+            "coordinates": {
+              "latitude": 28.5562,
+              "longitude": 77.1000
+            }
           },
           "destination": {
             "city": "Bangalore",
             "airport": "Kempegowda International Airport",
             "iata_code": "BLR",
-            "country_code": "IN"
+            "country_code": "IN",
+            "coordinates": {
+              "latitude": 13.1986,
+              "longitude": 77.7066
+            }
           },
           "departureTime": "10:00",
           "arrivalTime": "12:30",
@@ -115,13 +139,21 @@
             "city": "Bangalore",
             "airport": "Kempegowda International Airport",
             "iata_code": "BLR",
-            "country_code": "IN"
+            "country_code": "IN",
+            "coordinates": {
+              "latitude": 13.1986,
+              "longitude": 77.7066
+            }
           },
           "destination": {
             "city": "Mumbai",
             "airport": "Chhatrapati Shivaji Maharaj International Airport",
             "iata_code": "BOM",
-            "country_code": "IN"
+            "country_code": "IN",
+            "coordinates": {
+              "latitude": 19.0896,
+              "longitude": 72.8656
+            }
           },
           "departureTime": "07:00",
           "arrivalTime": "08:45",
@@ -150,13 +182,21 @@
             "city": "Mumbai",
             "airport": "Chhatrapati Shivaji Maharaj International Airport",
             "iata_code": "BOM",
-            "country_code": "IN"
+            "country_code": "IN",
+            "coordinates": {
+              "latitude": 19.0896,
+              "longitude": 72.8656
+            }
           },
           "destination": {
             "city": "Bangalore",
             "airport": "Kempegowda International Airport",
             "iata_code": "BLR",
-            "country_code": "IN"
+            "country_code": "IN",
+            "coordinates": {
+              "latitude": 13.1986,
+              "longitude": 77.7066
+            }
           },
           "departureTime": "09:00",
           "arrivalTime": "10:45",
@@ -187,13 +227,21 @@
             "city": "Bangalore",
             "airport": "Kempegowda International Airport",
             "iata_code": "BLR",
-            "country_code": "IN"
+            "country_code": "IN",
+            "coordinates": {
+              "latitude": 13.1986,
+              "longitude": 77.7066
+            }
           },
           "destination": {
             "city": "Dubai",
             "airport": "Dubai International Airport",
             "iata_code": "DXB",
-            "country_code": "AE"
+            "country_code": "AE",
+            "coordinates": {
+              "latitude": 25.2532,
+              "longitude": 55.3657
+            }
           },
           "departureTime": "02:15",
           "arrivalTime": "04:45",
@@ -223,13 +271,21 @@
             "city": "Dubai",
             "airport": "Dubai International Airport",
             "iata_code": "DXB",
-            "country_code": "AE"
+            "country_code": "AE",
+            "coordinates": {
+              "latitude": 25.2532,
+              "longitude": 55.3657
+            }
           },
           "destination": {
             "city": "Bangalore",
             "airport": "Kempegowda International Airport",
             "iata_code": "BLR",
-            "country_code": "IN"
+            "country_code": "IN",
+            "coordinates": {
+              "latitude": 13.1986,
+              "longitude": 77.7066
+            }
           },
           "departureTime": "08:15",
           "arrivalTime": "13:45",
@@ -1361,24 +1417,32 @@
     "JFK-BLR": {
       "onward": [
         {
-          "id": "AI103",
+          "id": "AI105",
           "airline": "Air India",
-          "flightNumber": "AI103",
+          "flightNumber": "AI105",
           "aircraft": "Boeing 777-300ER",
           "origin": {
             "city": "New York",
             "airport": "John F. Kennedy International Airport",
             "iata_code": "JFK",
-            "country_code": "US"
+            "country_code": "US",
+            "coordinates": {
+              "latitude": 40.6413,
+              "longitude": -73.7781
+            }
           },
           "destination": {
             "city": "Bangalore",
             "airport": "Kempegowda International Airport",
             "iata_code": "BLR",
-            "country_code": "IN"
+            "country_code": "IN",
+            "coordinates": {
+              "latitude": 13.1986,
+              "longitude": 77.7066
+            }
           },
           "departureTime": "22:30",
-          "arrivalTime": "23:45",
+          "arrivalTime": "06:45",
           "duration": "15h 15m",
           "stops": 0,
           "price": {
@@ -1397,21 +1461,539 @@
       ],
       "return": [
         {
-          "id": "AI104",
+          "id": "AI106",
           "airline": "Air India",
-          "flightNumber": "AI104",
+          "flightNumber": "AI106",
           "aircraft": "Boeing 777-300ER",
           "origin": {
+            "city": "New York",
+            "airport": "John F. Kennedy International Airport",
+            "iata_code": "JFK",
+            "country_code": "US",
+            "coordinates": {
+              "latitude": 40.6413,
+              "longitude": -73.7781
+            }
+          },
+          "destination": {
             "city": "Bangalore",
             "airport": "Kempegowda International Airport",
             "iata_code": "BLR",
-            "country_code": "IN"
+            "country_code": "IN",
+            "coordinates": {
+              "latitude": 13.1986,
+              "longitude": 77.7066
+            }
+          },
+          "departureTime": "01:30",
+          "arrivalTime": "06:45",
+          "duration": "15h 15m",
+          "stops": 0,
+          "price": {
+            "amount": 85000,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "business", "first"],
+          "mealOptions": ["vegetarian", "non_vegetarian", "special_meal"],
+          "availableSeats": {
+            "economy": 250,
+            "business": 35,
+            "first": 8
+          },
+          "operatingDays": ["Daily"]
+        }
+      ]
+    },
+    "LHR-EDI": {
+      "onward": [
+        {
+          "id": "BA1401",
+          "airline": "British Airways",
+          "flightNumber": "BA1401",
+          "aircraft": "Airbus A320",
+          "origin": {
+            "city": "London",
+            "airport": "Heathrow Airport",
+            "iata_code": "LHR",
+            "country_code": "GB"
+          },
+          "destination": {
+            "city": "Edinburgh",
+            "airport": "Edinburgh Airport",
+            "iata_code": "EDI",
+            "country_code": "GB"
+          },
+          "departureTime": "07:00",
+          "arrivalTime": "08:30",
+          "duration": "1h 30m",
+          "stops": 0,
+          "price": {
+            "amount": 120,
+            "currency": "GBP"
+          },
+          "cabinClasses": ["economy", "business"],
+          "mealOptions": ["vegetarian", "non_vegetarian"],
+          "availableSeats": {
+            "economy": 150,
+            "business": 20
+          },
+          "operatingDays": ["Daily"]
+        }
+      ],
+      "return": [
+        {
+          "id": "BA1402",
+          "airline": "British Airways",
+          "flightNumber": "BA1402",
+          "aircraft": "Airbus A320",
+          "origin": {
+            "city": "Edinburgh",
+            "airport": "Edinburgh Airport",
+            "iata_code": "EDI",
+            "country_code": "GB"
+          },
+          "destination": {
+            "city": "London",
+            "airport": "Heathrow Airport",
+            "iata_code": "LHR",
+            "country_code": "GB"
+          },
+          "departureTime": "18:00",
+          "arrivalTime": "19:30",
+          "duration": "1h 30m",
+          "stops": 0,
+          "price": {
+            "amount": 120,
+            "currency": "GBP"
+          },
+          "cabinClasses": ["economy", "business"],
+          "mealOptions": ["vegetarian", "non_vegetarian"],
+          "availableSeats": {
+            "economy": 150,
+            "business": 20
+          },
+          "operatingDays": ["Daily"]
+        }
+      ]
+    },
+    "LHR-CDG": {
+      "onward": [
+        {
+          "id": "BA302",
+          "airline": "British Airways",
+          "flightNumber": "BA302",
+          "aircraft": "Airbus A320",
+          "origin": {
+            "city": "London",
+            "airport": "Heathrow Airport",
+            "iata_code": "LHR",
+            "country_code": "GB"
+          },
+          "destination": {
+            "city": "Paris",
+            "airport": "Charles de Gaulle Airport",
+            "iata_code": "CDG",
+            "country_code": "FR"
+          },
+          "departureTime": "08:00",
+          "arrivalTime": "10:15",
+          "duration": "1h 15m",
+          "stops": 0,
+          "price": {
+            "amount": 150,
+            "currency": "GBP"
+          },
+          "cabinClasses": ["economy", "business"],
+          "mealOptions": ["vegetarian", "non_vegetarian"],
+          "availableSeats": {
+            "economy": 150,
+            "business": 20
+          },
+          "operatingDays": ["Daily"]
+        }
+      ],
+      "return": [
+        {
+          "id": "BA303",
+          "airline": "British Airways",
+          "flightNumber": "BA303",
+          "aircraft": "Airbus A320",
+          "origin": {
+            "city": "Paris",
+            "airport": "Charles de Gaulle Airport",
+            "iata_code": "CDG",
+            "country_code": "FR"
+          },
+          "destination": {
+            "city": "London",
+            "airport": "Heathrow Airport",
+            "iata_code": "LHR",
+            "country_code": "GB"
+          },
+          "departureTime": "19:00",
+          "arrivalTime": "19:15",
+          "duration": "1h 15m",
+          "stops": 0,
+          "price": {
+            "amount": 150,
+            "currency": "GBP"
+          },
+          "cabinClasses": ["economy", "business"],
+          "mealOptions": ["vegetarian", "non_vegetarian"],
+          "availableSeats": {
+            "economy": 150,
+            "business": 20
+          },
+          "operatingDays": ["Daily"]
+        }
+      ]
+    },
+    "LHR-JFK": {
+      "onward": [
+        {
+          "id": "BA178",
+          "airline": "British Airways",
+          "flightNumber": "BA178",
+          "aircraft": "Boeing 777-300ER",
+          "origin": {
+            "city": "London",
+            "airport": "Heathrow Airport",
+            "iata_code": "LHR",
+            "country_code": "GB",
+            "coordinates": {
+              "latitude": 51.4700,
+              "longitude": -0.4543
+            }
           },
           "destination": {
             "city": "New York",
             "airport": "John F. Kennedy International Airport",
             "iata_code": "JFK",
-            "country_code": "US"
+            "country_code": "US",
+            "coordinates": {
+              "latitude": 40.6413,
+              "longitude": -73.7781
+            }
+          },
+          "departureTime": "10:00",
+          "arrivalTime": "13:00",
+          "duration": "7h 00m",
+          "stops": 0,
+          "price": {
+            "amount": 450,
+            "currency": "GBP"
+          },
+          "cabinClasses": ["economy", "premium_economy", "business", "first"],
+          "mealOptions": ["vegetarian", "non_vegetarian"],
+          "availableSeats": {
+            "economy": 200,
+            "premium_economy": 50,
+            "business": 40,
+            "first": 14
+          },
+          "operatingDays": ["Daily"]
+        }
+      ],
+      "return": [
+        {
+          "id": "BA179",
+          "airline": "British Airways",
+          "flightNumber": "BA179",
+          "aircraft": "Boeing 777-300ER",
+          "origin": {
+            "city": "New York",
+            "airport": "John F. Kennedy International Airport",
+            "iata_code": "JFK",
+            "country_code": "US",
+            "coordinates": {
+              "latitude": 40.6413,
+              "longitude": -73.7781
+            }
+          },
+          "destination": {
+            "city": "London",
+            "airport": "Heathrow Airport",
+            "iata_code": "LHR",
+            "country_code": "GB",
+            "coordinates": {
+              "latitude": 51.4700,
+              "longitude": -0.4543
+            }
+          },
+          "departureTime": "20:00",
+          "arrivalTime": "08:00",
+          "duration": "7h 00m",
+          "stops": 0,
+          "price": {
+            "amount": 450,
+            "currency": "GBP"
+          },
+          "cabinClasses": ["economy", "premium_economy", "business", "first"],
+          "mealOptions": ["vegetarian", "non_vegetarian"],
+          "availableSeats": {
+            "economy": 200,
+            "premium_economy": 50,
+            "business": 40,
+            "first": 14
+          },
+          "operatingDays": ["Daily"]
+        }
+      ]
+    },
+    "LHR-SIN": {
+      "onward": [
+        {
+          "id": "SQ301",
+          "airline": "Singapore Airlines",
+          "flightNumber": "SQ301",
+          "aircraft": "Boeing 777-300ER",
+          "origin": {
+            "city": "London",
+            "airport": "Heathrow Airport",
+            "iata_code": "LHR",
+            "country_code": "GB",
+            "coordinates": {
+              "latitude": 51.4700,
+              "longitude": -0.4543
+            }
+          },
+          "destination": {
+            "city": "Singapore",
+            "airport": "Changi Airport",
+            "iata_code": "SIN",
+            "country_code": "SG",
+            "coordinates": {
+              "latitude": 1.3644,
+              "longitude": 103.9915
+            }
+          },
+          "departureTime": "22:00",
+          "arrivalTime": "17:00",
+          "duration": "13h 00m",
+          "stops": 0,
+          "price": {
+            "amount": 750,
+            "currency": "GBP"
+          },
+          "cabinClasses": ["economy", "premium_economy", "business", "first"],
+          "mealOptions": ["vegetarian", "non_vegetarian"],
+          "availableSeats": {
+            "economy": 200,
+            "premium_economy": 50,
+            "business": 40,
+            "first": 14
+          },
+          "operatingDays": ["Daily"]
+        }
+      ],
+      "return": [
+        {
+          "id": "SQ302",
+          "airline": "Singapore Airlines",
+          "flightNumber": "SQ302",
+          "aircraft": "Boeing 777-300ER",
+          "origin": {
+            "city": "Singapore",
+            "airport": "Changi Airport",
+            "iata_code": "SIN",
+            "country_code": "SG",
+            "coordinates": {
+              "latitude": 1.3644,
+              "longitude": 103.9915
+            }
+          },
+          "destination": {
+            "city": "London",
+            "airport": "Heathrow Airport",
+            "iata_code": "LHR",
+            "country_code": "GB",
+            "coordinates": {
+              "latitude": 51.4700,
+              "longitude": -0.4543
+            }
+          },
+          "departureTime": "23:00",
+          "arrivalTime": "05:00",
+          "duration": "13h 00m",
+          "stops": 0,
+          "price": {
+            "amount": 750,
+            "currency": "GBP"
+          },
+          "cabinClasses": ["economy", "premium_economy", "business", "first"],
+          "mealOptions": ["vegetarian", "non_vegetarian"],
+          "availableSeats": {
+            "economy": 200,
+            "premium_economy": 50,
+            "business": 40,
+            "first": 14
+          },
+          "operatingDays": ["Daily"]
+        }
+      ]
+    },
+    "LHR-DXB": {
+      "onward": [
+        {
+          "id": "EK201",
+          "airline": "Emirates",
+          "flightNumber": "EK201",
+          "aircraft": "Boeing 777-300ER",
+          "origin": {
+            "city": "London",
+            "airport": "Heathrow Airport",
+            "iata_code": "LHR",
+            "country_code": "GB",
+            "coordinates": {
+              "latitude": 51.4700,
+              "longitude": -0.4543
+            }
+          },
+          "destination": {
+            "city": "Dubai",
+            "airport": "Dubai International Airport",
+            "iata_code": "DXB",
+            "country_code": "AE",
+            "coordinates": {
+              "latitude": 25.2532,
+              "longitude": 55.3657
+            }
+          },
+          "departureTime": "14:00",
+          "arrivalTime": "00:30",
+          "duration": "6h 30m",
+          "stops": 0,
+          "price": {
+            "amount": 400,
+            "currency": "GBP"
+          },
+          "cabinClasses": ["economy", "premium_economy", "business", "first"],
+          "mealOptions": ["vegetarian", "non_vegetarian"],
+          "availableSeats": {
+            "economy": 200,
+            "premium_economy": 50,
+            "business": 40,
+            "first": 14
+          },
+          "operatingDays": ["Daily"]
+        }
+      ],
+      "return": [
+        {
+          "id": "EK202",
+          "airline": "Emirates",
+          "flightNumber": "EK202",
+          "aircraft": "Boeing 777-300ER",
+          "origin": {
+            "city": "Dubai",
+            "airport": "Dubai International Airport",
+            "iata_code": "DXB",
+            "country_code": "AE",
+            "coordinates": {
+              "latitude": 25.2532,
+              "longitude": 55.3657
+            }
+          },
+          "destination": {
+            "city": "London",
+            "airport": "Heathrow Airport",
+            "iata_code": "LHR",
+            "country_code": "GB",
+            "coordinates": {
+              "latitude": 51.4700,
+              "longitude": -0.4543
+            }
+          },
+          "departureTime": "02:00",
+          "arrivalTime": "06:30",
+          "duration": "6h 30m",
+          "stops": 0,
+          "price": {
+            "amount": 400,
+            "currency": "GBP"
+          },
+          "cabinClasses": ["economy", "premium_economy", "business", "first"],
+          "mealOptions": ["vegetarian", "non_vegetarian"],
+          "availableSeats": {
+            "economy": 200,
+            "premium_economy": 50,
+            "business": 40,
+            "first": 14
+          },
+          "operatingDays": ["Daily"]
+        }
+      ]
+    },
+    "BLR-JFK": {
+      "onward": [
+        {
+          "id": "AI105",
+          "airline": "Air India",
+          "flightNumber": "AI105",
+          "aircraft": "Boeing 777-300ER",
+          "origin": {
+            "city": "Bangalore",
+            "airport": "Kempegowda International Airport",
+            "iata_code": "BLR",
+            "country_code": "IN",
+            "coordinates": {
+              "latitude": 13.1986,
+              "longitude": 77.7066
+            }
+          },
+          "destination": {
+            "city": "New York",
+            "airport": "John F. Kennedy International Airport",
+            "iata_code": "JFK",
+            "country_code": "US",
+            "coordinates": {
+              "latitude": 40.6413,
+              "longitude": -73.7781
+            }
+          },
+          "departureTime": "22:30",
+          "arrivalTime": "06:45",
+          "duration": "15h 15m",
+          "stops": 0,
+          "price": {
+            "amount": 85000,
+            "currency": "INR"
+          },
+          "cabinClasses": ["economy", "business", "first"],
+          "mealOptions": ["vegetarian", "non_vegetarian", "special_meal"],
+          "availableSeats": {
+            "economy": 250,
+            "business": 35,
+            "first": 8
+          },
+          "operatingDays": ["Daily"]
+        }
+      ],
+      "return": [
+        {
+          "id": "AI106",
+          "airline": "Air India",
+          "flightNumber": "AI106",
+          "aircraft": "Boeing 777-300ER",
+          "origin": {
+            "city": "New York",
+            "airport": "John F. Kennedy International Airport",
+            "iata_code": "JFK",
+            "country_code": "US",
+            "coordinates": {
+              "latitude": 40.6413,
+              "longitude": -73.7781
+            }
+          },
+          "destination": {
+            "city": "Bangalore",
+            "airport": "Kempegowda International Airport",
+            "iata_code": "BLR",
+            "country_code": "IN",
+            "coordinates": {
+              "latitude": 13.1986,
+              "longitude": 77.7066
+            }
           },
           "departureTime": "01:30",
           "arrivalTime": "06:45",

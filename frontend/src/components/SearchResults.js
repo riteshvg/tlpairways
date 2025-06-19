@@ -24,7 +24,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import flightRoutes from '../data/flight_routes.json';
 import FlightDetailsModal from './FlightDetailsModal';
 import analytics from '../services/analytics';
-import withAnalytics from './withAnalytics';
 
 const SearchResults = () => {
   const location = useLocation();
@@ -47,14 +46,14 @@ const SearchResults = () => {
   useEffect(() => {
     try {
       if (location.state) {
-        const {
-          originCode,
-          destinationCode,
-          date,
-          returnDate,
-          passengers,
-          paymentType,
-          tripType,
+  const {
+    originCode,
+    destinationCode,
+    date,
+    returnDate,
+    passengers,
+    paymentType,
+    tripType,
           cabinClass,
           previousPage
         } = location.state;
@@ -106,12 +105,12 @@ const SearchResults = () => {
         .map(flight => {
           // Calculate prices for different cabin classes
           const basePrice = flight.price.amount;
-          let prices = {
-            economy: basePrice,
-            premium_economy: Math.round(basePrice * 1.3),
-            business: Math.round(basePrice * 1.7),
-            first: Math.round(basePrice * 2.2)
-          };
+      let prices = {
+        economy: basePrice,
+        premium_economy: Math.round(basePrice * 1.3),
+        business: Math.round(basePrice * 1.7),
+        first: Math.round(basePrice * 2.2)
+      };
 
           // Filter available classes based on flight's cabinClasses
           const availableClasses = flight.cabinClasses;
@@ -133,17 +132,17 @@ const SearchResults = () => {
           // If arrival time is before departure time, it means the flight arrives the next day
           if (arrivalTime < departureTime) {
             arrivalTime.setDate(arrivalTime.getDate() + 1);
-          }
+      }
 
-          return {
-            ...flight,
+      return {
+        ...flight,
             departureTime,
             arrivalTime,
-            prices,
-            availableClasses,
-            currentPrice: prices[cabinClass] || basePrice
-          };
-        });
+        prices,
+        availableClasses,
+        currentPrice: prices[cabinClass] || basePrice
+      };
+    });
     } catch (err) {
       console.error('Error getting matching flights:', err);
       return [];
@@ -346,57 +345,57 @@ const SearchResults = () => {
     });
 
     return (
-      <Card 
+          <Card 
         key={flight.flightNumber} 
-        sx={{ 
+            sx={{ 
           mb: 2, 
           border: isSelected ? '2px solid #1976d2' : '1px solid #e0e0e0',
-          '&:hover': {
+              '&:hover': { 
             boxShadow: 3
           }
-        }}
-      >
-        <CardContent>
+            }}
+          >
+            <CardContent>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={4}>
               <Typography variant="h6">{flight.airline}</Typography>
               <Typography variant="body2" color="textSecondary">
-                {flight.flightNumber}
-              </Typography>
+                    {flight.flightNumber}
+                  </Typography>
               <Typography variant="body2">
                 {format(flight.departureTime, 'HH:mm')} - {format(flight.arrivalTime, 'HH:mm')}
-              </Typography>
-            </Grid>
+                    </Typography>
+                </Grid>
             <Grid item xs={12} sm={4}>
               <Typography variant="body1">
                 {flight.origin.iata_code} → {flight.destination.iata_code}
-              </Typography>
+                    </Typography>
               <Typography variant="body2" color="textSecondary">
                 {format(flight.departureTime, 'MMM dd, yyyy')}
-              </Typography>
+                    </Typography>
               <Typography variant="body2">
                 {flight.aircraft}
-              </Typography>
-            </Grid>
+                    </Typography>
+                </Grid>
             <Grid item xs={12} sm={4}>
               <Typography variant="h6" color="primary">
                 ₹{price.toLocaleString()}
-              </Typography>
+                    </Typography>
               <Typography variant="body2" color="textSecondary">
                 {searchParams.cabinClass.charAt(0).toUpperCase() + searchParams.cabinClass.slice(1)}
-              </Typography>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => handleSelectFlight(flight, isReturn ? 'return' : 'onward')}
+                    </Typography>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handleSelectFlight(flight, isReturn ? 'return' : 'onward')}
                 sx={{ mt: 1 }}
-              >
+                      >
                 {isSelected ? 'Selected' : 'Select'}
-              </Button>
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
+                      </Button>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
     );
   };
 
@@ -421,7 +420,7 @@ const SearchResults = () => {
           New Search
         </Button>
       </Container>
-    );
+  );
   }
 
   return (
@@ -432,22 +431,22 @@ const SearchResults = () => {
         </Typography>
         <Typography variant="body1" gutterBottom>
           {searchParams.originCode} → {searchParams.destinationCode}
-        </Typography>
+          </Typography>
         <Typography variant="body2" color="textSecondary">
           {format(searchParams.date, 'MMM dd, yyyy')}
           {searchParams.returnDate && ` - ${format(searchParams.returnDate, 'MMM dd, yyyy')}`}
-        </Typography>
+          </Typography>
         <Typography variant="body2" color="textSecondary">
           {searchParams.tripType === 'roundtrip' ? 'Round Trip' : 'One Way'} • {searchParams.passengers} {searchParams.passengers === 1 ? 'Passenger' : 'Passengers'}
-        </Typography>
-      </Paper>
+          </Typography>
+        </Paper>
 
       <Grid container spacing={4}>
         <Grid item xs={12} md={8}>
           <Typography variant="h6" gutterBottom>
             Onward Flights
           </Typography>
-          {onwardFlights.length > 0 ? (
+        {onwardFlights.length > 0 ? (
             renderFlightList(onwardFlights)
           ) : (
             <Typography>No flights found for the selected criteria.</Typography>
@@ -486,9 +485,9 @@ const SearchResults = () => {
                 </Typography>
                 <Typography>
                   Cabin Class: {searchParams.cabinClass}
-                </Typography>
+                    </Typography>
               </Box>
-            )}
+                  )}
 
             {selectedReturnFlight && (
               <Box sx={{ mb: 2 }}>
@@ -508,16 +507,16 @@ const SearchResults = () => {
               </Box>
             )}
 
-            <Button
-              variant="contained"
-              color="primary"
+                <Button
+                  variant="contained"
+                  color="primary"
               fullWidth
               onClick={handleProceedToTravellerDetails}
               disabled={!selectedOnwardFlight || (searchParams.tripType === 'roundtrip' && !selectedReturnFlight)}
               sx={{ mt: 2 }}
-            >
+                >
               Continue to Traveller Details
-            </Button>
+                </Button>
           </Paper>
         </Grid>
       </Grid>
@@ -540,8 +539,8 @@ const SearchResults = () => {
         </DialogTitle>
         <DialogContent>
           {selectedFlight && (
-            <FlightDetailsModal
-              flight={selectedFlight}
+      <FlightDetailsModal
+        flight={selectedFlight}
               cabinClass={searchParams.cabinClass}
             />
           )}
@@ -567,9 +566,9 @@ const SearchResults = () => {
         <DialogContent>
           {selectedReturnFlight && (
             <FlightDetailsModal
-              flight={selectedReturnFlight}
+        flight={selectedReturnFlight}
               cabinClass={searchParams.cabinClass}
-            />
+      />
           )}
         </DialogContent>
       </Dialog>
@@ -577,4 +576,4 @@ const SearchResults = () => {
   );
 };
 
-export default withAnalytics(SearchResults, 'Search Results'); 
+export default SearchResults; 

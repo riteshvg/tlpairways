@@ -21,11 +21,16 @@ import {
   ListItemText,
   ListItemIcon,
   Chip,
+  Tooltip,
 } from '@mui/material';
 import { format, parseISO, isValid } from 'date-fns';
 import DownloadIcon from '@mui/icons-material/Download';
 import PrintIcon from '@mui/icons-material/Print';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import EventSeatIcon from '@mui/icons-material/EventSeat';
+import LuggageIcon from '@mui/icons-material/Luggage';
+import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
+import LocalAirportIcon from '@mui/icons-material/LocalAirport';
 import analytics from '../services/analytics';
 
 const BookingConfirmation = () => {
@@ -240,11 +245,76 @@ const BookingConfirmation = () => {
 
     // Track booking confirmation
     try {
+      // Debug logs for flight data
+      console.log('Original flight data:', selectedFlights);
+      console.log('Onward flight origin:', selectedFlights.onward.origin);
+      console.log('Onward flight destination:', selectedFlights.onward.destination);
+
+      // Ensure flight data includes coordinates
+      const flightsWithCoordinates = {
+        onward: {
+          ...selectedFlights.onward,
+          origin: {
+            ...selectedFlights.onward.origin,
+            coordinates: {
+              latitude: parseFloat(selectedFlights.onward.origin.coordinates?.latitude) || 0,
+              longitude: parseFloat(selectedFlights.onward.origin.coordinates?.longitude) || 0
+            }
+          },
+          destination: {
+            ...selectedFlights.onward.destination,
+            coordinates: {
+              latitude: parseFloat(selectedFlights.onward.destination.coordinates?.latitude) || 0,
+              longitude: parseFloat(selectedFlights.onward.destination.coordinates?.longitude) || 0
+            }
+          }
+        }
+      };
+
+      // Add return flight coordinates if it exists
+      if (selectedFlights.return) {
+        flightsWithCoordinates.return = {
+          ...selectedFlights.return,
+          origin: {
+            ...selectedFlights.return.origin,
+            coordinates: {
+              latitude: parseFloat(selectedFlights.return.origin.coordinates?.latitude) || 0,
+              longitude: parseFloat(selectedFlights.return.origin.coordinates?.longitude) || 0
+            }
+          },
+          destination: {
+            ...selectedFlights.return.destination,
+            coordinates: {
+              latitude: parseFloat(selectedFlights.return.destination.coordinates?.latitude) || 0,
+              longitude: parseFloat(selectedFlights.return.destination.coordinates?.longitude) || 0
+            }
+          }
+        };
+      }
+
+      // Debug logs for processed flight data
+      console.log('Processed flight data with coordinates:', flightsWithCoordinates);
+      console.log('Onward flight coordinates:', {
+        origin: flightsWithCoordinates.onward.origin.coordinates,
+        destination: flightsWithCoordinates.onward.destination.coordinates
+      });
+      if (flightsWithCoordinates.return) {
+        console.log('Return flight coordinates:', {
+          origin: flightsWithCoordinates.return.origin.coordinates,
+          destination: flightsWithCoordinates.return.destination.coordinates
+        });
+      }
+
       analytics.bookingConfirmed({
-        flights: selectedFlights,
+        flights: flightsWithCoordinates,
         passengers: travellerDetails,
         services: selectedServices,
-        payment: paymentDetails,
+        payment: {
+          method: paymentDetails?.method || 'cash',
+          amount: calculateFeeBreakdown().total,
+          currency: 'INR',
+          status: 'completed'
+        },
         totalPrice: calculateFeeBreakdown().total,
         pnr,
         tickets: {
@@ -254,7 +324,7 @@ const BookingConfirmation = () => {
       });
     } catch (error) {
       console.error('Error tracking booking confirmation:', error);
-        }
+    }
   }, [selectedFlights, tripType, passengers, selectedServices, navigate, pnr, onwardTicket, returnTicket, paymentDetails, location.state]);
 
   // Helper function to calculate seat price
@@ -327,29 +397,18 @@ const BookingConfirmation = () => {
   const renderAncillaryServices = () => {
     if (!selectedServices) return null;
 
-    const renderServiceItem = (title, items, price) => (
-      <Box sx={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center',
-        p: 2,
-        mb: 1,
-        bgcolor: 'background.paper',
-        borderRadius: 1,
-        boxShadow: 1
-      }}>
-        <Box>
-          <Typography variant="subtitle1">{title}</Typography>
-          {items && items.length > 0 && (
-            <Typography variant="body2" color="text.secondary">
-              {items.join(', ')}
-            </Typography>
-          )}
-        </Box>
-        <Typography variant="subtitle1" color="primary">
-          ₹{price}
-        </Typography>
-      </Box>
+    const renderServiceChip = (icon, label, price, tooltip) => (
+      <Tooltip title={tooltip} arrow>
+        <Chip
+          icon={icon}
+          label={`${label} - ₹${price}`}
+          sx={{
+            m: 0.5,
+            '& .MuiChip-icon': { color: 'primary.main' },
+            '& .MuiChip-label': { fontWeight: 'medium' }
+          }}
+        />
+      </Tooltip>
     );
 
     const calculateSeatPrice = (seat) => {
@@ -371,58 +430,94 @@ const BookingConfirmation = () => {
         <Typography variant="h6" gutterBottom>
           Additional Services
         </Typography>
-        {selectedServices.onward?.seat?.length > 0 && renderServiceItem(
-          'Onward Flight Seats',
-          selectedServices.onward.seat,
-          selectedServices.onward.seat.reduce((total, seat) => total + calculateSeatPrice(seat), 0)
-        )}
-        {selectedServices.return?.seat?.length > 0 && renderServiceItem(
-          'Return Flight Seats',
-          selectedServices.return.seat,
-          selectedServices.return.seat.reduce((total, seat) => total + calculateSeatPrice(seat), 0)
-        )}
-        {selectedServices.onward?.baggage?.length > 0 && renderServiceItem(
-          'Onward Flight Baggage',
-          selectedServices.onward.baggage.filter(b => b && b !== 'included'),
-          selectedServices.onward.baggage.reduce((total, baggage) => {
-            if (baggage && baggage !== 'included') {
-              const isInternational = selectedFlights?.onward?.origin?.iata_code !== selectedFlights?.onward?.destination?.iata_code;
-              return total + (isInternational ? 2000 : 1000);
-            }
-            return total;
-          }, 0)
-        )}
-        {selectedServices.return?.baggage?.length > 0 && renderServiceItem(
-          'Return Flight Baggage',
-          selectedServices.return.baggage.filter(b => b && b !== 'included'),
-          selectedServices.return.baggage.reduce((total, baggage) => {
-            if (baggage && baggage !== 'included') {
-              const isInternational = selectedFlights?.return?.origin?.iata_code !== selectedFlights?.return?.destination?.iata_code;
-              return total + (isInternational ? 2000 : 1000);
-            }
-            return total;
-          }, 0)
-        )}
-        {selectedServices.onward?.priorityBoarding?.length > 0 && renderServiceItem(
-          'Onward Flight Priority Boarding',
-          ['Priority Boarding'],
-          selectedServices.onward.priorityBoarding.filter(Boolean).length * 500
-        )}
-        {selectedServices.return?.priorityBoarding?.length > 0 && renderServiceItem(
-          'Return Flight Priority Boarding',
-          ['Priority Boarding'],
-          selectedServices.return.priorityBoarding.filter(Boolean).length * 500
-        )}
-        {selectedServices.onward?.loungeAccess?.length > 0 && renderServiceItem(
-          'Onward Flight Lounge Access',
-          ['Lounge Access'],
-          selectedServices.onward.loungeAccess.filter(Boolean).length * 1500
-        )}
-        {selectedServices.return?.loungeAccess?.length > 0 && renderServiceItem(
-          'Return Flight Lounge Access',
-          ['Lounge Access'],
-          selectedServices.return.loungeAccess.filter(Boolean).length * 1500
-        )}
+        <Box sx={{ 
+          p: 2, 
+          bgcolor: 'background.paper', 
+          borderRadius: 1,
+          boxShadow: 1
+        }}>
+          <Grid container spacing={2}>
+            {/* Onward Flight Services */}
+            <Grid item xs={12}>
+              <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                Onward Flight
+              </Typography>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                {selectedServices.onward?.seat?.length > 0 && renderServiceChip(
+                  <EventSeatIcon />,
+                  'Seats',
+                  selectedServices.onward.seat.reduce((total, seat) => total + calculateSeatPrice(seat), 0),
+                  `Selected seats: ${selectedServices.onward.seat.join(', ')}`
+                )}
+                {selectedServices.onward?.baggage?.length > 0 && renderServiceChip(
+                  <LuggageIcon />,
+                  'Baggage',
+                  selectedServices.onward.baggage.reduce((total, baggage) => {
+                    if (baggage && baggage !== 'included') {
+                      const isInternational = selectedFlights?.onward?.origin?.iata_code !== selectedFlights?.onward?.destination?.iata_code;
+                      return total + (isInternational ? 2000 : 1000);
+                    }
+                    return total;
+                  }, 0),
+                  `Selected baggage: ${selectedServices.onward.baggage.filter(b => b && b !== 'included').join(', ')}`
+                )}
+                {selectedServices.onward?.priorityBoarding?.length > 0 && renderServiceChip(
+                  <PriorityHighIcon />,
+                  'Priority',
+                  selectedServices.onward.priorityBoarding.filter(Boolean).length * 500,
+                  'Priority Boarding'
+                )}
+                {selectedServices.onward?.loungeAccess?.length > 0 && renderServiceChip(
+                  <LocalAirportIcon />,
+                  'Lounge',
+                  selectedServices.onward.loungeAccess.filter(Boolean).length * 1500,
+                  'Lounge Access'
+                )}
+              </Box>
+            </Grid>
+
+            {/* Return Flight Services */}
+            {selectedServices.return && (
+              <Grid item xs={12}>
+                <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                  Return Flight
+                </Typography>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                  {selectedServices.return?.seat?.length > 0 && renderServiceChip(
+                    <EventSeatIcon />,
+                    'Seats',
+                    selectedServices.return.seat.reduce((total, seat) => total + calculateSeatPrice(seat), 0),
+                    `Selected seats: ${selectedServices.return.seat.join(', ')}`
+                  )}
+                  {selectedServices.return?.baggage?.length > 0 && renderServiceChip(
+                    <LuggageIcon />,
+                    'Baggage',
+                    selectedServices.return.baggage.reduce((total, baggage) => {
+                      if (baggage && baggage !== 'included') {
+                        const isInternational = selectedFlights?.return?.origin?.iata_code !== selectedFlights?.return?.destination?.iata_code;
+                        return total + (isInternational ? 2000 : 1000);
+                      }
+                      return total;
+                    }, 0),
+                    `Selected baggage: ${selectedServices.return.baggage.filter(b => b && b !== 'included').join(', ')}`
+                  )}
+                  {selectedServices.return?.priorityBoarding?.length > 0 && renderServiceChip(
+                    <PriorityHighIcon />,
+                    'Priority',
+                    selectedServices.return.priorityBoarding.filter(Boolean).length * 500,
+                    'Priority Boarding'
+                  )}
+                  {selectedServices.return?.loungeAccess?.length > 0 && renderServiceChip(
+                    <LocalAirportIcon />,
+                    'Lounge',
+                    selectedServices.return.loungeAccess.filter(Boolean).length * 1500,
+                    'Lounge Access'
+                  )}
+                </Box>
+              </Grid>
+            )}
+          </Grid>
+        </Box>
       </Box>
     );
   };

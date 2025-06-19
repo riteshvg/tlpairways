@@ -15,6 +15,7 @@ import analytics from './services/analytics';
 
 // Page View Tracker Component
 function PageViewTracker() {
+  console.log('PageViewTracker component rendered');
   const location = useLocation();
 
   useEffect(() => {
@@ -24,6 +25,7 @@ function PageViewTracker() {
         location.pathname.split('/').pop().split('-').map(word => 
           word.charAt(0).toUpperCase() + word.slice(1)
         ).join(' ');
+      console.log('PageViewTracker fired', location.pathname);
       analytics.pageView(pageName);
     }
   }, [location]);

@@ -1,12 +1,66 @@
-// Initialize the data layer
-window.adobeDataLayer = window.adobeDataLayer || [];
+// Initialize Adobe Data Collection
+const loadAdobeAnalytics = () => {
+  // Initialize the data layer FIRST
+  window.adobeDataLayer = window.adobeDataLayer || [];
+  console.log('Data layer initialized:', window.adobeDataLayer);
+
+  // Add debug configuration
+  window.satellite = window.satellite || {};
+  window.satellite.debug = true;
+
+ 
+
+  // Add debug logging
+  console.log('Initializing Adobe Analytics with environment:', window.satellite.environment);
+
+  console.log('Loading Adobe Analytics script...');
+  
+  const script = document.createElement('script');
+  script.src = "https://assets.adobedtm.com/01296dd00565/26201e3c8f15/launch-2f8b80d50cb3-development.min.js";
+  script.async = true;
+  
+  // Add error handling
+  script.onerror = (error) => {
+    console.error('Error loading Adobe Analytics script:', error);
+  };
+
+  // Add load success handling
+  script.onload = () => {
+    console.log('Adobe Analytics script loaded successfully');
+    // Verify satellite object
+    if (window._satellite) {
+      console.log('Satellite object initialized:', window._satellite);
+      // Enable debug mode
+      window._satellite.debug = true;
+      // Log available rules
+      console.log('Available rules:', window._satellite.rules);
+    } else {
+      console.error('Satellite object not initialized');
+    }
+  };
+
+  document.head.appendChild(script);
+};
+
+// Load Adobe Analytics when the file is imported
+loadAdobeAnalytics();
 
 // Helper function to push data to data layer
 const pushToDataLayer = (data) => {
-  // Clear previous data layer events
-  window.adobeDataLayer = [];
-  // Push new event
+  // Log the data being pushed
+  console.log('Pushing to data layer:', data);
+  
+  // Push new event while preserving existing data
+  window.adobeDataLayer = window.adobeDataLayer || [];
   window.adobeDataLayer.push(data);
+  
+  // Verify the push
+  console.log('Current data layer state:', window.adobeDataLayer);
+  
+  // Check if rules are available
+  if (window._satellite) {
+    console.log('Available rules after push:', window._satellite.rules);
+  }
 };
 
 // Common page info structure
@@ -57,7 +111,8 @@ const analytics = {
   pageView: (pageName, previousPageName = null) => {
     pushToDataLayer({
       event: 'pageView',
-      ...getPageInfo(pageName, previousPageName)
+      ...getPageInfo(pageName, previousPageName),
+      source: 'react-app'
     });
   },
 
@@ -196,6 +251,27 @@ const analytics = {
       tickets
     } = bookingDetails;
 
+    // Calculate distances
+    const onwardDistance = calculateDistance(flights.onward.origin, flights.onward.destination);
+    const returnDistance = flights.return ? 
+      calculateDistance(flights.return.origin, flights.return.destination) : 0;
+    const totalDistance = onwardDistance + returnDistance;
+
+    // Debug logs for distance calculation
+    console.log('Distance calculation:', {
+      onward: {
+        origin: flights.onward.origin.coordinates,
+        destination: flights.onward.destination.coordinates,
+        distance: onwardDistance
+      },
+      return: flights.return ? {
+        origin: flights.return.origin.coordinates,
+        destination: flights.return.destination.coordinates,
+        distance: returnDistance
+      } : null,
+      total: totalDistance
+    });
+
     // Calculate fee breakdown
     const baseFare = flights?.onward?.price?.amount + (flights?.return?.price?.amount || 0);
     const taxes = Math.round(baseFare * 0.05); // 5% tax
@@ -269,67 +345,37 @@ const analytics = {
     const ancillaryFee = onwardAncillaries.total + returnAncillaries.total;
 
     pushToDataLayer({
-      event: 'bookingConfirmation',
-      page: {
-        pageInfo: {
-          pageName: 'Booking Confirmation',
-          previousPageName: 'Payment',
-          siteSection: 'Booking',
-          server: window.location.hostname,
-          pageType: 'confirmation',
-          pageCategory: 'booking',
-          pageSubCategory: 'confirmation'
+      event: 'bookingConfirmed',
+      ...getPageInfo('Booking Confirmation', 'Payment'),
+      booking: {
+        pnr,
+        tickets,
+        totalPrice,
+        distance: {
+          onward: onwardDistance,
+          return: returnDistance,
+          total: totalDistance
         }
       },
-      ecommerce: {
-        purchase: {
-          purchaseID: pnr,
-          actionField: {
-            id: pnr,
-            revenue: totalPrice,
-            tax: taxes,
-            convenienceFee: convenienceFee,
-            surcharge: surcharge,
-            ancillaryFee: ancillaryFee,
-            baseFare: baseFare,
-            totalPrice: totalPrice,
-            paymentBy: payment?.paymentMethod || 'cash',
-            transactionId: payment?.transactionId || `TXN-${Date.now()}`,
-            currencyCode: 'INR',
-            pnr: pnr,
-            sectorType: flights?.onward?.origin?.country_code !== 'IN' || flights?.onward?.destination?.country_code !== 'IN' ? 'International' : 'Domestic',
-            paymentType: payment?.method || 'cash',
-            cabinClass: flights?.onward?.cabinClass || 'economy'
-          },
-          products: [
-            {
-              name: `${flights?.onward?.origin?.iata_code || ''} to ${flights?.onward?.destination?.iata_code || ''}`,
-              id: flights?.onward?.flightNumber,
-              price: flights?.onward?.price?.amount || 0,
-              brand: flights?.onward?.airline,
-              category: 'Flights/Domestic',
-              quantity: 1,
-              ticketNumber: tickets?.onward,
-              pnr: pnr,
-              paymentType: payment?.method || 'cash',
-              cabinClass: flights?.onward?.cabinClass || 'economy',
-              ancillaryServices: onwardAncillaries.ancillaries
-            },
-            ...(flights?.return ? [{
-              name: `${flights?.return?.origin?.iata_code || ''} to ${flights?.return?.destination?.iata_code || ''}`,
-              id: flights?.return?.flightNumber,
-              price: flights?.return?.price?.amount || 0,
-              brand: flights?.return?.airline,
-              category: 'Flights/Domestic',
-              quantity: 1,
-              ticketNumber: tickets?.return,
-              pnr: pnr,
-              paymentType: payment?.method || 'cash',
-              cabinClass: flights?.return?.cabinClass || 'economy',
-              ancillaryServices: returnAncillaries.ancillaries
-            }] : [])
-          ]
-        }
+      flights: {
+        onward: {
+          ...getFlightInfo(flights.onward),
+          distance: onwardDistance
+        },
+        ...(flights.return && {
+          return: {
+            ...getFlightInfo(flights.return),
+            distance: returnDistance
+          }
+        })
+      },
+      passengers,
+      services: calculateFlightAncillaries(flights, services),
+      payment: {
+        method: payment.method,
+        amount: payment.amount,
+        currency: payment.currency,
+        status: payment.status
       }
     });
   }
@@ -404,6 +450,28 @@ const calculateAncillaryTotal = (services, flights) => {
   });
   
   return total;
+};
+
+// Calculate distance between two points using Haversine formula
+const calculateDistance = (origin, destination) => {
+  if (!origin?.coordinates || !destination?.coordinates) {
+    console.warn('Missing coordinates for distance calculation:', { origin, destination });
+    return 0;
+  }
+
+  const R = 6371; // Earth's radius in kilometers
+  const lat1 = parseFloat(origin.coordinates.latitude) * Math.PI / 180;
+  const lat2 = parseFloat(destination.coordinates.latitude) * Math.PI / 180;
+  const deltaLat = (parseFloat(destination.coordinates.latitude) - parseFloat(origin.coordinates.latitude)) * Math.PI / 180;
+  const deltaLon = (parseFloat(destination.coordinates.longitude) - parseFloat(origin.coordinates.longitude)) * Math.PI / 180;
+
+  const a = Math.sin(deltaLat/2) * Math.sin(deltaLat/2) +
+            Math.cos(lat1) * Math.cos(lat2) *
+            Math.sin(deltaLon/2) * Math.sin(deltaLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  const distance = R * c;
+
+  return Math.round(distance); // Round to nearest kilometer
 };
 
 export default analytics; 
