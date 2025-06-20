@@ -340,6 +340,21 @@ const TravellerDetails = () => {
         }
       }
 
+      // Ensure travellerDetails array matches the number of passengers
+      let filledTravellers = [...travellers];
+      while (filledTravellers.length < (passengers || 1)) {
+        filledTravellers.push({
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          dateOfBirth: '',
+          gender: '',
+          passportNumber: '',
+          nationality: '',
+        });
+      }
+
       const navigationState = {
         selectedFlights: {
           onward: {
@@ -357,15 +372,15 @@ const TravellerDetails = () => {
             cabinClass: selectedFlights.return.cabinClass
           } : null
         },
-      travellerDetails: travellers,
+        travellerDetails: filledTravellers,
         contactInfo: {
           email,
           phone
         },
         paymentType: selectedFlights.return ? 'roundtrip' : 'oneway',
         previousPage: 'Traveller Details'
-    };
-    
+      };
+      
       console.log('Navigating to ancillary services with state:', navigationState);
       console.log('Final price details being passed:', {
         onwardPrice: navigationState.selectedFlights.onward.price.amount,
@@ -375,7 +390,7 @@ const TravellerDetails = () => {
       });
 
       // Navigate to ancillary services page
-    navigate('/ancillary-services', {
+      navigate('/ancillary-services', {
         state: navigationState,
         replace: true
       });
@@ -385,7 +400,7 @@ const TravellerDetails = () => {
         open: true,
         message: 'Error submitting form. Please try again.',
         severity: 'error'
-    });
+      });
     }
   };
 
@@ -445,6 +460,8 @@ const TravellerDetails = () => {
       </CardContent>
     </Card>
   );
+
+  const numPassengers = passengers || travellers.length || 1;
 
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
@@ -639,7 +656,7 @@ const TravellerDetails = () => {
                   </Typography>
                 </Box>
                 <Typography>
-                  ₹{selectedFlights?.onward?.price?.amount?.toLocaleString() || '0'}
+                  ₹{(selectedFlights?.onward?.price?.amount * numPassengers).toLocaleString()} <Typography component="span" variant="body2" color="textSecondary">(₹{selectedFlights?.onward?.price?.amount?.toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography>
                 </Typography>
               </Box>
               {tripType === 'roundtrip' && selectedFlights?.return && (
@@ -654,7 +671,7 @@ const TravellerDetails = () => {
                     </Typography>
                   </Box>
                   <Typography>
-                    ₹{selectedFlights.return.price.amount.toLocaleString()}
+                    ₹{(selectedFlights.return.price.amount * numPassengers).toLocaleString()} <Typography component="span" variant="body2" color="textSecondary">(₹{selectedFlights.return.price.amount?.toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography>
                   </Typography>
                 </Box>
               )}
@@ -662,10 +679,14 @@ const TravellerDetails = () => {
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                 <Typography variant="subtitle1">Total Price</Typography>
                 <Typography variant="subtitle1">
-                  ₹{(
-                    (selectedFlights?.onward?.price?.amount || 0) + 
-                    (tripType === 'roundtrip' && selectedFlights?.return ? (selectedFlights.return.price.amount || 0) : 0)
-                  ).toLocaleString()}
+                  ₹{
+                    ((selectedFlights?.onward?.price?.amount || 0) * numPassengers +
+                    (tripType === 'roundtrip' && selectedFlights?.return ? (selectedFlights.return.price.amount || 0) * numPassengers : 0))
+                    .toLocaleString()
+                  } <Typography component="span" variant="body2" color="textSecondary">(₹{
+                    ((selectedFlights?.onward?.price?.amount || 0) +
+                    (tripType === 'roundtrip' && selectedFlights?.return ? (selectedFlights.return.price.amount || 0) : 0))
+                    .toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography>
                 </Typography>
               </Box>
               <Button

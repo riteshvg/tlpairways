@@ -331,7 +331,9 @@ const SearchResults = () => {
   };
 
   const renderFlightCard = (flight, isReturn = false) => {
-    const price = flight.prices[searchParams.cabinClass] || flight.prices.economy;
+    const pricePerPassenger = flight.prices[searchParams.cabinClass] || flight.prices.economy;
+    const numPassengers = searchParams.passengers || 1;
+    const totalPrice = pricePerPassenger * numPassengers;
     const isSelected = isReturn ? 
       selectedReturnFlight?.flightNumber === flight.flightNumber :
       selectedOnwardFlight?.flightNumber === flight.flightNumber;
@@ -340,7 +342,9 @@ const SearchResults = () => {
       flightNumber: flight.flightNumber,
       isReturn,
       isSelected,
-      price,
+      pricePerPassenger,
+      numPassengers,
+      totalPrice,
       cabinClass: searchParams.cabinClass
     });
 
@@ -379,7 +383,7 @@ const SearchResults = () => {
                 </Grid>
             <Grid item xs={12} sm={4}>
               <Typography variant="h6" color="primary">
-                ₹{price.toLocaleString()}
+                ₹{totalPrice.toLocaleString()} <Typography component="span" variant="body2" color="textSecondary">(₹{pricePerPassenger.toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography>
                     </Typography>
               <Typography variant="body2" color="textSecondary">
                 {searchParams.cabinClass.charAt(0).toUpperCase() + searchParams.cabinClass.slice(1)}
@@ -426,20 +430,50 @@ const SearchResults = () => {
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
       <Paper sx={{ p: 3, mb: 4 }}>
-        <Typography variant="h5" gutterBottom>
-          Flight Search Results
-        </Typography>
-        <Typography variant="body1" gutterBottom>
-          {searchParams.originCode} → {searchParams.destinationCode}
-          </Typography>
-        <Typography variant="body2" color="textSecondary">
-          {format(searchParams.date, 'MMM dd, yyyy')}
-          {searchParams.returnDate && ` - ${format(searchParams.returnDate, 'MMM dd, yyyy')}`}
-          </Typography>
-        <Typography variant="body2" color="textSecondary">
-          {searchParams.tripType === 'roundtrip' ? 'Round Trip' : 'One Way'} • {searchParams.passengers} {searchParams.passengers === 1 ? 'Passenger' : 'Passengers'}
-          </Typography>
-        </Paper>
+        <Grid container alignItems="center" spacing={2}>
+          <Grid item xs={12} md={8}>
+            <Typography variant="h5" gutterBottom>
+              Flight Search Results
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              {searchParams.originCode} → {searchParams.destinationCode}
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              {format(searchParams.date, 'MMM dd, yyyy')}
+              {searchParams.returnDate && ` - ${format(searchParams.returnDate, 'MMM dd, yyyy')}`}
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              {searchParams.tripType === 'roundtrip' ? 'Round Trip' : 'One Way'} • {searchParams.passengers} {searchParams.passengers === 1 ? 'Passenger' : 'Passengers'}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={4} sx={{ position: 'relative', height: { xs: 180, md: 220 }, display: 'flex', alignItems: 'center', justifyContent: { xs: 'center', md: 'flex-end' }, p: 0 }}>
+            <Box
+              sx={{
+                position: 'absolute',
+                top: { xs: 8, md: -32 },
+                right: { xs: 0, md: -32 },
+                width: { xs: '90%', md: 320 },
+                height: { xs: 160, md: 220 },
+                zIndex: 1,
+                borderRadius: { xs: 4, md: '0 22px 22px 0' },
+                overflow: 'hidden',
+                boxShadow: 3,
+                transition: 'transform 0.4s cubic-bezier(0.4,0,0.2,1)',
+                '&:hover': {
+                  transform: 'scale(1.06) rotate(-2deg)',
+                  boxShadow: 6,
+                },
+              }}
+            >
+              <img
+                src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80"
+                alt="Flight summary visual"
+                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+              />
+            </Box>
+          </Grid>
+        </Grid>
+      </Paper>
 
       <Grid container spacing={4}>
         <Grid item xs={12} md={8}>

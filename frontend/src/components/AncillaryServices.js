@@ -1052,6 +1052,9 @@ Price: ₹${seatPrice}`}
 
   const steps = ['Flight Details', 'Ancillary Services', 'Payment'];
 
+  // Find the number of passengers
+  const numPassengers = (location.state?.passengers || travellerDetails?.length || 1);
+
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
       <Stepper activeStep={activeStep} sx={{ mb: 4 }}>
@@ -1100,15 +1103,19 @@ Price: ₹${seatPrice}`}
                 Flight Cost
               </Typography>
               {selectedFlights?.onward?.price && (
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                <Typography>Onward Flight</Typography>
-                  <Typography>₹{selectedFlights.onward.price.amount.toLocaleString()}</Typography>
-              </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                  <Typography>Onward Flight</Typography>
+                  <Typography>
+                    ₹{(selectedFlights.onward.price.amount * numPassengers).toLocaleString()} <Typography component="span" variant="body2" color="textSecondary">(₹{selectedFlights.onward.price.amount.toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography>
+                  </Typography>
+                </Box>
               )}
               {selectedFlights?.return?.price && (
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                   <Typography>Return Flight</Typography>
-                  <Typography>₹{selectedFlights.return.price.amount.toLocaleString()}</Typography>
+                  <Typography>
+                    ₹{(selectedFlights.return.price.amount * numPassengers).toLocaleString()} <Typography component="span" variant="body2" color="textSecondary">(₹{selectedFlights.return.price.amount.toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography>
+                  </Typography>
                 </Box>
               )}
             </Box>
@@ -1138,10 +1145,14 @@ Price: ₹${seatPrice}`}
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
               <Typography variant="subtitle1">Flight Total</Typography>
               <Typography variant="subtitle1">
-                ₹{(
-                  (selectedFlights?.onward?.price?.amount || 0) + 
-                  (selectedFlights?.return?.price?.amount || 0)
-                ).toLocaleString()}
+                ₹{
+                  ((selectedFlights?.onward?.price?.amount || 0) * numPassengers +
+                  (selectedFlights?.return?.price?.amount ? selectedFlights.return.price.amount * numPassengers : 0))
+                  .toLocaleString()
+                } <Typography component="span" variant="body2" color="textSecondary">(₹{
+                  ((selectedFlights?.onward?.price?.amount || 0) +
+                  (selectedFlights?.return?.price?.amount || 0))
+                  .toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography>
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
@@ -1154,11 +1165,12 @@ Price: ₹${seatPrice}`}
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
               <Typography variant="h6">Total Amount</Typography>
               <Typography variant="h6" color="primary">
-                ₹{(
-                  (selectedFlights?.onward?.price?.amount || 0) + 
-                  (selectedFlights?.return?.price?.amount || 0) + 
-                  totalAmount
-                ).toLocaleString()}
+                ₹{
+                  ((selectedFlights?.onward?.price?.amount || 0) * numPassengers +
+                  (selectedFlights?.return?.price?.amount ? selectedFlights.return.price.amount * numPassengers : 0) +
+                  totalAmount)
+                  .toLocaleString()
+                } <Typography component="span" variant="body2" color="textSecondary">(Flight + Ancillary for {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography>
               </Typography>
             </Box>
           </Paper>

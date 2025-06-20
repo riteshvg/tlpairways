@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Container,
@@ -31,7 +31,9 @@ import EventSeatIcon from '@mui/icons-material/EventSeat';
 import LuggageIcon from '@mui/icons-material/Luggage';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import LocalAirportIcon from '@mui/icons-material/LocalAirport';
+import ForestIcon from '@mui/icons-material/Forest';
 import analytics from '../services/analytics';
+import airports from '../data/airports.json';
 
 const BookingConfirmation = () => {
   const location = useLocation();
@@ -42,6 +44,9 @@ const BookingConfirmation = () => {
     return: []
   });
   const [bookingData, setBookingData] = useState(null);
+  const hasFiredBookingConfirmed = useRef(false);
+  const [totalDistance, setTotalDistance] = useState(0);
+  const [treesPlanted, setTreesPlanted] = useState(0);
 
   const {
     selectedFlights,
@@ -51,6 +56,9 @@ const BookingConfirmation = () => {
     selectedServices,
     paymentDetails
   } = location.state || {};
+
+  // Find the number of passengers
+  const numPassengers = (location.state?.passengers || travellerDetails?.length || 1);
 
   // Generate PNR and ticket numbers
   const generatePNR = () => {
@@ -156,7 +164,7 @@ const BookingConfirmation = () => {
 
   // Calculate fee breakdown
   const calculateFeeBreakdown = () => {
-    const baseFare = selectedFlights.onward.price.amount + (selectedFlights.return?.price.amount || 0);
+    const baseFare = (selectedFlights.onward.price.amount * numPassengers) + (selectedFlights.return?.price.amount ? selectedFlights.return.price.amount * numPassengers : 0);
     const taxes = Math.round(baseFare * 0.05); // 5% tax
     const convenienceFee = Math.round(baseFare * 0.02); // 2% convenience fee
     const surcharge = Math.round(baseFare * 0.01); // 1% surcharge
@@ -186,23 +194,23 @@ const BookingConfirmation = () => {
             <TableBody>
               <TableRow>
                 <TableCell>Base Fare</TableCell>
-                <TableCell align="right">₹{fees.baseFare.toLocaleString()}</TableCell>
+                <TableCell align="right">₹{fees.baseFare.toLocaleString()} <Typography component="span" variant="body2" color="textSecondary">(for {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography></TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Taxes</TableCell>
-                <TableCell align="right">₹{fees.taxes.toLocaleString()}</TableCell>
+                <TableCell align="right">₹{fees.taxes.toLocaleString()} <Typography component="span" variant="body2" color="textSecondary">(for {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography></TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Convenience Fee</TableCell>
-                <TableCell align="right">₹{fees.convenienceFee.toLocaleString()}</TableCell>
+                <TableCell align="right">₹{fees.convenienceFee.toLocaleString()} <Typography component="span" variant="body2" color="textSecondary">(for {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography></TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Surcharge</TableCell>
-                <TableCell align="right">₹{fees.surcharge.toLocaleString()}</TableCell>
+                <TableCell align="right">₹{fees.surcharge.toLocaleString()} <Typography component="span" variant="body2" color="textSecondary">(for {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography></TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Ancillary Services</TableCell>
-                <TableCell align="right">₹{fees.ancillaryTotal.toLocaleString()}</TableCell>
+                <TableCell align="right">₹{fees.ancillaryTotal.toLocaleString()} <Typography component="span" variant="body2" color="textSecondary">(for {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography></TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>
@@ -212,7 +220,7 @@ const BookingConfirmation = () => {
                 </TableCell>
                 <TableCell align="right">
                   <Typography variant="subtitle1" fontWeight="bold">
-                    ₹{fees.total.toLocaleString()}
+                    ₹{fees.total.toLocaleString()} <Typography component="span" variant="body2" color="textSecondary">(for {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography>
                   </Typography>
                 </TableCell>
               </TableRow>
@@ -223,7 +231,15 @@ const BookingConfirmation = () => {
     );
   };
 
+  const getAirportWithCoordinates = (iata_code) => {
+    const airport = airports.find(a => a.iata_code === iata_code);
+    if (!airport) return null;
+    return airport.coordinates ? airport.coordinates : null;
+  };
+
   useEffect(() => {
+    if (hasFiredBookingConfirmed.current) return;
+    hasFiredBookingConfirmed.current = true;
     // Log the received state for debugging
     console.log('BookingConfirmation received state:', location.state);
 
@@ -250,45 +266,30 @@ const BookingConfirmation = () => {
       console.log('Onward flight origin:', selectedFlights.onward.origin);
       console.log('Onward flight destination:', selectedFlights.onward.destination);
 
-      // Ensure flight data includes coordinates
+      // Inject coordinates from airports.json if missing
+      const addCoordinatesIfMissing = (airportObj) => {
+        if (airportObj.coordinates && airportObj.coordinates.latitude && airportObj.coordinates.longitude) {
+          return airportObj;
+        }
+        const coords = getAirportWithCoordinates(airportObj.iata_code);
+        if (coords) {
+          return { ...airportObj, coordinates: coords };
+        }
+        return airportObj;
+      };
+
       const flightsWithCoordinates = {
         onward: {
           ...selectedFlights.onward,
-          origin: {
-            ...selectedFlights.onward.origin,
-            coordinates: {
-              latitude: parseFloat(selectedFlights.onward.origin.coordinates?.latitude) || 0,
-              longitude: parseFloat(selectedFlights.onward.origin.coordinates?.longitude) || 0
-            }
-          },
-          destination: {
-            ...selectedFlights.onward.destination,
-            coordinates: {
-              latitude: parseFloat(selectedFlights.onward.destination.coordinates?.latitude) || 0,
-              longitude: parseFloat(selectedFlights.onward.destination.coordinates?.longitude) || 0
-            }
-          }
+          origin: addCoordinatesIfMissing(selectedFlights.onward.origin),
+          destination: addCoordinatesIfMissing(selectedFlights.onward.destination)
         }
       };
-
-      // Add return flight coordinates if it exists
       if (selectedFlights.return) {
         flightsWithCoordinates.return = {
           ...selectedFlights.return,
-          origin: {
-            ...selectedFlights.return.origin,
-            coordinates: {
-              latitude: parseFloat(selectedFlights.return.origin.coordinates?.latitude) || 0,
-              longitude: parseFloat(selectedFlights.return.origin.coordinates?.longitude) || 0
-            }
-          },
-          destination: {
-            ...selectedFlights.return.destination,
-            coordinates: {
-              latitude: parseFloat(selectedFlights.return.destination.coordinates?.latitude) || 0,
-              longitude: parseFloat(selectedFlights.return.destination.coordinates?.longitude) || 0
-            }
-          }
+          origin: addCoordinatesIfMissing(selectedFlights.return.origin),
+          destination: addCoordinatesIfMissing(selectedFlights.return.destination)
         };
       }
 
@@ -322,6 +323,39 @@ const BookingConfirmation = () => {
           return: returnTicket
         }
       });
+
+      // Calculate distance using Haversine formula (same as analytics.js)
+      const toRad = (value) => (value * Math.PI) / 180;
+      const calculateDistance = (origin, destination) => {
+        if (!origin?.coordinates || !destination?.coordinates) return 0;
+        const lat1 = parseFloat(origin.coordinates.latitude);
+        const lon1 = parseFloat(origin.coordinates.longitude);
+        const lat2 = parseFloat(destination.coordinates.latitude);
+        const lon2 = parseFloat(destination.coordinates.longitude);
+        const R = 6371;
+        const phi1 = toRad(lat1);
+        const phi2 = toRad(lat2);
+        const deltaLat = toRad(lat2 - lat1);
+        const deltaLon = toRad(lon2 - lon1);
+        const a = Math.sin(deltaLat/2) * Math.sin(deltaLat/2) +
+                  Math.cos(phi1) * Math.cos(phi2) *
+                  Math.sin(deltaLon/2) * Math.sin(deltaLon/2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return Math.round(R * c);
+      };
+      const onwardDistance = calculateDistance(
+        flightsWithCoordinates.onward.origin,
+        flightsWithCoordinates.onward.destination
+      );
+      const returnDistance = flightsWithCoordinates.return
+        ? calculateDistance(
+            flightsWithCoordinates.return.origin,
+            flightsWithCoordinates.return.destination
+          )
+        : 0;
+      const total = onwardDistance + returnDistance;
+      setTotalDistance(total);
+      setTreesPlanted(Math.floor(total / 100));
     } catch (error) {
       console.error('Error tracking booking confirmation:', error);
     }
@@ -597,7 +631,7 @@ const BookingConfirmation = () => {
             <Grid item xs={12} md={6}>
               <Typography variant="subtitle1">Amount Paid</Typography>
               <Typography variant="h6" color="primary">
-                ₹{total.toLocaleString()}
+                ₹{total.toLocaleString()} <Typography component="span" variant="body2" color="textSecondary">(for {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography>
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 Paid on: {formatDate(paymentDetails.paymentDate || new Date())}
@@ -653,6 +687,17 @@ const BookingConfirmation = () => {
               </Typography>
             </Grid>
           </Grid>
+        </Box>
+
+        {/* Trees Planted and Distance Section */}
+        <Box sx={{ mb: 4, textAlign: 'center', bgcolor: 'success.light', borderRadius: 2, p: 3, color: 'success.contrastText' }}>
+          <Typography variant="h6" gutterBottom>
+            <ForestIcon sx={{ verticalAlign: 'middle', color: 'success.main', mr: 1 }} />
+            Sustainability Impact
+          </Typography>
+          <Typography variant="body1">
+            Your journey covers <b>{totalDistance.toLocaleString()} km</b> and will help plant <b>{treesPlanted}</b> tree{treesPlanted !== 1 ? 's' : ''}!
+          </Typography>
         </Box>
 
         {selectedFlights?.onward && renderFlightDetails(selectedFlights.onward, 'onward')}

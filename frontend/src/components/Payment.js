@@ -295,6 +295,9 @@ const Payment = () => {
     });
   }, [flightTotal, selectedServices, totalAmount]);
 
+  // Find the number of passengers
+  const numPassengers = travellerDetails.length || 1;
+
   if (paymentError) {
     return (
       <Box sx={{ p: 3, textAlign: 'center' }}>
@@ -322,28 +325,40 @@ const Payment = () => {
               </Typography>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                 <Typography>Base Fare</Typography>
-                <Typography>₹{priceBreakdown.baseFare.toLocaleString()}</Typography>
+                <Typography>
+                  ₹{(priceBreakdown.baseFare * numPassengers).toLocaleString()} <Typography component="span" variant="body2" color="textSecondary">(₹{priceBreakdown.baseFare.toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography>
+                </Typography>
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                 <Typography>Taxes (5%)</Typography>
-                <Typography>₹{priceBreakdown.taxes.toLocaleString()}</Typography>
+                <Typography>
+                  ₹{(priceBreakdown.taxes * numPassengers).toLocaleString()} <Typography component="span" variant="body2" color="textSecondary">(₹{priceBreakdown.taxes.toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography>
+                </Typography>
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                 <Typography>Convenience Fee (2%)</Typography>
-                <Typography>₹{priceBreakdown.convenienceFee.toLocaleString()}</Typography>
+                <Typography>
+                  ₹{(priceBreakdown.convenienceFee * numPassengers).toLocaleString()} <Typography component="span" variant="body2" color="textSecondary">(₹{priceBreakdown.convenienceFee.toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography>
+                </Typography>
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                 <Typography>Surcharge (1%)</Typography>
-                <Typography>₹{priceBreakdown.surcharge.toLocaleString()}</Typography>
+                <Typography>
+                  ₹{(priceBreakdown.surcharge * numPassengers).toLocaleString()} <Typography component="span" variant="body2" color="textSecondary">(₹{priceBreakdown.surcharge.toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography>
+                </Typography>
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                 <Typography>Ancillary Services</Typography>
-                <Typography>₹{priceBreakdown.ancillaryTotal.toLocaleString()}</Typography>
+                <Typography>
+                  ₹{(priceBreakdown.ancillaryTotal * numPassengers).toLocaleString()} <Typography component="span" variant="body2" color="textSecondary">(₹{priceBreakdown.ancillaryTotal.toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography>
+                </Typography>
               </Box>
               <Divider sx={{ my: 2 }} />
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                 <Typography variant="subtitle1">Total Amount</Typography>
-                <Typography variant="subtitle1">₹{priceBreakdown.total.toLocaleString()}</Typography>
+                <Typography variant="subtitle1">
+                  ₹{(priceBreakdown.total * numPassengers).toLocaleString()} <Typography component="span" variant="body2" color="textSecondary">(₹{priceBreakdown.total.toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography>
+                </Typography>
               </Box>
             </Box>
           </Paper>
@@ -484,7 +499,9 @@ const Payment = () => {
                   disabled={loading}
                   startIcon={loading ? <CircularProgress size={20} /> : null}
                 >
-                  {loading ? 'Processing...' : `Pay ₹${totalAmount.toLocaleString()}`}
+                  {loading
+                    ? 'Processing...'
+                    : `Pay ₹${(priceBreakdown.total * numPassengers).toLocaleString()}`}
                 </Button>
               </Box>
             </form>

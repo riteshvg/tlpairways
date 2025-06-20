@@ -45,13 +45,20 @@ const cabinClasses = [
   { value: 'first', label: 'First' }
 ];
 
+const passengerTypes = [
+  { value: 'adult', label: 'Adult' },
+  { value: 'child', label: 'Child' },
+  { value: 'infant', label: 'Infant' }
+];
+
 const FlightSearch = () => {
   const navigate = useNavigate();
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
   const [date, setDate] = useState(null);
   const [returnDate, setReturnDate] = useState(null);
-  const [passengers, setPassengers] = useState(1);
+  const [passengerType, setPassengerType] = useState('adult');
+  const [passengerCounts, setPassengerCounts] = useState({ adult: 1, child: 0, infant: 0 });
   const [paymentType, setPaymentType] = useState('');
   const [tripType, setTripType] = useState('oneway');
   const [cabinClass, setCabinClass] = useState('economy');
@@ -91,15 +98,17 @@ const FlightSearch = () => {
       return;
     }
 
+    const totalPassengers = passengerCounts.adult + passengerCounts.child + passengerCounts.infant;
     const searchParams = {
-        originCode: origin.iata_code,
-        destinationCode: destination.iata_code,
-        date: date.toISOString(),
-        returnDate: returnDate ? returnDate.toISOString() : null,
-        passengers,
-        paymentType,
-        tripType,
-        cabinClass
+      originCode: origin.iata_code,
+      destinationCode: destination.iata_code,
+      date: date.toISOString(),
+      returnDate: returnDate ? returnDate.toISOString() : null,
+      passengers: totalPassengers,
+      passengerCounts,
+      paymentType,
+      tripType,
+      cabinClass
     };
 
     // Track search initiation
@@ -225,15 +234,38 @@ const FlightSearch = () => {
               </Grid>
             )}
             <Grid item xs={12} md={4}>
-              <TextField
-                fullWidth
-                type="number"
-                label="Number of Passengers"
-                value={passengers}
-                onChange={(e) => setPassengers(Math.max(1, Math.min(9, parseInt(e.target.value) || 1)))}
-                inputProps={{ min: 1, max: 9 }}
-                required
-              />
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <FormControl fullWidth required sx={{ minWidth: 100 }}>
+                  <InputLabel>Passenger Type</InputLabel>
+                  <Select
+                    value={passengerType}
+                    label="Passenger Type"
+                    onChange={e => setPassengerType(e.target.value)}
+                  >
+                    {passengerTypes.map(option => (
+                      <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <TextField
+                  type="number"
+                  label="Count"
+                  value={passengerCounts[passengerType]}
+                  onChange={e => {
+                    const val = Math.max(0, Math.min(9, parseInt(e.target.value) || 0));
+                    setPassengerCounts(prev => ({ ...prev, [passengerType]: val }));
+                  }}
+                  inputProps={{ min: 0, max: 9 }}
+                  sx={{ width: 80 }}
+                  required={passengerType === 'adult'}
+                />
+              </Box>
+              <Box sx={{ mt: 1, fontSize: 14, color: 'grey.600' }}>
+                {passengerTypes
+                  .filter(type => passengerCounts[type.value] > 0)
+                  .map(type => `${type.label}: ${passengerCounts[type.value]}`)
+                  .join(', ') || 'No passengers selected'}
+              </Box>
             </Grid>
             <Grid item xs={12} md={4}>
               <FormControl fullWidth required>

@@ -15,20 +15,16 @@ import analytics from './services/analytics';
 
 // Page View Tracker Component
 function PageViewTracker() {
-  console.log('PageViewTracker component rendered');
   const location = useLocation();
 
-  useEffect(() => {
-    // Don't track page view for confirmation page as it has its own event
-    if (location.pathname !== '/confirmation') {
-      const pageName = location.pathname === '/' ? 'Homepage' : 
-        location.pathname.split('/').pop().split('-').map(word => 
-          word.charAt(0).toUpperCase() + word.slice(1)
-        ).join(' ');
-      console.log('PageViewTracker fired', location.pathname);
-      analytics.pageView(pageName);
+  React.useEffect(() => {
+    if (location.pathname === '/') {
+      // Only fire once per mount (i.e., on initial load or refresh)
+      analytics.pageView('Homepage');
     }
-  }, [location]);
+    // No dependency on location, so this effect only runs on mount/unmount
+    // eslint-disable-next-line
+  }, []);
 
   return null;
 }

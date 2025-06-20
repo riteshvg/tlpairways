@@ -132,7 +132,8 @@ const analytics = {
           adult: searchParams.passengers,
           child: 0,
           infant: 0
-        }
+        },
+        searchDate: new Date().toISOString()
       }
     });
   },
@@ -154,7 +155,8 @@ const analytics = {
           child: 0,
           infant: 0
         },
-        resultsCount: results.total
+        resultsCount: results.total,
+        searchDate: new Date().toISOString()
       },
       ecommerce: {
         impressions: [
@@ -251,11 +253,20 @@ const analytics = {
       tickets
     } = bookingDetails;
 
+    // Debug: Log the full flight objects before distance calculation
+    console.log('bookingConfirmed: flights.onward.origin:', flights.onward.origin);
+    console.log('bookingConfirmed: flights.onward.destination:', flights.onward.destination);
+    if (flights.return) {
+      console.log('bookingConfirmed: flights.return.origin:', flights.return.origin);
+      console.log('bookingConfirmed: flights.return.destination:', flights.return.destination);
+    }
+
     // Calculate distances
     const onwardDistance = calculateDistance(flights.onward.origin, flights.onward.destination);
     const returnDistance = flights.return ? 
       calculateDistance(flights.return.origin, flights.return.destination) : 0;
     const totalDistance = onwardDistance + returnDistance;
+    const treesPlanted = Math.floor(totalDistance / 100);
 
     // Debug logs for distance calculation
     console.log('Distance calculation:', {
@@ -269,7 +280,8 @@ const analytics = {
         destination: flights.return.destination.coordinates,
         distance: returnDistance
       } : null,
-      total: totalDistance
+      total: totalDistance,
+      treesPlanted
     });
 
     // Calculate fee breakdown
@@ -355,7 +367,8 @@ const analytics = {
           onward: onwardDistance,
           return: returnDistance,
           total: totalDistance
-        }
+        },
+        treesPlanted
       },
       flights: {
         onward: {
@@ -454,23 +467,32 @@ const calculateAncillaryTotal = (services, flights) => {
 
 // Calculate distance between two points using Haversine formula
 const calculateDistance = (origin, destination) => {
+  console.log('calculateDistance called with:', { origin, destination });
   if (!origin?.coordinates || !destination?.coordinates) {
     console.warn('Missing coordinates for distance calculation:', { origin, destination });
     return 0;
   }
 
+  const lat1 = parseFloat(origin.coordinates.latitude);
+  const lon1 = parseFloat(origin.coordinates.longitude);
+  const lat2 = parseFloat(destination.coordinates.latitude);
+  const lon2 = parseFloat(destination.coordinates.longitude);
+
+  console.log('Parsed coordinates:', { lat1, lon1, lat2, lon2 });
+
   const R = 6371; // Earth's radius in kilometers
-  const lat1 = parseFloat(origin.coordinates.latitude) * Math.PI / 180;
-  const lat2 = parseFloat(destination.coordinates.latitude) * Math.PI / 180;
-  const deltaLat = (parseFloat(destination.coordinates.latitude) - parseFloat(origin.coordinates.latitude)) * Math.PI / 180;
-  const deltaLon = (parseFloat(destination.coordinates.longitude) - parseFloat(origin.coordinates.longitude)) * Math.PI / 180;
+  const phi1 = lat1 * Math.PI / 180;
+  const phi2 = lat2 * Math.PI / 180;
+  const deltaLat = (lat2 - lat1) * Math.PI / 180;
+  const deltaLon = (lon2 - lon1) * Math.PI / 180;
 
   const a = Math.sin(deltaLat/2) * Math.sin(deltaLat/2) +
-            Math.cos(lat1) * Math.cos(lat2) *
+            Math.cos(phi1) * Math.cos(phi2) *
             Math.sin(deltaLon/2) * Math.sin(deltaLon/2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
   const distance = R * c;
 
+  console.log('Calculated distance:', distance);
   return Math.round(distance); // Round to nearest kilometer
 };
 
