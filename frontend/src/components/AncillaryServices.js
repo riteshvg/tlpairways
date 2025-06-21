@@ -1103,7 +1103,7 @@ Price: ₹${seatPrice}`}
             {(selectedFlights?.onward?.isInternational || selectedFlights?.return?.isInternational) && (
               <Alert severity="info" sx={{ mb: 2 }}>
                 <Typography variant="body2">
-                  <strong>Currency Conversion Applied:</strong> International flight prices are displayed in USD but will be converted to INR during payment at a fixed exchange rate of 1 USD = {CURRENCY_CONFIG.defaultExchangeRate} INR.
+                  <strong>Currency Conversion Applied:</strong> International flight prices are converted to INR at a fixed exchange rate of 1 USD = {CURRENCY_CONFIG.defaultExchangeRate} INR.
                 </Typography>
               </Alert>
             )}

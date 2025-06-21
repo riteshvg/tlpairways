@@ -701,7 +701,7 @@ const BookingConfirmation = () => {
         </Box>
 
         {selectedFlights?.onward && renderFlightDetails(selectedFlights.onward, 'onward')}
-        {tripType === 'roundtrip' && selectedFlights?.return && renderFlightDetails(selectedFlights.return, 'return')}
+        {selectedFlights?.return && renderFlightDetails(selectedFlights.return, 'return')}
 
         {renderAncillaryServices()}
         {renderPaymentDetails()}

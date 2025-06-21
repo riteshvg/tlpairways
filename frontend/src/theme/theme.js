@@ -3,19 +3,19 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#8B0000', // Deep red
-      light: '#A52A2A',
-      dark: '#660000',
+      main: '#1976D2', // Classic Blue
+      light: '#42A5F5',
+      dark: '#1565C0',
       contrastText: '#FFFFFF',
     },
     secondary: {
-      main: '#D4AF37', // Gold
-      light: '#E5C158',
-      dark: '#B38F2E',
+      main: '#E0E0E0', // Light Gray
+      light: '#F5F5F5',
+      dark: '#BDBDBD',
       contrastText: '#000000',
     },
     background: {
-      default: '#F5F5DC', // Cream
+      default: '#F7F9FC', // Light Blue-Gray
       paper: '#FFFFFF',
     },
     text: {
@@ -131,8 +131,8 @@ const theme = createTheme({
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: '#FFFFFF',
-          color: '#1A1A1A',
+          backgroundColor: '#1976D2', // Use Primary Blue
+          color: '#FFFFFF', // White text
           boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
         },
       },
