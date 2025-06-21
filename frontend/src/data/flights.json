@@ -23,7 +23,8 @@
       },
       "aircraft": "Boeing 737",
       "availableSeats": 120,
-      "mealOptions": ["veg", "nonveg"]
+      "mealOptions": ["veg", "nonveg"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"]
     },
     {
       "itineraryId": "DEL-BOM-2",
@@ -48,7 +49,8 @@
       },
       "aircraft": "Airbus A320",
       "availableSeats": 150,
-      "mealOptions": ["veg", "nonveg"]
+      "mealOptions": ["veg", "nonveg"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"]
     },
     {
       "itineraryId": "DEL-BOM-3",
@@ -73,7 +75,8 @@
       },
       "aircraft": "Boeing 737",
       "availableSeats": 100,
-      "mealOptions": ["veg", "nonveg"]
+      "mealOptions": ["veg", "nonveg"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"]
     },
     {
       "itineraryId": "BOM-DEL-1",
@@ -98,7 +101,8 @@
       },
       "aircraft": "Airbus A320",
       "availableSeats": 140,
-      "mealOptions": ["veg", "nonveg"]
+      "mealOptions": ["veg", "nonveg"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"]
     },
     {
       "itineraryId": "BOM-DEL-2",
@@ -123,7 +127,8 @@
       },
       "aircraft": "Boeing 737",
       "availableSeats": 130,
-      "mealOptions": ["veg", "nonveg"]
+      "mealOptions": ["veg", "nonveg"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"]
     },
     {
       "itineraryId": "DEL-BLR-1",
@@ -148,7 +153,8 @@
       },
       "aircraft": "Airbus A320",
       "availableSeats": 145,
-      "mealOptions": ["veg", "nonveg"]
+      "mealOptions": ["veg", "nonveg"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"]
     },
     {
       "itineraryId": "DEL-BLR-2",
@@ -173,7 +179,8 @@
       },
       "aircraft": "Boeing 737",
       "availableSeats": 135,
-      "mealOptions": ["veg", "nonveg"]
+      "mealOptions": ["veg", "nonveg"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"]
     },
     {
       "itineraryId": "BLR-DEL-1",
@@ -198,7 +205,8 @@
       },
       "aircraft": "Airbus A320",
       "availableSeats": 150,
-      "mealOptions": ["veg", "nonveg"]
+      "mealOptions": ["veg", "nonveg"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"]
     },
     {
       "itineraryId": "DEL-MAA-1",
@@ -223,7 +231,8 @@
       },
       "aircraft": "Boeing 737",
       "availableSeats": 125,
-      "mealOptions": ["veg", "nonveg"]
+      "mealOptions": ["veg", "nonveg"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"]
     },
     {
       "itineraryId": "MAA-DEL-1",
@@ -248,7 +257,8 @@
       },
       "aircraft": "Airbus A320",
       "availableSeats": 140,
-      "mealOptions": ["veg", "nonveg"]
+      "mealOptions": ["veg", "nonveg"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"]
     },
     {
       "itineraryId": "DEL-LHR-1",
@@ -273,7 +283,8 @@
       },
       "aircraft": "Boeing 787-9",
       "availableSeats": 180,
-      "mealOptions": ["veg", "nonveg"]
+      "mealOptions": ["veg", "nonveg"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"]
     },
     {
       "itineraryId": "DEL-LHR-2",
@@ -298,7 +309,8 @@
       },
       "aircraft": "Airbus A350-900",
       "availableSeats": 200,
-      "mealOptions": ["veg", "nonveg"]
+      "mealOptions": ["veg", "nonveg"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"]
     },
     {
       "itineraryId": "LHR-DEL-1",
@@ -323,7 +335,8 @@
       },
       "aircraft": "Boeing 787-9",
       "availableSeats": 180,
-      "mealOptions": ["veg", "nonveg"]
+      "mealOptions": ["veg", "nonveg"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"]
     },
     {
       "itineraryId": "DEL-JFK-1",
@@ -349,6 +362,7 @@
       "aircraft": "Boeing 777-300ER",
       "availableSeats": 300,
       "mealOptions": ["veg", "nonveg"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"],
       "segments": [
         {
           "segmentId": "TL801A_DELDXB",
@@ -412,6 +426,7 @@
       "aircraft": "Boeing 777-300ER",
       "availableSeats": 300,
       "mealOptions": ["veg", "nonveg"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"],
       "segments": [
         {
           "segmentId": "TL802A_DELLHR",
@@ -475,6 +490,7 @@
       "aircraft": "Boeing 777-300ER",
       "availableSeats": 300,
       "mealOptions": ["veg", "nonveg"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"],
       "segments": [
         {
           "segmentId": "TL803A_JFKDXB",
@@ -537,7 +553,8 @@
       },
       "aircraft": "Airbus A330-300",
       "availableSeats": 250,
-      "mealOptions": ["veg", "nonveg"]
+      "mealOptions": ["veg", "nonveg"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"]
     },
     {
       "itineraryId": "SIN-DEL-1",
@@ -562,7 +579,8 @@
       },
       "aircraft": "Airbus A330-300",
       "availableSeats": 250,
-      "mealOptions": ["veg", "nonveg"]
+      "mealOptions": ["veg", "nonveg"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"]
     },
     {
       "itineraryId": "BOM-LHR-1",
@@ -587,7 +605,8 @@
       },
       "aircraft": "Boeing 787-9",
       "availableSeats": 180,
-      "mealOptions": ["veg", "nonveg"]
+      "mealOptions": ["veg", "nonveg"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"]
     },
     {
       "itineraryId": "LHR-BOM-1",
@@ -612,7 +631,8 @@
       },
       "aircraft": "Boeing 787-9",
       "availableSeats": 180,
-      "mealOptions": ["veg", "nonveg"]
+      "mealOptions": ["veg", "nonveg"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"]
     },
     {
       "itineraryId": "BOM-BLR-1",
@@ -637,7 +657,8 @@
       },
       "aircraft": "Airbus A320",
       "availableSeats": 160,
-      "mealOptions": ["veg", "nonveg"]
+      "mealOptions": ["veg", "nonveg"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"]
     },
     {
       "itineraryId": "BLR-BOM-1",
@@ -662,7 +683,8 @@
       },
       "aircraft": "Boeing 737",
       "availableSeats": 110,
-      "mealOptions": ["veg", "nonveg"]
+      "mealOptions": ["veg", "nonveg"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"]
     },
     {
       "itineraryId": "DEL-CCU-1",
@@ -687,7 +709,8 @@
       },
       "aircraft": "Airbus A321",
       "availableSeats": 170,
-      "mealOptions": ["veg", "nonveg"]
+      "mealOptions": ["veg", "nonveg"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"]
     },
     {
       "itineraryId": "CCU-DEL-1",
@@ -712,7 +735,8 @@
       },
       "aircraft": "Airbus A320",
       "availableSeats": 130,
-      "mealOptions": ["veg", "nonveg"]
+      "mealOptions": ["veg", "nonveg"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"]
     },
     {
       "itineraryId": "LHR-JFK-1",
@@ -737,7 +761,8 @@
       },
       "aircraft": "Boeing 777-300ER",
       "availableSeats": 250,
-      "mealOptions": ["veg", "nonveg", "premium"]
+      "mealOptions": ["veg", "nonveg", "premium"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"]
     },
     {
       "itineraryId": "JFK-LHR-1",
@@ -762,7 +787,8 @@
       },
       "aircraft": "Boeing 777-300ER",
       "availableSeats": 250,
-      "mealOptions": ["veg", "nonveg", "premium"]
+      "mealOptions": ["veg", "nonveg", "premium"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"]
     },
     {
       "itineraryId": "DEL-CDG-1",
@@ -787,7 +813,8 @@
       },
       "aircraft": "Airbus A350-900",
       "availableSeats": 220,
-      "mealOptions": ["veg", "nonveg", "french_cuisine"]
+      "mealOptions": ["veg", "nonveg", "french_cuisine"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"]
     },
     {
       "itineraryId": "MAA-DXB-1",
@@ -812,7 +839,8 @@
       },
       "aircraft": "Boeing 737 MAX",
       "availableSeats": 140,
-      "mealOptions": ["veg", "nonveg", "arabian_delight"]
+      "mealOptions": ["veg", "nonveg", "arabian_delight"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"]
     },
     {
       "itineraryId": "DEL-SYD-1-CONNECT",
@@ -838,6 +866,7 @@
       "aircraft": "Mixed",
       "availableSeats": 100,
       "mealOptions": ["veg", "nonveg"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"],
       "segments": [
         {
           "segmentId": "TL1601A_DELSIN",
@@ -901,6 +930,7 @@
       "aircraft": "Mixed",
       "availableSeats": 90,
       "mealOptions": ["veg", "nonveg"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"],
       "segments": [
         {
           "segmentId": "TL1701A_BLRDXB",
@@ -963,7 +993,8 @@
       },
       "aircraft": "ATR 72",
       "availableSeats": 70,
-      "mealOptions": ["veg_snack", "nonveg_snack"]
+      "mealOptions": ["veg_snack", "nonveg_snack"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"]
     },
     {
       "itineraryId": "HYD-MAA-1",
@@ -988,7 +1019,8 @@
       },
       "aircraft": "ATR 72",
       "availableSeats": 65,
-      "mealOptions": ["veg_snack", "nonveg_snack"]
+      "mealOptions": ["veg_snack", "nonveg_snack"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"]
     },
     {
       "flightNumber": "TLP-789",
@@ -1013,7 +1045,8 @@
       },
       "availableSeats": 45,
       "cabinClass": "business",
-      "availableClasses": ["business", "premium_economy", "economy"]
+      "availableClasses": ["business", "premium_economy", "economy"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"]
     },
     {
       "flightNumber": "TLP-790",
@@ -1038,7 +1071,8 @@
       },
       "availableSeats": 60,
       "cabinClass": "premium_economy",
-      "availableClasses": ["premium_economy", "economy"]
+      "availableClasses": ["premium_economy", "economy"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"]
     },
     {
       "flightNumber": "TLP-791",
@@ -1063,7 +1097,8 @@
       },
       "availableSeats": 120,
       "cabinClass": "economy",
-      "availableClasses": ["economy"]
+      "availableClasses": ["economy"],
+      "cabinClasses": ["economy", "premium_economy", "business", "first"]
     }
   ]
 } 

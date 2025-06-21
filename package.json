@@ -1,24 +1,25 @@
 {
-  "name": "tlpairways",
+  "name": "tlairways",
   "version": "1.0.0",
-  "description": "A dummy airline booking and check-in system",
+  "description": "TLAirways - Premium Air Travel Experience",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "start": "node backend/src/index.js",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
     "server": "cd backend && npm run dev",
     "client": "cd frontend && npm start",
-    "install-all": "npm install && cd frontend && npm install && cd ../backend && npm install"
+    "build": "cd frontend && npm run build",
+    "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "heroku-postbuild": "cd frontend && npm install && npm run build"
   },
-  "keywords": [
-    "airline",
-    "booking",
-    "mern",
-    "react",
-    "node"
-  ],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
+  "keywords": ["airlines", "booking", "travel"],
+  "author": "TLAirways",
+  "license": "MIT",
+  "dependencies": {
     "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
   }
 } 

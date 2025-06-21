@@ -44,6 +44,7 @@ import { format } from 'date-fns';
 import seatConfigurations from '../data/ancillary/seat_configurations.json';
 import baggageRulesData from '../data/ancillary/baggage_rules.json';
 import analytics from '../services/analytics';
+import { CURRENCY_CONFIG } from '../config/currencyConfig';
 
 const AncillaryServices = () => {
   const location = useLocation();
@@ -1097,6 +1098,15 @@ Price: ₹${seatPrice}`}
             <Typography variant="h5" gutterBottom>
               Cost Summary
             </Typography>
+            
+            {/* Currency conversion note for international flights */}
+            {(selectedFlights?.onward?.isInternational || selectedFlights?.return?.isInternational) && (
+              <Alert severity="info" sx={{ mb: 2 }}>
+                <Typography variant="body2">
+                  <strong>Currency Conversion Applied:</strong> International flight prices are displayed in USD but will be converted to INR during payment at a fixed exchange rate of 1 USD = {CURRENCY_CONFIG.defaultExchangeRate} INR.
+                </Typography>
+              </Alert>
+            )}
             
             <Box sx={{ mb: 3 }}>
               <Typography variant="h6" gutterBottom>

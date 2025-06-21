@@ -29,6 +29,7 @@ import {
 } from '@mui/material';
 import { format, isValid, parseISO } from 'date-fns';
 import analytics from '../services/analytics';
+import CURRENCY_CONFIG from '../config/currencyConfig';
 
 const Payment = () => {
   const location = useLocation();
@@ -181,6 +182,13 @@ const Payment = () => {
   const renderFlightDetails = (flight, type) => {
     if (!flight) return null;
 
+    const numPassengers = travellerDetails.length || 1;
+    const isInternational = flight.isInternational;
+    const displayPrice = flight.displayPrices?.[cabinClass] || flight.prices?.[cabinClass] || flight.price.amount;
+    const originalPrice = flight.originalPrices?.[cabinClass] || flight.prices?.[cabinClass] || flight.price.amount;
+    const totalDisplayPrice = displayPrice * numPassengers;
+    const totalOriginalPrice = originalPrice * numPassengers;
+
     return (
       <Box sx={{ mb: 2 }}>
         <Typography variant="subtitle1" gutterBottom>
@@ -199,7 +207,17 @@ const Payment = () => {
           Cabin Class: {flight.cabinClass || cabinClass}
         </Typography>
         <Typography>
-          Fare: ₹{flight.price?.amount?.toLocaleString() || '0'}
+          {isInternational ? (
+            <>
+              Display Price: {CURRENCY_CONFIG.formatPrice(totalDisplayPrice, flight.displayCurrency)}
+              <br />
+              <Typography component="span" variant="body2" color="textSecondary">
+                Payment Amount: ₹{totalOriginalPrice.toLocaleString()}
+              </Typography>
+            </>
+          ) : (
+            `Fare: ₹${totalOriginalPrice.toLocaleString()}`
+          )}
         </Typography>
       </Box>
     );
@@ -259,20 +277,43 @@ const Payment = () => {
 
   // Calculate total price including flight fares and ancillary services
   const calculateTotalPrice = () => {
-    // Use the already calculated totals from state
-    const baseFare = flightTotal;
-    const ancillaryTotal = calculateAncillaryTotal();
-      const taxes = Math.round(baseFare * 0.05); // 5% tax
-      const convenienceFee = Math.round(baseFare * 0.02); // 2% convenience fee
-      const surcharge = Math.round(baseFare * 0.01); // 1% surcharge
+    let total = 0;
+    const numPassengers = travellerDetails.length || 1;
+
+    // Calculate flight costs
+    if (selectedFlights.onward) {
+      // Use original INR prices for payment calculation
+      const onwardPrice = selectedFlights.onward.originalPrices?.[cabinClass] || 
+                         selectedFlights.onward.prices?.[cabinClass] || 
+                         selectedFlights.onward.price.amount;
+      total += onwardPrice * numPassengers;
+    }
+
+    if (selectedFlights.return) {
+      // Use original INR prices for payment calculation
+      const returnPrice = selectedFlights.return.originalPrices?.[cabinClass] || 
+                         selectedFlights.return.prices?.[cabinClass] || 
+                         selectedFlights.return.price.amount;
+      total += returnPrice * numPassengers;
+    }
+
+    // Add ancillary costs
+    total += calculateAncillaryTotal();
+
+    // Add taxes and fees (5% tax, 2% convenience fee + 1% surcharge)
+    const taxes = Math.round(total * 0.05);
+    const convenienceFee = Math.round(total * 0.02);
+    const surcharge = Math.round(total * 0.01);
+    total += taxes + convenienceFee + surcharge;
 
     return {
-        baseFare,
-        taxes,
-        convenienceFee,
-        surcharge,
-      ancillaryTotal,
-      total: baseFare + taxes + convenienceFee + surcharge + ancillaryTotal
+      baseFare: (selectedFlights.onward ? (selectedFlights.onward.originalPrices?.[cabinClass] || selectedFlights.onward.prices?.[cabinClass] || selectedFlights.onward.price.amount) * numPassengers : 0) +
+                (selectedFlights.return ? (selectedFlights.return.originalPrices?.[cabinClass] || selectedFlights.return.prices?.[cabinClass] || selectedFlights.return.price.amount) * numPassengers : 0),
+      ancillaryTotal: calculateAncillaryTotal(),
+      taxes,
+      convenienceFee,
+      surcharge,
+      total
     };
   };
 
@@ -297,6 +338,9 @@ const Payment = () => {
 
   // Find the number of passengers
   const numPassengers = travellerDetails.length || 1;
+
+  // Check if any flight is international for display purposes
+  const hasInternationalFlight = selectedFlights.onward?.isInternational || selectedFlights.return?.isInternational;
 
   if (paymentError) {
     return (
@@ -326,31 +370,31 @@ const Payment = () => {
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                 <Typography>Base Fare</Typography>
                 <Typography>
-                  ₹{(priceBreakdown.baseFare * numPassengers).toLocaleString()} <Typography component="span" variant="body2" color="textSecondary">(₹{priceBreakdown.baseFare.toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography>
+                  ₹{(priceBreakdown.baseFare || 0).toLocaleString()} <Typography component="span" variant="body2" color="textSecondary">(₹{(priceBreakdown.baseFare || 0).toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography>
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                 <Typography>Taxes (5%)</Typography>
                 <Typography>
-                  ₹{(priceBreakdown.taxes * numPassengers).toLocaleString()} <Typography component="span" variant="body2" color="textSecondary">(₹{priceBreakdown.taxes.toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography>
+                  ₹{(priceBreakdown.taxes || 0).toLocaleString()} <Typography component="span" variant="body2" color="textSecondary">(₹{(priceBreakdown.taxes || 0).toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography>
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                 <Typography>Convenience Fee (2%)</Typography>
                 <Typography>
-                  ₹{(priceBreakdown.convenienceFee * numPassengers).toLocaleString()} <Typography component="span" variant="body2" color="textSecondary">(₹{priceBreakdown.convenienceFee.toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography>
+                  ₹{(priceBreakdown.convenienceFee || 0).toLocaleString()} <Typography component="span" variant="body2" color="textSecondary">(₹{(priceBreakdown.convenienceFee || 0).toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography>
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                 <Typography>Surcharge (1%)</Typography>
                 <Typography>
-                  ₹{(priceBreakdown.surcharge * numPassengers).toLocaleString()} <Typography component="span" variant="body2" color="textSecondary">(₹{priceBreakdown.surcharge.toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography>
+                  ₹{(priceBreakdown.surcharge || 0).toLocaleString()} <Typography component="span" variant="body2" color="textSecondary">(₹{(priceBreakdown.surcharge || 0).toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography>
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                 <Typography>Ancillary Services</Typography>
                 <Typography>
-                  ₹{(priceBreakdown.ancillaryTotal * numPassengers).toLocaleString()} <Typography component="span" variant="body2" color="textSecondary">(₹{priceBreakdown.ancillaryTotal.toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography>
+                  ₹{(priceBreakdown.ancillaryTotal || 0).toLocaleString()} <Typography component="span" variant="body2" color="textSecondary">(₹{(priceBreakdown.ancillaryTotal || 0).toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography>
                 </Typography>
               </Box>
               <Divider sx={{ my: 2 }} />

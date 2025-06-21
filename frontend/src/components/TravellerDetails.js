@@ -25,6 +25,7 @@ import {
 import { Add as AddIcon, Remove as RemoveIcon } from '@mui/icons-material';
 import { format } from 'date-fns';
 import analytics from '../services/analytics';
+import CURRENCY_CONFIG from '../config/currencyConfig';
 
 const TravellerDetails = () => {
   const location = useLocation();
@@ -645,6 +646,11 @@ const TravellerDetails = () => {
               <Typography variant="h6" gutterBottom>
                 Price Summary
               </Typography>
+              {(selectedFlights?.onward?.isInternational || selectedFlights?.return?.isInternational) && (
+                <Alert severity="info" sx={{ mb: 2 }}>
+                  International flights will be charged in INR during payment.
+                </Alert>
+              )}
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                 <Box>
                 <Typography>Onward Flight</Typography>
@@ -656,7 +662,21 @@ const TravellerDetails = () => {
                   </Typography>
                 </Box>
                 <Typography>
-                  ₹{(selectedFlights?.onward?.price?.amount * numPassengers).toLocaleString()} <Typography component="span" variant="body2" color="textSecondary">(₹{selectedFlights?.onward?.price?.amount?.toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography>
+                  {selectedFlights?.onward?.isInternational ? (
+                    <>
+                      {CURRENCY_CONFIG.formatPrice((selectedFlights.onward.displayPrices?.[selectedFlights.onward.cabinClass] || selectedFlights.onward.price.amount) * numPassengers, selectedFlights.onward.displayCurrency)}
+                      <Typography component="span" variant="body2" color="textSecondary">
+                        ({CURRENCY_CONFIG.formatPrice(selectedFlights.onward.displayPrices?.[selectedFlights.onward.cabinClass] || selectedFlights.onward.price.amount, selectedFlights.onward.displayCurrency)} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})
+                      </Typography>
+                    </>
+                  ) : (
+                    <>
+                      ₹{(selectedFlights?.onward?.price?.amount * numPassengers).toLocaleString()}
+                      <Typography component="span" variant="body2" color="textSecondary">
+                        (₹{selectedFlights?.onward?.price?.amount?.toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})
+                      </Typography>
+                    </>
+                  )}
                 </Typography>
               </Box>
               {tripType === 'roundtrip' && selectedFlights?.return && (
@@ -671,7 +691,21 @@ const TravellerDetails = () => {
                     </Typography>
                   </Box>
                   <Typography>
-                    ₹{(selectedFlights.return.price.amount * numPassengers).toLocaleString()} <Typography component="span" variant="body2" color="textSecondary">(₹{selectedFlights.return.price.amount?.toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography>
+                    {selectedFlights?.return?.isInternational ? (
+                      <>
+                        {CURRENCY_CONFIG.formatPrice((selectedFlights.return.displayPrices?.[selectedFlights.return.cabinClass] || selectedFlights.return.price.amount) * numPassengers, selectedFlights.return.displayCurrency)}
+                        <Typography component="span" variant="body2" color="textSecondary">
+                          ({CURRENCY_CONFIG.formatPrice(selectedFlights.return.displayPrices?.[selectedFlights.return.cabinClass] || selectedFlights.return.price.amount, selectedFlights.return.displayCurrency)} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})
+                        </Typography>
+                      </>
+                    ) : (
+                      <>
+                        ₹{(selectedFlights.return.price.amount * numPassengers).toLocaleString()}
+                        <Typography component="span" variant="body2" color="textSecondary">
+                          (₹{selectedFlights.return.price.amount?.toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})
+                        </Typography>
+                      </>
+                    )}
                   </Typography>
                 </Box>
               )}
@@ -679,14 +713,36 @@ const TravellerDetails = () => {
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                 <Typography variant="subtitle1">Total Price</Typography>
                 <Typography variant="subtitle1">
-                  ₹{
-                    ((selectedFlights?.onward?.price?.amount || 0) * numPassengers +
-                    (tripType === 'roundtrip' && selectedFlights?.return ? (selectedFlights.return.price.amount || 0) * numPassengers : 0))
-                    .toLocaleString()
-                  } <Typography component="span" variant="body2" color="textSecondary">(₹{
-                    ((selectedFlights?.onward?.price?.amount || 0) +
-                    (tripType === 'roundtrip' && selectedFlights?.return ? (selectedFlights.return.price.amount || 0) : 0))
-                    .toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography>
+                  {(selectedFlights?.onward?.isInternational || selectedFlights?.return?.isInternational) ? (
+                    <>
+                      {CURRENCY_CONFIG.formatPrice(
+                        ((selectedFlights?.onward?.displayPrices?.[selectedFlights?.onward?.cabinClass] || selectedFlights?.onward?.price?.amount || 0) * numPassengers +
+                        (tripType === 'roundtrip' && selectedFlights?.return ? (selectedFlights.return.displayPrices?.[selectedFlights.return.cabinClass] || selectedFlights.return.price.amount || 0) * numPassengers : 0)),
+                        selectedFlights?.onward?.displayCurrency || 'USD'
+                      )}
+                      <Typography component="span" variant="body2" color="textSecondary">
+                        ({CURRENCY_CONFIG.formatPrice(
+                          ((selectedFlights?.onward?.displayPrices?.[selectedFlights?.onward?.cabinClass] || selectedFlights?.onward?.price?.amount || 0) +
+                          (tripType === 'roundtrip' && selectedFlights?.return ? (selectedFlights.return.displayPrices?.[selectedFlights.return.cabinClass] || selectedFlights.return.price.amount || 0) : 0)),
+                          selectedFlights?.onward?.displayCurrency || 'USD'
+                        )} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})
+                      </Typography>
+                    </>
+                  ) : (
+                    <>
+                      ₹{
+                        ((selectedFlights?.onward?.price?.amount || 0) * numPassengers +
+                        (tripType === 'roundtrip' && selectedFlights?.return ? (selectedFlights.return.price.amount || 0) * numPassengers : 0))
+                        .toLocaleString()
+                      }
+                      <Typography component="span" variant="body2" color="textSecondary">
+                        (₹{
+                          ((selectedFlights?.onward?.price?.amount || 0) +
+                          (tripType === 'roundtrip' && selectedFlights?.return ? (selectedFlights.return.price.amount || 0) : 0))
+                          .toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})
+                      </Typography>
+                    </>
+                  )}
                 </Typography>
               </Box>
               <Button

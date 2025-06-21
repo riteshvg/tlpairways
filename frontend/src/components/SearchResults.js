@@ -24,12 +24,15 @@ import CloseIcon from '@mui/icons-material/Close';
 import flightRoutes from '../data/flight_routes.json';
 import FlightDetailsModal from './FlightDetailsModal';
 import analytics from '../services/analytics';
+import CURRENCY_CONFIG from '../config/currencyConfig';
+import airports from '../data/airports.json';
 
 const SearchResults = () => {
   const location = useLocation();
   const navigate = useNavigate();
   
   // Initialize state with default values
+  const [error, setError] = useState(null);
   const [searchParams, setSearchParams] = useState(null);
   const [onwardFlights, setOnwardFlights] = useState([]);
   const [returnFlights, setReturnFlights] = useState([]);
@@ -40,7 +43,6 @@ const SearchResults = () => {
   const [isReturnFlight, setIsReturnFlight] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isReturnModalOpen, setIsReturnModalOpen] = useState(false);
-  const [error, setError] = useState(null);
 
   // Initialize search parameters from location state
   useEffect(() => {
@@ -134,11 +136,38 @@ const SearchResults = () => {
             arrivalTime.setDate(arrivalTime.getDate() + 1);
       }
 
+      // Get country codes for origin and destination
+      const originAirport = airports.find(a => a.iata_code === flight.origin.iata_code);
+      const destAirport = airports.find(a => a.iata_code === flight.destination.iata_code);
+      const originCountry = originAirport?.country || 'India';
+      const destCountry = destAirport?.country || 'India';
+      
+      // Check if this is an international flight
+      const isInternational = CURRENCY_CONFIG.isInternationalFlight(originCountry, destCountry);
+      
+      // Determine display currency - for international flights, always show USD
+      const displayCurrency = isInternational ? 'USD' : 'INR';
+      
+      // Convert prices for display (keep original INR prices in backend)
+      const displayPrices = {};
+      Object.keys(prices).forEach(className => {
+        if (isInternational) {
+          // Convert INR to USD for display
+          displayPrices[className] = Math.round(prices[className] / CURRENCY_CONFIG.defaultExchangeRate);
+        } else {
+          displayPrices[className] = prices[className];
+        }
+      });
+
       return {
         ...flight,
             departureTime,
             arrivalTime,
         prices,
+        displayPrices,
+        isInternational,
+        displayCurrency,
+        originalPrices: prices, // Keep original INR prices
         availableClasses,
         currentPrice: prices[cabinClass] || basePrice
       };
@@ -246,6 +275,10 @@ const SearchResults = () => {
         currency: 'INR'
       },
       prices: flight.prices,
+      displayPrices: flight.displayPrices, // Preserve display prices
+      displayCurrency: flight.displayCurrency, // Preserve display currency
+      isInternational: flight.isInternational, // Preserve international flag
+      originalPrices: flight.originalPrices, // Preserve original prices
       basePrice: flight.prices.economy
     };
 
@@ -304,6 +337,10 @@ const SearchResults = () => {
           amount: selectedOnwardFlight.prices[searchParams.cabinClass],
           currency: 'INR'
         },
+        displayPrices: selectedOnwardFlight.displayPrices, // Preserve display prices
+        displayCurrency: selectedOnwardFlight.displayCurrency, // Preserve display currency
+        isInternational: selectedOnwardFlight.isInternational, // Preserve international flag
+        originalPrices: selectedOnwardFlight.originalPrices, // Preserve original prices
         basePrice: selectedOnwardFlight.prices.economy,
         prices: selectedOnwardFlight.prices
       },
@@ -314,6 +351,10 @@ const SearchResults = () => {
           amount: selectedReturnFlight.prices[searchParams.cabinClass],
           currency: 'INR'
         },
+        displayPrices: selectedReturnFlight.displayPrices, // Preserve display prices
+        displayCurrency: selectedReturnFlight.displayCurrency, // Preserve display currency
+        isInternational: selectedReturnFlight.isInternational, // Preserve international flag
+        originalPrices: selectedReturnFlight.originalPrices, // Preserve original prices
         basePrice: selectedReturnFlight.prices.economy,
         prices: selectedReturnFlight.prices
       } : null,
@@ -331,7 +372,7 @@ const SearchResults = () => {
   };
 
   const renderFlightCard = (flight, isReturn = false) => {
-    const pricePerPassenger = flight.prices[searchParams.cabinClass] || flight.prices.economy;
+    const pricePerPassenger = flight.displayPrices[searchParams.cabinClass] || flight.displayPrices.economy;
     const numPassengers = searchParams.passengers || 1;
     const totalPrice = pricePerPassenger * numPassengers;
     const isSelected = isReturn ? 
@@ -383,20 +424,25 @@ const SearchResults = () => {
                 </Grid>
             <Grid item xs={12} sm={4}>
               <Typography variant="h6" color="primary">
-                ₹{totalPrice.toLocaleString()} <Typography component="span" variant="body2" color="textSecondary">(₹{pricePerPassenger.toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography>
-                    </Typography>
+                {CURRENCY_CONFIG.formatPrice(totalPrice, flight.displayCurrency)} <Typography component="span" variant="body2" color="textSecondary">({CURRENCY_CONFIG.formatPrice(pricePerPassenger, flight.displayCurrency)} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography>
+              </Typography>
+              {flight.isInternational && (
+                <Typography variant="body2" color="textSecondary">
+                  *Price will be converted to INR during payment
+                </Typography>
+              )}
               <Typography variant="body2" color="textSecondary">
                 {searchParams.cabinClass.charAt(0).toUpperCase() + searchParams.cabinClass.slice(1)}
-                    </Typography>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => handleSelectFlight(flight, isReturn ? 'return' : 'onward')}
+              </Typography>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleSelectFlight(flight, isReturn ? 'return' : 'onward')}
                 sx={{ mt: 1 }}
-                      >
+              >
                 {isSelected ? 'Selected' : 'Select'}
-                      </Button>
-                </Grid>
+              </Button>
+            </Grid>
               </Grid>
             </CardContent>
           </Card>
@@ -519,9 +565,15 @@ const SearchResults = () => {
                 </Typography>
                 <Typography>
                   Cabin Class: {searchParams.cabinClass}
-                    </Typography>
-              </Box>
+                </Typography>
+                <Typography variant="h6" color="primary" sx={{ mt: 1 }}>
+                  {CURRENCY_CONFIG.formatPrice(
+                    (selectedOnwardFlight.displayPrices?.[searchParams.cabinClass] || selectedOnwardFlight.displayPrices?.economy) * searchParams.passengers,
+                    selectedOnwardFlight.displayCurrency
                   )}
+                </Typography>
+              </Box>
+            )}
 
             {selectedReturnFlight && (
               <Box sx={{ mb: 2 }}>
@@ -538,19 +590,50 @@ const SearchResults = () => {
                 <Typography>
                   Cabin Class: {searchParams.cabinClass}
                 </Typography>
+                <Typography variant="h6" color="primary" sx={{ mt: 1 }}>
+                  {CURRENCY_CONFIG.formatPrice(
+                    (selectedReturnFlight.displayPrices?.[searchParams.cabinClass] || selectedReturnFlight.displayPrices?.economy) * searchParams.passengers,
+                    selectedReturnFlight.displayCurrency
+                  )}
+                </Typography>
               </Box>
             )}
 
-                <Button
-                  variant="contained"
-                  color="primary"
+            {/* Total Price */}
+            {(selectedOnwardFlight || selectedReturnFlight) && (
+              <Box sx={{ mt: 2, pt: 2, borderTop: '1px solid #e0e0e0' }}>
+                <Typography variant="h6" gutterBottom>
+                  Total Price
+                </Typography>
+                <Typography variant="h5" color="primary">
+                  {(() => {
+                    const onwardPrice = selectedOnwardFlight ? 
+                      (selectedOnwardFlight.displayPrices?.[searchParams.cabinClass] || selectedOnwardFlight.displayPrices?.economy) * searchParams.passengers : 0;
+                    const returnPrice = selectedReturnFlight ? 
+                      (selectedReturnFlight.displayPrices?.[searchParams.cabinClass] || selectedReturnFlight.displayPrices?.economy) * searchParams.passengers : 0;
+                    const totalPrice = onwardPrice + returnPrice;
+                    const currency = selectedOnwardFlight?.displayCurrency || selectedReturnFlight?.displayCurrency || 'INR';
+                    return CURRENCY_CONFIG.formatPrice(totalPrice, currency);
+                  })()}
+                </Typography>
+                {(selectedOnwardFlight?.isInternational || selectedReturnFlight?.isInternational) && (
+                  <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
+                    *Prices will be converted to INR during payment
+                  </Typography>
+                )}
+              </Box>
+            )}
+
+            <Button
+              variant="contained"
+              color="primary"
               fullWidth
               onClick={handleProceedToTravellerDetails}
               disabled={!selectedOnwardFlight || (searchParams.tripType === 'roundtrip' && !selectedReturnFlight)}
               sx={{ mt: 2 }}
-                >
+            >
               Continue to Traveller Details
-                </Button>
+            </Button>
           </Paper>
         </Grid>
       </Grid>

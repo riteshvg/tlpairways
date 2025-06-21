@@ -1,62 +1,207 @@
-# TLAirways - Airline Booking System
+# TLAirways - Premium Air Travel Experience
 
-A dummy airline website that simulates core functionalities of an airline booking and check-in system. This project is intended as a learning tool and uses mock data.
+A modern flight booking application built with React, Node.js, and Express.
 
-## Features
+## 🚀 Features
 
-- Flight Search with IATA codes
-- Passenger Management
-- Flight Booking Simulation
-- Check-in Process
+- **Flight Search & Booking**: Search for flights with flexible date and route options
+- **Multi-Cabin Support**: Economy, Premium Economy, Business, and First Class
+- **Currency Conversion**: Automatic USD/INR conversion for international flights
+- **Ancillary Services**: Seat selection, baggage, meals, priority boarding, lounge access
+- **Responsive Design**: Modern UI that works on all devices
+- **Analytics Integration**: Adobe Data Layer integration for tracking
 
-## Tech Stack
+## 🛠️ Tech Stack
 
-- Frontend: React.js with Material-UI
-- Backend: Node.js with Express.js
-- Database: MongoDB with Mongoose
-- State Management: React Context API
+- **Frontend**: React 18, Material-UI, React Router
+- **Backend**: Node.js, Express.js
+- **Database**: MongoDB (optional)
+- **Deployment**: Render.com
 
-## Project Structure
+## 📦 Installation
 
-```
-tlpairways/
-├── frontend/           # React frontend application
-├── backend/           # Node.js/Express backend
-└── package.json       # Root package.json for project management
-```
+### Prerequisites
+- Node.js (v16 or higher)
+- npm (v8 or higher)
 
-## Getting Started
+### Local Development
 
-1. Clone the repository
-2. Install dependencies:
+1. **Clone the repository**
+   ```bash
+   git clone <your-repo-url>
+   cd tlpairways
+   ```
+
+2. **Install dependencies**
    ```bash
    npm run install-all
    ```
-3. Start the development servers:
+
+3. **Start development servers**
    ```bash
-   npm start
+   npm run dev
    ```
 
-## Development
+4. **Access the application**
+   - Frontend: http://localhost:3001
+   - Backend API: http://localhost:5000
 
-- Frontend runs on: http://localhost:3000
-- Backend runs on: http://localhost:5000
+## 🚀 Deployment to Render.com
 
-## Environment Variables
+### Method 1: Using Render Dashboard (Recommended)
 
-Create `.env` files in both frontend and backend directories with the following variables:
+1. **Prepare Your Repository**
+   - Ensure all files are committed to your Git repository
+   - Make sure the repository is public or connected to Render
 
-### Backend (.env)
-```
+2. **Create a Render Account**
+   - Go to [render.com](https://render.com)
+   - Sign up with your GitHub account
+
+3. **Create a New Web Service**
+   - Click "New +" → "Web Service"
+   - Connect your GitHub repository
+   - Select the repository containing your TLAirways app
+
+4. **Configure the Service**
+   - **Name**: `tlairways-app` (or your preferred name)
+   - **Environment**: `Node`
+   - **Region**: Choose closest to your users
+   - **Branch**: `main` (or your default branch)
+   - **Build Command**: `npm run install-all && npm run build`
+   - **Start Command**: `npm start`
+   - **Plan**: Free (or choose paid plan)
+
+5. **Set Environment Variables**
+   - Click on "Environment" tab
+   - Add the following variables:
+     ```
+     NODE_ENV=production
+     PORT=10000
+     ```
+
+6. **Deploy**
+   - Click "Create Web Service"
+   - Render will automatically build and deploy your application
+
+### Method 2: Using render.yaml (Blue-Green Deployment)
+
+1. **Use the provided render.yaml file**
+   - The file is already configured in your repository
+   - Render will automatically detect and use it
+
+2. **Deploy via Render Dashboard**
+   - Follow the same steps as Method 1
+   - Render will use the configuration from render.yaml
+
+## 🔧 Configuration
+
+### Environment Variables
+
+Create a `.env` file in the backend directory:
+
+```env
+# Server Configuration
 PORT=5000
+NODE_ENV=development
+
+# Database Configuration (if using MongoDB)
 MONGODB_URI=mongodb://localhost:27017/tlairways
+
+# CORS Origins
+ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3001
+
+# Security
+JWT_SECRET=your-super-secret-jwt-key-here
+SESSION_SECRET=your-super-secret-session-key-here
 ```
 
-### Frontend (.env)
-```
-REACT_APP_API_URL=http://localhost:5000/api
+### Production Configuration
+
+For production deployment on Render:
+
+```env
+NODE_ENV=production
+PORT=10000
+MONGODB_URI=your-mongodb-atlas-uri
+ALLOWED_ORIGINS=https://your-app-name.onrender.com
 ```
 
-## License
+## 📁 Project Structure
 
-ISC 
+```
+tlpairways/
+├── frontend/                 # React frontend application
+│   ├── public/              # Static files
+│   ├── src/                 # Source code
+│   │   ├── components/      # React components
+│   │   ├── pages/          # Page components
+│   │   ├── services/       # API services
+│   │   ├── config/         # Configuration files
+│   │   └── data/           # Static data files
+│   └── package.json
+├── backend/                 # Node.js backend API
+│   ├── src/
+│   │   ├── routes/         # API routes
+│   │   ├── models/         # Database models
+│   │   ├── config/         # Configuration
+│   │   └── scripts/        # Utility scripts
+│   └── package.json
+├── package.json            # Root package.json
+├── render.yaml             # Render deployment config
+└── README.md
+```
+
+## 🔍 API Endpoints
+
+- `GET /api/health` - Health check
+- `GET /api/airports` - Get all airports
+- `GET /api/flights` - Get flights (with query parameters)
+
+## 🧪 Testing
+
+```bash
+# Test frontend
+cd frontend
+npm test
+
+# Test backend
+cd backend
+npm test
+```
+
+## 📊 Monitoring
+
+- **Health Check**: `/api/health`
+- **Logs**: Available in Render dashboard
+- **Analytics**: Adobe Data Layer integration
+
+## 🔒 Security
+
+- Helmet.js for security headers
+- CORS configuration
+- Input validation
+- Rate limiting (recommended for production)
+
+## 🚀 Performance
+
+- Gzip compression enabled
+- Static file serving
+- React production build
+- Optimized bundle size
+
+## 📞 Support
+
+For deployment issues:
+1. Check Render logs in the dashboard
+2. Verify environment variables
+3. Ensure all dependencies are installed
+4. Check the health endpoint: `https://your-app.onrender.com/api/health`
+
+## 📝 License
+
+MIT License - see LICENSE file for details
+
+---
+
+**Happy Flying with TLAirways! ✈️** 
