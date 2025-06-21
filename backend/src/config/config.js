@@ -13,6 +13,13 @@ const config = {
     ? process.env.ALLOWED_ORIGINS.split(',') 
     : ['http://localhost:3000', 'http://localhost:3001'],
   
+  // Adobe Analytics Configuration
+  adobeAnalytics: {
+    enabled: process.env.ADOBE_ANALYTICS_ENABLED === 'true',
+    scriptUrl: process.env.ADOBE_SCRIPT_URL || 'https://assets.adobedtm.com/01296dd00565/26201e3c8f15/launch-2f8b80d50cb3-development.min.js',
+    environment: process.env.ADOBE_ENVIRONMENT || 'development'
+  },
+  
   // Security
   jwtSecret: process.env.JWT_SECRET || 'your-super-secret-jwt-key-here',
   sessionSecret: process.env.SESSION_SECRET || 'your-super-secret-session-key-here',

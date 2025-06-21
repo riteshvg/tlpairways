@@ -144,6 +144,11 @@ MONGODB_URI=mongodb://localhost:27017/tlairways
 # CORS Origins
 ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3001
 
+# Adobe Analytics Configuration
+ADOBE_ANALYTICS_ENABLED=true
+ADOBE_ENVIRONMENT=development
+ADOBE_SCRIPT_URL=https://assets.adobedtm.com/01296dd00565/26201e3c8f15/launch-2f8b80d50cb3-development.min.js
+
 # Security
 JWT_SECRET=your-super-secret-jwt-key-here
 SESSION_SECRET=your-super-secret-session-key-here
@@ -157,7 +162,9 @@ For production deployment on Render:
 NODE_ENV=production
 PORT=10000
 MONGODB_URI=your-mongodb-atlas-uri
-ALLOWED_ORIGINS=https://your-app-name.onrender.com
+ALLOWED_ORIGINS=https://tlairways-app.onrender.com
+ADOBE_ANALYTICS_ENABLED=true
+ADOBE_ENVIRONMENT=production
 ```
 
 ## 📁 Project Structure
@@ -166,7 +173,6 @@ ALLOWED_ORIGINS=https://your-app-name.onrender.com
 tlpairways/
 ├── frontend/                 # React frontend application
 │   ├── public/              # Static files
-│   ├── src/                 # Source code
 │   │   ├── components/      # React components
 │   │   ├── pages/          # Page components
 │   │   ├── services/       # API services
@@ -237,4 +243,4 @@ MIT License - see LICENSE file for details
 
 ---
 
-**Happy Flying with TLAirways! ✈️** 
+**Happy Flying with TLAirways! ✈️**

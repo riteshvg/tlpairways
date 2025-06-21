@@ -12,6 +12,10 @@ services:
         value: 10000
       - key: ALLOWED_ORIGINS
         value: https://tlairways-app.onrender.com
+      - key: ADOBE_ANALYTICS_ENABLED
+        value: true
+      - key: ADOBE_ENVIRONMENT
+        value: production
     healthCheckPath: /api/health
     autoDeploy: true
     buildFilter:

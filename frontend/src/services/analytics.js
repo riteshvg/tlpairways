@@ -8,8 +8,6 @@ const loadAdobeAnalytics = () => {
   window.satellite = window.satellite || {};
   window.satellite.debug = true;
 
- 
-
   // Add debug logging
   console.log('Initializing Adobe Analytics with environment:', window.satellite.environment);
 
@@ -18,14 +16,38 @@ const loadAdobeAnalytics = () => {
   const script = document.createElement('script');
   script.src = "https://assets.adobedtm.com/01296dd00565/26201e3c8f15/launch-2f8b80d50cb3-development.min.js";
   script.async = true;
+  script.crossOrigin = 'anonymous'; // Add CORS attribute
   
   // Add error handling
   script.onerror = (error) => {
     console.error('Error loading Adobe Analytics script:', error);
+    console.warn('Adobe Analytics failed to load. This may be due to CORS restrictions or network issues.');
+    console.warn('Analytics tracking will be disabled for this session.');
   };
 
   // Add load success handling
   script.onload = () => {
+    console.log('Adobe Analytics script loaded successfully');
+    // Verify satellite object
+    if (window._satellite) {
+      console.log('Satellite object initialized:', window._satellite);
+      // Enable debug mode
+      window._satellite.debug = true;
+      // Log available rules
+      console.log('Available rules:', window._satellite.rules);
+    } else {
+      console.error('Satellite object not initialized');
+    }
+  };
+
+  // Add timeout handling
+  const timeout = setTimeout(() => {
+    console.warn('Adobe Analytics script loading timed out');
+    console.warn('Analytics tracking may be limited for this session.');
+  }, 10000); // 10 second timeout
+
+  script.onload = () => {
+    clearTimeout(timeout);
     console.log('Adobe Analytics script loaded successfully');
     // Verify satellite object
     if (window._satellite) {

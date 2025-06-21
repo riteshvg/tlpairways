@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const compression = require('compression');
 require('dotenv').config();
 const connectDB = require('./config/database');
+const corsMiddleware = require('./middleware/cors');
 
 const app = express();
 
@@ -19,20 +20,30 @@ app.use(helmet({
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:"],
-      scriptSrc: ["'self'"],
-      connectSrc: ["'self'"]
+      scriptSrc: [
+        "'self'", 
+        "'unsafe-inline'",
+        "https://assets.adobedtm.com",
+        "https://*.adobedtm.com"
+      ],
+      connectSrc: [
+        "'self'",
+        "https://assets.adobedtm.com",
+        "https://*.adobedtm.com",
+        "https://*.adobe.com"
+      ],
+      frameSrc: [
+        "'self'",
+        "https://assets.adobedtm.com"
+      ]
     }
   }
 }));
 
 app.use(compression());
 
-app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://your-app-name.onrender.com'] 
-    : ['http://localhost:3000', 'http://localhost:3001'],
-  credentials: true
-}));
+// Use custom CORS middleware
+app.use(corsMiddleware);
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
