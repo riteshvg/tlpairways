@@ -30,7 +30,10 @@ app.use(helmet({
         "'self'",
         "https://assets.adobedtm.com",
         "https://*.adobedtm.com",
-        "https://*.adobe.com"
+        "https://*.adobe.com",
+        "https://*.demdex.net",
+        "https://adobedc.demdex.net",
+        "https://edge.adobedc.net"
       ],
       frameSrc: [
         "'self'",
