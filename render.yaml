@@ -3,12 +3,21 @@ services:
     name: tlairways-app
     env: node
     plan: free
-    buildCommand: npm run install-all && npm run build
+    buildCommand: npm run render-build
     startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
         value: 10000
+      - key: ALLOWED_ORIGINS
+        value: https://tlairways-app.onrender.com
     healthCheckPath: /api/health
-    autoDeploy: true 
+    autoDeploy: true
+    buildFilter:
+      paths:
+        - backend/**
+        - frontend/**
+        - package.json
+        - package-lock.json
+        - render.yaml 

@@ -68,7 +68,7 @@ A modern flight booking application built with React, Node.js, and Express.
    - **Environment**: `Node`
    - **Region**: Choose closest to your users
    - **Branch**: `main` (or your default branch)
-   - **Build Command**: `npm run install-all && npm run build`
+   - **Build Command**: `npm run render-build`
    - **Start Command**: `npm start`
    - **Plan**: Free (or choose paid plan)
 
@@ -78,6 +78,7 @@ A modern flight booking application built with React, Node.js, and Express.
      ```
      NODE_ENV=production
      PORT=10000
+     ALLOWED_ORIGINS=https://your-app-name.onrender.com
      ```
 
 6. **Deploy**
@@ -93,6 +94,38 @@ A modern flight booking application built with React, Node.js, and Express.
 2. **Deploy via Render Dashboard**
    - Follow the same steps as Method 1
    - Render will use the configuration from render.yaml
+
+### Troubleshooting Deployment Issues
+
+If you encounter the error "Cannot find module '/opt/render/project/src/backend/src/index.js'":
+
+1. **Verify File Structure**
+   ```bash
+   # Run the deployment check script
+   node deploy-check.js
+   ```
+
+2. **Check Build Logs**
+   - Go to your Render dashboard
+   - Click on your service
+   - Check the "Logs" tab for build errors
+
+3. **Common Solutions**
+   - Ensure all files are committed to Git
+   - Verify the build command is correct: `npm run render-build`
+   - Check that the start command is: `npm start`
+   - Make sure the root index.js file exists
+
+4. **Manual Verification**
+   ```bash
+   # Test locally before deploying
+   npm run render-build
+   npm start
+   ```
+
+5. **Health Check**
+   - After deployment, test: `https://your-app.onrender.com/api/health`
+   - Should return: `{"status":"OK","timestamp":"...","environment":"production"}`
 
 ## 🔧 Configuration
 
