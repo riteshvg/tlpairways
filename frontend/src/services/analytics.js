@@ -1,6 +1,54 @@
 // The Adobe launch script and data layer are initialized in public/index.html.
 // This service file is now only responsible for pushing events to that data layer.
 
+// Initialize Adobe Data Collection
+const loadAdobeAnalytics = () => {
+  // Initialize the data layer FIRST
+  window.adobeDataLayer = window.adobeDataLayer || [];
+  console.log('Data layer initialized:', window.adobeDataLayer);
+
+  console.log('Loading Adobe Analytics script...');
+  
+  const script = document.createElement('script');
+  script.src = "https://assets.adobedtm.com/01296dd00565/26201e3c8f15/launch-2f8b80d50cb3-development.min.js";
+  script.async = true;
+  script.crossOrigin = 'anonymous';
+  
+  script.onerror = (error) => {
+    console.error('Error loading Adobe Analytics script:', error);
+  };
+
+  script.onload = () => {
+    console.log('Adobe Analytics script loaded successfully');
+    if (window._satellite) {
+      console.log('Satellite object initialized.');
+    } else {
+      console.error('Satellite object not initialized');
+    }
+  };
+
+  document.head.appendChild(script);
+};
+
+/**
+ * Executes the Adobe Analytics script load.
+ * We defer this until the DOM is fully loaded to prevent race conditions.
+ */
+function initializeAnalytics() {
+  if (window.adobeDataLayerInitialized) {
+    return;
+  }
+  window.adobeDataLayerInitialized = true;
+  loadAdobeAnalytics();
+}
+
+// Wait for the DOM to be ready before initializing analytics.
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeAnalytics);
+} else {
+  initializeAnalytics();
+}
+
 /**
  * Pushes a structured event object into the global adobeDataLayer queue.
  * This is the single, standardized method for all analytics interactions.
