@@ -64,8 +64,28 @@ const loadAdobeAnalytics = () => {
   document.head.appendChild(script);
 };
 
-// Load Adobe Analytics when the file is imported
-loadAdobeAnalytics();
+/**
+ * Executes the Adobe Analytics script load.
+ * We defer this until the DOM is fully loaded to prevent race conditions
+ * and ensure the browser is in a stable state.
+ */
+function initializeAnalytics() {
+  // Check if the script has already been initialized to avoid duplicates.
+  if (window.adobeDataLayerInitialized) {
+    return;
+  }
+  window.adobeDataLayerInitialized = true;
+  loadAdobeAnalytics();
+}
+
+// Wait for the DOM to be ready before initializing analytics.
+if (document.readyState === 'loading') {
+  // The document is still loading, so we wait for the event.
+  document.addEventListener('DOMContentLoaded', initializeAnalytics);
+} else {
+  // The DOMContentLoaded event has already fired, we can initialize immediately.
+  initializeAnalytics();
+}
 
 // Helper function to push data to data layer
 const pushToDataLayer = (data) => {
