@@ -1,25 +1,16 @@
-// The Adobe Analytics script is now loaded directly in public/index.html.
-// This service file is responsible for pushing events to the data layer.
+// The Adobe launch script and data layer are initialized in public/index.html.
+// This service file is now only responsible for pushing events to that data layer.
 
-// Initialize the data layer FIRST to ensure it's available before any events are pushed.
-window.adobeDataLayer = window.adobeDataLayer || [];
-
-// Helper function to push data to data layer
+/**
+ * Pushes a structured event object into the global adobeDataLayer queue.
+ * This is the single, standardized method for all analytics interactions.
+ * @param {object} data The event or data object to be pushed.
+ */
 const pushToDataLayer = (data) => {
-  // Log the data being pushed
-  console.log('Pushing to data layer:', data);
-  
-  // Push new event while preserving existing data
+  // Ensure the dataLayer exists, though it should have been created in index.html.
   window.adobeDataLayer = window.adobeDataLayer || [];
+  console.log('Pushing to adobeDataLayer:', data);
   window.adobeDataLayer.push(data);
-  
-  // Verify the push
-  console.log('Current data layer state:', window.adobeDataLayer);
-  
-  // Check if rules are available
-  if (window._satellite) {
-    console.log('Available rules after push:', window._satellite.rules);
-  }
 };
 
 // Common page info structure
