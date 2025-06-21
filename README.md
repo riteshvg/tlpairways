@@ -162,7 +162,7 @@ For production deployment on Render:
 NODE_ENV=production
 PORT=10000
 MONGODB_URI=your-mongodb-atlas-uri
-ALLOWED_ORIGINS=https://tlairways-app.onrender.com
+ALLOWED_ORIGINS=https://tlpairways.onrender.com
 ADOBE_ANALYTICS_ENABLED=true
 ADOBE_ENVIRONMENT=production
 ```

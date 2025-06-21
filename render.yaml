@@ -11,7 +11,7 @@ services:
       - key: PORT
         value: 10000
       - key: ALLOWED_ORIGINS
-        value: https://tlairways-app.onrender.com
+        value: https://tlpairways.onrender.com
       - key: ADOBE_ANALYTICS_ENABLED
         value: true
       - key: ADOBE_ENVIRONMENT

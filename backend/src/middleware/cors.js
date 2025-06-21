@@ -7,7 +7,7 @@ const corsOptions = {
     if (!origin) return callback(null, true);
     
     const allowedOrigins = process.env.NODE_ENV === 'production' 
-      ? ['https://tlairways-app.onrender.com'] 
+      ? ['https://tlpairways.onrender.com'] 
       : ['http://localhost:3000', 'http://localhost:3001'];
     
     // Allow Adobe Analytics domains
