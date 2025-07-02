@@ -1,14 +1,12 @@
 // Adobe Target Pre-hiding Snippet
-const __adobePrehiding = (function(e,a,n,t){
+void function(e,a,n,t){
   var i=e.head;
   if(i){
     if(a) return;
     var o=e.createElement("style");
     o.id="alloy-prehiding",o.innerText=n,i.appendChild(o),setTimeout(function(){o.parentNode&&o.parentNode.removeChild(o)},t)
   }
-  // Return something to avoid 'no-unused-expressions'
-  return true;
-})(document, document.location.href.indexOf("adobe_authoring_enabled") !== -1, ".personalization-container { opacity: 0 !important }", 3000);
+}(document, document.location.href.indexOf("adobe_authoring_enabled") !== -1, ".personalization-container { opacity: 0 !important }", 3000);
 
 // The Adobe launch script and data layer are initialized in public/index.html.
 // This service file is now only responsible for pushing events to that data layer.
