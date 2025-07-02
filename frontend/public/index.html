@@ -13,7 +13,21 @@
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <title>TLAirways</title>
-    
+
+    <!-- Adobe Target Pre-hiding Snippet -->
+    <script>
+      (function(e,a,n,t){
+        var i=e.head;
+        if(i){
+          if(a) return;
+          var o=e.createElement("style");
+          o.id="alloy-prehiding",o.innerText=n,i.appendChild(o),setTimeout(function(){o.parentNode&&o.parentNode.removeChild(o)},t)
+        }
+      })(document, document.location.href.indexOf("adobe_authoring_enabled") !== -1, ".personalization-container { opacity: 0 !important }", 3000);
+    </script>
+    <!-- Adobe Launch/DTM Script -->
+    <script src="https://assets.adobedtm.com/01296dd00565/26201e3c8f15/launch-2f8b80d50cb3-development.min.js" async crossorigin="anonymous"></script>
+
     <!-- Initialize Adobe Data Layer -->
     <script>
       window.adobeDataLayer = window.adobeDataLayer || [];
