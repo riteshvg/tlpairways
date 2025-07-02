@@ -321,23 +321,42 @@ const TravellerDetails = () => {
     try {
       // Track passenger details added with proper flight data
       if (selectedFlights?.onward) {
-        const flightData = {
+        // Prepare passenger details for analytics
+        const passengerDetails = {
           passengers: travellers,
-          flight: {
-            originCode: selectedFlights.onward.origin?.iata_code || selectedFlights.onward.originCode,
-            destinationCode: selectedFlights.onward.destination?.iata_code || selectedFlights.onward.destinationCode,
-            flightNumber: selectedFlights.onward.flightNumber,
-            departureTime: selectedFlights.onward.departureTime,
-            arrivalTime: selectedFlights.onward.arrivalTime,
-            price: selectedFlights.onward.price,
-            cabinClass: selectedFlights.onward.cabinClass
+          contactInfo: {
+            email,
+            phone
           }
         };
-        console.log('Tracking analytics with flight data:', flightData);
+
+        // Prepare search parameters for analytics
+        const searchParams = {
+          originCode: selectedFlights.onward.origin?.iata_code || selectedFlights.onward.originCode,
+          destinationCode: selectedFlights.onward.destination?.iata_code || selectedFlights.onward.destinationCode,
+          date: selectedFlights.onward.departureTime,
+          returnDate: selectedFlights.return?.departureTime || null,
+          tripType: selectedFlights.return ? 'roundtrip' : 'oneway',
+          passengers: passengers || travellers.length || 1
+        };
+
+        console.log('Tracking analytics with passenger details:', passengerDetails);
+        console.log('Tracking analytics with search params:', searchParams);
+        
         try {
-          analytics.passengerDetailsAdded(flightData);
+          console.log('About to call analytics.passengerDetailsAdded...');
+          console.log('Analytics object:', analytics);
+          console.log('Analytics.passengerDetailsAdded function:', analytics.passengerDetailsAdded);
+          
+          // Test analytics first
+          console.log('Testing analytics service...');
+          analytics.test();
+          
+          analytics.passengerDetailsAdded(passengerDetails, searchParams);
+          console.log('analytics.passengerDetailsAdded called successfully');
         } catch (analyticsError) {
           console.error('Analytics error:', analyticsError);
+          console.error('Analytics error stack:', analyticsError.stack);
         }
       }
 
@@ -489,6 +508,44 @@ const TravellerDetails = () => {
             )}
 
             <form onSubmit={handleSubmit}>
+              {/* Test Analytics Button */}
+              <Box sx={{ mb: 4, p: 2, border: '1px solid #ccc', borderRadius: 1 }}>
+                <Typography variant="h6" gutterBottom>
+                  Analytics Test
+                </Typography>
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    console.log('Manual analytics test triggered');
+                    analytics.test();
+                  }}
+                  sx={{ mr: 2 }}
+                >
+                  Test Analytics
+                </Button>
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    console.log('Manual passengerDetailsAdded test triggered');
+                    const testPassengerDetails = {
+                      passengers: [{ firstName: 'Test', lastName: 'User' }],
+                      contactInfo: { email: 'test@example.com', phone: '1234567890' }
+                    };
+                    const testSearchParams = {
+                      originCode: 'DEL',
+                      destinationCode: 'BOM',
+                      date: '2024-01-01',
+                      returnDate: null,
+                      tripType: 'oneway',
+                      passengers: 1
+                    };
+                    analytics.passengerDetailsAdded(testPassengerDetails, testSearchParams);
+                  }}
+                >
+                  Test passengerDetailsAdded
+                </Button>
+              </Box>
+
               <Box sx={{ mb: 4 }}>
                 <Typography variant="h6" gutterBottom>
                   Contact Information

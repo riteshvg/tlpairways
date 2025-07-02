@@ -1,3 +1,15 @@
+// Adobe Target Pre-hiding Snippet
+const __adobePrehiding = (function(e,a,n,t){
+  var i=e.head;
+  if(i){
+    if(a) return;
+    var o=e.createElement("style");
+    o.id="alloy-prehiding",o.innerText=n,i.appendChild(o),setTimeout(function(){o.parentNode&&o.parentNode.removeChild(o)},t)
+  }
+  // Return something to avoid 'no-unused-expressions'
+  return true;
+})(document, document.location.href.indexOf("adobe_authoring_enabled") !== -1, ".personalization-container { opacity: 0 !important }", 3000);
+
 // The Adobe launch script and data layer are initialized in public/index.html.
 // This service file is now only responsible for pushing events to that data layer.
 
@@ -55,10 +67,22 @@ if (document.readyState === 'loading') {
  * @param {object} data The event or data object to be pushed.
  */
 const pushToDataLayer = (data) => {
-  // Ensure the dataLayer exists, though it should have been created in index.html.
-  window.adobeDataLayer = window.adobeDataLayer || [];
-  console.log('Pushing to adobeDataLayer:', data);
-  window.adobeDataLayer.push(data);
+  try {
+    // Ensure the dataLayer exists, though it should have been created in index.html.
+    window.adobeDataLayer = window.adobeDataLayer || [];
+    console.log('Pushing to adobeDataLayer:', data);
+    console.log('Current adobeDataLayer length before push:', window.adobeDataLayer.length);
+    console.log('Data to push:', JSON.stringify(data, null, 2));
+    
+    window.adobeDataLayer.push(data);
+    console.log('Current adobeDataLayer length after push:', window.adobeDataLayer.length);
+    console.log('Latest entry in adobeDataLayer:', window.adobeDataLayer[window.adobeDataLayer.length - 1]);
+    console.log('pushToDataLayer completed successfully');
+  } catch (error) {
+    console.error('Error in pushToDataLayer:', error);
+    console.error('Error stack:', error.stack);
+    console.error('Data that failed to push:', data);
+  }
 };
 
 // Common page info structure
@@ -105,6 +129,23 @@ const getFlightInfo = (flight) => {
 
 // Analytics service methods
 const analytics = {
+  // Test function to verify analytics is working
+  test: () => {
+    console.log('Analytics test function called');
+    console.log('window.adobeDataLayer exists:', !!window.adobeDataLayer);
+    console.log('window.adobeDataLayer length:', window.adobeDataLayer?.length || 0);
+    
+    const testEvent = {
+      event: 'test',
+      timestamp: new Date().toISOString(),
+      message: 'Analytics test event'
+    };
+    
+    console.log('Pushing test event:', testEvent);
+    pushToDataLayer(testEvent);
+    console.log('Test event pushed successfully');
+  },
+
   // Page View Events
   pageView: (pageName, previousPageName = null) => {
     pushToDataLayer({
@@ -195,18 +236,47 @@ const analytics = {
 
   // Passenger Details Events
   passengerDetailsAdded: (passengerDetails, searchParams) => {
-    pushToDataLayer({
-      event: 'passengerDetailsAdded',
-      ...getPageInfo('Passenger Details', 'Flight Selection'),
-      passengerDetails,
-      search: {
-        originAirport: searchParams.originCode,
-        destinationAirport: searchParams.destinationCode,
-        departureDate: searchParams.date,
-        returnDate: searchParams.returnDate,
-        tripType: searchParams.tripType
+    try {
+      console.log('passengerDetailsAdded called with:', { passengerDetails, searchParams });
+      
+      // Validate inputs
+      if (!passengerDetails) {
+        console.error('passengerDetailsAdded: passengerDetails is required');
+        return;
       }
-    });
+      
+      if (!searchParams) {
+        console.error('passengerDetailsAdded: searchParams is required');
+        return;
+      }
+      
+      // Get page info
+      const pageInfo = getPageInfo('Passenger Details', 'Flight Selection');
+      console.log('Page info generated:', pageInfo);
+      
+      const eventData = {
+        event: 'passengerDetailsAdded',
+        ...pageInfo,
+        passengerDetails,
+        search: {
+          originAirport: searchParams.originCode,
+          destinationAirport: searchParams.destinationCode,
+          departureDate: searchParams.date,
+          returnDate: searchParams.returnDate,
+          tripType: searchParams.tripType
+        }
+      };
+      
+      console.log('Pushing passengerDetailsAdded event to data layer:', eventData);
+      console.log('Event data structure:', JSON.stringify(eventData, null, 2));
+      
+      pushToDataLayer(eventData);
+      
+      console.log('passengerDetailsAdded event pushed successfully');
+    } catch (error) {
+      console.error('Error in passengerDetailsAdded:', error);
+      console.error('Error stack:', error.stack);
+    }
   },
 
   // Ancillary Services Events
