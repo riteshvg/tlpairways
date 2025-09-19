@@ -1,18 +1,9 @@
-# Ignore root package.json build script
-# Railway will use nixpacks.toml configuration instead
-
-# Ignore development files
-node_modules/
-.git/
-.gitignore
-README.md
-RAILWAY_DEPLOYMENT_GUIDE.md
-railway-build.sh
-
-# Ignore local environment files
+node_modules
+.git
+*.log
 .env.local
 .env.development
-
-# Ignore build artifacts (will be created during build)
-frontend/build/
-backend/dist/
+.env.test
+frontend/node_modules
+backend/node_modules
+frontend/build

@@ -1,21 +1,15 @@
 [phases.setup]
-nixPkgs = ["nodejs_20", "npm"]
+nixPkgs = ["nodejs_20"]
 
 [phases.install]
 cmds = [
-  "echo 'Installing backend dependencies...'",
-  "cd backend && npm install --production --no-audit --no-fund",
-  "echo 'Backend dependencies installed'"
+  "cd backend && npm install --production",
+  "cd ../frontend && npm install"
 ]
 
 [phases.build]
 cmds = [
-  "echo 'Installing frontend dependencies...'",
-  "cd frontend && npm install --no-audit --no-fund",
-  "echo 'Frontend dependencies installed'",
-  "echo 'Building frontend...'",
-  "npm run build",
-  "echo 'Build completed successfully!'"
+  "cd frontend && npm run build"
 ]
 
 [start]
