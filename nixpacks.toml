@@ -3,17 +3,19 @@ nixPkgs = ["nodejs-20_x", "npm"]
 
 [phases.install]
 cmds = [
-  "echo 'Installing backend dependencies...'",
-  "cd backend && npm ci --omit=dev --no-audit --no-fund",
-  "echo 'Installing frontend dependencies...'",
-  "cd ../frontend && npm ci --no-audit --no-fund"
+  "echo '=== INSTALLING BACKEND DEPENDENCIES ==='",
+  "cd backend && npm install --omit=dev --no-audit --no-fund",
+  "echo 'Backend dependencies installed successfully'",
+  "echo '=== INSTALLING FRONTEND DEPENDENCIES ==='",
+  "cd ../frontend && npm install --no-audit --no-fund",
+  "echo 'Frontend dependencies installed successfully'"
 ]
 
 [phases.build]
 cmds = [
-  "echo 'Building frontend...'",
+  "echo '=== BUILDING FRONTEND ==='",
   "cd frontend && npm run build",
-  "echo 'Build completed successfully!'"
+  "echo 'Frontend build completed successfully!'"
 ]
 
 [start]
