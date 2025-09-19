@@ -1,0 +1,10 @@
+# Ignore files that might interfere with Nixpacks detection
+render.yaml
+railway-build.sh
+Dockerfile
+.dockerignore
+
+# Keep our configuration files
+!nixpacks.toml
+!railway.json
+!package.json
