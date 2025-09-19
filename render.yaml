@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: tlairways-app
+    env: node
+    plan: free
+    buildCommand: npm run render-build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: ALLOWED_ORIGINS
+        value: https://tlpairways.onrender.com
+      - key: ADOBE_ANALYTICS_ENABLED
+        value: true
+      - key: ADOBE_ENVIRONMENT
+        value: production
+    healthCheckPath: /api/health
+    autoDeploy: true
+    buildFilter:
+      paths:
+        - backend/**
+        - frontend/**
+        - package.json
+        - package-lock.json
+        - render.yaml 
