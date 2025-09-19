@@ -4,11 +4,11 @@
   "description": "TLAirways - Premium Air Travel Experience",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "cd backend && npm start",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "server": "cd backend && npm run dev",
     "client": "cd frontend && npm start",
-    "build": "echo 'Build handled by nixpacks configuration'",
+    "build": "cd frontend && npm run build",
     "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install",
     "heroku-postbuild": "cd frontend && npm install && npm run build",
     "render-build": "npm run install-all && npm run build",
