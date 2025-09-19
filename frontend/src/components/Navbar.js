@@ -11,14 +11,19 @@ import {
   MenuItem,
   useTheme,
   useMediaQuery,
+  Avatar,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link as RouterLink } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import LoginButton from './auth/LoginButton';
+import ProfileDropdown from './auth/ProfileDropdown';
 
 const Navbar = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [anchorEl, setAnchorEl] = useState(null);
+  const { user, isAuthenticated } = useAuth();
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -85,24 +90,14 @@ const Navbar = () => {
             </Box>
           )}
 
-          {/* Login/Sign Up Button */}
-          <Button
-            variant="outlined"
-            color="primary"
-            component={RouterLink}
-            to="/login"
-            sx={{
-              ml: { xs: 'auto', md: 2 },
-              borderWidth: 2,
-              '&:hover': {
-                borderWidth: 2,
-                backgroundColor: 'primary.main',
-                color: 'white',
-              },
-            }}
-          >
-            Login / Sign Up
-          </Button>
+          {/* Authentication Section */}
+          <Box sx={{ ml: { xs: 'auto', md: 2 }, display: 'flex', alignItems: 'center', gap: 1 }}>
+            {isAuthenticated ? (
+              <ProfileDropdown />
+            ) : (
+              <LoginButton size="small" />
+            )}
+          </Box>
 
           {/* Mobile Menu */}
           {isMobile && (

@@ -8,12 +8,12 @@ const loadAdobeAnalytics = () => {
   console.log('Data layer initialized:', window.adobeDataLayer);
 
   console.log('Loading Adobe Analytics script...');
-  
+
   const script = document.createElement('script');
   script.src = "https://assets.adobedtm.com/01296dd00565/26201e3c8f15/launch-2f8b80d50cb3-development.min.js";
   script.async = true;
   script.crossOrigin = 'anonymous';
-  
+
   script.onerror = (error) => {
     console.error('Error loading Adobe Analytics script:', error);
   };
@@ -28,6 +28,63 @@ const loadAdobeAnalytics = () => {
   };
 
   document.head.appendChild(script);
+};
+
+// User Authentication Data Functions
+const generateUserId = (user) => {
+  // Generate alphanumeric user ID from Auth0 user data
+  if (user?.sub) {
+    // Extract alphanumeric part from Auth0 sub (format: auth0|1234567890abcdef)
+    const subParts = user.sub.split('|');
+    if (subParts.length > 1) {
+      return subParts[1]; // Return the alphanumeric part
+    }
+    return user.sub.replace(/[^a-zA-Z0-9]/g, ''); // Remove non-alphanumeric characters
+  }
+  return null;
+};
+
+const pushUserInfo = (user, isAuthenticated) => {
+  if (!window.adobeDataLayer) {
+    console.warn('Adobe Data Layer not initialized');
+    return;
+  }
+
+  const userInfo = {
+    userInfo: {
+      userId: generateUserId(user),
+      status: isAuthenticated ? 'authenticated' : 'anonymous',
+      timestamp: new Date().toISOString(),
+      // Additional user data for analytics
+      userType: isAuthenticated ? 'registered' : 'guest',
+      loginMethod: user?.sub?.includes('auth0') ? 'auth0' : 'unknown',
+    }
+  };
+
+  // Push user info to Adobe Data Layer
+  window.adobeDataLayer.push(userInfo);
+  console.log('User info pushed to Adobe Data Layer:', userInfo);
+};
+
+const pushUserLogout = () => {
+  if (!window.adobeDataLayer) {
+    console.warn('Adobe Data Layer not initialized');
+    return;
+  }
+
+  const logoutInfo = {
+    userInfo: {
+      userId: null,
+      status: 'anonymous',
+      timestamp: new Date().toISOString(),
+      userType: 'guest',
+      loginMethod: null,
+    }
+  };
+
+  // Push logout info to Adobe Data Layer
+  window.adobeDataLayer.push(logoutInfo);
+  console.log('User logout pushed to Adobe Data Layer:', logoutInfo);
 };
 
 /**
@@ -295,6 +352,51 @@ const analytics = {
       payment: paymentDetails,
       booking: bookingSummary
     });
+  },
+
+  // User Authentication Events
+  trackUserLogin: (user) => {
+    pushUserInfo(user, true);
+    pushToDataLayer({
+      event: 'userLogin',
+      ...getPageInfo('User Login'),
+      user: {
+        userId: generateUserId(user),
+        loginMethod: user?.sub?.includes('auth0') ? 'auth0' : 'unknown',
+        timestamp: new Date().toISOString(),
+      }
+    });
+  },
+
+  trackUserLogout: () => {
+    pushUserLogout();
+    pushToDataLayer({
+      event: 'userLogout',
+      ...getPageInfo('User Logout'),
+      timestamp: new Date().toISOString(),
+    });
+  },
+
+  trackUserProfileUpdate: (userData) => {
+    pushUserInfo(userData, true);
+    pushToDataLayer({
+      event: 'userProfileUpdate',
+      ...getPageInfo('User Profile Update'),
+      user: {
+        userId: generateUserId(userData),
+        updatedFields: Object.keys(userData),
+        timestamp: new Date().toISOString(),
+      }
+    });
+  },
+
+  // Helper function to get current user info from data layer
+  getCurrentUserInfo: () => {
+    if (window.adobeDataLayer) {
+      const userInfoEntry = window.adobeDataLayer.find(entry => entry.userInfo);
+      return userInfoEntry ? userInfoEntry.userInfo : null;
+    }
+    return null;
   },
 
   // Booking Confirmation Events
