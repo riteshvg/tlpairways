@@ -11,7 +11,7 @@ services:
       - key: PORT
         value: 10000
       - key: ALLOWED_ORIGINS
-        value: https://tlairways-app.onrender.com
+        value: https://tlpairways.onrender.com
       - key: ADOBE_ANALYTICS_ENABLED
         value: true
       - key: ADOBE_ENVIRONMENT
@@ -23,7 +23,7 @@ services:
       - key: REACT_APP_AUTH0_AUDIENCE
         value: https://api.tlairways.com
       - key: REACT_APP_AUTH0_REDIRECT_URI
-        value: https://tlairways-app.onrender.com
+        value: https://tlpairways.onrender.com
       - key: REACT_APP_AUTH0_SCOPE
         value: openid profile email
     healthCheckPath: /api/health
