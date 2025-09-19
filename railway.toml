@@ -5,6 +5,3 @@ builder = "nixpacks"
 startCommand = "cd backend && npm start"
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 3
-
-[build.nixpacks]
-configPath = "nixpacks.toml"

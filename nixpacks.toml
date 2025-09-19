@@ -2,10 +2,21 @@
 nixPkgs = ["nodejs_20", "npm"]
 
 [phases.install]
-cmds = ["echo 'Skipping install phase - using build script instead'"]
+cmds = [
+  "echo 'Installing backend dependencies...'",
+  "cd backend && npm install --production --no-audit --no-fund",
+  "echo 'Backend dependencies installed'"
+]
 
 [phases.build]
-cmds = ["chmod +x railway-build.sh", "./railway-build.sh"]
+cmds = [
+  "echo 'Installing frontend dependencies...'",
+  "cd frontend && npm install --no-audit --no-fund",
+  "echo 'Frontend dependencies installed'",
+  "echo 'Building frontend...'",
+  "npm run build",
+  "echo 'Build completed successfully!'"
+]
 
 [start]
 cmd = "cd backend && npm start"
