@@ -3,10 +3,12 @@ nixPkgs = ["nodejs-20_x", "npm"]
 
 [phases.install]
 cmds = [
+  "echo 'Installing root dependencies...'",
+  "npm install --no-audit --no-fund",
   "echo 'Installing backend dependencies...'",
   "cd backend && npm install --only=production --no-audit --no-fund",
   "echo 'Installing frontend dependencies...'",
-  "cd frontend && npm install --no-audit --no-fund"
+  "cd ../frontend && npm install --no-audit --no-fund"
 ]
 
 [phases.build]
@@ -17,4 +19,4 @@ cmds = [
 ]
 
 [start]
-cmd = "cd backend && npm start"
+cmd = "node index.js"
