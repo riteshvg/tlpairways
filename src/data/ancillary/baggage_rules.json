@@ -1,0 +1,142 @@
+{
+  "cabin_classes": {
+    "first": {
+      "cabin_baggage": {
+        "pieces": 2,
+        "max_weight_per_piece": 7,
+        "max_dimensions": "55x35x25",
+        "unit": "kg"
+      },
+      "checked_baggage": {
+        "pieces": 3,
+        "max_weight_per_piece": 32,
+        "max_dimensions": "158x73x73",
+        "unit": "kg"
+      }
+    },
+    "business": {
+      "cabin_baggage": {
+        "pieces": 2,
+        "max_weight_per_piece": 7,
+        "max_dimensions": "55x35x25",
+        "unit": "kg"
+      },
+      "checked_baggage": {
+        "pieces": 2,
+        "max_weight_per_piece": 32,
+        "max_dimensions": "158x73x73",
+        "unit": "kg"
+      }
+    },
+    "premium_economy": {
+      "cabin_baggage": {
+        "pieces": 1,
+        "max_weight_per_piece": 7,
+        "max_dimensions": "55x35x25",
+        "unit": "kg"
+      },
+      "checked_baggage": {
+        "pieces": 2,
+        "max_weight_per_piece": 23,
+        "max_dimensions": "158x73x73",
+        "unit": "kg"
+      }
+    },
+    "economy": {
+      "cabin_baggage": {
+        "pieces": 1,
+        "max_weight_per_piece": 7,
+        "max_dimensions": "55x35x25",
+        "unit": "kg"
+      },
+      "checked_baggage": {
+        "pieces": 1,
+        "max_weight_per_piece": 23,
+        "max_dimensions": "158x73x73",
+        "unit": "kg"
+      }
+    }
+  },
+  "route_specific_rules": {
+    "domestic": {
+      "economy": {
+        "checked_baggage": {
+          "pieces": 1,
+          "max_weight_per_piece": 15,
+          "max_dimensions": "158x73x73",
+          "unit": "kg"
+        }
+      }
+    },
+    "international": {
+      "economy": {
+        "checked_baggage": {
+          "pieces": 1,
+          "max_weight_per_piece": 23,
+          "max_dimensions": "158x73x73",
+          "unit": "kg"
+        }
+      }
+    }
+  },
+  "special_items": {
+    "sports_equipment": {
+      "max_weight": 32,
+      "max_dimensions": "300x75x75",
+      "unit": "kg",
+      "additional_charges": {
+        "domestic": 1000,
+        "international": 2000
+      }
+    },
+    "musical_instruments": {
+      "max_weight": 32,
+      "max_dimensions": "300x75x75",
+      "unit": "kg",
+      "additional_charges": {
+        "domestic": 1000,
+        "international": 2000
+      }
+    },
+    "wheelchairs": {
+      "max_weight": 32,
+      "max_dimensions": "300x75x75",
+      "unit": "kg",
+      "additional_charges": 0
+    }
+  },
+  "excess_baggage_charges": {
+    "domestic": {
+      "per_kg": 500,
+      "max_charge": 5000
+    },
+    "international": {
+      "per_kg": 1000,
+      "max_charge": 10000
+    }
+  },
+  "restricted_items": [
+    "Explosives",
+    "Compressed gases",
+    "Flammable liquids",
+    "Flammable solids",
+    "Oxidizing substances",
+    "Toxic substances",
+    "Radioactive materials",
+    "Corrosive substances",
+    "Miscellaneous dangerous goods"
+  ],
+  "prohibited_items": [
+    "Weapons",
+    "Ammunition",
+    "Explosives",
+    "Compressed gases",
+    "Flammable liquids",
+    "Flammable solids",
+    "Oxidizing substances",
+    "Toxic substances",
+    "Radioactive materials",
+    "Corrosive substances",
+    "Miscellaneous dangerous goods"
+  ]
+} 
