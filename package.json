@@ -1,26 +1,18 @@
 {
-  "name": "tlairways",
+  "name": "tlpairways",
   "version": "1.0.0",
   "description": "TLAirways - Premium Air Travel Experience",
-  "main": "index.js",
   "scripts": {
-    "start": "cd backend && npm start",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "server": "cd backend && npm run dev",
-    "client": "cd frontend && npm start",
-    "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install",
-    "heroku-postbuild": "cd frontend && npm install && npm run build",
-    "render-build": "npm run install-all && cd frontend && npm run build",
-    "railway-build": "echo 'Build completed successfully'"
-  },
-  "keywords": ["airlines", "booking", "travel"],
-  "author": "TLAirways",
-  "license": "MIT",
-  "dependencies": {
-    "concurrently": "^8.2.2"
+    "install:backend": "npm install --production --prefix backend",
+    "install:frontend": "npm install --prefix frontend",
+    "build:frontend": "npm run build --prefix frontend",
+    "start:backend": "npm start --prefix backend",
+    "install:all": "npm run install:backend && npm run install:frontend",
+    "build": "npm run build:frontend",
+    "start": "npm run start:backend"
   },
   "engines": {
-    "node": ">=16.0.0",
+    "node": ">=18.0.0",
     "npm": ">=8.0.0"
   }
-} 
+}
