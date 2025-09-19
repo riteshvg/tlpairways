@@ -3,11 +3,13 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { validateAuth0Config } from '../config/auth0Config';
 import analytics from '../services/analytics';
 
-// Validate Auth0 configuration on import
-try {
-  validateAuth0Config();
-} catch (error) {
-  console.error('Auth0 configuration error:', error.message);
+// Validate Auth0 configuration only when environment variables are available
+if (process.env.NODE_ENV !== 'production' || process.env.REACT_APP_AUTH0_DOMAIN) {
+  try {
+    validateAuth0Config();
+  } catch (error) {
+    console.error('Auth0 configuration error:', error.message);
+  }
 }
 
 const AuthContext = createContext();

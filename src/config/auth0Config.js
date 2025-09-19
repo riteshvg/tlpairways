@@ -19,7 +19,8 @@ export const validateAuth0Config = () => {
   const missing = required.filter(key => !auth0Config[key]);
   
   if (missing.length > 0) {
-    throw new Error(`Missing required Auth0 configuration: ${missing.join(', ')}`);
+    console.warn(`Missing Auth0 configuration: ${missing.join(', ')}. This is normal during build process.`);
+    return false;
   }
   
   return true;
