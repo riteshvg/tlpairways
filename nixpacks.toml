@@ -1,11 +1,11 @@
 [phases.setup]
-nixPkgs = ["nodejs-20_x", "npm"]
+nixPkgs = ["nodejs_20", "npm"]
 
 [phases.install]
 cmds = ["echo 'Skipping install phase - using build script instead'"]
 
 [phases.build]
-cmds = ["./railway-build.sh"]
+cmds = ["chmod +x railway-build.sh", "./railway-build.sh"]
 
 [start]
 cmd = "cd backend && npm start"
