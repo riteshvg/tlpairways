@@ -1,14 +1,25 @@
 [phases.setup]
-nixPkgs = ["nodejs", "npm"]
+nixPkgs = ["nodejs-18_x", "npm"]
 
 [phases.install]
 cmds = [
+  "echo 'Node version:' && node --version",
+  "echo 'NPM version:' && npm --version",
+  "echo 'Installing backend dependencies...'",
   "cd backend && npm ci --only=production",
-  "cd frontend && npm ci --include=dev"
+  "echo 'Backend dependencies installed successfully'",
+  "echo 'Installing frontend dependencies...'",
+  "cd frontend && npm ci",
+  "echo 'Frontend dependencies installed successfully'"
 ]
 
 [phases.build]
-cmds = ["cd frontend && npm run build"]
+cmds = [
+  "echo 'Building frontend...'",
+  "cd frontend && npm run build",
+  "echo 'Build completed successfully!'",
+  "echo 'Build artifacts:' && ls -la frontend/build/"
+]
 
 [start]
 cmd = "cd backend && npm start"
