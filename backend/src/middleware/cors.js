@@ -17,10 +17,17 @@ const corsOptions = {
       'https://*.adobe.com'
     ];
     
-    const allAllowedOrigins = [...allowedOrigins, ...adobeDomains];
+    // Allow Auth0 domains
+    const auth0Domains = [
+      'https://dev-q6p3jrm5pbykuq23.us.auth0.com',
+      'https://*.auth0.com'
+    ];
+    
+    const allAllowedOrigins = [...allowedOrigins, ...adobeDomains, ...auth0Domains];
     
     if (allAllowedOrigins.indexOf(origin) !== -1 || 
-        adobeDomains.some(domain => origin.includes(domain.replace('https://', '').replace('*.', '')))) {
+        adobeDomains.some(domain => origin.includes(domain.replace('https://', '').replace('*.', ''))) ||
+        auth0Domains.some(domain => origin.includes(domain.replace('https://', '').replace('*.', '')))) {
       callback(null, true);
     } else {
       console.warn(`CORS blocked origin: ${origin}`);

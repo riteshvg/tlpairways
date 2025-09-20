@@ -17,17 +17,22 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://dev-q6p3jrm5pbykuq23.us.auth0.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com", "https://dev-q6p3jrm5pbykuq23.us.auth0.com"],
       imgSrc: ["'self'", "data:", "https:"],
       scriptSrc: [
         "'self'", 
         "'unsafe-inline'",
+        "'unsafe-eval'",
+        "https://dev-q6p3jrm5pbykuq23.us.auth0.com",
+        "https://*.auth0.com",
         "https://assets.adobedtm.com",
         "https://*.adobedtm.com"
       ],
       connectSrc: [
         "'self'",
+        "https://dev-q6p3jrm5pbykuq23.us.auth0.com",
+        "https://*.auth0.com",
         "https://assets.adobedtm.com",
         "https://*.adobedtm.com",
         "https://*.adobe.com",
@@ -37,7 +42,13 @@ app.use(helmet({
       ],
       frameSrc: [
         "'self'",
+        "https://dev-q6p3jrm5pbykuq23.us.auth0.com",
+        "https://*.auth0.com",
         "https://assets.adobedtm.com"
+      ],
+      formAction: [
+        "'self'",
+        "https://dev-q6p3jrm5pbykuq23.us.auth0.com"
       ]
     }
   }
