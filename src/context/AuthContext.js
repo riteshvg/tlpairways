@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { validateAuth0Config } from '../config/auth0Config';
-import analytics from '../services/analytics';
 
 // Validate Auth0 configuration only when environment variables are available
 if (process.env.NODE_ENV !== 'production' || process.env.REACT_APP_AUTH0_DOMAIN) {
@@ -36,7 +35,7 @@ export const AuthProvider = ({ children }) => {
   const [userProfile, setUserProfile] = useState(null);
   const [isLoadingProfile, setIsLoadingProfile] = useState(false);
 
-  // Load user profile data and track authentication
+  // Load user profile data
   useEffect(() => {
     const loadUserProfile = async () => {
       if (isAuthenticated && user) {
@@ -57,10 +56,6 @@ export const AuthProvider = ({ children }) => {
           };
           
           setUserProfile(profileData);
-          
-          // Track user login in Adobe Data Layer
-          console.log('User authenticated, tracking login:', profileData);
-          analytics.trackUserLogin(profileData);
         } catch (error) {
           console.error('Error loading user profile:', error);
         } finally {
@@ -68,16 +63,11 @@ export const AuthProvider = ({ children }) => {
         }
       } else {
         setUserProfile(null);
-        // Track user logout in Adobe Data Layer
-        if (!isLoading) {
-          console.log('User not authenticated, tracking logout');
-          analytics.trackUserLogout();
-        }
       }
     };
 
     loadUserProfile();
-  }, [isAuthenticated, user, getAccessTokenSilently, isLoading]);
+  }, [isAuthenticated, user, getAccessTokenSilently]);
 
   const login = () => {
     loginWithRedirect({

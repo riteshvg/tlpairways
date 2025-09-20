@@ -27,15 +27,26 @@
       img-src 'self' data: blob: 
         https://dev-q6p3jrm5pbykuq23.us.auth0.com 
         https://assets.adobedtm.com 
-        https://*.adobedtm.com;
+        https://*.adobedtm.com 
+        https://images.unsplash.com 
+        https://*.unsplash.com 
+        https://www.gravatar.com 
+        https://*.gravatar.com;
       connect-src 'self' 
         https://dev-q6p3jrm5pbykuq23.us.auth0.com 
         https://*.auth0.com 
         https://api.tlairways.com 
         https://assets.adobedtm.com 
-        https://*.adobedtm.com;
+        https://*.adobedtm.com 
+        https://*.adobe.com 
+        https://*.demdex.net 
+        https://adobedc.demdex.net 
+        https://edge.adobedc.net;
       frame-src 'self' 
-        https://dev-q6p3jrm5pbykuq23.us.auth0.com;
+        https://dev-q6p3jrm5pbykuq23.us.auth0.com 
+        https://*.auth0.com 
+        https://assets.adobedtm.com 
+        https://*.adobedtm.com;
       object-src 'none';
       base-uri 'self';
       form-action 'self' https://dev-q6p3jrm5pbykuq23.us.auth0.com;
@@ -58,11 +69,6 @@
     <!-- Adobe Launch/DTM Script -->
     <script src="https://assets.adobedtm.com/01296dd00565/26201e3c8f15/launch-2f8b80d50cb3-development.min.js" async crossorigin="anonymous"></script>
 
-    <!-- Initialize Adobe Data Layer -->
-    <script>
-      window.adobeDataLayer = window.adobeDataLayer || [];
-      console.log('Adobe Data Layer initialized in index.html');
-    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

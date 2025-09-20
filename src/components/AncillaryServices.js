@@ -43,7 +43,6 @@ import {
 import { format } from 'date-fns';
 import seatConfigurations from '../data/ancillary/seat_configurations.json';
 import baggageRulesData from '../data/ancillary/baggage_rules.json';
-import analytics from '../services/analytics';
 import { CURRENCY_CONFIG } from '../config/currencyConfig';
 
 const AncillaryServices = () => {
@@ -158,10 +157,7 @@ const AncillaryServices = () => {
           setCurrentAircraft(initialFlights.onward.aircraft);
         }
 
-        // Track page view
-        analytics.pageView('Ancillary Services', location.state.previousPage, {
-          flights: initialFlights,
-          passengers: initialTravellerDetails,
+        // Ancillary services page loaded
           contactInfo: initialContactInfo,
           paymentType: initialPaymentType
         });
@@ -217,13 +213,13 @@ const AncillaryServices = () => {
           journeyType: journey
         };
         
-        analytics.ancillarySelected(serviceType, value, value !== 'included', flightInfo);
+        // Service selected
       } else {
-        console.warn('Flight data not available for analytics tracking');
+        console.warn('Flight data not available');
       }
     } catch (error) {
-      console.error('Error tracking service selection:', error);
-      // Continue with the service change even if analytics fails
+      console.error('Error handling service selection:', error);
+      // Continue with the service change
     }
   };
 
@@ -1031,10 +1027,7 @@ Price: ₹${seatPrice}`}
       previousPage: 'Ancillary Services'
     };
 
-    // Track proceeding to payment with complete data
-    analytics.paymentInitiated({
-      ...navigationState,
-      flightDetails: {
+    // Proceeding to payment
         onward: {
           origin: selectedFlights.onward.origin?.iata_code,
           destination: selectedFlights.onward.destination?.iata_code,

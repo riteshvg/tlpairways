@@ -38,8 +38,6 @@ import {
 } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import analytics from '../services/analytics';
-import AdobeDataLayerDebugger from '../components/AdobeDataLayerDebugger';
 
 const UserProfilePage = () => {
   const { user, isAuthenticated } = useAuth();
@@ -72,8 +70,7 @@ const UserProfilePage = () => {
     // In a real app, you would save this to your backend
     console.log('Saving user profile:', editedUser);
     
-    // Track profile update in Adobe Data Layer
-    analytics.trackUserProfileUpdate(editedUser);
+    // Profile updated
     
     setSnackbar({
       open: true,
@@ -286,12 +283,6 @@ const UserProfilePage = () => {
         </Grid>
       </Grid>
 
-      {/* Adobe Data Layer Debugger (Development Only) */}
-      {process.env.NODE_ENV === 'development' && (
-        <Box sx={{ mt: 4 }}>
-          <AdobeDataLayerDebugger />
-        </Box>
-      )}
 
       {/* Snackbar for notifications */}
       <Snackbar

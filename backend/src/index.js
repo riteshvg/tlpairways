@@ -19,7 +19,15 @@ app.use(helmet({
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://dev-q6p3jrm5pbykuq23.us.auth0.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com", "https://dev-q6p3jrm5pbykuq23.us.auth0.com"],
-      imgSrc: ["'self'", "data:", "https:"],
+      imgSrc: [
+        "'self'", 
+        "data:", 
+        "https:",
+        "https://images.unsplash.com",
+        "https://*.unsplash.com",
+        "https://www.gravatar.com",
+        "https://*.gravatar.com"
+      ],
       scriptSrc: [
         "'self'", 
         "'unsafe-inline'",
@@ -38,13 +46,15 @@ app.use(helmet({
         "https://*.adobe.com",
         "https://*.demdex.net",
         "https://adobedc.demdex.net",
-        "https://edge.adobedc.net"
+        "https://edge.adobedc.net",
+        "https://*.adobedc.net"
       ],
       frameSrc: [
         "'self'",
         "https://dev-q6p3jrm5pbykuq23.us.auth0.com",
         "https://*.auth0.com",
-        "https://assets.adobedtm.com"
+        "https://assets.adobedtm.com",
+        "https://*.adobedtm.com"
       ],
       formAction: [
         "'self'",

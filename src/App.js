@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Auth0Provider } from '@auth0/auth0-react';
@@ -19,23 +19,7 @@ import AncillaryServices from './components/AncillaryServices';
 import Payment from './components/Payment';
 import BookingConfirmation from './components/BookingConfirmation';
 import ProtectedRoute from './components/protected/ProtectedRoute';
-import analytics from './services/analytics';
 
-// Page View Tracker Component
-function PageViewTracker() {
-  const location = useLocation();
-
-  React.useEffect(() => {
-    if (location.pathname === '/') {
-      // Only fire once per mount (i.e., on initial load or refresh)
-      analytics.pageView('Homepage');
-    }
-    // No dependency on location, so this effect only runs on mount/unmount
-    // eslint-disable-next-line
-  }, []);
-
-  return null;
-}
 
 function App() {
   return (
@@ -44,7 +28,6 @@ function App() {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Router>
-            <PageViewTracker />
             <Navbar />
             <Routes>
               <Route path="/" element={<HomePage />} />

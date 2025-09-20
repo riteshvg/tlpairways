@@ -1,0 +1,30 @@
+🚀 Adobe Experience Platform API Helper - Quick Reference
+========================================================
+
+📋 BASIC COMMANDS:
+./adobe-api-helper.sh sandboxes                    # List all sandboxes
+./adobe-api-helper.sh batch <ID> [SANDBOX]         # Get batch info (sandbox optional)
+./adobe-api-helper.sh failed <ID> [SANDBOX]        # Get failed files (sandbox optional)
+./adobe-api-helper.sh datasets [SANDBOX]           # List datasets (sandbox optional)
+./adobe-api-helper.sh test                         # Test connection
+./adobe-api-helper.sh config                       # Show current config
+./adobe-api-helper.sh help                         # Show help
+
+🎯 TYPICAL WORKFLOW:
+1. ./adobe-api-helper.sh sandboxes                 # Find your sandbox names
+2. ./adobe-api-helper.sh batch 01K5JSCT5RNRATHCMR9C0FJ9MG     # Uses DEFAULT_SANDBOX
+3. ./adobe-api-helper.sh failed 01K5JSCT5RNRATHCMR9C0FJ9MG   # Uses DEFAULT_SANDBOX
+
+🔧 CONFIGURATION:
+Edit ACCESS_TOKEN, API_KEY, ORG_ID, DEFAULT_SANDBOX at top of adobe-api-helper.sh
+DEFAULT_SANDBOX makes sandbox parameter optional in commands
+
+✅ FEATURES:
+- Color-coded output
+- Automatic JSON formatting
+- Proper error handling
+- Pre-configured headers
+- Sandbox-aware requests
+
+📚 FULL DOCUMENTATION:
+See ADOBE_API_USAGE.md for detailed instructions and examples
