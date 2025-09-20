@@ -59,7 +59,7 @@ class AirlinesDataLayer {
         ...eventData,
         timestamp: new Date().toISOString(),
         userAgent: navigator.userAgent,
-        screenResolution: `${screen.width}x${screen.height}`,
+        screenResolution: `${window.screen.width}x${window.screen.height}`,
         viewportSize: `${window.innerWidth}x${window.innerHeight}`
       }
     };

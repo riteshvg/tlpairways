@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, Card, CardMedia, CardContent, Typography, Button, Box } from '@mui/material';
-import { FlightTakeoff as FlightTakeoffIcon } from '@mui/icons-material/FlightTakeoff';
+import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
 
 const featuredDestinations = [
   {
