@@ -1,16 +1,56 @@
 import React from 'react';
-import { Box, Container, Typography, Grid } from '@mui/material';
+import { Box, Container, Typography, Grid, Card, CardContent, Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import HomeBanner from '../components/HomeBanner';
+import FeaturedDestinations from '../components/FeaturedDestinations';
+import WhyChooseUs from '../components/WhyChooseUs';
+import PromotionalBanners from '../components/PromotionalBanners';
+import useHomepageDataLayer from '../hooks/useHomepageDataLayer';
 
 const HomePage = () => {
-  console.log('HomePage rendered');
+  const navigate = useNavigate();
+  const {
+    trackHomepageInteraction,
+    trackNavigationInteraction,
+    trackFeaturedDestinationClick,
+    trackPromotionalBannerClick
+  } = useHomepageDataLayer();
+
+  console.log('🏠 HomePage rendered with data layer integration');
+
+  const handleWhyChooseUsClick = (feature) => {
+    trackHomepageInteraction('why-choose-us-click', {
+      feature,
+      section: 'why-choose-us'
+    });
+  };
+
+  const handleNavigationClick = (destination) => {
+    trackNavigationInteraction(destination);
+    navigate(`/search?destination=${encodeURIComponent(destination)}`);
+  };
+
+  const handlePromotionalBannerClick = (bannerData) => {
+    trackPromotionalBannerClick(bannerData);
+  };
+
+  const handleFeaturedDestinationClick = (destinationData) => {
+    trackFeaturedDestinationClick(destinationData);
+    navigate('/search', {
+      state: {
+        destination: destinationData.destination,
+        destinationCode: destinationData.destinationCode
+      }
+    });
+  };
+
   return (
     <Box>
-      {/* Hero Banner */}
+      {/* Hero Banner with Data Layer Integration */}
       <HomeBanner />
 
-      {/* Why Choose Us Section */}
-      <Box sx={{ bgcolor: 'grey.100', py: 8 }}>
+      {/* Featured Destinations Section */}
+      <Box sx={{ py: 8 }}>
         <Container maxWidth="xl">
           <Typography
             variant="h3"
@@ -21,40 +61,64 @@ const HomePage = () => {
               fontWeight: 600,
             }}
           >
-            Why Choose TLP Airways?
+            Featured Destinations
           </Typography>
-          <Grid container spacing={4}>
-            <Grid item xs={12} md={4}>
-              <Box sx={{ textAlign: 'center', p: 2 }}>
-                <Typography variant="h5" gutterBottom sx={{ fontFamily: 'Garamond, serif' }}>
-                  Premium Service
-                </Typography>
-                <Typography variant="body1" color="text.secondary">
-                  Experience luxury and comfort with our premium service offerings
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <Box sx={{ textAlign: 'center', p: 2 }}>
-                <Typography variant="h5" gutterBottom sx={{ fontFamily: 'Garamond, serif' }}>
-                  Best Prices
-                </Typography>
-                <Typography variant="body1" color="text.secondary">
-                  Get the best value for your money with our competitive pricing
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <Box sx={{ textAlign: 'center', p: 2 }}>
-                <Typography variant="h5" gutterBottom sx={{ fontFamily: 'Garamond, serif' }}>
-                  Safety First
-                </Typography>
-                <Typography variant="body1" color="text.secondary">
-                  Your safety is our top priority with state-of-the-art aircraft
-                </Typography>
-              </Box>
-            </Grid>
-          </Grid>
+          <FeaturedDestinations onDestinationClick={handleFeaturedDestinationClick} />
+        </Container>
+      </Box>
+
+      {/* Promotional Banners */}
+      <Box sx={{ py: 4, bgcolor: 'primary.light' }}>
+        <Container maxWidth="xl">
+          <PromotionalBanners onBannerClick={handlePromotionalBannerClick} />
+        </Container>
+      </Box>
+
+      {/* Why Choose Us Section */}
+      <Box sx={{ bgcolor: 'grey.100', py: 8 }}>
+        <Container maxWidth="xl">
+          <WhyChooseUs onFeatureClick={handleWhyChooseUsClick} />
+        </Container>
+      </Box>
+
+      {/* Newsletter Signup Section */}
+      <Box sx={{ py: 8, bgcolor: 'primary.main', color: 'white' }}>
+        <Container maxWidth="md">
+          <Box sx={{ textAlign: 'center' }}>
+            <Typography
+              variant="h4"
+              gutterBottom
+              sx={{
+                fontFamily: 'Garamond, serif',
+                fontWeight: 600,
+                mb: 3
+              }}
+            >
+              Stay Updated with TLP Airways
+            </Typography>
+            <Typography variant="h6" sx={{ mb: 4, opacity: 0.9 }}>
+              Get exclusive offers and travel updates delivered to your inbox
+            </Typography>
+            <Button
+              variant="outlined"
+              size="large"
+              sx={{
+                color: 'white',
+                borderColor: 'white',
+                px: 4,
+                py: 1.5,
+                '&:hover': {
+                  borderColor: 'white',
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)'
+                }
+              }}
+              onClick={() => trackHomepageInteraction('newsletter-signup-click', {
+                section: 'newsletter'
+              })}
+            >
+              Subscribe to Newsletter
+            </Button>
+          </Box>
         </Container>
       </Box>
     </Box>

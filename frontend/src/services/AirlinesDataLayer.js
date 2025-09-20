@@ -251,9 +251,38 @@ class AirlinesDataLayer {
       }
     }
   }
+
+  /**
+   * Debug helper function for browser console
+   */
+  debugDataLayer() {
+    console.log('🛩️ Adobe Data Layer Debug Info:');
+    console.log('Total Events:', window.adobeDataLayer ? window.adobeDataLayer.length : 0);
+    console.log('All Events:', window.adobeDataLayer || []);
+    
+    if (window.adobeDataLayer && window.adobeDataLayer.length > 0) {
+      // Group events by type
+      const eventTypes = {};
+      window.adobeDataLayer.forEach(event => {
+        if (!eventTypes[event.event]) {
+          eventTypes[event.event] = [];
+        }
+        eventTypes[event.event].push(event);
+      });
+      
+      console.log('Events by Type:', eventTypes);
+    }
+    
+    return window.adobeDataLayer || [];
+  }
 }
 
 // Create singleton instance
 const airlinesDataLayer = new AirlinesDataLayer();
+
+// Make debug function globally available for browser console
+if (typeof window !== 'undefined') {
+  window.debugDataLayer = airlinesDataLayer.debugDataLayer.bind(airlinesDataLayer);
+}
 
 export default airlinesDataLayer;
