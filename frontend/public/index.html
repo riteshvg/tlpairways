@@ -10,6 +10,36 @@
       name="description"
       content="TLAirways - Premium Air Travel Experience"
     />
+    
+    <!-- Content Security Policy for Auth0 and Adobe Analytics -->
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self';
+      script-src 'self' 'unsafe-inline' 'unsafe-eval' 
+        https://dev-q6p3jrm5pbykuq23.us.auth0.com 
+        https://assets.adobedtm.com 
+        https://*.adobedtm.com;
+      style-src 'self' 'unsafe-inline' 
+        https://fonts.googleapis.com 
+        https://dev-q6p3jrm5pbykuq23.us.auth0.com;
+      font-src 'self' 
+        https://fonts.gstatic.com 
+        https://dev-q6p3jrm5pbykuq23.us.auth0.com;
+      img-src 'self' data: blob: 
+        https://dev-q6p3jrm5pbykuq23.us.auth0.com 
+        https://assets.adobedtm.com 
+        https://*.adobedtm.com;
+      connect-src 'self' 
+        https://dev-q6p3jrm5pbykuq23.us.auth0.com 
+        https://*.auth0.com 
+        https://api.tlairways.com 
+        https://assets.adobedtm.com 
+        https://*.adobedtm.com;
+      frame-src 'self' 
+        https://dev-q6p3jrm5pbykuq23.us.auth0.com;
+      object-src 'none';
+      base-uri 'self';
+      form-action 'self' https://dev-q6p3jrm5pbykuq23.us.auth0.com;
+    ">
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <title>TLAirways</title>
