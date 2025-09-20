@@ -342,21 +342,7 @@ const TravellerDetails = () => {
         console.log('Tracking analytics with passenger details:', passengerDetails);
         console.log('Tracking analytics with search params:', searchParams);
         
-        try {
-          console.log('About to call // analytics.passengerDetailsAdded...');
-          console.log('Analytics object:', analytics);
-          console.log('Analytics.passengerDetailsAdded function:', // analytics.passengerDetailsAdded);
-          
-          // Test analytics first
-          console.log('Testing analytics service...');
-          // Analytics call removed
-          
-          // Analytics call removed
-          console.log('// analytics.passengerDetailsAdded called successfully');
-        } catch (analyticsError) {
-          console.error('Analytics error:', analyticsError);
-          console.error('Analytics error stack:', analyticsError.stack);
-        }
+        // Analytics tracking removed
       }
 
       // Ensure travellerDetails array matches the number of passengers

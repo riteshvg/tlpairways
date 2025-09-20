@@ -306,22 +306,22 @@ const BookingConfirmation = () => {
       }
 
       // analytics.bookingConfirmed({
-        flights: flightsWithCoordinates,
-        passengers: travellerDetails,
-        services: selectedServices,
-        payment: {
-          method: paymentDetails?.method || 'cash',
-          amount: calculateFeeBreakdown().total,
-          currency: 'INR',
-          status: 'completed'
-        },
-        totalPrice: calculateFeeBreakdown().total,
-        pnr,
-        tickets: {
-          onward: onwardTicket,
-          return: returnTicket
-        }
-      });
+      //   flights: flightsWithCoordinates,
+      //   passengers: travellerDetails,
+      //   services: selectedServices,
+      //   payment: {
+      //     method: paymentDetails?.method || 'cash',
+      //     amount: calculateFeeBreakdown().total,
+      //     currency: 'INR',
+      //     status: 'completed'
+      //   },
+      //   totalPrice: calculateFeeBreakdown().total,
+      //   pnr,
+      //   tickets: {
+      //     onward: onwardTicket,
+      //     return: returnTicket
+      //   }
+      // });
 
       // Calculate distance using Haversine formula (same as // analytics.js)
       const toRad = (value) => (value * Math.PI) / 180;

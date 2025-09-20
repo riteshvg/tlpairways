@@ -159,11 +159,11 @@ const AncillaryServices = () => {
 
         // Track page view
         // analytics.pageView('Ancillary Services', location.state.previousPage, {
-          flights: initialFlights,
-          passengers: initialTravellerDetails,
-          contactInfo: initialContactInfo,
-          paymentType: initialPaymentType
-        });
+        //   flights: initialFlights,
+        //   passengers: initialTravellerDetails,
+        //   contactInfo: initialContactInfo,
+        //   paymentType: initialPaymentType
+        // });
       } else {
         console.error('No state found in location');
         console.error('Redirecting to search due to missing state');
@@ -1032,20 +1032,20 @@ Price: ₹${seatPrice}`}
 
     // Track proceeding to payment with complete data
     // analytics.paymentInitiated({
-      ...navigationState,
-      flightDetails: {
-        onward: {
-          origin: selectedFlights.onward.origin?.iata_code,
-          destination: selectedFlights.onward.destination?.iata_code,
-          price: selectedFlights.onward.price
-        },
-        return: selectedFlights.return ? {
-          origin: selectedFlights.return.origin?.iata_code,
-          destination: selectedFlights.return.destination?.iata_code,
-          price: selectedFlights.return.price
-        } : null
-      }
-    });
+    //   ...navigationState,
+    //   flightDetails: {
+    //     onward: {
+    //       origin: selectedFlights.onward.origin?.iata_code,
+    //       destination: selectedFlights.onward.destination?.iata_code,
+    //       price: selectedFlights.onward.price
+    //     },
+    //     return: selectedFlights.return ? {
+    //       origin: selectedFlights.return.origin?.iata_code,
+    //       destination: selectedFlights.return.destination?.iata_code,
+    //       price: selectedFlights.return.price
+    //     } : null
+    //   }
+    // });
 
     navigate('/payment', { state: navigationState });
   };

@@ -213,22 +213,22 @@ const SearchResults = () => {
     if (searchParams && (onwardFlights.length > 0 || returnFlights.length > 0)) {
       try {
         // analytics.searchResultsDisplayed({
-          searchParams: {
-            originCode: searchParams.originCode,
-            destinationCode: searchParams.destinationCode,
-            date: searchParams.date,
-            returnDate: searchParams.returnDate,
-            passengers: searchParams.passengers,
-            paymentType: searchParams.paymentType,
-            tripType: searchParams.tripType,
-            cabinClass: searchParams.cabinClass
-          },
-          results: {
-            onward: onwardFlights,
-            return: returnFlights,
-            total: onwardFlights.length + returnFlights.length
-          }
-        });
+        //   searchParams: {
+        //     originCode: searchParams.originCode,
+        //     destinationCode: searchParams.destinationCode,
+        //     date: searchParams.date,
+        //     returnDate: searchParams.returnDate,
+        //     passengers: searchParams.passengers,
+        //     paymentType: searchParams.paymentType,
+        //     tripType: searchParams.tripType,
+        //     cabinClass: searchParams.cabinClass
+        //   },
+        //   results: {
+        //     onward: onwardFlights,
+        //     return: returnFlights,
+        //     total: onwardFlights.length + returnFlights.length
+        //   }
+        // });
       } catch (err) {
         console.error('Error tracking search results:', err);
       }

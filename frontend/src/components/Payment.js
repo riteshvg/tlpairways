@@ -85,16 +85,16 @@ const Payment = () => {
       
       // Track page view with complete booking details
       // analytics.pageView('Payment', previousPage, {
-        flights: selectedFlights,
-        passengers: travellerDetails,
-        contactInfo,
-        services: selectedServices,
-        flightTotal,
-        ancillaryTotal,
-        totalAmount,
-        paymentType,
-        cabinClass
-      });
+      //   flights: selectedFlights,
+      //   passengers: travellerDetails,
+      //   contactInfo,
+      //   services: selectedServices,
+      //   flightTotal,
+      //   ancillaryTotal,
+      //   totalAmount,
+      //   paymentType,
+      //   cabinClass
+      // });
 
       // Log the received state for debugging
       console.log('Payment page received state:', {
