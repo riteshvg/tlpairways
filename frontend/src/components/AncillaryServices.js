@@ -43,7 +43,6 @@ import {
 import { format } from 'date-fns';
 import seatConfigurations from '../data/ancillary/seat_configurations.json';
 import baggageRulesData from '../data/ancillary/baggage_rules.json';
-import analytics from '../services/analytics';
 import { CURRENCY_CONFIG } from '../config/currencyConfig';
 
 const AncillaryServices = () => {
@@ -159,7 +158,7 @@ const AncillaryServices = () => {
         }
 
         // Track page view
-        analytics.pageView('Ancillary Services', location.state.previousPage, {
+        // analytics.pageView('Ancillary Services', location.state.previousPage, {
           flights: initialFlights,
           passengers: initialTravellerDetails,
           contactInfo: initialContactInfo,
@@ -217,7 +216,7 @@ const AncillaryServices = () => {
           journeyType: journey
         };
         
-        analytics.ancillarySelected(serviceType, value, value !== 'included', flightInfo);
+        // Analytics call removed
       } else {
         console.warn('Flight data not available for analytics tracking');
       }
@@ -1032,7 +1031,7 @@ Price: ₹${seatPrice}`}
     };
 
     // Track proceeding to payment with complete data
-    analytics.paymentInitiated({
+    // analytics.paymentInitiated({
       ...navigationState,
       flightDetails: {
         onward: {

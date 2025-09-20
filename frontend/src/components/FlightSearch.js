@@ -19,7 +19,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import airports from '../data/airports.json';
 import flightRoutes from '../data/flight_routes.json';
-import analytics from '../services/analytics';
 
 const getUniqueLocations = () => {
   const locations = airports.map(airport => ({
@@ -112,7 +111,7 @@ const FlightSearch = () => {
     };
 
     // Track search initiation
-    analytics.searchInitiated(searchParams);
+    // Analytics call removed
 
     // Navigate to search results
     navigate('/search-results', {

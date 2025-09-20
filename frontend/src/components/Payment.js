@@ -28,7 +28,6 @@ import {
   FormLabel,
 } from '@mui/material';
 import { format, isValid, parseISO } from 'date-fns';
-import analytics from '../services/analytics';
 import CURRENCY_CONFIG from '../config/currencyConfig';
 
 const Payment = () => {
@@ -85,7 +84,7 @@ const Payment = () => {
       const { previousPage } = location.state;
       
       // Track page view with complete booking details
-      analytics.pageView('Payment', previousPage, {
+      // analytics.pageView('Payment', previousPage, {
         flights: selectedFlights,
         passengers: travellerDetails,
         contactInfo,
@@ -156,7 +155,7 @@ const Payment = () => {
       };
 
       // Track payment completion
-      analytics.paymentCompleted(paymentData);
+      // Analytics call removed
 
       // Navigate to confirmation
       navigate('/confirmation', {

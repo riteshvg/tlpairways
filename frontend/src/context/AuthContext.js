@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { validateAuth0Config } from '../config/auth0Config';
-import analytics from '../services/analytics';
 
 // Validate Auth0 configuration only when environment variables are available
 if (process.env.NODE_ENV !== 'production' || process.env.REACT_APP_AUTH0_DOMAIN) {
@@ -60,7 +59,7 @@ export const AuthProvider = ({ children }) => {
           
           // Track user login in Adobe Data Layer
           console.log('User authenticated, tracking login:', profileData);
-          analytics.trackUserLogin(profileData);
+          // Analytics call removed
         } catch (error) {
           console.error('Error loading user profile:', error);
         } finally {
@@ -71,7 +70,7 @@ export const AuthProvider = ({ children }) => {
         // Track user logout in Adobe Data Layer
         if (!isLoading) {
           console.log('User not authenticated, tracking logout');
-          analytics.trackUserLogout();
+          // Analytics call removed
         }
       }
     };

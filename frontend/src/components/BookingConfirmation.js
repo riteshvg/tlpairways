@@ -32,7 +32,6 @@ import LuggageIcon from '@mui/icons-material/Luggage';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import LocalAirportIcon from '@mui/icons-material/LocalAirport';
 import ForestIcon from '@mui/icons-material/Forest';
-import analytics from '../services/analytics';
 import airports from '../data/airports.json';
 
 const BookingConfirmation = () => {
@@ -306,7 +305,7 @@ const BookingConfirmation = () => {
         });
       }
 
-      analytics.bookingConfirmed({
+      // analytics.bookingConfirmed({
         flights: flightsWithCoordinates,
         passengers: travellerDetails,
         services: selectedServices,
@@ -324,7 +323,7 @@ const BookingConfirmation = () => {
         }
       });
 
-      // Calculate distance using Haversine formula (same as analytics.js)
+      // Calculate distance using Haversine formula (same as // analytics.js)
       const toRad = (value) => (value * Math.PI) / 180;
       const calculateDistance = (origin, destination) => {
         if (!origin?.coordinates || !destination?.coordinates) return 0;

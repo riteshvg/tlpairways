@@ -23,7 +23,6 @@ import { format, isWithinInterval, addDays } from 'date-fns';
 import CloseIcon from '@mui/icons-material/Close';
 import flightRoutes from '../data/flight_routes.json';
 import FlightDetailsModal from './FlightDetailsModal';
-import analytics from '../services/analytics';
 import CURRENCY_CONFIG from '../config/currencyConfig';
 import airports from '../data/airports.json';
 
@@ -213,7 +212,7 @@ const SearchResults = () => {
   useEffect(() => {
     if (searchParams && (onwardFlights.length > 0 || returnFlights.length > 0)) {
       try {
-        analytics.searchResultsDisplayed({
+        // analytics.searchResultsDisplayed({
           searchParams: {
             originCode: searchParams.originCode,
             destinationCode: searchParams.destinationCode,
@@ -292,7 +291,7 @@ const SearchResults = () => {
 
     // Track flight selection with correct price
     try {
-      analytics.flightSelected(flightWithCorrectPrice, type === 'return' ? 'return' : 'onward', searchParams);
+      // Analytics call removed
     } catch (error) {
       console.error('Error tracking flight selection:', error);
     }

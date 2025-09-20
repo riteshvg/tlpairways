@@ -38,8 +38,6 @@ import {
 } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import analytics from '../services/analytics';
-import AdobeDataLayerDebugger from '../components/AdobeDataLayerDebugger';
 
 const UserProfilePage = () => {
   const { user, isAuthenticated } = useAuth();
@@ -73,7 +71,7 @@ const UserProfilePage = () => {
     console.log('Saving user profile:', editedUser);
     
     // Track profile update in Adobe Data Layer
-    analytics.trackUserProfileUpdate(editedUser);
+    // Analytics call removed
     
     setSnackbar({
       open: true,

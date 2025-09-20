@@ -19,7 +19,6 @@ import AncillaryServices from './components/AncillaryServices';
 import Payment from './components/Payment';
 import BookingConfirmation from './components/BookingConfirmation';
 import ProtectedRoute from './components/protected/ProtectedRoute';
-import analytics from './services/analytics';
 
 // Page View Tracker Component
 function PageViewTracker() {
@@ -28,7 +27,7 @@ function PageViewTracker() {
   React.useEffect(() => {
     if (location.pathname === '/') {
       // Only fire once per mount (i.e., on initial load or refresh)
-      analytics.pageView('Homepage');
+      // Analytics call removed
     }
     // No dependency on location, so this effect only runs on mount/unmount
     // eslint-disable-next-line

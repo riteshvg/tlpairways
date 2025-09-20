@@ -24,7 +24,6 @@ import {
 } from '@mui/material';
 import { Add as AddIcon, Remove as RemoveIcon } from '@mui/icons-material';
 import { format } from 'date-fns';
-import analytics from '../services/analytics';
 import CURRENCY_CONFIG from '../config/currencyConfig';
 
 const TravellerDetails = () => {
@@ -344,16 +343,16 @@ const TravellerDetails = () => {
         console.log('Tracking analytics with search params:', searchParams);
         
         try {
-          console.log('About to call analytics.passengerDetailsAdded...');
+          console.log('About to call // analytics.passengerDetailsAdded...');
           console.log('Analytics object:', analytics);
-          console.log('Analytics.passengerDetailsAdded function:', analytics.passengerDetailsAdded);
+          console.log('Analytics.passengerDetailsAdded function:', // analytics.passengerDetailsAdded);
           
           // Test analytics first
           console.log('Testing analytics service...');
-          analytics.test();
+          // Analytics call removed
           
-          analytics.passengerDetailsAdded(passengerDetails, searchParams);
-          console.log('analytics.passengerDetailsAdded called successfully');
+          // Analytics call removed
+          console.log('// analytics.passengerDetailsAdded called successfully');
         } catch (analyticsError) {
           console.error('Analytics error:', analyticsError);
           console.error('Analytics error stack:', analyticsError.stack);
@@ -517,7 +516,7 @@ const TravellerDetails = () => {
                   variant="outlined"
                   onClick={() => {
                     console.log('Manual analytics test triggered');
-                    analytics.test();
+                    // Analytics call removed
                   }}
                   sx={{ mr: 2 }}
                 >
@@ -539,7 +538,7 @@ const TravellerDetails = () => {
                       tripType: 'oneway',
                       passengers: 1
                     };
-                    analytics.passengerDetailsAdded(testPassengerDetails, testSearchParams);
+                    // Analytics call removed
                   }}
                 >
                   Test passengerDetailsAdded
