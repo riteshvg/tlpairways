@@ -12,11 +12,17 @@ const useHomepageDataLayer = () => {
   const scrollDepthTracked = useRef(new Set());
   const lastScrollTime = useRef(0);
   const scrollThrottle = 500; // Throttle scroll events to every 500ms
+  const initializedRef = useRef(false);
 
   /**
    * Initialize homepage data layer on component mount
    */
   useEffect(() => {
+    // Prevent duplicate initialization in React StrictMode
+    if (initializedRef.current) {
+      return;
+    }
+    
     // Set page data for homepage
     airlinesDataLayer.setPageData({
       pageType: 'home',
@@ -35,7 +41,13 @@ const useHomepageDataLayer = () => {
       landingPage: true
     });
 
+    initializedRef.current = true;
     console.log('🏠 Homepage data layer initialized');
+    
+    // Cleanup function to reset initialization flag
+    return () => {
+      initializedRef.current = false;
+    };
   }, []);
 
   /**
