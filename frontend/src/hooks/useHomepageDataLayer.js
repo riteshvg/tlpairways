@@ -7,6 +7,9 @@ import { useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import airlinesDataLayer from '../services/AirlinesDataLayer';
 
+// Global flag to prevent duplicate initialization across component re-renders
+let homepageInitialized = false;
+
 const useHomepageDataLayer = () => {
   const { user, isAuthenticated } = useAuth();
   const scrollDepthTracked = useRef(new Set());
@@ -18,8 +21,8 @@ const useHomepageDataLayer = () => {
    * Initialize homepage data layer on component mount
    */
   useEffect(() => {
-    // Prevent duplicate initialization in React StrictMode
-    if (initializedRef.current) {
+    // Prevent duplicate initialization across component re-renders and React StrictMode
+    if (homepageInitialized) {
       return;
     }
     
@@ -41,14 +44,21 @@ const useHomepageDataLayer = () => {
       landingPage: true
     });
 
-    initializedRef.current = true;
+    homepageInitialized = true;
     console.log('🏠 Homepage data layer initialized');
     
-    // Cleanup function to reset initialization flag
-    return () => {
-      initializedRef.current = false;
+    // Reset flag when page is unloaded (for browser navigation)
+    const handleBeforeUnload = () => {
+      homepageInitialized = false;
     };
-  }, []);
+    
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    
+    // Cleanup function
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [isAuthenticated, user?.id]);
 
   /**
    * Track scroll depth with throttling
