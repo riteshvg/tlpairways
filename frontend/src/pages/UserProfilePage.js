@@ -284,12 +284,6 @@ const UserProfilePage = () => {
         </Grid>
       </Grid>
 
-      {/* Adobe Data Layer Debugger (Development Only) */}
-      {process.env.NODE_ENV === 'development' && (
-        <Box sx={{ mt: 4 }}>
-          <AdobeDataLayerDebugger />
-        </Box>
-      )}
 
       {/* Snackbar for notifications */}
       <Snackbar
