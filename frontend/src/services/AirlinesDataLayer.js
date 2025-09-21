@@ -275,14 +275,25 @@ class AirlinesDataLayer {
     
     return window.adobeDataLayer || [];
   }
+
+  /**
+   * Reset homepage initialization flag (for debugging)
+   */
+  resetHomepageInitialization() {
+    if (typeof window !== 'undefined' && window.homepageInitialized !== undefined) {
+      window.homepageInitialized = false;
+      console.log('🛩️ Homepage initialization flag reset');
+    }
+  }
 }
 
 // Create singleton instance
 const airlinesDataLayer = new AirlinesDataLayer();
 
-// Make debug function globally available for browser console
+// Make debug functions globally available for browser console
 if (typeof window !== 'undefined') {
   window.debugDataLayer = airlinesDataLayer.debugDataLayer.bind(airlinesDataLayer);
+  window.resetHomepageInit = airlinesDataLayer.resetHomepageInitialization.bind(airlinesDataLayer);
 }
 
 export default airlinesDataLayer;
