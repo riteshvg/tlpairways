@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Container, Typography, Grid, Card, CardContent, Button } from '@mui/material';
+import { Box, Container, Typography, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import HomeBanner from '../components/HomeBanner';
 import FeaturedDestinations from '../components/FeaturedDestinations';
@@ -9,28 +9,12 @@ import useHomepageDataLayer from '../hooks/useHomepageDataLayer';
 
 const HomePage = () => {
   const navigate = useNavigate();
-  const {
-    trackHomepageInteraction,
-    trackNavigationInteraction,
-    trackFeaturedDestinationClick,
-    trackPromotionalBannerClick
-  } = useHomepageDataLayer();
+  // useHomepageDataLayer handles page view tracking
+  useHomepageDataLayer();
 
   // Page view tracking is handled by useHomepageDataLayer hook
 
   console.log('🏠 HomePage rendered with data layer integration');
-
-  const handleWhyChooseUsClick = (feature) => {
-    // Tracking is now handled globally by GlobalClickTracker
-  };
-
-  const handleNavigationClick = (destination) => {
-    navigate(`/search?destination=${encodeURIComponent(destination)}`);
-  };
-
-  const handlePromotionalBannerClick = (bannerData) => {
-    // Tracking is now handled globally by GlobalClickTracker
-  };
 
   const handleFeaturedDestinationClick = (destinationData) => {
     navigate('/search', {

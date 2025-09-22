@@ -22,12 +22,7 @@ const usePageView = (customPageConfig = {}) => {
 
   useEffect(() => {
     // Only track once per page load
-    if (hasTracked.current) {
-      console.log('🔄 usePageView: Page already tracked, skipping', { pathname: location.pathname });
-      return;
-    }
-    
-    console.log('🚀 usePageView: Starting page view tracking', { pathname: location.pathname });
+    if (hasTracked.current) return;
     
     // Small delay to ensure page is fully loaded
     const timer = setTimeout(() => {
