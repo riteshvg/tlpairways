@@ -17,30 +17,38 @@ const destinations = [
   {
     id: 1,
     name: 'Paris',
+    destinationCode: 'CDG',
     image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
     tagline: 'The City of Lights Awaits',
     description: 'Experience the romance and charm of the French capital',
+    price: 'From ₹45,000',
   },
   {
     id: 2,
     name: 'Kyoto',
+    destinationCode: 'KIX',
     image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
     tagline: 'Where Tradition Meets Tranquility',
     description: 'Discover the ancient heart of Japan',
+    price: 'From ₹52,000',
   },
   {
     id: 3,
     name: 'Jaipur',
+    destinationCode: 'JAI',
     image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
     tagline: 'The Pink City Beckons',
     description: 'Immerse yourself in the royal heritage of Rajasthan',
+    price: 'From ₹8,500',
   },
   {
     id: 4,
     name: 'Rome',
+    destinationCode: 'FCO',
     image: 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
     tagline: 'Eternal City, Timeless Beauty',
     description: 'Walk through the pages of history',
+    price: 'From ₹38,000',
   },
 ];
 
@@ -50,6 +58,7 @@ const HomeBanner = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -60,14 +69,16 @@ const HomeBanner = () => {
   }, [currentSlide]);
 
   const handleNextSlide = () => {
+    const nextSlide = currentSlide === destinations.length - 1 ? 0 : currentSlide + 1;
     setIsTransitioning(true);
-    setCurrentSlide((prev) => (prev === destinations.length - 1 ? 0 : prev + 1));
-    setTimeout(() => setIsTransitioning(false), 500); // Match transition duration
+    setCurrentSlide(nextSlide);
+    setTimeout(() => setIsTransitioning(false), 500);
   };
 
   const handlePrevSlide = () => {
+    const prevSlide = currentSlide === 0 ? destinations.length - 1 : currentSlide - 1;
     setIsTransitioning(true);
-    setCurrentSlide((prev) => (prev === 0 ? destinations.length - 1 : prev - 1));
+    setCurrentSlide(prevSlide);
     setTimeout(() => setIsTransitioning(false), 500);
   };
 
@@ -80,9 +91,12 @@ const HomeBanner = () => {
   };
 
   const handleExploreFlights = () => {
+    const currentDestination = destinations[currentSlide];
+    
     navigate('/search', {
       state: {
-        destination: destinations[currentSlide].name,
+        destination: currentDestination.name,
+        destinationCode: currentDestination.destinationCode,
       },
     });
   };
@@ -122,25 +136,29 @@ const HomeBanner = () => {
       />
 
       {/* Navigation Arrows */}
-      <IconButton
-        onClick={handlePrevSlide}
-        sx={{
-          position: 'absolute',
-          left: 20,
-          top: '50%',
-          transform: 'translateY(-50%)',
-          color: 'white',
-          backgroundColor: 'rgba(0, 0, 0, 0.3)',
-          '&:hover': {
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          },
-          zIndex: 2,
-        }}
-      >
-        <ArrowBackIosNewIcon />
-      </IconButton>
+          <IconButton
+            onClick={handlePrevSlide}
+            data-button-name="hero-banner-previous"
+            data-section="hero"
+            sx={{
+              position: 'absolute',
+              left: 20,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              color: 'white',
+              backgroundColor: 'rgba(0, 0, 0, 0.3)',
+              '&:hover': {
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              },
+              zIndex: 2,
+            }}
+          >
+            <ArrowBackIosNewIcon />
+          </IconButton>
       <IconButton
         onClick={handleNextSlide}
+        data-button-name="hero-banner-next"
+        data-section="hero"
         sx={{
           position: 'absolute',
           right: 20,
@@ -211,27 +229,30 @@ const HomeBanner = () => {
           >
             {destinations[currentSlide].description}
           </Typography>
-          <Button
-            variant="contained"
-            size="large"
-            onClick={handleExploreFlights}
-            startIcon={<FlightTakeoffIcon />}
-            sx={{
-              py: 2,
-              px: 6,
-              fontSize: '1.2rem',
-              backgroundColor: 'primary.main',
-              color: 'white',
-              '&:hover': {
-                backgroundColor: 'primary.dark',
-                transform: 'scale(1.05)',
-              },
-              transition: 'all 0.3s ease',
-              opacity: isTransitioning ? 0.7 : 1,
-            }}
-          >
-            Explore Flights
-          </Button>
+              <Button
+                variant="contained"
+                size="large"
+                onClick={handleExploreFlights}
+                startIcon={<FlightTakeoffIcon />}
+                data-button-name="explore-flights"
+                data-section="hero"
+                data-target="/search"
+                sx={{
+                  py: 2,
+                  px: 6,
+                  fontSize: '1.2rem',
+                  backgroundColor: 'primary.main',
+                  color: 'white',
+                  '&:hover': {
+                    backgroundColor: 'primary.dark',
+                    transform: 'scale(1.05)',
+                  },
+                  transition: 'all 0.3s ease',
+                  opacity: isTransitioning ? 0.7 : 1,
+                }}
+              >
+                Explore Flights
+              </Button>
         </Box>
       </Container>
 
@@ -247,23 +268,25 @@ const HomeBanner = () => {
           zIndex: 2,
         }}
       >
-        {destinations.map((_, index) => (
-          <Box
-            key={index}
-            onClick={() => handleDotClick(index)}
-            sx={{
-              width: 12,
-              height: 12,
-              borderRadius: '50%',
-              backgroundColor: currentSlide === index ? 'white' : 'rgba(255,255,255,0.5)',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease',
-              '&:hover': {
-                backgroundColor: 'white',
-              },
-            }}
-          />
-        ))}
+            {destinations.map((_, index) => (
+              <Box
+                key={index}
+                onClick={() => handleDotClick(index)}
+                data-button-name={`hero-banner-dot-${index + 1}`}
+                data-section="hero"
+                sx={{
+                  width: 12,
+                  height: 12,
+                  borderRadius: '50%',
+                  backgroundColor: currentSlide === index ? 'white' : 'rgba(255,255,255,0.5)',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    backgroundColor: 'white',
+                  },
+                }}
+              />
+            ))}
       </Box>
     </Box>
   );

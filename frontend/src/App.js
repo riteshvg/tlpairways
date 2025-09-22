@@ -19,6 +19,7 @@ import AncillaryServices from './components/AncillaryServices';
 import Payment from './components/Payment';
 import BookingConfirmation from './components/BookingConfirmation';
 import ProtectedRoute from './components/protected/ProtectedRoute';
+import globalClickTracker from './services/GlobalClickTracker';
 
 // Page View Tracker Component
 function PageViewTracker() {
@@ -37,6 +38,16 @@ function PageViewTracker() {
 }
 
 function App() {
+  // Initialize global click tracking
+  useEffect(() => {
+    globalClickTracker.init();
+    
+    // Cleanup on unmount
+    return () => {
+      globalClickTracker.destroy();
+    };
+  }, []);
+
   return (
     <Auth0Provider {...auth0Config}>
       <AuthProvider>

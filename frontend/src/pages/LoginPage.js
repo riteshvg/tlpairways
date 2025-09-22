@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Container,
   Box,
@@ -11,9 +11,21 @@ import {
 import { FlightTakeoff as FlightIcon } from '@mui/icons-material';
 import LoginButton from '../components/auth/LoginButton';
 import { useAuth } from '../context/AuthContext';
+import useUserAnalytics from '../hooks/useUserAnalytics';
 
 const LoginPage = () => {
   const { error } = useAuth();
+  const { trackLoginAttempt } = useUserAnalytics();
+
+  // Track page view for login attempts
+  useEffect(() => {
+    trackLoginAttempt({
+      method: 'email',
+      isSocialLogin: false,
+      pageURL: window.location.href,
+      referrer: document.referrer
+    });
+  }, [trackLoginAttempt]);
 
   return (
     <Container maxWidth="sm">

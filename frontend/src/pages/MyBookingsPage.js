@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
+import useUserAnalytics from '../hooks/useUserAnalytics';
 import {
   Container,
   Typography,
@@ -33,12 +35,12 @@ import {
   Download as DownloadIcon,
   Refresh as RefreshIcon,
 } from '@mui/icons-material';
-import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const MyBookingsPage = () => {
   const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const { trackBookingHistoryView } = useUserAnalytics();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedBooking, setSelectedBooking] = useState(null);
@@ -47,6 +49,17 @@ const MyBookingsPage = () => {
   // Mock data - in a real app, this would come from your backend
   useEffect(() => {
     if (isAuthenticated) {
+      // Track booking history view
+      trackBookingHistoryView({
+        totalBookings: 3,
+        activeBookings: 2,
+        cancelledBookings: 1,
+        filterApplied: 'none',
+        sortBy: 'date',
+        dateRange: 'all',
+        pageNumber: 1
+      });
+      
       // Simulate API call
       setTimeout(() => {
         setBookings([
