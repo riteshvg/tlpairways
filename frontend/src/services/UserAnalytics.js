@@ -75,7 +75,7 @@ class UserAnalytics {
       pageURL: window.location.href
     };
 
-    airlinesDataLayer.trackEvent('login-attempt', eventData);
+    airlinesDataLayer.trackEvent('loginAttempt', eventData);
     this.log('Login attempt tracked', eventData);
   }
 
@@ -109,7 +109,7 @@ class UserAnalytics {
     airlinesDataLayer.setUserData(eventData.user);
 
     // Push login success event
-    airlinesDataLayer.trackEvent('user-login-success', eventData);
+    airlinesDataLayer.trackEvent('userLoginSuccess', eventData);
     this.log('Login success tracked', eventData);
   }
 
@@ -129,7 +129,7 @@ class UserAnalytics {
       pageURL: window.location.href
     };
 
-    airlinesDataLayer.trackEvent('user-login-failure', eventData);
+    airlinesDataLayer.trackEvent('userLoginFailure', eventData);
     this.log('Login failure tracked', eventData);
   }
 
@@ -162,7 +162,7 @@ class UserAnalytics {
       pageURL: window.location.href
     };
 
-    airlinesDataLayer.trackEvent('user-registration-complete', eventData);
+    airlinesDataLayer.trackEvent('userRegistrationComplete', eventData);
     this.log('Registration completion tracked', eventData);
   }
 
@@ -181,7 +181,7 @@ class UserAnalytics {
       pageURL: window.location.href
     };
 
-    airlinesDataLayer.trackEvent('social-login-usage', eventData);
+    airlinesDataLayer.trackEvent('socialLoginUsage', eventData);
     this.log('Social login tracked', eventData);
   }
 
@@ -198,7 +198,7 @@ class UserAnalytics {
       pageURL: window.location.href
     };
 
-    airlinesDataLayer.trackEvent('password-reset-request', eventData);
+    airlinesDataLayer.trackEvent('passwordResetRequest', eventData);
     this.log('Password reset request tracked', eventData);
   }
 
@@ -221,7 +221,7 @@ class UserAnalytics {
       pageURL: window.location.href
     };
 
-    airlinesDataLayer.trackEvent('user-profile-update', eventData);
+    airlinesDataLayer.trackEvent('userProfileUpdate', eventData);
     this.log('Profile update tracked', eventData);
   }
 
@@ -249,7 +249,7 @@ class UserAnalytics {
       pageURL: window.location.href
     };
 
-    airlinesDataLayer.trackEvent('loyalty-program-interaction', eventData);
+    airlinesDataLayer.trackEvent('loyaltyProgramInteraction', eventData);
     this.log('Loyalty interaction tracked', eventData);
   }
 
@@ -277,7 +277,7 @@ class UserAnalytics {
       pageURL: window.location.href
     };
 
-    airlinesDataLayer.trackEvent('booking-history-view', eventData);
+    airlinesDataLayer.trackEvent('bookingHistoryView', eventData);
     this.log('Booking history view tracked', eventData);
   }
 
@@ -303,7 +303,7 @@ class UserAnalytics {
       pageURL: window.location.href
     };
 
-    airlinesDataLayer.trackEvent('user-preferences-change', eventData);
+    airlinesDataLayer.trackEvent('userPreferencesChange', eventData);
     this.log('Preferences change tracked', eventData);
   }
 
@@ -324,7 +324,7 @@ class UserAnalytics {
       pageURL: window.location.href
     };
 
-    airlinesDataLayer.trackEvent('user-logout', eventData);
+    airlinesDataLayer.trackEvent('userLogout', eventData);
     this.log('User logout tracked', eventData);
   }
 

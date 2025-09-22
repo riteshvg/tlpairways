@@ -88,7 +88,7 @@ class GlobalClickTracker {
   trackButtonClick(element, event) {
     const buttonData = this.extractButtonData(element);
     
-    airlinesDataLayer.trackEvent('button-click', {
+    airlinesDataLayer.trackEvent('buttonClick', {
       ...buttonData,
       eventType: 'click',
       clickCoordinates: {
@@ -109,7 +109,7 @@ class GlobalClickTracker {
   trackLinkClick(element, event) {
     const linkData = this.extractLinkData(element);
     
-    airlinesDataLayer.trackEvent('link-click', {
+    airlinesDataLayer.trackEvent('linkClick', {
       ...linkData,
       eventType: 'click',
       clickCoordinates: {

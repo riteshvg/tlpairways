@@ -32,7 +32,7 @@ class AirlinesDataLayer {
    */
   setPageData(pageData) {
     const pageDataEvent = {
-      event: 'page-data',
+      event: 'pageData',
       pageData: {
         pageType: pageData.pageType || 'unknown',
         pageName: pageData.pageName || document.title,
@@ -54,7 +54,7 @@ class AirlinesDataLayer {
    */
   setPageDataWithView(pageData, viewData = {}) {
     const combinedEvent = {
-      event: 'page-view',
+      event: 'pageView',
       pageData: {
         pageType: pageData.pageType || 'unknown',
         pageName: pageData.pageName || document.title,
@@ -85,7 +85,7 @@ class AirlinesDataLayer {
    */
   setUserData(userData) {
     const userDataEvent = {
-      event: 'user-data',
+      event: 'userData',
       userData: {
         ...userData,
         timestamp: new Date().toISOString()
@@ -123,7 +123,7 @@ class AirlinesDataLayer {
    */
   trackSearchSubmission(searchData) {
     const searchEvent = {
-      event: 'search-submission',
+      event: 'searchSubmission',
       eventData: {
         searchType: 'flight-search',
         origin: searchData.origin,
@@ -148,7 +148,7 @@ class AirlinesDataLayer {
    */
   trackHeroBannerInteraction(interactionType, bannerData = {}) {
     const bannerEvent = {
-      event: 'hero-banner-interaction',
+      event: 'heroBannerInteraction',
       eventData: {
         interactionType,
         bannerId: bannerData.bannerId,
@@ -169,7 +169,7 @@ class AirlinesDataLayer {
    */
   trackPromotionalBannerClick(bannerData) {
     const promoEvent = {
-      event: 'promotional-banner-click',
+      event: 'promotionalBannerClick',
       eventData: {
         bannerId: bannerData.bannerId,
         bannerTitle: bannerData.bannerTitle,
@@ -192,7 +192,7 @@ class AirlinesDataLayer {
    */
   trackScrollDepth(scrollDepth, pageType) {
     const scrollEvent = {
-      event: 'scroll-depth',
+      event: 'scrollDepth',
       eventData: {
         scrollDepth,
         pageType,
@@ -212,7 +212,7 @@ class AirlinesDataLayer {
    */
   trackHomepageInteraction(interactionType, interactionData = {}) {
     const homepageEvent = {
-      event: 'homepage-interaction',
+      event: 'homepageInteraction',
       eventData: {
         interactionType,
         ...interactionData,

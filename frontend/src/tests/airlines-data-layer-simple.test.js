@@ -32,7 +32,7 @@ describe('AirlinesDataLayer Class', () => {
 
     expect(mockAdobeDataLayer).toHaveLength(1);
     expect(mockAdobeDataLayer[0]).toMatchObject({
-      event: 'page-data',
+      event: 'pageData',
       pageData: {
         pageType: 'home',
         pageName: 'Homepage',
@@ -48,11 +48,11 @@ describe('AirlinesDataLayer Class', () => {
       element: 'button'
     };
 
-    airlinesDataLayer.trackEvent('test-event', eventData);
+    airlinesDataLayer.trackEvent('testEvent', eventData);
 
     expect(mockAdobeDataLayer).toHaveLength(1);
     expect(mockAdobeDataLayer[0]).toMatchObject({
-      event: 'test-event',
+      event: 'testEvent',
       eventData: {
         interactionType: 'click',
         element: 'button',
@@ -76,7 +76,7 @@ describe('AirlinesDataLayer Class', () => {
 
     expect(mockAdobeDataLayer).toHaveLength(1);
     expect(mockAdobeDataLayer[0]).toMatchObject({
-      event: 'search-submission',
+      event: 'searchSubmission',
       eventData: {
         searchType: 'flight-search',
         origin: 'DEL',
@@ -138,7 +138,7 @@ describe('AirlinesDataLayer Class', () => {
 
     expect(mockAdobeDataLayer).toHaveLength(1);
     expect(mockAdobeDataLayer[0]).toMatchObject({
-      event: 'scroll-depth',
+      event: 'scrollDepth',
       eventData: {
         scrollDepth: 50,
         pageType: 'home',
@@ -158,7 +158,7 @@ describe('AirlinesDataLayer Class', () => {
 
     expect(mockAdobeDataLayer).toHaveLength(1);
     expect(mockAdobeDataLayer[0]).toMatchObject({
-      event: 'homepage-interaction',
+      event: 'homepageInteraction',
       eventData: {
         interactionType: 'interaction',
         section: 'hero',

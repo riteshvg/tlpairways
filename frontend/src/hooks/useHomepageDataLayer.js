@@ -154,7 +154,7 @@ const useHomepageDataLayer = () => {
    * Track navigation menu interactions
    */
   const trackNavigationInteraction = useCallback((menuItem, action = 'click') => {
-    airlinesDataLayer.trackEvent('navigation-interaction', {
+    airlinesDataLayer.trackEvent('navigationInteraction', {
       menuItem,
       action,
       pageType: 'home',
@@ -167,7 +167,7 @@ const useHomepageDataLayer = () => {
    * Track user authentication actions
    */
   const trackAuthAction = useCallback((action, additionalData = {}) => {
-    airlinesDataLayer.trackEvent('auth-action', {
+    airlinesDataLayer.trackEvent('authAction', {
       action,
       ...additionalData,
       pageType: 'home'
@@ -178,7 +178,7 @@ const useHomepageDataLayer = () => {
    * Track newsletter signup
    */
   const trackNewsletterSignup = useCallback((email) => {
-    airlinesDataLayer.trackEvent('newsletter-signup', {
+    airlinesDataLayer.trackEvent('newsletterSignup', {
       email,
       pageType: 'home',
       userAuthenticated: isAuthenticated,
