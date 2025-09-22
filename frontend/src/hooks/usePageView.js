@@ -41,12 +41,6 @@ const usePageView = (customPageConfig = {}) => {
         };
 
         // Track page view
-        console.log('📊 usePageView: Calling pageViewTracker.trackPageView', {
-          pathname: location.pathname,
-          userAuthenticated: isAuthenticated,
-          customConfig: finalPageConfig
-        });
-        
         pageViewTracker.trackPageView(
           location.pathname,
           user,
@@ -56,7 +50,6 @@ const usePageView = (customPageConfig = {}) => {
         );
 
         hasTracked.current = true;
-        console.log('✅ usePageView: Page view tracking completed', { pathname: location.pathname });
       } catch (error) {
         console.error('Error tracking page view:', error);
         pageViewTracker.trackPageError(location.pathname, error, 'page-view-tracking');

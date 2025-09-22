@@ -25,6 +25,18 @@ const HomePage = () => {
     });
   };
 
+  const handlePromotionalBannerClick = (bannerData) => {
+    // Tracking is handled globally by GlobalClickTracker
+    if (bannerData.destinationUrl) {
+      navigate(bannerData.destinationUrl);
+    }
+  };
+
+  const handleWhyChooseUsClick = (feature) => {
+    // Tracking is handled globally by GlobalClickTracker
+    console.log('Why Choose Us feature clicked:', feature);
+  };
+
   return (
     <Box>
       {/* Hero Banner with Data Layer Integration */}

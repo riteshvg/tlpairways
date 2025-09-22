@@ -15,7 +15,6 @@ const useHomepageDataLayer = () => {
   const scrollDepthTracked = useRef(new Set());
   const lastScrollTime = useRef(0);
   const scrollThrottle = 500; // Throttle scroll events to every 500ms
-  const initializedRef = useRef(false);
 
   /**
    * Initialize homepage data layer on component mount
@@ -27,8 +26,6 @@ const useHomepageDataLayer = () => {
     }
     
     // Set page data and track view in a single merged event
-    console.log('🏠 Homepage: Triggering pageView event via setPageDataWithView');
-    
     airlinesDataLayer.setPageDataWithView({
       pageType: 'home',
       pageName: 'Homepage',
