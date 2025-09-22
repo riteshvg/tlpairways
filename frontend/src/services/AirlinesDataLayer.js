@@ -48,6 +48,38 @@ class AirlinesDataLayer {
   }
 
   /**
+   * Set page data and track page view in a single event
+   * @param {Object} pageData - Page information object
+   * @param {Object} viewData - Additional view tracking data
+   */
+  setPageDataWithView(pageData, viewData = {}) {
+    const combinedEvent = {
+      event: 'page-view',
+      pageData: {
+        pageType: pageData.pageType || 'unknown',
+        pageName: pageData.pageName || document.title,
+        pageURL: pageData.pageURL || window.location.href,
+        referrer: pageData.referrer || document.referrer,
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+        screenResolution: `${window.screen.width}x${window.screen.height}`,
+        viewportSize: `${window.innerWidth}x${window.innerHeight}`,
+        ...pageData
+      },
+      viewData: {
+        landingPage: viewData.landingPage || false,
+        userAuthenticated: viewData.userAuthenticated || false,
+        userId: viewData.userId || null,
+        sessionId: viewData.sessionId || null,
+        ...viewData
+      }
+    };
+
+    this.pushToDataLayer(combinedEvent);
+    this.log('Page data with view tracked', combinedEvent);
+  }
+
+  /**
    * Set user data in the data layer
    * @param {Object} userData - User information object
    */

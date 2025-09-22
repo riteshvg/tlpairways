@@ -26,19 +26,13 @@ const useHomepageDataLayer = () => {
       return;
     }
     
-    // Set page data for homepage
-    airlinesDataLayer.setPageData({
+    // Set page data and track view in a single merged event
+    airlinesDataLayer.setPageDataWithView({
       pageType: 'home',
       pageName: 'Homepage',
       pageURL: window.location.href,
-      referrer: document.referrer,
-      userAuthenticated: isAuthenticated,
-      userId: user?.id || null
-    });
-
-    // Track homepage view
-    airlinesDataLayer.trackEvent('homepage-view', {
-      pageType: 'home',
+      referrer: document.referrer
+    }, {
       userAuthenticated: isAuthenticated,
       userId: user?.id || null,
       landingPage: true

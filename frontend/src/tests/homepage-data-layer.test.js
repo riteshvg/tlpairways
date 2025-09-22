@@ -6,8 +6,8 @@
 import { renderHook, act } from '@testing-library/react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import AirlinesDataLayer from '../../services/AirlinesDataLayer';
-import useHomepageDataLayer from '../../hooks/useHomepageDataLayer';
+import airlinesDataLayer from '../services/AirlinesDataLayer';
+import useHomepageDataLayer from '../hooks/useHomepageDataLayer';
 
 // Mock window.adobeDataLayer
 const mockAdobeDataLayer = [];
@@ -154,6 +154,43 @@ describe('AirlinesDataLayer Class', () => {
           bannerTitle: 'Paris',
           bannerDestination: 'CDG',
           timestamp: expect.any(String)
+        }
+      });
+    });
+  });
+
+  describe('setPageDataWithView', () => {
+    test('should merge page data and view data into single event', () => {
+      const pageData = {
+        pageType: 'home',
+        pageName: 'Homepage',
+        pageURL: 'https://example.com'
+      };
+      
+      const viewData = {
+        userAuthenticated: true,
+        userId: 'user123',
+        landingPage: true
+      };
+
+      airlinesDataLayer.setPageDataWithView(pageData, viewData);
+
+      expect(mockAdobeDataLayer).toHaveLength(1);
+      expect(mockAdobeDataLayer[0]).toMatchObject({
+        event: 'page-view',
+        pageData: {
+          pageType: 'home',
+          pageName: 'Homepage',
+          pageURL: 'https://example.com',
+          timestamp: expect.any(String),
+          userAgent: expect.any(String),
+          screenResolution: expect.any(String),
+          viewportSize: expect.any(String)
+        },
+        viewData: {
+          userAuthenticated: true,
+          userId: 'user123',
+          landingPage: true
         }
       });
     });
