@@ -231,19 +231,11 @@ describe('PageViewTracker Service', () => {
   });
 
   describe('trackPageExit', () => {
-    test('should track page exit with time on page', () => {
+    test('should not track page exit when disabled', () => {
       pageViewTracker.trackPageExit('/test-page', 5000);
       
-      expect(mockAdobeDataLayer).toHaveLength(1);
-      expect(mockAdobeDataLayer[0]).toMatchObject({
-        event: 'pageExit',
-        eventData: {
-          pathname: '/test-page',
-          timeOnPage: 5000,
-          exitMethod: 'navigation',
-          timestamp: expect.any(String)
-        }
-      });
+      // Should not add any events to data layer when disabled
+      expect(mockAdobeDataLayer).toHaveLength(0);
     });
   });
 

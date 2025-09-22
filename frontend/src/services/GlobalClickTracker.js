@@ -39,10 +39,10 @@ class GlobalClickTracker {
       return;
     }
 
-    // Track button clicks
-    if (this.isButton(target)) {
-      this.trackButtonClick(target, event);
-    }
+    // Track button clicks - DISABLED
+    // if (this.isButton(target)) {
+    //   this.trackButtonClick(target, event);
+    // }
     
     // Track link clicks
     if (this.isLink(target)) {

@@ -261,23 +261,24 @@ class PageViewTracker {
   }
 
   /**
-   * Track page exit (when user leaves the page)
+   * Track page exit (when user leaves the page) - DISABLED
    * @param {string} pathname - Current pathname
    * @param {number} timeOnPage - Time spent on page in milliseconds
    */
   trackPageExit(pathname, timeOnPage) {
-    const exitEvent = {
-      event: 'pageExit',
-      eventData: {
-        pathname,
-        timeOnPage,
-        exitMethod: 'navigation', // or 'close', 'refresh'
-        timestamp: new Date().toISOString()
-      }
-    };
+    // DISABLED - Page exit tracking
+    // const exitEvent = {
+    //   event: 'pageExit',
+    //   eventData: {
+    //     pathname,
+    //     timeOnPage,
+    //     exitMethod: 'navigation', // or 'close', 'refresh'
+    //     timestamp: new Date().toISOString()
+    //   }
+    // };
 
-    airlinesDataLayer.pushToDataLayer(exitEvent);
-    this.log('Page exit tracked', { pathname, timeOnPage });
+    // airlinesDataLayer.pushToDataLayer(exitEvent);
+    // this.log('Page exit tracked', { pathname, timeOnPage });
   }
 
   /**

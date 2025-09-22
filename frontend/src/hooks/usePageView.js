@@ -60,11 +60,11 @@ const usePageView = (customPageConfig = {}) => {
     return () => {
       clearTimeout(timer);
       
-      // Track page exit
-      if (hasTracked.current) {
-        const timeOnPage = Date.now() - pageStartTime.current;
-        pageViewTracker.trackPageExit(location.pathname, timeOnPage);
-      }
+      // Track page exit - DISABLED
+      // if (hasTracked.current) {
+      //   const timeOnPage = Date.now() - pageStartTime.current;
+      //   pageViewTracker.trackPageExit(location.pathname, timeOnPage);
+      // }
     };
   }, [location.pathname, location.search, location.state, user, isAuthenticated, customPageConfig]);
 
