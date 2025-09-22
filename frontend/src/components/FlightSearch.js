@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import usePageView from '../hooks/usePageView';
 import {
   Container,
   Paper,
@@ -52,6 +53,14 @@ const passengerTypes = [
 
 const FlightSearch = () => {
   const navigate = useNavigate();
+  
+  // Track page view with search-specific context
+  usePageView({
+    pageCategory: 'booking',
+    searchType: 'flight',
+    sections: ['search-form', 'filters', 'quick-actions']
+  });
+  
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
   const [date, setDate] = useState(null);

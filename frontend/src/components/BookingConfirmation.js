@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import usePageView from '../hooks/usePageView';
 import {
   Container,
   Paper,
@@ -37,6 +38,15 @@ import airports from '../data/airports.json';
 const BookingConfirmation = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  
+  // Track page view with confirmation-specific context
+  usePageView({
+    pageCategory: 'booking',
+    bookingStep: 'confirmation',
+    sections: ['confirmation-details', 'booking-summary', 'next-steps'],
+    bookingId: location.state?.bookingId || null
+  });
+  
   const [error, setError] = useState('');
   const [assignedSeats, setAssignedSeats] = useState({
     onward: [],

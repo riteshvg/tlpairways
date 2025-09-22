@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import usePageView from '../hooks/usePageView';
 import {
   Container,
   Paper,
@@ -31,6 +32,14 @@ const TravellerDetails = () => {
   const navigate = useNavigate();
 
   const { onwardFlight, returnFlight, tripType, passengers } = location.state || {};
+  
+  // Track page view with traveller details-specific context
+  usePageView({
+    pageCategory: 'booking',
+    bookingStep: 'traveller-details',
+    sections: ['passenger-form', 'contact-details', 'special-requests'],
+    passengerCount: passengers?.adult + passengers?.child + passengers?.infant || 1
+  });
 
   console.log('TravellerDetails received state:', {
     onwardFlight,

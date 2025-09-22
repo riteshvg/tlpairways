@@ -20,20 +20,11 @@ import Payment from './components/Payment';
 import BookingConfirmation from './components/BookingConfirmation';
 import ProtectedRoute from './components/protected/ProtectedRoute';
 import globalClickTracker from './services/GlobalClickTracker';
+import usePageView from './hooks/usePageView';
 
 // Page View Tracker Component
 function PageViewTracker() {
-  const location = useLocation();
-
-  React.useEffect(() => {
-    if (location.pathname === '/') {
-      // Only fire once per mount (i.e., on initial load or refresh)
-      // Analytics call removed
-    }
-    // No dependency on location, so this effect only runs on mount/unmount
-    // eslint-disable-next-line
-  }, []);
-
+  usePageView();
   return null;
 }
 

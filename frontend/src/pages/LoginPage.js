@@ -12,10 +12,19 @@ import { FlightTakeoff as FlightIcon } from '@mui/icons-material';
 import LoginButton from '../components/auth/LoginButton';
 import { useAuth } from '../context/AuthContext';
 import useUserAnalytics from '../hooks/useUserAnalytics';
+import usePageView from '../hooks/usePageView';
 
 const LoginPage = () => {
   const { error } = useAuth();
   const { trackLoginAttempt } = useUserAnalytics();
+
+  // Track page view with login-specific context
+  usePageView({
+    pageCategory: 'auth',
+    authAction: 'login',
+    sections: ['login-form', 'social-login', 'forgot-password'],
+    hasError: !!error
+  });
 
   // Track page view for login attempts
   useEffect(() => {

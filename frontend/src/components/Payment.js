@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import usePageView from '../hooks/usePageView';
 import {
   Container,
   Paper,
@@ -33,6 +34,13 @@ import CURRENCY_CONFIG from '../config/currencyConfig';
 const Payment = () => {
   const location = useLocation();
   const navigate = useNavigate();
+
+  // Track page view with payment-specific context
+  usePageView({
+    pageCategory: 'booking',
+    bookingStep: 'payment',
+    sections: ['payment-form', 'price-breakdown', 'security-info']
+  });
 
   // Extract all required data from location state with defaults
   const { 

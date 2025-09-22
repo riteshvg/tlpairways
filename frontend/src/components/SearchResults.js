@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import usePageView from '../hooks/usePageView';
 import {
   Container,
   Typography,
@@ -29,6 +30,14 @@ import airports from '../data/airports.json';
 const SearchResults = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  
+  // Track page view with search results-specific context
+  usePageView({
+    pageCategory: 'booking',
+    searchType: 'flight-results',
+    sections: ['results-list', 'filters', 'sorting', 'pagination'],
+    resultsCount: 0 // Will be updated when results are loaded
+  });
   
   // Initialize state with default values
   const [error, setError] = useState(null);

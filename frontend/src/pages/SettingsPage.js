@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import usePageView from '../hooks/usePageView';
 import {
   Container,
   Typography,
@@ -34,6 +35,14 @@ import { useNavigate } from 'react-router-dom';
 const SettingsPage = () => {
   const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  
+  // Track page view with settings-specific context
+  usePageView({
+    pageCategory: 'account',
+    sections: ['notification-settings', 'privacy-settings', 'account-preferences'],
+    userLoyaltyTier: user?.loyaltyTier || 'bronze'
+  });
+  
   const [settings, setSettings] = useState({
     emailNotifications: true,
     smsNotifications: false,

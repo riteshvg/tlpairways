@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import useUserAnalytics from '../hooks/useUserAnalytics';
+import usePageView from '../hooks/usePageView';
 import {
   Container,
   Paper,
@@ -44,6 +45,15 @@ const UserProfilePage = () => {
   const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const { trackProfileUpdate, trackPreferencesChange } = useUserAnalytics();
+  
+  // Track page view with profile-specific context
+  usePageView({
+    pageCategory: 'account',
+    sections: ['profile-form', 'preferences', 'account-settings'],
+    userLoyaltyTier: user?.loyaltyTier || 'bronze',
+    isEditing: false
+  });
+  
   const [isEditing, setIsEditing] = useState(false);
   const [editedUser, setEditedUser] = useState({
     name: user?.name || '',

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import usePageView from '../hooks/usePageView';
 import {
   Container,
   Typography,
@@ -48,6 +49,14 @@ import { CURRENCY_CONFIG } from '../config/currencyConfig';
 const AncillaryServices = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  
+  // Track page view with ancillary services-specific context
+  usePageView({
+    pageCategory: 'booking',
+    bookingStep: 'ancillary-services',
+    sections: ['seat-selection', 'meals', 'baggage', 'insurance']
+  });
+  
   const [selectedFlights, setSelectedFlights] = useState({
     onward: null,
     return: null

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import useUserAnalytics from '../hooks/useUserAnalytics';
+import usePageView from '../hooks/usePageView';
 import {
   Container,
   Typography,
@@ -41,6 +42,14 @@ const MyBookingsPage = () => {
   const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const { trackBookingHistoryView } = useUserAnalytics();
+  
+  // Track page view with bookings-specific context
+  usePageView({
+    pageCategory: 'account',
+    sections: ['bookings-list', 'booking-filters', 'booking-actions'],
+    bookingsCount: 0 // Will be updated when bookings are loaded
+  });
+  
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedBooking, setSelectedBooking] = useState(null);
