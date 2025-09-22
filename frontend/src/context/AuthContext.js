@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { validateAuth0Config } from '../config/auth0Config';
+import userAnalytics from '../services/UserAnalytics';
 
 // Validate Auth0 configuration only when environment variables are available
 if (process.env.NODE_ENV !== 'production' || process.env.REACT_APP_AUTH0_DOMAIN) {
@@ -57,20 +58,28 @@ export const AuthProvider = ({ children }) => {
           
           setUserProfile(profileData);
           
-          // Track user login in Adobe Data Layer
-          console.log('User authenticated, tracking login:', profileData);
-          // Analytics call removed
+          // Track successful login
+          userAnalytics.trackLoginSuccess(user);
         } catch (error) {
           console.error('Error loading user profile:', error);
+          
+          // Track login failure
+          userAnalytics.trackLoginFailure({
+            errorType: 'profile_load_failed',
+            errorMessage: error.message,
+            method: 'email'
+          });
         } finally {
           setIsLoadingProfile(false);
         }
       } else {
         setUserProfile(null);
-        // Track user logout in Adobe Data Layer
-        if (!isLoading) {
-          console.log('User not authenticated, tracking logout');
-          // Analytics call removed
+        // Track user logout
+        if (!isLoading && userProfile) {
+          userAnalytics.trackUserLogout({
+            userId: userProfile.id,
+            reason: 'session_expired'
+          });
         }
       }
     };
@@ -87,6 +96,14 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logoutUser = () => {
+    // Track manual logout
+    if (userProfile) {
+      userAnalytics.trackUserLogout({
+        userId: userProfile.id,
+        reason: 'manual'
+      });
+    }
+    
     logout({
       logoutParams: {
         returnTo: window.location.origin,

@@ -48,6 +48,23 @@ class AirlinesDataLayer {
   }
 
   /**
+   * Set user data in the data layer
+   * @param {Object} userData - User information object
+   */
+  setUserData(userData) {
+    const userDataEvent = {
+      event: 'user-data',
+      userData: {
+        ...userData,
+        timestamp: new Date().toISOString()
+      }
+    };
+
+    this.pushToDataLayer(userDataEvent);
+    this.log('User data set', userDataEvent);
+  }
+
+  /**
    * Track user interactions and push events to data layer
    * @param {string} eventName - Name of the event
    * @param {Object} eventData - Event data object

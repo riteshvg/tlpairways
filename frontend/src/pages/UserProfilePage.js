@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
+import useUserAnalytics from '../hooks/useUserAnalytics';
 import {
   Container,
   Paper,
@@ -36,12 +38,12 @@ import {
   Star as StarIcon,
   Security as SecurityIcon,
 } from '@mui/icons-material';
-import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const UserProfilePage = () => {
   const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const { trackProfileUpdate, trackPreferencesChange } = useUserAnalytics();
   const [isEditing, setIsEditing] = useState(false);
   const [editedUser, setEditedUser] = useState({
     name: user?.name || '',
@@ -70,8 +72,27 @@ const UserProfilePage = () => {
     // In a real app, you would save this to your backend
     console.log('Saving user profile:', editedUser);
     
-    // Track profile update in Adobe Data Layer
-    // Analytics call removed
+    // Track profile update
+    const updatedFields = [];
+    const previousValues = {};
+    const newValues = {};
+    
+    Object.keys(editedUser).forEach(key => {
+      if (user[key] !== editedUser[key]) {
+        updatedFields.push(key);
+        previousValues[key] = user[key] || '';
+        newValues[key] = editedUser[key];
+      }
+    });
+    
+    if (updatedFields.length > 0) {
+      trackProfileUpdate({
+        updatedFields,
+        previousValues,
+        newValues,
+        updateType: 'profile'
+      });
+    }
     
     setSnackbar({
       open: true,
