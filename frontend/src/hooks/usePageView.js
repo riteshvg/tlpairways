@@ -22,7 +22,12 @@ const usePageView = (customPageConfig = {}) => {
 
   useEffect(() => {
     // Only track once per page load
-    if (hasTracked.current) return;
+    if (hasTracked.current) {
+      console.log('🔄 usePageView: Page already tracked, skipping', { pathname: location.pathname });
+      return;
+    }
+    
+    console.log('🚀 usePageView: Starting page view tracking', { pathname: location.pathname });
     
     // Small delay to ensure page is fully loaded
     const timer = setTimeout(() => {
@@ -41,6 +46,12 @@ const usePageView = (customPageConfig = {}) => {
         };
 
         // Track page view
+        console.log('📊 usePageView: Calling pageViewTracker.trackPageView', {
+          pathname: location.pathname,
+          userAuthenticated: isAuthenticated,
+          customConfig: finalPageConfig
+        });
+        
         pageViewTracker.trackPageView(
           location.pathname,
           user,
@@ -50,6 +61,7 @@ const usePageView = (customPageConfig = {}) => {
         );
 
         hasTracked.current = true;
+        console.log('✅ usePageView: Page view tracking completed', { pathname: location.pathname });
       } catch (error) {
         console.error('Error tracking page view:', error);
         pageViewTracker.trackPageError(location.pathname, error, 'page-view-tracking');

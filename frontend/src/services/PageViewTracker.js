@@ -207,13 +207,12 @@ class PageViewTracker {
    * @param {Object} state - Route state
    */
   trackPageView(pathname, user, isAuthenticated, searchParams = {}, state = {}) {
-    // Create unique page identifier to prevent duplicates
-    const pageId = `${pathname}-${Date.now()}`;
-    
-    if (this.trackedPages.has(pageId)) {
-      this.log('Page already tracked, skipping', { pathname, pageId });
-      return;
-    }
+    // Remove duplicate prevention for now to ensure all page views are tracked
+    // const pageId = pathname;
+    // if (this.trackedPages.has(pageId)) {
+    //   this.log('Page already tracked in this session, skipping', { pathname, pageId });
+    //   return;
+    // }
 
     const pageConfig = this.getPageConfig(pathname, searchParams, state);
     
@@ -229,14 +228,23 @@ class PageViewTracker {
     // Track page view with merged data
     airlinesDataLayer.setPageDataWithView(pageConfig, userContext);
     
-    // Mark as tracked
-    this.trackedPages.add(pageId);
+    // Mark as tracked (disabled for now)
+    // this.trackedPages.add(pageId);
     
     this.log('Page view tracked', {
       pathname,
       pageType: pageConfig.pageType,
       pageName: pageConfig.pageName,
       userAuthenticated: isAuthenticated
+    });
+
+    // Debug: Log to console for verification
+    console.log('📄 PageView Event Triggered:', {
+      pathname,
+      pageType: pageConfig.pageType,
+      pageName: pageConfig.pageName,
+      userAuthenticated: isAuthenticated,
+      timestamp: new Date().toISOString()
     });
 
     // Clean up old tracked pages (keep only last 10)

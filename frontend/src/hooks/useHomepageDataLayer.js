@@ -27,6 +27,8 @@ const useHomepageDataLayer = () => {
     }
     
     // Set page data and track view in a single merged event
+    console.log('🏠 Homepage: Triggering pageView event via setPageDataWithView');
+    
     airlinesDataLayer.setPageDataWithView({
       pageType: 'home',
       pageName: 'Homepage',
