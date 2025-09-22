@@ -13,6 +13,23 @@ import usePageView from '../hooks/usePageView';
 const mockAdobeDataLayer = [];
 global.window.adobeDataLayer = mockAdobeDataLayer;
 
+// Mock window.location for tests
+Object.defineProperty(window, 'location', {
+  value: {
+    href: 'http://localhost:3000',
+    pathname: '/',
+    search: '',
+    origin: 'http://localhost:3000'
+  },
+  writable: true
+});
+
+// Mock document for tests
+Object.defineProperty(document, 'referrer', {
+  value: 'http://localhost:3000',
+  writable: true
+});
+
 // Mock AuthContext
 jest.mock('../context/AuthContext', () => ({
   useAuth: () => ({

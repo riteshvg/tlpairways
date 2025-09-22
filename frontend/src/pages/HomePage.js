@@ -6,7 +6,6 @@ import FeaturedDestinations from '../components/FeaturedDestinations';
 import WhyChooseUs from '../components/WhyChooseUs';
 import PromotionalBanners from '../components/PromotionalBanners';
 import useHomepageDataLayer from '../hooks/useHomepageDataLayer';
-import usePageView from '../hooks/usePageView';
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -17,14 +16,7 @@ const HomePage = () => {
     trackPromotionalBannerClick
   } = useHomepageDataLayer();
 
-  // Track page view with homepage-specific context
-  usePageView({
-    isLandingPage: true,
-    pageCategory: 'landing',
-    sections: ['hero', 'featured-destinations', 'promotional-banners', 'why-choose-us', 'newsletter'],
-    featuredDestinationsCount: 3,
-    promotionalBannersCount: 2
-  });
+  // Page view tracking is handled by useHomepageDataLayer hook
 
   console.log('🏠 HomePage rendered with data layer integration');
 

@@ -20,13 +20,8 @@ import Payment from './components/Payment';
 import BookingConfirmation from './components/BookingConfirmation';
 import ProtectedRoute from './components/protected/ProtectedRoute';
 import globalClickTracker from './services/GlobalClickTracker';
-import usePageView from './hooks/usePageView';
-
-// Page View Tracker Component
-function PageViewTracker() {
-  usePageView();
-  return null;
-}
+// Page View Tracker Component - REMOVED
+// Individual pages now handle their own page view tracking
 
 function App() {
   // Initialize global click tracking
@@ -45,7 +40,6 @@ function App() {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Router>
-            <PageViewTracker />
             <Navbar />
             <Routes>
               <Route path="/" element={<HomePage />} />
