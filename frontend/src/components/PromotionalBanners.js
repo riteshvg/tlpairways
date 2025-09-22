@@ -162,6 +162,9 @@ const PromotionalBanners = ({ onBannerClick }) => {
                 variant="contained"
                 size="large"
                 startIcon={<FlightTakeoffIcon />}
+                data-button-name={banner.id}
+                data-section="promotional-banners"
+                data-target={banner.ctaDestination}
                 sx={{
                   backgroundColor: 'rgba(255,255,255,0.2)',
                   color: 'white',

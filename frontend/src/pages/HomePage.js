@@ -19,23 +19,18 @@ const HomePage = () => {
   console.log('🏠 HomePage rendered with data layer integration');
 
   const handleWhyChooseUsClick = (feature) => {
-    trackHomepageInteraction('why-choose-us-click', {
-      feature,
-      section: 'why-choose-us'
-    });
+    // Tracking is now handled globally by GlobalClickTracker
   };
 
   const handleNavigationClick = (destination) => {
-    trackNavigationInteraction(destination);
     navigate(`/search?destination=${encodeURIComponent(destination)}`);
   };
 
   const handlePromotionalBannerClick = (bannerData) => {
-    trackPromotionalBannerClick(bannerData);
+    // Tracking is now handled globally by GlobalClickTracker
   };
 
   const handleFeaturedDestinationClick = (destinationData) => {
-    trackFeaturedDestinationClick(destinationData);
     navigate('/search', {
       state: {
         destination: destinationData.destination,
@@ -102,6 +97,8 @@ const HomePage = () => {
             <Button
               variant="outlined"
               size="large"
+              data-button-name="newsletter-signup"
+              data-section="newsletter"
               sx={{
                 color: 'white',
                 borderColor: 'white',
@@ -112,9 +109,6 @@ const HomePage = () => {
                   backgroundColor: 'rgba(255, 255, 255, 0.1)'
                 }
               }}
-              onClick={() => trackHomepageInteraction('newsletter-signup-click', {
-                section: 'newsletter'
-              })}
             >
               Subscribe to Newsletter
             </Button>

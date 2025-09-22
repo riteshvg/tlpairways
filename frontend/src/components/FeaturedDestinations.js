@@ -119,23 +119,26 @@ const FeaturedDestinations = ({ onDestinationClick }) => {
                 </Typography>
               </Box>
               
-              <Button
-                variant="outlined"
-                size="small"
-                startIcon={<FlightTakeoffIcon />}
-                sx={{
-                  width: '100%',
-                  borderColor: 'primary.main',
-                  color: 'primary.main',
-                  '&:hover': {
-                    borderColor: 'primary.dark',
-                    backgroundColor: 'primary.light',
-                    color: 'primary.dark'
-                  }
-                }}
-              >
-                Book Now
-              </Button>
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    startIcon={<FlightTakeoffIcon />}
+                    data-button-name={`book-${destination.destination.toLowerCase()}`}
+                    data-section="featured-destinations"
+                    data-target="/search"
+                    sx={{
+                      width: '100%',
+                      borderColor: 'primary.main',
+                      color: 'primary.main',
+                      '&:hover': {
+                        borderColor: 'primary.dark',
+                        backgroundColor: 'primary.light',
+                        color: 'primary.dark'
+                      }
+                    }}
+                  >
+                    Book Now
+                  </Button>
             </CardContent>
           </Card>
         </Grid>

@@ -12,7 +12,6 @@ import {
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
-import useHomepageDataLayer from '../hooks/useHomepageDataLayer';
 
 const destinations = [
   {
@@ -60,7 +59,6 @@ const HomeBanner = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   
-  const { trackHeroBannerInteraction } = useHomepageDataLayer();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -75,15 +73,6 @@ const HomeBanner = () => {
     setIsTransitioning(true);
     setCurrentSlide(nextSlide);
     setTimeout(() => setIsTransitioning(false), 500);
-    
-    // Track navigation interaction
-    trackHeroBannerInteraction('slide-next', {
-      bannerId: `hero-banner-${destinations[nextSlide].id}`,
-      bannerTitle: destinations[nextSlide].name,
-      bannerDestination: destinations[nextSlide].destinationCode,
-      bannerPosition: nextSlide + 1,
-      previousSlide: currentSlide + 1
-    });
   };
 
   const handlePrevSlide = () => {
@@ -91,15 +80,6 @@ const HomeBanner = () => {
     setIsTransitioning(true);
     setCurrentSlide(prevSlide);
     setTimeout(() => setIsTransitioning(false), 500);
-    
-    // Track navigation interaction
-    trackHeroBannerInteraction('slide-previous', {
-      bannerId: `hero-banner-${destinations[prevSlide].id}`,
-      bannerTitle: destinations[prevSlide].name,
-      bannerDestination: destinations[prevSlide].destinationCode,
-      bannerPosition: prevSlide + 1,
-      previousSlide: currentSlide + 1
-    });
   };
 
   const handleDotClick = (index) => {
@@ -107,30 +87,11 @@ const HomeBanner = () => {
       setIsTransitioning(true);
       setCurrentSlide(index);
       setTimeout(() => setIsTransitioning(false), 500);
-      
-      // Track dot navigation interaction
-      trackHeroBannerInteraction('dot-navigation', {
-        bannerId: `hero-banner-${destinations[index].id}`,
-        bannerTitle: destinations[index].name,
-        bannerDestination: destinations[index].destinationCode,
-        bannerPosition: index + 1,
-        previousSlide: currentSlide + 1
-      });
     }
   };
 
   const handleExploreFlights = () => {
     const currentDestination = destinations[currentSlide];
-    
-    // Track hero banner CTA click
-    trackHeroBannerInteraction('cta-click', {
-      bannerId: `hero-banner-${currentDestination.id}`,
-      bannerTitle: currentDestination.name,
-      bannerDestination: currentDestination.destinationCode,
-      bannerPosition: currentSlide + 1,
-      ctaText: 'Explore Flights',
-      ctaDestination: 'search-page'
-    });
     
     navigate('/search', {
       state: {
@@ -175,25 +136,29 @@ const HomeBanner = () => {
       />
 
       {/* Navigation Arrows */}
-      <IconButton
-        onClick={handlePrevSlide}
-        sx={{
-          position: 'absolute',
-          left: 20,
-          top: '50%',
-          transform: 'translateY(-50%)',
-          color: 'white',
-          backgroundColor: 'rgba(0, 0, 0, 0.3)',
-          '&:hover': {
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          },
-          zIndex: 2,
-        }}
-      >
-        <ArrowBackIosNewIcon />
-      </IconButton>
+          <IconButton
+            onClick={handlePrevSlide}
+            data-button-name="hero-banner-previous"
+            data-section="hero"
+            sx={{
+              position: 'absolute',
+              left: 20,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              color: 'white',
+              backgroundColor: 'rgba(0, 0, 0, 0.3)',
+              '&:hover': {
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              },
+              zIndex: 2,
+            }}
+          >
+            <ArrowBackIosNewIcon />
+          </IconButton>
       <IconButton
         onClick={handleNextSlide}
+        data-button-name="hero-banner-next"
+        data-section="hero"
         sx={{
           position: 'absolute',
           right: 20,
@@ -264,27 +229,30 @@ const HomeBanner = () => {
           >
             {destinations[currentSlide].description}
           </Typography>
-          <Button
-            variant="contained"
-            size="large"
-            onClick={handleExploreFlights}
-            startIcon={<FlightTakeoffIcon />}
-            sx={{
-              py: 2,
-              px: 6,
-              fontSize: '1.2rem',
-              backgroundColor: 'primary.main',
-              color: 'white',
-              '&:hover': {
-                backgroundColor: 'primary.dark',
-                transform: 'scale(1.05)',
-              },
-              transition: 'all 0.3s ease',
-              opacity: isTransitioning ? 0.7 : 1,
-            }}
-          >
-            Explore Flights
-          </Button>
+              <Button
+                variant="contained"
+                size="large"
+                onClick={handleExploreFlights}
+                startIcon={<FlightTakeoffIcon />}
+                data-button-name="explore-flights"
+                data-section="hero"
+                data-target="/search"
+                sx={{
+                  py: 2,
+                  px: 6,
+                  fontSize: '1.2rem',
+                  backgroundColor: 'primary.main',
+                  color: 'white',
+                  '&:hover': {
+                    backgroundColor: 'primary.dark',
+                    transform: 'scale(1.05)',
+                  },
+                  transition: 'all 0.3s ease',
+                  opacity: isTransitioning ? 0.7 : 1,
+                }}
+              >
+                Explore Flights
+              </Button>
         </Box>
       </Container>
 
@@ -300,23 +268,25 @@ const HomeBanner = () => {
           zIndex: 2,
         }}
       >
-        {destinations.map((_, index) => (
-          <Box
-            key={index}
-            onClick={() => handleDotClick(index)}
-            sx={{
-              width: 12,
-              height: 12,
-              borderRadius: '50%',
-              backgroundColor: currentSlide === index ? 'white' : 'rgba(255,255,255,0.5)',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease',
-              '&:hover': {
-                backgroundColor: 'white',
-              },
-            }}
-          />
-        ))}
+            {destinations.map((_, index) => (
+              <Box
+                key={index}
+                onClick={() => handleDotClick(index)}
+                data-button-name={`hero-banner-dot-${index + 1}`}
+                data-section="hero"
+                sx={{
+                  width: 12,
+                  height: 12,
+                  borderRadius: '50%',
+                  backgroundColor: currentSlide === index ? 'white' : 'rgba(255,255,255,0.5)',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    backgroundColor: 'white',
+                  },
+                }}
+              />
+            ))}
       </Box>
     </Box>
   );
