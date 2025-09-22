@@ -12,35 +12,44 @@ import {
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
+import useHomepageDataLayer from '../hooks/useHomepageDataLayer';
 
 const destinations = [
   {
     id: 1,
     name: 'Paris',
+    destinationCode: 'CDG',
     image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
     tagline: 'The City of Lights Awaits',
     description: 'Experience the romance and charm of the French capital',
+    price: 'From ₹45,000',
   },
   {
     id: 2,
     name: 'Kyoto',
+    destinationCode: 'KIX',
     image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
     tagline: 'Where Tradition Meets Tranquility',
     description: 'Discover the ancient heart of Japan',
+    price: 'From ₹52,000',
   },
   {
     id: 3,
     name: 'Jaipur',
+    destinationCode: 'JAI',
     image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
     tagline: 'The Pink City Beckons',
     description: 'Immerse yourself in the royal heritage of Rajasthan',
+    price: 'From ₹8,500',
   },
   {
     id: 4,
     name: 'Rome',
+    destinationCode: 'FCO',
     image: 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
     tagline: 'Eternal City, Timeless Beauty',
     description: 'Walk through the pages of history',
+    price: 'From ₹38,000',
   },
 ];
 
@@ -50,6 +59,8 @@ const HomeBanner = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  
+  const { trackHeroBannerInteraction } = useHomepageDataLayer();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -60,15 +71,35 @@ const HomeBanner = () => {
   }, [currentSlide]);
 
   const handleNextSlide = () => {
+    const nextSlide = currentSlide === destinations.length - 1 ? 0 : currentSlide + 1;
     setIsTransitioning(true);
-    setCurrentSlide((prev) => (prev === destinations.length - 1 ? 0 : prev + 1));
-    setTimeout(() => setIsTransitioning(false), 500); // Match transition duration
+    setCurrentSlide(nextSlide);
+    setTimeout(() => setIsTransitioning(false), 500);
+    
+    // Track navigation interaction
+    trackHeroBannerInteraction('slide-next', {
+      bannerId: `hero-banner-${destinations[nextSlide].id}`,
+      bannerTitle: destinations[nextSlide].name,
+      bannerDestination: destinations[nextSlide].destinationCode,
+      bannerPosition: nextSlide + 1,
+      previousSlide: currentSlide + 1
+    });
   };
 
   const handlePrevSlide = () => {
+    const prevSlide = currentSlide === 0 ? destinations.length - 1 : currentSlide - 1;
     setIsTransitioning(true);
-    setCurrentSlide((prev) => (prev === 0 ? destinations.length - 1 : prev - 1));
+    setCurrentSlide(prevSlide);
     setTimeout(() => setIsTransitioning(false), 500);
+    
+    // Track navigation interaction
+    trackHeroBannerInteraction('slide-previous', {
+      bannerId: `hero-banner-${destinations[prevSlide].id}`,
+      bannerTitle: destinations[prevSlide].name,
+      bannerDestination: destinations[prevSlide].destinationCode,
+      bannerPosition: prevSlide + 1,
+      previousSlide: currentSlide + 1
+    });
   };
 
   const handleDotClick = (index) => {
@@ -76,13 +107,35 @@ const HomeBanner = () => {
       setIsTransitioning(true);
       setCurrentSlide(index);
       setTimeout(() => setIsTransitioning(false), 500);
+      
+      // Track dot navigation interaction
+      trackHeroBannerInteraction('dot-navigation', {
+        bannerId: `hero-banner-${destinations[index].id}`,
+        bannerTitle: destinations[index].name,
+        bannerDestination: destinations[index].destinationCode,
+        bannerPosition: index + 1,
+        previousSlide: currentSlide + 1
+      });
     }
   };
 
   const handleExploreFlights = () => {
+    const currentDestination = destinations[currentSlide];
+    
+    // Track hero banner CTA click
+    trackHeroBannerInteraction('cta-click', {
+      bannerId: `hero-banner-${currentDestination.id}`,
+      bannerTitle: currentDestination.name,
+      bannerDestination: currentDestination.destinationCode,
+      bannerPosition: currentSlide + 1,
+      ctaText: 'Explore Flights',
+      ctaDestination: 'search-page'
+    });
+    
     navigate('/search', {
       state: {
-        destination: destinations[currentSlide].name,
+        destination: currentDestination.name,
+        destinationCode: currentDestination.destinationCode,
       },
     });
   };
