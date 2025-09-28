@@ -82,11 +82,13 @@ const SearchResults = () => {
           paymentType: paymentType || 'oneway',
           tripType: tripType || 'oneway',
           cabinClass: cabinClass || 'economy',
-          previousPage
+          previousPage,
+          numberOfDays: differenceInDays(new Date(date), new Date()) // Days between booking and travel
         };
 
         console.log('Search params set:', params);
         console.log('Passenger counts:', params.passengerCounts);
+        console.log('Number of days until travel:', params.numberOfDays);
         setSearchParams(params);
         setSearchId(`search_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
         setError(null);
