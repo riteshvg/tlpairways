@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Route Verification Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .route { margin: 10px 0; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; }
+    </style>
+</head>
+<body>
+    <h1>Flight Route Verification Test</h1>
+    <p>Testing important routes to ensure they have flight data available.</p>
+    
+    <div id="results"></div>
+
+    <script>
+        // Test routes
+        const testRoutes = [
+            'BOM-DXB', 'DXB-BOM',
+            'DEL-DXB', 'DXB-DEL',
+            'BOM-SIN', 'SIN-BOM',
+            'DEL-HKG', 'HKG-DEL',
+            'BOM-JFK', 'JFK-BOM',
+            'BLR-LHR', 'LHR-BLR',
+            'HYD-DXB', 'DXB-HYD'
+        ];
+
+        // Load flight routes data
+        fetch('/frontend/src/data/flight_routes.json')
+            .then(response => response.json())
+            .then(data => {
+                const results = document.getElementById('results');
+                
+                testRoutes.forEach(route => {
+                    const routeData = data.routes[route];
+                    const div = document.createElement('div');
+                    div.className = 'route';
+                    
+                    if (routeData && routeData.onward && routeData.onward.length > 0) {
+                        div.className += ' success';
+                        div.innerHTML = `
+                            <strong>✅ ${route}</strong> - ${routeData.onward.length} flights available
+                            <br>Sample: ${routeData.onward[0].flightNumber} (${routeData.onward[0].airline})
+                            <br>Price: ₹${routeData.onward[0].price.amount} ${routeData.onward[0].price.currency}
+                        `;
+                    } else {
+                        div.className += ' error';
+                        div.innerHTML = `<strong>❌ ${route}</strong> - No flights available`;
+                    }
+                    
+                    results.appendChild(div);
+                });
+                
+                // Add summary
+                const summary = document.createElement('div');
+                summary.className = 'route info';
+                const totalRoutes = Object.keys(data.routes).length;
+                summary.innerHTML = `
+                    <strong>📊 Database Summary:</strong><br>
+                    Total routes: ${totalRoutes}<br>
+                    Test routes checked: ${testRoutes.length}
+                `;
+                results.appendChild(summary);
+            })
+            .catch(error => {
+                document.getElementById('results').innerHTML = `
+                    <div class="route error">
+                        <strong>❌ Error loading flight data:</strong> ${error.message}
+                    </div>
+                `;
+            });
+    </script>
+</body>
+</html>

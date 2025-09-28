@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Layer Test - Search Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .button {
+            background: #1976d2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .button:hover {
+            background: #1565c0;
+        }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+    </style>
+</head>
+<body>
+    <h1>🛩️ Search Results Data Layer Test</h1>
+    
+    <div class="container">
+        <h2>Data Layer Status</h2>
+        <div id="status" class="status info">Initializing...</div>
+        <button class="button" onclick="checkDataLayer()">Check Data Layer</button>
+        <button class="button" onclick="clearDataLayer()">Clear Data Layer</button>
+        <button class="button" onclick="simulateSearchResults()">Simulate Search Results</button>
+        <button class="button" onclick="simulateFlightSelection()">Simulate Flight Selection</button>
+    </div>
+
+    <div class="container">
+        <h2>Data Layer Events</h2>
+        <div id="events" class="log">No events yet...</div>
+        <button class="button" onclick="refreshEvents()">Refresh Events</button>
+    </div>
+
+    <div class="container">
+        <h2>Debug Commands</h2>
+        <p>Open browser console and try these commands:</p>
+        <div class="log">
+// Check data layer
+console.log(window.adobeDataLayer);
+
+// View all events
+window.adobeDataLayer.forEach((event, index) => {
+    console.log(`Event ${index}:`, event);
+});
+
+// Filter by event type
+window.adobeDataLayer.filter(event => event.event === 'search-results-displayed');
+
+// Get latest 5 events
+window.adobeDataLayer.slice(-5);
+
+// Check data layer length
+window.adobeDataLayer.length
+        </div>
+    </div>
+
+    <script>
+        // Initialize Adobe Data Layer
+        window.adobeDataLayer = window.adobeDataLayer || [];
+        
+        // Mock AirlinesDataLayer for testing
+        const mockAirlinesDataLayer = {
+            trackEvent: (eventName, eventData) => {
+                const event = {
+                    event: eventName,
+                    ...eventData,
+                    timestamp: new Date().toISOString()
+                };
+                window.adobeDataLayer.push(event);
+                console.log('🛩️ Event tracked:', event);
+                updateEvents();
+            },
+            
+            setPageData: (pageType, pageData) => {
+                const event = {
+                    event: 'pageData',
+                    pageData: {
+                        pageType,
+                        pageName: pageData.pageName || document.title,
+                        pageURL: pageData.pageURL || window.location.href,
+                        timestamp: new Date().toISOString(),
+                        ...pageData
+                    }
+                };
+                window.adobeDataLayer.push(event);
+                console.log('🛩️ Page data set:', event);
+                updateEvents();
+            }
+        };
+
+        // Make it globally available
+        window.airlinesDataLayer = mockAirlinesDataLayer;
+
+        function updateStatus(message, type = 'info') {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = message;
+            statusEl.className = `status ${type}`;
+        }
+
+        function updateEvents() {
+            const eventsEl = document.getElementById('events');
+            const events = window.adobeDataLayer.slice(-10); // Show last 10 events
+            eventsEl.textContent = JSON.stringify(events, null, 2);
+        }
+
+        function checkDataLayer() {
+            if (window.adobeDataLayer) {
+                updateStatus(`✅ Data Layer Active - ${window.adobeDataLayer.length} events`, 'success');
+                updateEvents();
+            } else {
+                updateStatus('❌ Data Layer Not Found', 'error');
+            }
+        }
+
+        function clearDataLayer() {
+            window.adobeDataLayer.length = 0;
+            updateStatus('🗑️ Data Layer Cleared', 'info');
+            updateEvents();
+        }
+
+        function simulateSearchResults() {
+            const searchId = `search_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            
+            // Simulate search results display
+            mockAirlinesDataLayer.trackEvent('search-results-displayed', {
+                searchContext: {
+                    searchId,
+                    origin: 'JFK',
+                    destination: 'LAX',
+                    departureDate: '2024-01-15',
+                    returnDate: '2024-01-22',
+                    passengers: 2,
+                    cabinClass: 'economy',
+                    tripType: 'roundtrip'
+                },
+                resultsData: {
+                    totalResults: 15,
+                    onwardResults: 8,
+                    returnResults: 7,
+                    priceRange: { min: 299, max: 899 },
+                    airlines: ['American Airlines', 'Delta', 'United'],
+                    durationRange: { min: 300, max: 480 }
+                },
+                userContext: {
+                    isLoggedIn: true,
+                    userId: 'user_123',
+                    userLoyaltyTier: 'gold'
+                }
+            });
+            
+            updateStatus('✅ Search Results Event Simulated', 'success');
+        }
+
+        function simulateFlightSelection() {
+            const searchId = `search_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            
+            // Simulate flight selection
+            mockAirlinesDataLayer.trackEvent('flight-selected', {
+                flight: {
+                    flightNumber: 'AA123',
+                    airline: 'American Airlines',
+                    origin: 'JFK',
+                    destination: 'LAX',
+                    departureTime: '08:30',
+                    arrivalTime: '11:45',
+                    duration: '6h 15m',
+                    stops: 0,
+                    price: 299.99,
+                    currency: 'USD',
+                    cabinClass: 'Economy',
+                    availability: 7,
+                    aircraft: 'Boeing 737',
+                    resultPosition: 3
+                },
+                searchContext: {
+                    searchId,
+                    resultPosition: 3,
+                    totalResults: 15,
+                    currentFilters: [],
+                    sortBy: 'price'
+                },
+                userContext: {
+                    isLoggedIn: true,
+                    loyaltyTier: 'gold',
+                    userId: 'user_123'
+                }
+            });
+            
+            updateStatus('✅ Flight Selection Event Simulated', 'success');
+        }
+
+        function refreshEvents() {
+            updateEvents();
+            updateStatus('🔄 Events Refreshed', 'info');
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            checkDataLayer();
+            
+            // Set up real-time monitoring
+            const originalPush = window.adobeDataLayer.push;
+            window.adobeDataLayer.push = function(...args) {
+                const result = originalPush.apply(this, args);
+                updateEvents();
+                return result;
+            };
+        });
+    </script>
+</body>
+</html>

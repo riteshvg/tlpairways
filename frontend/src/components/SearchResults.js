@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import usePageView from '../hooks/usePageView';
+// usePageView removed - now using merged pageView event
+import { useAuth } from '../context/AuthContext';
+import airlinesDataLayer from '../services/AirlinesDataLayer';
 import {
   Container,
   Typography,
@@ -20,7 +22,7 @@ import {
   DialogActions,
   IconButton,
 } from '@mui/material';
-import { format, isWithinInterval, addDays } from 'date-fns';
+import { format, isWithinInterval, addDays, differenceInMinutes, differenceInDays } from 'date-fns';
 import CloseIcon from '@mui/icons-material/Close';
 import flightRoutes from '../data/flight_routes.json';
 import FlightDetailsModal from './FlightDetailsModal';
@@ -30,18 +32,14 @@ import airports from '../data/airports.json';
 const SearchResults = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuth();
   
-  // Track page view with search results-specific context
-  usePageView({
-    pageCategory: 'booking',
-    searchType: 'flight-results',
-    sections: ['results-list', 'filters', 'sorting', 'pagination'],
-    resultsCount: 0 // Will be updated when results are loaded
-  });
+  // Page view is now handled in the merged event below
   
   // Initialize state with default values
   const [error, setError] = useState(null);
   const [searchParams, setSearchParams] = useState(null);
+  const [searchId, setSearchId] = useState(null);
   const [onwardFlights, setOnwardFlights] = useState([]);
   const [returnFlights, setReturnFlights] = useState([]);
   const [selectedOnwardFlight, setSelectedOnwardFlight] = useState(null);
@@ -56,12 +54,14 @@ const SearchResults = () => {
   useEffect(() => {
     try {
       if (location.state) {
-  const {
+        console.log('Location state received:', location.state);
+        const {
     originCode,
     destinationCode,
     date,
     returnDate,
     passengers,
+    passengerCounts,
     paymentType,
     tripType,
           cabinClass,
@@ -78,12 +78,17 @@ const SearchResults = () => {
           date: new Date(date),
           returnDate: returnDate ? new Date(returnDate) : null,
           passengers: passengers || 1,
+          passengerCounts: passengerCounts || { adult: 1, child: 0, infant: 0 },
           paymentType: paymentType || 'oneway',
           tripType: tripType || 'oneway',
-          cabinClass: cabinClass || 'economy'
+          cabinClass: cabinClass || 'economy',
+          previousPage
         };
 
+        console.log('Search params set:', params);
+        console.log('Passenger counts:', params.passengerCounts);
         setSearchParams(params);
+        setSearchId(`search_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
         setError(null);
       } else {
         setError('No search parameters found');
@@ -91,6 +96,12 @@ const SearchResults = () => {
     } catch (err) {
       setError(err.message);
       console.error('Error initializing search parameters:', err);
+      // Track search initialization error
+      airlinesDataLayer.trackEvent('search-error', {
+        errorType: 'search-initialization',
+        errorMessage: err.message,
+        timestamp: new Date().toISOString()
+      });
     }
   }, [location.state]);
 
@@ -112,7 +123,7 @@ const SearchResults = () => {
           return flight.origin.iata_code === origin && 
                  flight.destination.iata_code === destination;
         })
-        .map(flight => {
+        .map((flight, index) => {
           // Calculate prices for different cabin classes
           const basePrice = flight.price.amount;
       let prices = {
@@ -157,28 +168,35 @@ const SearchResults = () => {
       const displayCurrency = isInternational ? 'USD' : 'INR';
       
       // Convert prices for display (keep original INR prices in backend)
-      const displayPrices = {};
-      Object.keys(prices).forEach(className => {
-        if (isInternational) {
-          // Convert INR to USD for display
-          displayPrices[className] = Math.round(prices[className] / CURRENCY_CONFIG.defaultExchangeRate);
-        } else {
-          displayPrices[className] = prices[className];
-        }
-      });
+          const displayPrices = {};
+          Object.keys(prices).forEach(className => {
+            if (isInternational) {
+              // Convert INR to USD for display
+              displayPrices[className] = Math.round(prices[className] / CURRENCY_CONFIG.defaultExchangeRate);
+            } else {
+              displayPrices[className] = prices[className];
+            }
+          });
 
-      return {
-        ...flight,
+          // Calculate duration in minutes
+          const durationMinutes = differenceInMinutes(arrivalTime, departureTime);
+          const duration = `${Math.floor(durationMinutes / 60)}h ${durationMinutes % 60}m`;
+
+          return {
+            ...flight,
             departureTime,
             arrivalTime,
-        prices,
-        displayPrices,
-        isInternational,
-        displayCurrency,
-        originalPrices: prices, // Keep original INR prices
-        availableClasses,
-        currentPrice: prices[cabinClass] || basePrice
-      };
+            prices,
+            displayPrices,
+            isInternational,
+            displayCurrency,
+            originalPrices: prices, // Keep original INR prices
+            availableClasses,
+            currentPrice: prices[cabinClass] || basePrice,
+            duration,
+            durationMinutes,
+            resultPosition: index + 1
+          };
     });
     } catch (err) {
       console.error('Error getting matching flights:', err);
@@ -217,32 +235,100 @@ const SearchResults = () => {
     }
   }, [searchParams]);
 
-  // Track search results display
+  // Track merged page view with search results data
   useEffect(() => {
     if (searchParams && (onwardFlights.length > 0 || returnFlights.length > 0)) {
       try {
-        // analytics.searchResultsDisplayed({
-        //   searchParams: {
-        //     originCode: searchParams.originCode,
-        //     destinationCode: searchParams.destinationCode,
-        //     date: searchParams.date,
-        //     returnDate: searchParams.returnDate,
-        //     passengers: searchParams.passengers,
-        //     paymentType: searchParams.paymentType,
-        //     tripType: searchParams.tripType,
-        //     cabinClass: searchParams.cabinClass
-        //   },
-        //   results: {
-        //     onward: onwardFlights,
-        //     return: returnFlights,
-        //     total: onwardFlights.length + returnFlights.length
-        //   }
-        // });
+        // Create merged pageView event with search results data
+        const mergedEvent = {
+          event: 'pageView',
+          pageData: {
+            pageType: 'search-results',
+            pageName: 'Search Results',
+            pageURL: window.location.href,
+            referrer: document.referrer,
+            timestamp: new Date().toISOString(),
+            userAgent: navigator.userAgent,
+            screenResolution: `${window.screen.width}x${window.screen.height}`,
+            viewportSize: `${window.innerWidth}x${window.innerHeight}`,
+            pageCategory: 'booking',
+            searchType: 'flight-results',
+            sections: ['results-list', 'filters', 'sorting', 'pagination']
+          },
+          searchContext: {
+            searchId,
+            origin: searchParams.originCode,
+            destination: searchParams.destinationCode,
+            departureDate: searchParams.date ? format(new Date(searchParams.date), 'yyyy/MM/dd') : null,
+            returnDate: searchParams.returnDate ? format(new Date(searchParams.returnDate), 'yyyy/MM/dd') : null,
+            numberOfDays: searchParams.date && searchParams.returnDate ? 
+              differenceInDays(new Date(searchParams.returnDate), new Date(searchParams.date)) : null,
+            passengers: {
+              total: searchParams.passengers || 0,
+              breakdown: {
+                adults: {
+                  count: searchParams.passengerCounts?.adult || 0,
+                  type: 'adult',
+                  description: '12+ years'
+                },
+                children: {
+                  count: searchParams.passengerCounts?.child || 0,
+                  type: 'child', 
+                  description: '2-11 years'
+                },
+                infants: {
+                  count: searchParams.passengerCounts?.infant || 0,
+                  type: 'infant',
+                  description: 'Under 2 years'
+                }
+              },
+              summary: searchParams.passengerCounts ? 
+                Object.entries(searchParams.passengerCounts)
+                  .filter(([type, count]) => count > 0)
+                  .map(([type, count]) => `${type}: ${count}`)
+                  .join(', ') : 'No passengers'
+            },
+            cabinClass: searchParams.cabinClass,
+            tripType: searchParams.tripType
+          },
+          resultsData: {
+            totalResults: onwardFlights.length + returnFlights.length,
+            onwardResults: onwardFlights.length,
+            returnResults: returnFlights.length,
+            priceRange: {
+              min: Math.min(...onwardFlights.map(f => f.currentPrice)),
+              max: Math.max(...onwardFlights.map(f => f.currentPrice))
+            },
+            airlines: [...new Set(onwardFlights.map(f => f.airline))],
+            durationRange: {
+              min: Math.min(...onwardFlights.map(f => f.durationMinutes)),
+              max: Math.max(...onwardFlights.map(f => f.durationMinutes))
+            }
+          },
+          userContext: {
+            isLoggedIn: isAuthenticated,
+            userId: user?.id || null,
+            userLoyaltyTier: user?.loyaltyTier || null,
+            sessionId: sessionStorage.getItem('tlp_session_id') || `session_${Date.now()}`
+          },
+          timestamp: new Date().toISOString()
+        };
+
+        // Push merged event to data layer
+        airlinesDataLayer.pushToDataLayer(mergedEvent);
+        
+        console.log('🛩️ Merged pageView with search results tracked:', mergedEvent);
       } catch (err) {
-        console.error('Error tracking search results:', err);
+        console.error('Error tracking merged page view:', err);
+        airlinesDataLayer.trackEvent('search-error', {
+          errorType: 'merged-pageview-tracking',
+          errorMessage: err.message,
+          searchId,
+          timestamp: new Date().toISOString()
+        });
       }
     }
-  }, [searchParams, onwardFlights, returnFlights]);
+  }, [searchParams, onwardFlights, returnFlights, searchId, isAuthenticated, user]);
 
   const handleViewDetails = (flight, isReturn = false) => {
     if (isReturn) {
@@ -251,6 +337,29 @@ const SearchResults = () => {
     } else {
       setSelectedFlight(flight);
       setIsModalOpen(true);
+    }
+
+    // Track flight details view
+    try {
+      airlinesDataLayer.trackEvent('flight-details-viewed', {
+        flight: {
+          flightNumber: flight.flightNumber,
+          airline: flight.airline,
+          origin: flight.origin.iata_code,
+          destination: flight.destination.iata_code,
+          price: flight.currentPrice,
+          resultPosition: flight.resultPosition
+        },
+        searchId,
+        isReturn,
+        userContext: {
+          isLoggedIn: isAuthenticated,
+          userId: user?.id || null
+        },
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error('Error tracking flight details view:', error);
     }
   };
 
@@ -300,9 +409,45 @@ const SearchResults = () => {
 
     // Track flight selection with correct price
     try {
-      // Analytics call removed
+      airlinesDataLayer.trackEvent('flight-selected', {
+        flight: {
+          flightNumber: flightWithCorrectPrice.flightNumber,
+          airline: flightWithCorrectPrice.airline,
+          origin: flightWithCorrectPrice.origin.iata_code,
+          destination: flightWithCorrectPrice.destination.iata_code,
+          departureTime: flightWithCorrectPrice.departureTime.toISOString(),
+          arrivalTime: flightWithCorrectPrice.arrivalTime.toISOString(),
+          duration: flightWithCorrectPrice.duration,
+          stops: flightWithCorrectPrice.stops || 0,
+          price: flightWithCorrectPrice.price.amount,
+          currency: flightWithCorrectPrice.price.currency,
+          cabinClass: flightWithCorrectPrice.cabinClass,
+          availability: flightWithCorrectPrice.availableSeats || 0,
+          aircraft: flightWithCorrectPrice.aircraft,
+          resultPosition: flightWithCorrectPrice.resultPosition
+        },
+        searchContext: {
+          searchId,
+          resultPosition: flightWithCorrectPrice.resultPosition,
+          totalResults: onwardFlights.length + returnFlights.length,
+          currentFilters: [],
+          sortBy: 'default'
+        },
+        userContext: {
+          isLoggedIn: isAuthenticated,
+          loyaltyTier: user?.loyaltyTier || null,
+          userId: user?.id || null
+        },
+        timestamp: new Date().toISOString()
+      });
     } catch (error) {
       console.error('Error tracking flight selection:', error);
+      airlinesDataLayer.trackEvent('search-error', {
+        errorType: 'flight-selection-tracking',
+        errorMessage: error.message,
+        searchId,
+        timestamp: new Date().toISOString()
+      });
     }
 
     // For one-way journey, proceed to traveller details after selecting onward flight
@@ -373,6 +518,42 @@ const SearchResults = () => {
     };
 
     console.log('Navigating to traveller details with state:', navigationState);
+
+    // Track proceed to traveller details
+    try {
+      airlinesDataLayer.trackEvent('search-proceed-to-traveller-details', {
+        searchId,
+        selectedFlights: {
+          onward: selectedOnwardFlight ? {
+            flightNumber: selectedOnwardFlight.flightNumber,
+            airline: selectedOnwardFlight.airline,
+            price: selectedOnwardFlight.price.amount
+          } : null,
+          return: selectedReturnFlight ? {
+            flightNumber: selectedReturnFlight.flightNumber,
+            airline: selectedReturnFlight.airline,
+            price: selectedReturnFlight.price.amount
+          } : null
+        },
+        totalPrice: (() => {
+          const onwardPrice = selectedOnwardFlight ? 
+            selectedOnwardFlight.displayPrices?.[searchParams.cabinClass] * searchParams.passengers : 0;
+          const returnPrice = selectedReturnFlight ? 
+            selectedReturnFlight.displayPrices?.[searchParams.cabinClass] * searchParams.passengers : 0;
+          return onwardPrice + returnPrice;
+        })(),
+        tripType: searchParams.tripType,
+        passengers: searchParams.passengers,
+        cabinClass: searchParams.cabinClass,
+        userContext: {
+          isLoggedIn: isAuthenticated,
+          userId: user?.id || null
+        },
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error('Error tracking proceed to traveller details:', error);
+    }
 
     navigate('/traveller-details', {
       state: navigationState
@@ -462,6 +643,46 @@ const SearchResults = () => {
       {flights.map(flight => renderFlightCard(flight, isReturn))}
     </List>
   );
+
+  // Debug function for testing data layer
+  const debugDataLayer = () => {
+    console.log('🔍 Search Results Data Layer Debug (Merged pageView):');
+    console.log('Search ID:', searchId);
+    console.log('Search Params:', searchParams);
+    console.log('Passenger Details:', {
+      total: searchParams?.passengers || 0,
+      breakdown: searchParams?.passengerCounts || {},
+      summary: searchParams?.passengerCounts ? 
+        Object.entries(searchParams.passengerCounts)
+          .filter(([type, count]) => count > 0)
+          .map(([type, count]) => `${type}: ${count}`)
+          .join(', ') : 'No passengers'
+    });
+    console.log('Number of Days:', searchParams?.date && searchParams?.returnDate ? 
+      differenceInDays(new Date(searchParams.returnDate), new Date(searchParams.date)) : 'N/A');
+    console.log('Onward Flights:', onwardFlights.length);
+    console.log('Return Flights:', returnFlights.length);
+    console.log('Selected Onward:', selectedOnwardFlight?.flightNumber);
+    console.log('Selected Return:', selectedReturnFlight?.flightNumber);
+    console.log('Data Layer Length:', window.adobeDataLayer?.length || 0);
+    console.log('Latest Events:', window.adobeDataLayer?.slice(-5) || []);
+    
+    // Check for merged pageView events
+    const pageViewEvents = window.adobeDataLayer?.filter(event => event.event === 'pageView') || [];
+    console.log('PageView Events:', pageViewEvents);
+    
+    // Make debug function globally available
+    if (typeof window !== 'undefined') {
+      window.debugSearchResults = debugDataLayer;
+    }
+  };
+
+  // Call debug function in development
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
+      debugDataLayer();
+    }
+  }, [searchId, searchParams, onwardFlights, returnFlights, selectedOnwardFlight, selectedReturnFlight]);
 
   if (!searchParams) {
     return (
