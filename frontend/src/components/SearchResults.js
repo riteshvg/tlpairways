@@ -101,24 +101,17 @@ const SearchResults = () => {
           tripType: tripType || 'oneway',
           cabinClass: cabinClass || 'economy',
           previousPage,
-<<<<<<< HEAD
-          numberOfDays: differenceInDays(new Date(date), new Date()) // Days between booking and travel
-=======
           numberOfDays: numberOfDays // Days between booking and travel
->>>>>>> enhancements
         };
 
         console.log('Search params set:', params);
         console.log('Passenger counts:', params.passengerCounts);
         console.log('Number of days until travel:', params.numberOfDays);
-<<<<<<< HEAD
-=======
         console.log('Travel date:', params.date);
         console.log('Current date:', currentDate);
         console.log('Raw date input:', date);
         console.log('Parsed travel date:', travelDate);
         console.log('Date difference calculation:', differenceInDays(travelDate, currentDate));
->>>>>>> enhancements
         setSearchParams(params);
         setSearchId(`search_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
         setError(null);
