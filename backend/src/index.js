@@ -75,6 +75,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Routes
 app.use('/api/flights', require('./routes/flights'));
 app.use('/api/airports', require('./routes/airports'));
+app.use('/api/user-location', require('./routes/userLocation'));
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

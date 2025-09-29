@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Geolocation Test</title>
+</head>
+<body>
+    <h1>IP Geolocation Test</h1>
+    <div id="result">Loading...</div>
+    
+    <script>
+        async function testIPGeolocation() {
+            const resultDiv = document.getElementById('result');
+            
+            try {
+                // Test backend endpoint first
+                console.log('Testing backend endpoint...');
+                const backendResponse = await fetch('/api/user-location');
+                if (backendResponse.ok) {
+                    const backendData = await backendResponse.json();
+                    resultDiv.innerHTML = `
+                        <h2>Backend Endpoint Result:</h2>
+                        <pre>${JSON.stringify(backendData, null, 2)}</pre>
+                    `;
+                    return;
+                }
+            } catch (error) {
+                console.log('Backend endpoint failed:', error.message);
+            }
+            
+            // Test direct IP services
+            const services = [
+                'https://ipapi.co/json/',
+                'https://ip-api.com/json/',
+                'https://ipwho.is/'
+            ];
+            
+            for (const service of services) {
+                try {
+                    console.log(`Testing ${service}...`);
+                    const response = await fetch(service);
+                    if (response.ok) {
+                        const data = await response.json();
+                        resultDiv.innerHTML = `
+                            <h2>Direct Service Result (${service}):</h2>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        `;
+                        return;
+                    }
+                } catch (error) {
+                    console.log(`${service} failed:`, error.message);
+                }
+            }
+            
+            resultDiv.innerHTML = '<h2>All services failed</h2><p>CORS issues detected</p>';
+        }
+        
+        testIPGeolocation();
+    </script>
+</body>
+</html>

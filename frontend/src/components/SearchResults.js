@@ -1,8 +1,16 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 // usePageView removed - now using merged pageView event
 import { useAuth } from '../context/AuthContext';
 import airlinesDataLayer from '../services/AirlinesDataLayer';
+import enhancedSearchResultsDataLayer from '../services/EnhancedSearchResultsDataLayer';
+import { 
+  calculateDistance, 
+  getSpecialDay, 
+  getUserLocation, 
+  calculateRevenueAnalytics,
+  getUserPreferences 
+} from '../utils/searchAnalytics';
 import {
   Container,
   Typography,
@@ -28,6 +36,7 @@ import flightRoutes from '../data/flight_routes.json';
 import FlightDetailsModal from './FlightDetailsModal';
 import CURRENCY_CONFIG from '../config/currencyConfig';
 import airports from '../data/airports.json';
+
 
 const SearchResults = () => {
   const location = useLocation();
@@ -72,10 +81,19 @@ const SearchResults = () => {
           throw new Error('Missing required search parameters');
         }
 
+        // Ensure proper date parsing
+        const travelDate = new Date(date);
+        const currentDate = new Date();
+        
+        // Calculate numberOfDays with validation
+        let numberOfDays = differenceInDays(travelDate, currentDate);
+        if (numberOfDays < 0) numberOfDays = 0;
+        if (isNaN(travelDate.getTime())) numberOfDays = 0;
+        
         const params = {
           originCode,
           destinationCode,
-          date: new Date(date),
+          date: travelDate,
           returnDate: returnDate ? new Date(returnDate) : null,
           passengers: passengers || 1,
           passengerCounts: passengerCounts || { adult: 1, child: 0, infant: 0 },
@@ -83,12 +101,24 @@ const SearchResults = () => {
           tripType: tripType || 'oneway',
           cabinClass: cabinClass || 'economy',
           previousPage,
+<<<<<<< HEAD
           numberOfDays: differenceInDays(new Date(date), new Date()) // Days between booking and travel
+=======
+          numberOfDays: numberOfDays // Days between booking and travel
+>>>>>>> enhancements
         };
 
         console.log('Search params set:', params);
         console.log('Passenger counts:', params.passengerCounts);
         console.log('Number of days until travel:', params.numberOfDays);
+<<<<<<< HEAD
+=======
+        console.log('Travel date:', params.date);
+        console.log('Current date:', currentDate);
+        console.log('Raw date input:', date);
+        console.log('Parsed travel date:', travelDate);
+        console.log('Date difference calculation:', differenceInDays(travelDate, currentDate));
+>>>>>>> enhancements
         setSearchParams(params);
         setSearchId(`search_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
         setError(null);
@@ -230,6 +260,12 @@ const SearchResults = () => {
           setReturnFlights([]);
         }
         setError(null);
+        
+        // Initialize enhanced search results data layer
+        if (searchId) {
+          enhancedSearchResultsDataLayer.initializeSearch(searchId);
+        }
+        
       } catch (err) {
         setError('Error loading flights');
         console.error('Error updating flights:', err);
@@ -239,9 +275,65 @@ const SearchResults = () => {
 
   // Track merged page view with search results data
   useEffect(() => {
-    if (searchParams && (onwardFlights.length > 0 || returnFlights.length > 0)) {
-      try {
-        // Create merged pageView event with search results data
+    const trackPageView = async () => {
+      if (searchParams && (onwardFlights.length > 0 || returnFlights.length > 0)) {
+        try {
+        // Get enhanced search results data
+        const allFlights = [
+          ...onwardFlights.map(f => ({ ...f, type: 'onward' })),
+          ...returnFlights.map(f => ({ ...f, type: 'return' }))
+        ];
+        
+        // Get airport information for enhanced data
+        const originAirport = airports.find(a => a.iata_code === searchParams.originCode);
+        const destAirport = airports.find(a => a.iata_code === searchParams.destinationCode);
+        
+        // Calculate distance
+        const distance = calculateDistance(originAirport, destAirport);
+        
+        // Check for special days
+        const onwardSpecialDay = getSpecialDay(searchParams.date, originAirport?.country);
+        const returnSpecialDay = searchParams.returnDate ? 
+          getSpecialDay(searchParams.returnDate, destAirport?.country) : null;
+        
+        // Calculate numberOfDays fresh to ensure accuracy
+        const travelDate = new Date(searchParams.date);
+        const currentDate = new Date();
+        let calculatedNumberOfDays = differenceInDays(travelDate, currentDate);
+        
+        // Ensure numberOfDays is never negative (past dates should be 0)
+        if (calculatedNumberOfDays < 0) {
+          calculatedNumberOfDays = 0;
+        }
+        
+        // Validate that we have a valid date
+        if (isNaN(travelDate.getTime())) {
+          console.error('Invalid travel date:', searchParams.date);
+          calculatedNumberOfDays = 0;
+        }
+        
+        console.log('🔍 Data Layer numberOfDays Calculation:');
+        console.log('  Travel Date:', travelDate);
+        console.log('  Current Date:', currentDate);
+        console.log('  Raw difference:', differenceInDays(travelDate, currentDate));
+        console.log('  Final numberOfDays:', calculatedNumberOfDays);
+        console.log('  searchParams.numberOfDays:', searchParams.numberOfDays);
+        
+        // Get user location (async)
+        const userLocation = await getUserLocation();
+        
+        
+        // Calculate revenue analytics
+        const revenueData = calculateRevenueAnalytics(onwardFlights, searchParams.passengers);
+        
+        // Get user preferences
+        const userPrefs = getUserPreferences(user, {
+          totalSearches: parseInt(sessionStorage.getItem('tlp_search_count') || '0'),
+          sessionSearches: 1,
+          avgBookingWindow: differenceInDays(searchParams.date, new Date())
+        });
+
+        // Create merged pageView event with enhanced search results data
         const mergedEvent = {
           event: 'pageView',
           pageData: {
@@ -258,13 +350,13 @@ const SearchResults = () => {
             sections: ['results-list', 'filters', 'sorting', 'pagination']
           },
           searchContext: {
+            // Basic search parameters
             searchId,
             origin: searchParams.originCode,
             destination: searchParams.destinationCode,
             departureDate: searchParams.date ? format(new Date(searchParams.date), 'yyyy/MM/dd') : null,
             returnDate: searchParams.returnDate ? format(new Date(searchParams.returnDate), 'yyyy/MM/dd') : null,
-            numberOfDays: searchParams.date && searchParams.returnDate ? 
-              differenceInDays(new Date(searchParams.returnDate), new Date(searchParams.date)) : null,
+            numberOfDays: calculatedNumberOfDays,
             passengers: {
               total: searchParams.passengers || 0,
               breakdown: {
@@ -291,27 +383,72 @@ const SearchResults = () => {
                   .join(', ') : 'No passengers'
             },
             cabinClass: searchParams.cabinClass,
-            tripType: searchParams.tripType
-          },
-          resultsData: {
-            totalResults: onwardFlights.length + returnFlights.length,
-            onwardResults: onwardFlights.length,
-            returnResults: returnFlights.length,
-            priceRange: {
-              min: Math.min(...onwardFlights.map(f => f.currentPrice)),
-              max: Math.max(...onwardFlights.map(f => f.currentPrice))
+            tripType: searchParams.tripType,
+            
+            // Enhanced search criteria (merged from search-results-displayed)
+            searchCriteria: {
+              originAirport: searchParams.originCode,
+              originCity: originAirport?.city || '',
+              originCountry: originAirport?.country || '',
+              destinationAirport: searchParams.destinationCode,
+              destinationCity: destAirport?.city || '',
+              destinationCountry: destAirport?.country || '',
+              departureDate: format(searchParams.date, 'yyyy-MM-dd'),
+              returnDate: searchParams.returnDate ? format(searchParams.returnDate, 'yyyy-MM-dd') : null,
+              tripType: searchParams.tripType === 'roundtrip' ? 'roundTrip' : 'oneWay',
+              passengers: {
+                adults: searchParams.passengerCounts?.adult || 0,
+                children: searchParams.passengerCounts?.child || 0,
+                infants: searchParams.passengerCounts?.infant || 0,
+                total: searchParams.passengers || 0
+              },
+              cabinClass: searchParams.cabinClass,
+              flexibleDates: false,
+              directFlightsOnly: false
             },
-            airlines: [...new Set(onwardFlights.map(f => f.airline))],
-            durationRange: {
-              min: Math.min(...onwardFlights.map(f => f.durationMinutes)),
-              max: Math.max(...onwardFlights.map(f => f.durationMinutes))
+            
+            // Distance and special days
+            distanceKm: distance,
+            specialDays: {
+              onward: onwardSpecialDay,
+              return: returnSpecialDay,
+              hasSpecialDays: onwardSpecialDay.is_special || (returnSpecialDay?.is_special || false)
+            },
+            
+            
+            // Revenue tracking
+            revenueData: revenueData,
+            
+            // Geography
+            geography: {
+              userLocation: userLocation
+            },
+            
+            // Search performance
+            searchPerformance: {
+              searchDurationMs: 0, // Search duration not available in this component
+              resultsLoadedAt: new Date().toISOString(),
+              searchAbandoned: false
             }
           },
           userContext: {
+            // Basic user context
             isLoggedIn: isAuthenticated,
             userId: user?.id || null,
             userLoyaltyTier: user?.loyaltyTier || null,
-            sessionId: sessionStorage.getItem('tlp_session_id') || `session_${Date.now()}`
+            sessionId: sessionStorage.getItem('tlp_session_id') || `session_${Date.now()}`,
+            
+            // Enhanced user context (merged from search-results-displayed)
+            userContext: {
+              isLoggedIn: isAuthenticated,
+              userId: user?.id || null,
+              loyaltyTier: user?.loyaltyTier || 'none',
+              sessionId: sessionStorage.getItem('tlp_session_id') || `session_${Date.now()}`,
+              searchCount: parseInt(sessionStorage.getItem('tlp_search_count') || '0')
+            },
+            
+            // User preferences (moved from search-results-displayed)
+            userPreferences: userPrefs
           },
           timestamp: new Date().toISOString()
         };
@@ -319,18 +456,28 @@ const SearchResults = () => {
         // Push merged event to data layer
         airlinesDataLayer.pushToDataLayer(mergedEvent);
         
-        console.log('🛩️ Merged pageView with search results tracked:', mergedEvent);
-      } catch (err) {
-        console.error('Error tracking merged page view:', err);
-        airlinesDataLayer.trackEvent('search-error', {
-          errorType: 'merged-pageview-tracking',
-          errorMessage: err.message,
-          searchId,
-          timestamp: new Date().toISOString()
-        });
+          console.log('🛩️ Enhanced pageView with merged search results tracked:', mergedEvent);
+        } catch (err) {
+          console.error('Error tracking merged page view:', err);
+          airlinesDataLayer.trackEvent('search-error', {
+            errorType: 'merged-pageview-tracking',
+            errorMessage: err.message,
+            searchId,
+            timestamp: new Date().toISOString()
+          });
+        }
       }
-    }
+    };
+    
+    trackPageView();
   }, [searchParams, onwardFlights, returnFlights, searchId, isAuthenticated, user]);
+
+  // Track search abandonment on component unmount
+  useEffect(() => {
+    return () => {
+      enhancedSearchResultsDataLayer.trackSearchAbandonment();
+    };
+  }, []);
 
   const handleViewDetails = (flight, isReturn = false) => {
     if (isReturn) {
