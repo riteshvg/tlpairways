@@ -76,6 +76,21 @@ import FlightDetailsModal from './FlightDetailsModal';
 import CURRENCY_CONFIG from '../config/currencyConfig';
 import airports from '../data/airports.json';
 
+// Helper function to find airport by code in the new structure
+const findAirportByCode = (code) => {
+  for (const cityData of airports.airports) {
+    const airport = cityData.airports.find(a => a.code === code);
+    if (airport) {
+      return {
+        ...airport,
+        city: cityData.city,
+        country: cityData.country
+      };
+    }
+  }
+  return null;
+};
+
 const EnhancedSearchResults = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -247,8 +262,8 @@ const EnhancedSearchResults = () => {
           }
 
           // Get country codes for origin and destination
-          const originAirport = airports.find(a => a.iata_code === flight.origin.iata_code);
-          const destAirport = airports.find(a => a.iata_code === flight.destination.iata_code);
+          const originAirport = findAirportByCode(flight.origin.iata_code);
+          const destAirport = findAirportByCode(flight.destination.iata_code);
           const originCountry = originAirport?.country || 'India';
           const destCountry = destAirport?.country || 'India';
           

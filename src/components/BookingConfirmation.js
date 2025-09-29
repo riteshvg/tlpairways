@@ -34,6 +34,21 @@ import LocalAirportIcon from '@mui/icons-material/LocalAirport';
 import ForestIcon from '@mui/icons-material/Forest';
 import airports from '../data/airports.json';
 
+// Helper function to find airport by code in the new structure
+const findAirportByCode = (code) => {
+  for (const cityData of airports.airports) {
+    const airport = cityData.airports.find(a => a.code === code);
+    if (airport) {
+      return {
+        ...airport,
+        city: cityData.city,
+        country: cityData.country
+      };
+    }
+  }
+  return null;
+};
+
 const BookingConfirmation = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -231,7 +246,7 @@ const BookingConfirmation = () => {
   };
 
   const getAirportWithCoordinates = (iata_code) => {
-    const airport = airports.find(a => a.iata_code === iata_code);
+    const airport = findAirportByCode(iata_code);
     if (!airport) return null;
     return airport.coordinates ? airport.coordinates : null;
   };

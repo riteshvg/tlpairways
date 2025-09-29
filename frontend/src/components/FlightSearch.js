@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import usePageView from '../hooks/usePageView';
 import {
@@ -23,13 +23,24 @@ import flightRoutes from '../data/flight_routes.json';
 import PassengerSelector from './PassengerSelector';
 
 const getUniqueLocations = () => {
-  const locations = airports.map(airport => ({
-    value: airport.iata_code,
-    label: `${airport.city}, ${airport.country}`,
-    city: airport.city,
-    country: airport.country,
-    iata_code: airport.iata_code
-  }));
+  const locations = [];
+  
+  // Flatten the new airport structure
+  airports.airports.forEach(cityData => {
+    cityData.airports.forEach(airport => {
+      locations.push({
+        value: airport.code,
+        label: `${airport.name} (${airport.code}) - ${cityData.city}, ${cityData.country}`,
+        city: cityData.city,
+        country: cityData.country,
+        iata_code: airport.code,
+        airport_name: airport.name,
+        airport_type: airport.type,
+        coordinates: airport.coordinates
+      });
+    });
+  });
+  
   return locations;
 };
 
