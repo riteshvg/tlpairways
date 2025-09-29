@@ -1,36 +1,30 @@
 #!/bin/bash
 
-echo "🚀 Starting Railway Build Process..."
+echo "--- Starting Railway Build Process ---"
 
-# Clean any existing builds
-echo "🧹 Cleaning previous builds..."
+# 1. Clean previous builds
+echo "Cleaning previous frontend build artifacts..."
 rm -rf frontend/build
-rm -rf frontend/node_modules/.cache
+echo "Previous build artifacts removed."
 
-# Install dependencies
-echo "📦 Installing backend dependencies..."
-npm install --production --prefix backend
+# 2. Install all dependencies
+echo "Installing all dependencies (backend and frontend)..."
+npm run install:all || { echo "npm install:all failed"; exit 1; }
+echo "All dependencies installed."
 
-echo "📦 Installing frontend dependencies..."
-npm install --prefix frontend
+# 3. Build the frontend
+echo "Building frontend for production..."
+npm run build:frontend || { echo "Frontend build failed"; exit 1; }
+echo "Frontend build completed."
 
-# Build frontend
-echo "🔨 Building frontend..."
-cd frontend
-npm run build:production
-cd ..
-
-# Verify build
-echo "✅ Verifying build..."
-if [ -d "frontend/build" ]; then
-    echo "✅ Build directory created successfully"
-    echo "📁 Build contents:"
-    ls -la frontend/build/
-    echo "📁 JS files:"
-    ls -la frontend/build/static/js/
+# 4. Verify build output
+echo "Verifying frontend build output..."
+if [ -d "frontend/build" ] && [ "$(ls -A frontend/build/static/js/)" ]; then
+  echo "Frontend build directory and JS files found."
+  ls -la frontend/build/static/js/
 else
-    echo "❌ Build directory not found!"
-    exit 1
+  echo "ERROR: Frontend build output not found or is empty."
+  exit 1
 fi
 
-echo "🎉 Railway build completed successfully!"
+echo "--- Railway Build Process Completed Successfully ---"
