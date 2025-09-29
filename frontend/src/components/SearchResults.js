@@ -85,6 +85,11 @@ const SearchResults = () => {
         const travelDate = new Date(date);
         const currentDate = new Date();
         
+        // Calculate numberOfDays with validation
+        let numberOfDays = differenceInDays(travelDate, currentDate);
+        if (numberOfDays < 0) numberOfDays = 0;
+        if (isNaN(travelDate.getTime())) numberOfDays = 0;
+        
         const params = {
           originCode,
           destinationCode,
@@ -96,7 +101,7 @@ const SearchResults = () => {
           tripType: tripType || 'oneway',
           cabinClass: cabinClass || 'economy',
           previousPage,
-          numberOfDays: differenceInDays(travelDate, currentDate) // Days between booking and travel
+          numberOfDays: numberOfDays // Days between booking and travel
         };
 
         console.log('Search params set:', params);
@@ -284,6 +289,29 @@ const SearchResults = () => {
         const returnSpecialDay = searchParams.returnDate ? 
           getSpecialDay(searchParams.returnDate, destAirport?.country) : null;
         
+        // Calculate numberOfDays fresh to ensure accuracy
+        const travelDate = new Date(searchParams.date);
+        const currentDate = new Date();
+        let calculatedNumberOfDays = differenceInDays(travelDate, currentDate);
+        
+        // Ensure numberOfDays is never negative (past dates should be 0)
+        if (calculatedNumberOfDays < 0) {
+          calculatedNumberOfDays = 0;
+        }
+        
+        // Validate that we have a valid date
+        if (isNaN(travelDate.getTime())) {
+          console.error('Invalid travel date:', searchParams.date);
+          calculatedNumberOfDays = 0;
+        }
+        
+        console.log('🔍 Data Layer numberOfDays Calculation:');
+        console.log('  Travel Date:', travelDate);
+        console.log('  Current Date:', currentDate);
+        console.log('  Raw difference:', differenceInDays(travelDate, currentDate));
+        console.log('  Final numberOfDays:', calculatedNumberOfDays);
+        console.log('  searchParams.numberOfDays:', searchParams.numberOfDays);
+        
         // Get user location (async)
         const userLocation = await getUserLocation();
         
@@ -321,7 +349,7 @@ const SearchResults = () => {
             destination: searchParams.destinationCode,
             departureDate: searchParams.date ? format(new Date(searchParams.date), 'yyyy/MM/dd') : null,
             returnDate: searchParams.returnDate ? format(new Date(searchParams.returnDate), 'yyyy/MM/dd') : null,
-            numberOfDays: searchParams.numberOfDays,
+            numberOfDays: calculatedNumberOfDays,
             passengers: {
               total: searchParams.passengers || 0,
               breakdown: {
