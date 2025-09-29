@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 // usePageView removed - now using merged pageView event
 import { useAuth } from '../context/AuthContext';
