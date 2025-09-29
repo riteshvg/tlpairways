@@ -15,27 +15,37 @@ import {
   Typography,
   Paper,
   List,
-  ListItem,
   Button,
   Grid,
   Box,
-  Divider,
   Card,
   CardContent,
-  Chip,
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions,
   IconButton,
 } from '@mui/material';
-import { format, isWithinInterval, addDays, differenceInMinutes, differenceInDays } from 'date-fns';
+import { format, differenceInMinutes, differenceInDays } from 'date-fns';
 import CloseIcon from '@mui/icons-material/Close';
 import flightRoutes from '../data/flight_routes.json';
 import FlightDetailsModal from './FlightDetailsModal';
 import CURRENCY_CONFIG from '../config/currencyConfig';
 import airports from '../data/airports.json';
 
+// Helper function to find airport by code in the new structure
+const findAirportByCode = (code) => {
+  for (const cityData of airports.airports) {
+    const airport = cityData.airports.find(a => a.code === code);
+    if (airport) {
+      return {
+        ...airport,
+        city: cityData.city,
+        country: cityData.country
+      };
+    }
+  }
+  return null;
+};
 
 const SearchResults = () => {
   const location = useLocation();
@@ -45,16 +55,13 @@ const SearchResults = () => {
   // Page view is now handled in the merged event below
   
   // Initialize state with default values
-  const [error, setError] = useState(null);
   const [searchParams, setSearchParams] = useState(null);
   const [searchId, setSearchId] = useState(null);
   const [onwardFlights, setOnwardFlights] = useState([]);
   const [returnFlights, setReturnFlights] = useState([]);
   const [selectedOnwardFlight, setSelectedOnwardFlight] = useState(null);
   const [selectedReturnFlight, setSelectedReturnFlight] = useState(null);
-  const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [selectedFlight, setSelectedFlight] = useState(null);
-  const [isReturnFlight, setIsReturnFlight] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isReturnModalOpen, setIsReturnModalOpen] = useState(false);
 
@@ -113,12 +120,10 @@ const SearchResults = () => {
         console.log('Date difference calculation:', differenceInDays(travelDate, currentDate));
         setSearchParams(params);
         setSearchId(`search_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
-        setError(null);
       } else {
-        setError('No search parameters found');
+        console.error('No search parameters found');
       }
     } catch (err) {
-      setError(err.message);
       console.error('Error initializing search parameters:', err);
       // Track search initialization error
       airlinesDataLayer.trackEvent('search-error', {
@@ -180,8 +185,8 @@ const SearchResults = () => {
       }
 
       // Get country codes for origin and destination
-      const originAirport = airports.find(a => a.iata_code === flight.origin.iata_code);
-      const destAirport = airports.find(a => a.iata_code === flight.destination.iata_code);
+      const originAirport = findAirportByCode(flight.origin.iata_code);
+      const destAirport = findAirportByCode(flight.destination.iata_code);
       const originCountry = originAirport?.country || 'India';
       const destCountry = destAirport?.country || 'India';
       
@@ -251,7 +256,6 @@ const SearchResults = () => {
         } else {
           setReturnFlights([]);
         }
-        setError(null);
         
         // Initialize search tracking
         if (searchId) {
@@ -259,26 +263,19 @@ const SearchResults = () => {
         }
         
       } catch (err) {
-        setError('Error loading flights');
         console.error('Error updating flights:', err);
       }
     }
-  }, [searchParams]);
+  }, [searchParams, searchId]);
 
   // Track merged page view with search results data
   useEffect(() => {
     const trackPageView = async () => {
       if (searchParams && (onwardFlights.length > 0 || returnFlights.length > 0)) {
         try {
-        // Get enhanced search results data
-        const allFlights = [
-          ...onwardFlights.map(f => ({ ...f, type: 'onward' })),
-          ...returnFlights.map(f => ({ ...f, type: 'return' }))
-        ];
-        
         // Get airport information for enhanced data
-        const originAirport = airports.find(a => a.iata_code === searchParams.originCode);
-        const destAirport = airports.find(a => a.iata_code === searchParams.destinationCode);
+        const originAirport = findAirportByCode(searchParams.originCode);
+        const destAirport = findAirportByCode(searchParams.destinationCode);
         
         // Calculate distance
         const distance = calculateDistance(originAirport, destAirport);
@@ -380,9 +377,11 @@ const SearchResults = () => {
             // Enhanced search criteria (merged from search-results-displayed)
             searchCriteria: {
               originAirport: searchParams.originCode,
+              originAirportName: originAirport?.name || '',
               originCity: originAirport?.city || '',
               originCountry: originAirport?.country || '',
               destinationAirport: searchParams.destinationCode,
+              destinationAirportName: destAirport?.name || '',
               destinationCity: destAirport?.city || '',
               destinationCountry: destAirport?.country || '',
               departureDate: format(searchParams.date, 'yyyy-MM-dd'),
@@ -470,39 +469,6 @@ const SearchResults = () => {
       console.log('Search results component unmounted');
     };
   }, []);
-
-  const handleViewDetails = (flight, isReturn = false) => {
-    if (isReturn) {
-      setSelectedReturnFlight(flight);
-      setIsReturnModalOpen(true);
-    } else {
-      setSelectedFlight(flight);
-      setIsModalOpen(true);
-    }
-
-    // Track flight details view
-    try {
-      airlinesDataLayer.trackEvent('flight-details-viewed', {
-        flight: {
-          flightNumber: flight.flightNumber,
-          airline: flight.airline,
-          origin: flight.origin.iata_code,
-          destination: flight.destination.iata_code,
-          price: flight.currentPrice,
-          resultPosition: flight.resultPosition
-        },
-        searchId,
-        isReturn,
-        userContext: {
-          isLoggedIn: isAuthenticated,
-          userId: user?.id || null
-        },
-        timestamp: new Date().toISOString()
-      });
-    } catch (error) {
-      console.error('Error tracking flight details view:', error);
-    }
-  };
 
   const handleCloseModal = (isReturn = false) => {
     if (isReturn) {
@@ -746,6 +712,13 @@ const SearchResults = () => {
                 {flight.origin.iata_code} → {flight.destination.iata_code}
                     </Typography>
               <Typography variant="body2" color="textSecondary">
+                {(() => {
+                  const originAirport = findAirportByCode(flight.origin.iata_code);
+                  const destAirport = findAirportByCode(flight.destination.iata_code);
+                  return `${originAirport?.name || flight.origin.iata_code} → ${destAirport?.name || flight.destination.iata_code}`;
+                })()}
+                    </Typography>
+              <Typography variant="body2" color="textSecondary">
                 {format(flight.departureTime, 'MMM dd, yyyy')}
                     </Typography>
               <Typography variant="body2">
@@ -823,7 +796,7 @@ const SearchResults = () => {
     if (process.env.NODE_ENV === 'development') {
       debugDataLayer();
     }
-  }, [searchId, searchParams, onwardFlights, returnFlights, selectedOnwardFlight, selectedReturnFlight]);
+  }, [searchId, searchParams, onwardFlights, returnFlights, selectedOnwardFlight, selectedReturnFlight, debugDataLayer]);
 
   if (!searchParams) {
     return (
@@ -853,6 +826,13 @@ const SearchResults = () => {
             </Typography>
             <Typography variant="body1" gutterBottom>
               {searchParams.originCode} → {searchParams.destinationCode}
+            </Typography>
+            <Typography variant="body2" color="textSecondary" gutterBottom>
+              {(() => {
+                const originAirport = findAirportByCode(searchParams.originCode);
+                const destAirport = findAirportByCode(searchParams.destinationCode);
+                return `${originAirport?.name || searchParams.originCode} → ${destAirport?.name || searchParams.destinationCode}`;
+              })()}
             </Typography>
             <Typography variant="body2" color="textSecondary">
               {format(searchParams.date, 'MMM dd, yyyy')}
@@ -933,6 +913,13 @@ const SearchResults = () => {
                 <Typography>
                   {selectedOnwardFlight.origin.iata_code} → {selectedOnwardFlight.destination.iata_code}
                 </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  {(() => {
+                    const originAirport = findAirportByCode(selectedOnwardFlight.origin.iata_code);
+                    const destAirport = findAirportByCode(selectedOnwardFlight.destination.iata_code);
+                    return `${originAirport?.name || selectedOnwardFlight.origin.iata_code} → ${destAirport?.name || selectedOnwardFlight.destination.iata_code}`;
+                  })()}
+                </Typography>
                 <Typography>
                   Cabin Class: {searchParams.cabinClass}
                 </Typography>
@@ -956,6 +943,13 @@ const SearchResults = () => {
                 </Typography>
                 <Typography>
                   {selectedReturnFlight.origin.iata_code} → {selectedReturnFlight.destination.iata_code}
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  {(() => {
+                    const originAirport = findAirportByCode(selectedReturnFlight.origin.iata_code);
+                    const destAirport = findAirportByCode(selectedReturnFlight.destination.iata_code);
+                    return `${originAirport?.name || selectedReturnFlight.origin.iata_code} → ${destAirport?.name || selectedReturnFlight.destination.iata_code}`;
+                  })()}
                 </Typography>
                 <Typography>
                   Cabin Class: {searchParams.cabinClass}
