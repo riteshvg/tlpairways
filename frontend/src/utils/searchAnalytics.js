@@ -122,12 +122,34 @@ export const getUserLocation = async () => {
   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const language = navigator.language || 'en';
   
-  // Try multiple IP geolocation services as fallbacks (CORS-friendly)
+  // First, try our backend API endpoint (works in production)
+  try {
+    console.log('Trying backend IP geolocation endpoint...');
+    const response = await fetch('/api/user-location', {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
+      signal: AbortSignal.timeout(3000)
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Backend IP geolocation data received:', data);
+      return data;
+    }
+  } catch (error) {
+    console.warn('Backend IP geolocation failed:', error.message);
+  }
+  
+  // Fallback to CORS-friendly services (some work better in production)
   const services = [
     'https://ipapi.co/json/',
     'https://ip-api.com/json/',
     'https://api.db-ip.com/v2/free/self',
-    'https://freeipapi.com/api/json'
+    'https://freeipapi.com/api/json',
+    'https://ipwho.is/', // Another CORS-friendly service
+    'https://ipapi.co/json/?callback=?' // JSONP fallback
   ];
   
   for (const service of services) {
@@ -192,6 +214,16 @@ export const getUserLocation = async () => {
           currency: 'USD',
           language: language
         };
+      } else if (service.includes('ipwho.is')) {
+        locationData = {
+          country: data.country || 'Unknown',
+          state: data.region || 'Unknown',
+          city: data.city || 'Unknown',
+          timezone: data.timezone || timezone,
+          ipCountry: data.country_code || 'Unknown',
+          currency: data.currency || 'USD',
+          language: language
+        };
       } else {
         // Generic fallback for other services
         locationData = {
@@ -217,21 +249,74 @@ export const getUserLocation = async () => {
     }
   }
   
-  // If all services fail, use browser-based fallback with better defaults
-  console.warn('All IP geolocation services failed, using browser-based fallback');
+  // Try JSONP as last resort (works in some browsers)
+  try {
+    console.log('Trying JSONP fallback...');
+    const jsonpUrl = 'https://ipapi.co/json/?callback=handleLocation';
+    
+    return new Promise((resolve) => {
+      // Create a temporary callback function
+      window.handleLocation = (data) => {
+        console.log('JSONP location data received:', data);
+        delete window.handleLocation; // Clean up
+        
+        const locationData = {
+          country: data.country_name || 'Unknown',
+          state: data.region || 'Unknown',
+          city: data.city || 'Unknown',
+          timezone: data.timezone || timezone,
+          ipCountry: data.country_code || 'Unknown',
+          currency: data.currency || 'USD',
+          language: data.languages ? data.languages.split(',')[0] : language
+        };
+        
+        if (locationData.country !== 'Unknown' && locationData.country !== '') {
+          resolve(locationData);
+        } else {
+          resolve(getBrowserFallback());
+        }
+      };
+      
+      // Create script tag for JSONP
+      const script = document.createElement('script');
+      script.src = jsonpUrl;
+      script.onerror = () => {
+        delete window.handleLocation;
+        resolve(getBrowserFallback());
+      };
+      document.head.appendChild(script);
+      
+      // Timeout after 5 seconds
+      setTimeout(() => {
+        delete window.handleLocation;
+        if (script.parentNode) {
+          script.parentNode.removeChild(script);
+        }
+        resolve(getBrowserFallback());
+      }, 5000);
+    });
+  } catch (error) {
+    console.warn('JSONP fallback failed:', error.message);
+    return getBrowserFallback();
+  }
   
-  // Try to extract country from timezone
-  const timezoneCountry = getCountryFromTimezone(timezone);
-  
-  return {
-    country: timezoneCountry || 'Unknown',
-    state: 'Unknown',
-    city: 'Unknown',
-    timezone: timezone,
-    ipCountry: timezoneCountry || 'Unknown',
-    currency: getCurrencyFromTimezone(timezone),
-    language: language
-  };
+  // Browser-based fallback function
+  function getBrowserFallback() {
+    console.warn('All IP geolocation services failed, using browser-based fallback');
+    
+    // Try to extract country from timezone
+    const timezoneCountry = getCountryFromTimezone(timezone);
+    
+    return {
+      country: timezoneCountry || 'Unknown',
+      state: 'Unknown',
+      city: 'Unknown',
+      timezone: timezone,
+      ipCountry: timezoneCountry || 'Unknown',
+      currency: getCurrencyFromTimezone(timezone),
+      language: language
+    };
+  }
 };
 
 /**
