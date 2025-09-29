@@ -87,7 +87,25 @@ export const AuthProvider = ({ children }) => {
     loadUserProfile();
   }, [isAuthenticated, user, getAccessTokenSilently, isLoading]);
 
-  const login = () => {
+  // Handle redirect after successful authentication
+  useEffect(() => {
+    if (isAuthenticated && !isLoading && !isLoadingProfile) {
+      const returnTo = sessionStorage.getItem('auth_return_to');
+      if (returnTo) {
+        // Clear the stored return path
+        sessionStorage.removeItem('auth_return_to');
+        // Redirect to the intended destination
+        window.location.href = returnTo;
+      }
+    }
+  }, [isAuthenticated, isLoading, isLoadingProfile]);
+
+  const login = (returnTo = null) => {
+    // Store the intended destination in sessionStorage
+    if (returnTo) {
+      sessionStorage.setItem('auth_return_to', returnTo);
+    }
+    
     loginWithRedirect({
       authorizationParams: {
         redirect_uri: window.location.origin,
