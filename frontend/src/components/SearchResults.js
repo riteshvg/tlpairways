@@ -80,6 +80,8 @@ const SearchResults = () => {
     paymentType,
     tripType,
           cabinClass,
+          travelPurpose,
+          searchDateTime,
           previousPage
         } = location.state;
 
@@ -106,6 +108,8 @@ const SearchResults = () => {
           paymentType: paymentType || 'oneway',
           tripType: tripType || 'oneway',
           cabinClass: cabinClass || 'economy',
+          travelPurpose: travelPurpose || 'personal',
+          searchDateTime: searchDateTime || new Date().toISOString().split('T')[0],
           previousPage,
           numberOfDays: numberOfDays // Days between booking and travel
         };
@@ -313,7 +317,9 @@ const SearchResults = () => {
         
         
         // Calculate revenue analytics
-        const revenueData = calculateRevenueAnalytics(onwardFlights, searchParams.passengers);
+        // Get currency from user location or default to INR
+        const userCurrency = userLocation?.currency || 'INR';
+        const revenueData = calculateRevenueAnalytics(onwardFlights, searchParams.passengers, userCurrency);
         
         // Get user preferences
         const userPrefs = getUserPreferences(user, {
@@ -343,8 +349,8 @@ const SearchResults = () => {
             searchId,
             origin: searchParams.originCode,
             destination: searchParams.destinationCode,
-            departureDate: searchParams.date ? format(new Date(searchParams.date), 'yyyy/MM/dd') : null,
-            returnDate: searchParams.returnDate ? format(new Date(searchParams.returnDate), 'yyyy/MM/dd') : null,
+            departureDate: searchParams.date ? format(new Date(searchParams.date), 'yyyy-MM-dd') : null,
+            returnDate: searchParams.returnDate ? format(new Date(searchParams.returnDate), 'yyyy-MM-dd') : null,
             numberOfDays: calculatedNumberOfDays,
             passengers: {
               total: searchParams.passengers || 0,
@@ -373,6 +379,8 @@ const SearchResults = () => {
             },
             cabinClass: searchParams.cabinClass,
             tripType: searchParams.tripType,
+            travelPurpose: searchParams.travelPurpose,
+            searchDateTime: searchParams.searchDateTime,
             
             // Enhanced search criteria (merged from search-results-displayed)
             searchCriteria: {
@@ -394,6 +402,8 @@ const SearchResults = () => {
                 total: searchParams.passengers || 0
               },
               cabinClass: searchParams.cabinClass,
+              travelPurpose: searchParams.travelPurpose,
+              searchDateTime: searchParams.searchDateTime,
               flexibleDates: false,
               directFlightsOnly: false
             },

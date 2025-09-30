@@ -57,6 +57,13 @@ const cabinClasses = [
   { value: 'first', label: 'First' }
 ];
 
+const travelPurposes = [
+  { value: 'business', label: 'Business' },
+  { value: 'personal', label: 'Personal' },
+  { value: 'official', label: 'Official' },
+  { value: 'diplomat', label: 'Diplomat' }
+];
+
 // Passenger types are now handled by PassengerSelector component
 
 const FlightSearch = () => {
@@ -82,6 +89,7 @@ const FlightSearch = () => {
   const [paymentType, setPaymentType] = useState('');
   const [tripType, setTripType] = useState('oneway');
   const [cabinClass, setCabinClass] = useState('economy');
+  const [travelPurpose, setTravelPurpose] = useState('personal');
   const [availableRoutes, setAvailableRoutes] = useState([]);
 
   // Get available routes on component mount
@@ -135,6 +143,8 @@ const FlightSearch = () => {
     }
 
     const totalPassengers = passengerCounts.adult + passengerCounts.child + passengerCounts.infant;
+    const searchDateTime = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+    
     const searchParams = {
       originCode: origin.iata_code,
       destinationCode: destination.iata_code,
@@ -144,7 +154,9 @@ const FlightSearch = () => {
       passengerCounts,
       paymentType,
       tripType,
-      cabinClass
+      cabinClass,
+      travelPurpose,
+      searchDateTime
     };
 
     // Track search initiation
@@ -341,6 +353,22 @@ const FlightSearch = () => {
                   onChange={(e) => setCabinClass(e.target.value)}
                 >
                   {cabinClasses.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <FormControl fullWidth required>
+                <InputLabel>Travel Purpose</InputLabel>
+                <Select
+                  value={travelPurpose}
+                  label="Travel Purpose"
+                  onChange={(e) => setTravelPurpose(e.target.value)}
+                >
+                  {travelPurposes.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}
                     </MenuItem>
