@@ -318,7 +318,9 @@ const SearchResults = () => {
         
         
         // Calculate revenue analytics
-        const revenueData = calculateRevenueAnalytics(onwardFlights, searchParams.passengers);
+        // Get currency from user location or default to INR
+        const userCurrency = userLocation?.currency || 'INR';
+        const revenueData = calculateRevenueAnalytics(onwardFlights, searchParams.passengers, userCurrency);
         
         // Get user preferences
         const userPrefs = getUserPreferences(user, {

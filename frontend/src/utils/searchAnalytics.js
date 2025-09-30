@@ -421,16 +421,22 @@ export const getRouteAnalytics = (origin, destination) => {
  * Calculate revenue analytics
  * @param {Array} flights - Array of flight objects
  * @param {number} passengerCount - Number of passengers
+ * @param {string} currency - Currency code (e.g., 'USD', 'INR', 'EUR')
  * @returns {Object} Revenue analytics
  */
-export const calculateRevenueAnalytics = (flights, passengerCount) => {
+export const calculateRevenueAnalytics = (flights, passengerCount, currency = 'INR') => {
   if (!flights || flights.length === 0) {
     return {
       potential_revenue: 0,
       avg_revenue_per_user: 0,
       booking_probability_score: 0,
       estimated_conversion_value: 0,
-      revenue_bucket: 'low_value'
+      revenue_bucket: 'low_value',
+      currency: {
+        code: currency,
+        symbol: getCurrencySymbol(currency),
+        name: getCurrencyName(currency)
+      }
     };
   }
 
@@ -451,8 +457,65 @@ export const calculateRevenueAnalytics = (flights, passengerCount) => {
     avg_revenue_per_user: avgRevenue,
     booking_probability_score: bookingProbability,
     estimated_conversion_value: conversionValue,
-    revenue_bucket: revenueBucket
+    revenue_bucket: revenueBucket,
+    currency: {
+      code: currency,
+      symbol: getCurrencySymbol(currency),
+      name: getCurrencyName(currency)
+    }
   };
+};
+
+/**
+ * Get currency symbol for a currency code
+ * @param {string} currencyCode - Currency code (e.g., 'USD', 'INR')
+ * @returns {string} Currency symbol
+ */
+const getCurrencySymbol = (currencyCode) => {
+  const symbols = {
+    'USD': '$',
+    'EUR': '€',
+    'GBP': '£',
+    'INR': '₹',
+    'JPY': '¥',
+    'AUD': 'A$',
+    'CAD': 'C$',
+    'CHF': 'CHF',
+    'CNY': '¥',
+    'AED': 'د.إ',
+    'SGD': 'S$',
+    'HKD': 'HK$',
+    'SEK': 'kr',
+    'DKK': 'kr',
+    'NOK': 'kr'
+  };
+  return symbols[currencyCode] || currencyCode;
+};
+
+/**
+ * Get currency name for a currency code
+ * @param {string} currencyCode - Currency code (e.g., 'USD', 'INR')
+ * @returns {string} Currency name
+ */
+const getCurrencyName = (currencyCode) => {
+  const names = {
+    'USD': 'US Dollar',
+    'EUR': 'Euro',
+    'GBP': 'British Pound',
+    'INR': 'Indian Rupee',
+    'JPY': 'Japanese Yen',
+    'AUD': 'Australian Dollar',
+    'CAD': 'Canadian Dollar',
+    'CHF': 'Swiss Franc',
+    'CNY': 'Chinese Yuan',
+    'AED': 'UAE Dirham',
+    'SGD': 'Singapore Dollar',
+    'HKD': 'Hong Kong Dollar',
+    'SEK': 'Swedish Krona',
+    'DKK': 'Danish Krone',
+    'NOK': 'Norwegian Krone'
+  };
+  return names[currencyCode] || currencyCode;
 };
 
 /**
