@@ -337,6 +337,7 @@ const SearchResults = () => {
             pageName: 'Search Results',
             pageURL: window.location.href,
             referrer: document.referrer,
+            previousPage: searchParams.previousPage || document.referrer || 'direct',
             timestamp: new Date().toISOString(),
             userAgent: navigator.userAgent,
             screenResolution: `${window.screen.width}x${window.screen.height}`,
@@ -350,8 +351,12 @@ const SearchResults = () => {
             searchId,
             origin: searchParams.originCode,
             destination: searchParams.destinationCode,
+            originDestination: searchParams.originCode && searchParams.destinationCode 
+              ? `${searchParams.originCode}-${searchParams.destinationCode}`
+              : null,
             departureDate: searchParams.date ? format(new Date(searchParams.date), 'yyyy-MM-dd') : null,
             returnDate: searchParams.returnDate ? format(new Date(searchParams.returnDate), 'yyyy-MM-dd') : null,
+            travelDay: searchParams.date ? format(new Date(searchParams.date), 'EEEE') : null,
             numberOfDays: calculatedNumberOfDays,
             passengers: {
               total: searchParams.passengers || 0,

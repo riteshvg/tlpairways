@@ -43,6 +43,7 @@ class PageViewTracker {
     const baseConfig = {
       pageURL: window.location.href,
       referrer: document.referrer,
+      previousPage: state.previousPage || document.referrer || 'direct',
       timestamp: new Date().toISOString(),
       userAgent: navigator.userAgent,
       screenResolution: `${window.screen.width}x${window.screen.height}`,
