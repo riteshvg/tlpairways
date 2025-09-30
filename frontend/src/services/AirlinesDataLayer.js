@@ -38,6 +38,7 @@ class AirlinesDataLayer {
         pageName: pageData.pageName || document.title,
         pageURL: pageData.pageURL || window.location.href,
         referrer: pageData.referrer || document.referrer,
+        previousPage: pageData.previousPage || document.referrer || 'direct',
         timestamp: new Date().toISOString(),
         ...pageData
       }
@@ -60,6 +61,7 @@ class AirlinesDataLayer {
         pageName: pageData.pageName || document.title,
         pageURL: pageData.pageURL || window.location.href,
         referrer: pageData.referrer || document.referrer,
+        previousPage: pageData.previousPage || document.referrer || 'direct',
         timestamp: new Date().toISOString(),
         userAgent: navigator.userAgent,
         screenResolution: `${window.screen.width}x${window.screen.height}`,
