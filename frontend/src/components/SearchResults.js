@@ -350,8 +350,8 @@ const SearchResults = () => {
             searchId,
             origin: searchParams.originCode,
             destination: searchParams.destinationCode,
-            departureDate: searchParams.date ? format(new Date(searchParams.date), 'yyyy/MM/dd') : null,
-            returnDate: searchParams.returnDate ? format(new Date(searchParams.returnDate), 'yyyy/MM/dd') : null,
+            departureDate: searchParams.date ? format(new Date(searchParams.date), 'yyyy-MM-dd') : null,
+            returnDate: searchParams.returnDate ? format(new Date(searchParams.returnDate), 'yyyy-MM-dd') : null,
             numberOfDays: calculatedNumberOfDays,
             passengers: {
               total: searchParams.passengers || 0,
