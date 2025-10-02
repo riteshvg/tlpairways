@@ -501,23 +501,16 @@ const FlightSearch = () => {
               </FormControl>
             </Grid>
 
-            {/* Promo Code and Search Button */}
+            {/* Search Button */}
             <Grid item xs={12}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
-                <Button
-                  variant="text"
-                  color="primary"
-                  sx={{ textTransform: 'none' }}
-                >
-                  + Add Promo Code
-                </Button>
+              <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
                 <Button
                   type="submit"
                   variant="contained"
                   color="primary"
                   size="large"
                   disabled={!origin || !destination || !date || !paymentType || (tripType === 'roundtrip' && !returnDate) || passengerCounts.adult < 1}
-                  sx={{ px: 4, py: 1.5, fontSize: '1.1rem' }}
+                  sx={{ px: 6, py: 1.5, fontSize: '1.1rem' }}
                 >
                   Search
                 </Button>
