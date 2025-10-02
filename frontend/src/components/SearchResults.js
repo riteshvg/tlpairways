@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 // usePageView removed - now using merged pageView event
 import { useAuth } from '../context/AuthContext';
 import airlinesDataLayer from '../services/AirlinesDataLayer';
-import enhancedSearchResultsDataLayer from '../services/EnhancedSearchResultsDataLayer';
 import { 
   calculateDistance, 
   getSpecialDay, 
@@ -262,9 +261,9 @@ const SearchResults = () => {
           setReturnFlights([]);
         }
         
-        // Initialize enhanced search results data layer
+        // Initialize search tracking
         if (searchId) {
-          enhancedSearchResultsDataLayer.initializeSearch(searchId);
+          console.log('Search initialized with ID:', searchId);
         }
         
       } catch (err) {
@@ -482,7 +481,7 @@ const SearchResults = () => {
   // Track search abandonment on component unmount
   useEffect(() => {
     return () => {
-      enhancedSearchResultsDataLayer.trackSearchAbandonment();
+      console.log('Search results component unmounted');
     };
   }, []);
 

@@ -13,9 +13,8 @@ cmds = [
 
 [phases.build]
 cmds = [
-  "echo 'Building frontend...'",
-  "npm run build --prefix frontend",
-  "echo 'Frontend build completed'"
+  "chmod +x railway-build.sh",
+  "./railway-build.sh"
 ]
 
 [start]
