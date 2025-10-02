@@ -361,8 +361,8 @@ const FlightSearch = () => {
 
         <form onSubmit={handleSearch}>
           <Grid container spacing={3}>
-            {/* First Row - Origin, Destination, Dates */}
-            <Grid item xs={12} md={4}>
+            {/* First Row - Origin, Destination, Departure Date, Return Date */}
+            <Grid item xs={12} md={3}>
               <Autocomplete
                 options={getUniqueLocations()}
                 getOptionLabel={(option) => option.label}
@@ -383,7 +383,7 @@ const FlightSearch = () => {
                 isOptionEqualToValue={(option, value) => option.iata_code === value.iata_code}
               />
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid item xs={12} md={3}>
               <Autocomplete
                 options={getAvailableDestinations()}
                 getOptionLabel={(option) => option.label}
@@ -403,7 +403,7 @@ const FlightSearch = () => {
                 disabled={!origin}
               />
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid item xs={12} md={3}>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicker
                   label="Departure Date"
@@ -421,37 +421,36 @@ const FlightSearch = () => {
                 />
               </LocalizationProvider>
             </Grid>
+            <Grid item xs={12} md={3}>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DatePicker
+                  label="Return Date"
+                  value={returnDate}
+                  onChange={(newValue) => setReturnDate(newValue)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      fullWidth
+                      required={tripType === 'roundtrip'}
+                      size="large"
+                      disabled={tripType === 'oneway'}
+                    />
+                  )}
+                  minDate={date || new Date()}
+                  disabled={tripType === 'oneway'}
+                />
+              </LocalizationProvider>
+            </Grid>
 
-            {/* Second Row - Return Date (if round trip), Passengers, Class, Payment, Purpose */}
-            {tripType === 'roundtrip' && (
-              <Grid item xs={12} md={2.4}>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DatePicker
-                    label="Return Date"
-                    value={returnDate}
-                    onChange={(newValue) => setReturnDate(newValue)}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        fullWidth
-                        required
-                        size="large"
-                      />
-                    )}
-                    minDate={date || new Date()}
-                  />
-                </LocalizationProvider>
-              </Grid>
-            )}
-            
-            <Grid item xs={12} md={tripType === 'roundtrip' ? 2.4 : 3}>
+            {/* Second Row - Passengers, Class, Payment, Purpose */}
+            <Grid item xs={12} md={3}>
               <PassengerSelector
                 passengerCounts={passengerCounts}
                 onPassengerCountsChange={setPassengerCounts}
               />
             </Grid>
             
-            <Grid item xs={12} md={tripType === 'roundtrip' ? 2.4 : 3}>
+            <Grid item xs={12} md={3}>
               <FormControl fullWidth required size="large">
                 <InputLabel>Cabin Class</InputLabel>
                 <Select
@@ -468,7 +467,7 @@ const FlightSearch = () => {
               </FormControl>
             </Grid>
             
-            <Grid item xs={12} md={tripType === 'roundtrip' ? 2.4 : 3}>
+            <Grid item xs={12} md={3}>
               <FormControl fullWidth required size="large">
                 <InputLabel>Payment Type</InputLabel>
                 <Select
@@ -485,7 +484,7 @@ const FlightSearch = () => {
               </FormControl>
             </Grid>
 
-            <Grid item xs={12} md={tripType === 'roundtrip' ? 2.4 : 3}>
+            <Grid item xs={12} md={3}>
               <FormControl fullWidth required size="large">
                 <InputLabel>Travel Purpose</InputLabel>
                 <Select
