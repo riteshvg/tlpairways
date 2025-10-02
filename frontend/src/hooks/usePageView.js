@@ -24,48 +24,34 @@ const usePageView = (customPageConfig = {}) => {
     // Only track once per page load
     if (hasTracked.current) return;
     
-    // Small delay to ensure page is fully loaded
-    const timer = setTimeout(() => {
-      try {
-        // Extract search parameters
-        const searchParams = new URLSearchParams(location.search);
-        const searchParamsObj = Object.fromEntries(searchParams.entries());
-        
-        // Extract state from location
-        const state = location.state || {};
-        
-        // Merge custom page config if provided
-        const finalPageConfig = {
-          ...customPageConfig,
-          ...state
-        };
-
-        // Track page view
-        pageViewTracker.trackPageView(
-          location.pathname,
-          user,
-          isAuthenticated,
-          searchParamsObj,
-          finalPageConfig
-        );
-
-        hasTracked.current = true;
-      } catch (error) {
-        console.error('Error tracking page view:', error);
-        pageViewTracker.trackPageError(location.pathname, error, 'page-view-tracking');
-      }
-    }, 100);
-
-    // Cleanup function
-    return () => {
-      clearTimeout(timer);
+    try {
+      // Extract search parameters
+      const searchParams = new URLSearchParams(location.search);
+      const searchParamsObj = Object.fromEntries(searchParams.entries());
       
-      // Track page exit - DISABLED
-      // if (hasTracked.current) {
-      //   const timeOnPage = Date.now() - pageStartTime.current;
-      //   pageViewTracker.trackPageExit(location.pathname, timeOnPage);
-      // }
-    };
+      // Extract state from location
+      const state = location.state || {};
+      
+      // Merge custom page config if provided
+      const finalPageConfig = {
+        ...customPageConfig,
+        ...state
+      };
+
+      // Track page view IMMEDIATELY (no delay)
+      pageViewTracker.trackPageView(
+        location.pathname,
+        user,
+        isAuthenticated,
+        searchParamsObj,
+        finalPageConfig
+      );
+
+      hasTracked.current = true;
+    } catch (error) {
+      console.error('Error tracking page view:', error);
+      pageViewTracker.trackPageError(location.pathname, error, 'page-view-tracking');
+    }
   }, [location.pathname, location.search, location.state, user, isAuthenticated, customPageConfig]);
 
   // Return page view tracking utilities
