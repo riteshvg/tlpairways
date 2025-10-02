@@ -3,6 +3,8 @@
  * Follows Adobe Data Layer standards and best practices
  */
 
+import pageDataLayerManager from './PageDataLayerManager';
+
 class AirlinesDataLayer {
   constructor() {
     this.debug = process.env.NODE_ENV === 'development';
@@ -38,7 +40,7 @@ class AirlinesDataLayer {
         pageName: pageData.pageName || document.title,
         pageURL: pageData.pageURL || window.location.href,
         referrer: pageData.referrer || document.referrer,
-        previousPage: pageData.previousPage || document.referrer || 'direct',
+        previousPage: pageData.previousPage || pageDataLayerManager.getPreviousPage() || document.referrer || 'direct',
         timestamp: new Date().toISOString(),
         ...pageData
       }
@@ -61,7 +63,7 @@ class AirlinesDataLayer {
         pageName: pageData.pageName || document.title,
         pageURL: pageData.pageURL || window.location.href,
         referrer: pageData.referrer || document.referrer,
-        previousPage: pageData.previousPage || document.referrer || 'direct',
+        previousPage: pageData.previousPage || pageDataLayerManager.getPreviousPage() || document.referrer || 'direct',
         timestamp: new Date().toISOString(),
         userAgent: navigator.userAgent,
         screenResolution: `${window.screen.width}x${window.screen.height}`,

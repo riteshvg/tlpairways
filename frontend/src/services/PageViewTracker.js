@@ -4,6 +4,7 @@
  */
 
 import airlinesDataLayer from './AirlinesDataLayer';
+import pageDataLayerManager from './PageDataLayerManager';
 
 class PageViewTracker {
   constructor() {
@@ -43,7 +44,7 @@ class PageViewTracker {
     const baseConfig = {
       pageURL: window.location.href,
       referrer: document.referrer,
-      previousPage: state.previousPage || document.referrer || 'direct',
+      previousPage: state.previousPage || pageDataLayerManager.getPreviousPage() || document.referrer || 'direct',
       timestamp: new Date().toISOString(),
       userAgent: navigator.userAgent,
       screenResolution: `${window.screen.width}x${window.screen.height}`,
@@ -228,6 +229,9 @@ class PageViewTracker {
 
     // Track page view with merged data
     airlinesDataLayer.setPageDataWithView(pageConfig, userContext);
+    
+    // Set current page as previous page for next navigation
+    pageDataLayerManager.setPreviousPage(pageConfig.pageName);
     
     // Mark as tracked
     this.trackedPages.add(pageId);

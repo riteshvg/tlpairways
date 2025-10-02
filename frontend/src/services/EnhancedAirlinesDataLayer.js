@@ -3,6 +3,8 @@
  * Provides comprehensive data layer functionality with XDM schema validation
  */
 
+import pageDataLayerManager from './PageDataLayerManager';
+
 class EnhancedAirlinesDataLayer {
   constructor() {
     this.debug = process.env.NODE_ENV === 'development';
@@ -137,7 +139,7 @@ class EnhancedAirlinesDataLayer {
         pageName: pageData.pageName || document.title,
         pageURL: pageData.pageURL || window.location.href,
         referrer: pageData.referrer || document.referrer,
-        previousPage: pageData.previousPage || document.referrer || 'direct',
+        previousPage: pageData.previousPage || pageDataLayerManager.getPreviousPage() || document.referrer || 'direct',
         timestamp: new Date().toISOString(),
         userAgent: navigator.userAgent,
         screenResolution: `${window.screen.width}x${window.screen.height}`,
