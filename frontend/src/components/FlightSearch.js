@@ -360,10 +360,9 @@ const FlightSearch = () => {
         </Box>
 
         <form onSubmit={handleSearch}>
-          {/* Single Line Layout - All Fields */}
-          <Grid container spacing={2} sx={{ alignItems: 'center', mb: 3 }}>
-            {/* From */}
-            <Grid item xs={12} md={2}>
+          <Grid container spacing={3}>
+            {/* First Row - Origin, Destination, Dates */}
+            <Grid item xs={12} md={4}>
               <Autocomplete
                 options={getUniqueLocations()}
                 getOptionLabel={(option) => option.label}
@@ -378,15 +377,13 @@ const FlightSearch = () => {
                     label="From"
                     required
                     fullWidth
-                    size="small"
+                    size="large"
                   />
                 )}
                 isOptionEqualToValue={(option, value) => option.iata_code === value.iata_code}
               />
             </Grid>
-
-            {/* To */}
-            <Grid item xs={12} md={2}>
+            <Grid item xs={12} md={4}>
               <Autocomplete
                 options={getAvailableDestinations()}
                 getOptionLabel={(option) => option.label}
@@ -399,19 +396,17 @@ const FlightSearch = () => {
                     required
                     fullWidth
                     disabled={!origin}
-                    size="small"
+                    size="large"
                   />
                 )}
                 isOptionEqualToValue={(option, value) => option.iata_code === value.iata_code}
                 disabled={!origin}
               />
             </Grid>
-
-            {/* Departure Date */}
-            <Grid item xs={12} md={2}>
+            <Grid item xs={12} md={4}>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicker
-                  label="Depart"
+                  label="Departure Date"
                   value={date}
                   onChange={(newValue) => setDate(newValue)}
                   renderInput={(params) => (
@@ -419,7 +414,7 @@ const FlightSearch = () => {
                       {...params}
                       fullWidth
                       required
-                      size="small"
+                      size="large"
                     />
                   )}
                   minDate={new Date()}
@@ -427,12 +422,12 @@ const FlightSearch = () => {
               </LocalizationProvider>
             </Grid>
 
-            {/* Return Date - Only for Round Trip */}
+            {/* Second Row - Return Date (if round trip), Passengers, Class, Payment */}
             {tripType === 'roundtrip' && (
-              <Grid item xs={12} md={2}>
+              <Grid item xs={12} md={3}>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
-                    label="Return"
+                    label="Return Date"
                     value={returnDate}
                     onChange={(newValue) => setReturnDate(newValue)}
                     renderInput={(params) => (
@@ -440,7 +435,7 @@ const FlightSearch = () => {
                         {...params}
                         fullWidth
                         required
-                        size="small"
+                        size="large"
                       />
                     )}
                     minDate={date || new Date()}
@@ -448,26 +443,20 @@ const FlightSearch = () => {
                 </LocalizationProvider>
               </Grid>
             )}
-
-            {/* Passengers */}
-            <Grid item xs={12} md={2}>
-              <Box sx={{ border: '1px solid #ccc', borderRadius: 1, p: 1, minHeight: 56, display: 'flex', alignItems: 'center' }}>
-                <Typography variant="body2" sx={{ color: 'text.secondary', mr: 1 }}>
-                  Passenger(S)
-                </Typography>
-                <Typography variant="body2" fontWeight="bold">
-                  Adult {passengerCounts.adult}
-                </Typography>
-              </Box>
+            
+            <Grid item xs={12} md={tripType === 'roundtrip' ? 3 : 4}>
+              <PassengerSelector
+                passengerCounts={passengerCounts}
+                onPassengerCountsChange={setPassengerCounts}
+              />
             </Grid>
-
-            {/* Cabin Class */}
-            <Grid item xs={12} md={2}>
-              <FormControl fullWidth size="small">
-                <InputLabel>Class</InputLabel>
+            
+            <Grid item xs={12} md={tripType === 'roundtrip' ? 3 : 4}>
+              <FormControl fullWidth required size="large">
+                <InputLabel>Cabin Class</InputLabel>
                 <Select
                   value={cabinClass}
-                  label="Class"
+                  label="Cabin Class"
                   onChange={(e) => setCabinClass(e.target.value)}
                 >
                   {cabinClasses.map((option) => (
@@ -478,14 +467,13 @@ const FlightSearch = () => {
                 </Select>
               </FormControl>
             </Grid>
-
-            {/* Payment Type */}
-            <Grid item xs={12} md={2}>
-              <FormControl fullWidth size="small">
-                <InputLabel>Pay By</InputLabel>
+            
+            <Grid item xs={12} md={tripType === 'roundtrip' ? 3 : 4}>
+              <FormControl fullWidth required size="large">
+                <InputLabel>Payment Type</InputLabel>
                 <Select
                   value={paymentType}
-                  label="Pay By"
+                  label="Payment Type"
                   onChange={(e) => setPaymentType(e.target.value)}
                 >
                   {paymentTypes.map((option) => (
@@ -497,43 +485,29 @@ const FlightSearch = () => {
               </FormControl>
             </Grid>
 
-            {/* Concession Type */}
-            <Grid item xs={12} md={2}>
-              <FormControl fullWidth size="small">
-                <InputLabel>Concession Type</InputLabel>
-                <Select
-                  value="none"
-                  label="Concession Type"
+            {/* Promo Code and Search Button */}
+            <Grid item xs={12}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
+                <Button
+                  variant="text"
+                  color="primary"
+                  sx={{ textTransform: 'none' }}
                 >
-                  <MenuItem value="none">None</MenuItem>
-                  <MenuItem value="senior">Senior Citizen</MenuItem>
-                  <MenuItem value="student">Student</MenuItem>
-                  <MenuItem value="military">Military</MenuItem>
-                </Select>
-              </FormControl>
+                  + Add Promo Code
+                </Button>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  disabled={!origin || !destination || !date || !paymentType || (tripType === 'roundtrip' && !returnDate) || passengerCounts.adult < 1}
+                  sx={{ px: 4, py: 1.5, fontSize: '1.1rem' }}
+                >
+                  Search
+                </Button>
+              </Box>
             </Grid>
           </Grid>
-
-          {/* Promo Code and Search Button */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Button
-              variant="text"
-              color="primary"
-              sx={{ textTransform: 'none' }}
-            >
-              + Add Promo Code
-            </Button>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              size="large"
-              disabled={!origin || !destination || !date || !paymentType || (tripType === 'roundtrip' && !returnDate) || passengerCounts.adult < 1}
-              sx={{ px: 4, py: 1.5, fontSize: '1.1rem' }}
-            >
-              Search
-            </Button>
-          </Box>
         </form>
       </Paper>
 
