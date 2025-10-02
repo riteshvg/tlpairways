@@ -357,19 +357,13 @@ const FlightSearch = () => {
           >
             Round Trip
           </Button>
-          <Button
-            variant="text"
-            size="large"
-            sx={{ minWidth: 120, color: 'primary.main' }}
-          >
-            Multi City
-          </Button>
         </Box>
 
         <form onSubmit={handleSearch}>
-          <Grid container spacing={3}>
-            {/* Origin and Destination */}
-            <Grid item xs={12} md={6}>
+          {/* Single Line Layout - All Fields */}
+          <Grid container spacing={2} sx={{ alignItems: 'center', mb: 3 }}>
+            {/* From */}
+            <Grid item xs={12} md={2}>
               <Autocomplete
                 options={getUniqueLocations()}
                 getOptionLabel={(option) => option.label}
@@ -384,13 +378,15 @@ const FlightSearch = () => {
                     label="From"
                     required
                     fullWidth
-                    size="large"
+                    size="small"
                   />
                 )}
                 isOptionEqualToValue={(option, value) => option.iata_code === value.iata_code}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+
+            {/* To */}
+            <Grid item xs={12} md={2}>
               <Autocomplete
                 options={getAvailableDestinations()}
                 getOptionLabel={(option) => option.label}
@@ -403,7 +399,7 @@ const FlightSearch = () => {
                     required
                     fullWidth
                     disabled={!origin}
-                    size="large"
+                    size="small"
                   />
                 )}
                 isOptionEqualToValue={(option, value) => option.iata_code === value.iata_code}
@@ -411,140 +407,133 @@ const FlightSearch = () => {
               />
             </Grid>
 
-            {/* Flight Details Row - Single Row Layout */}
-            <Grid item xs={12}>
-              <Grid container spacing={2} sx={{ alignItems: 'center' }}>
-                {/* Departure Date */}
-                <Grid item xs={12} md={2}>
-                  <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DatePicker
-                      label="Depart"
-                      value={date}
-                      onChange={(newValue) => setDate(newValue)}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          fullWidth
-                          required
-                          size="small"
-                        />
-                      )}
-                      minDate={new Date()}
+            {/* Departure Date */}
+            <Grid item xs={12} md={2}>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DatePicker
+                  label="Depart"
+                  value={date}
+                  onChange={(newValue) => setDate(newValue)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      fullWidth
+                      required
+                      size="small"
                     />
-                  </LocalizationProvider>
-                </Grid>
-
-                {/* Return Date - Only for Round Trip */}
-                {tripType === 'roundtrip' && (
-                  <Grid item xs={12} md={2}>
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                      <DatePicker
-                        label="Return"
-                        value={returnDate}
-                        onChange={(newValue) => setReturnDate(newValue)}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            fullWidth
-                            required
-                            size="small"
-                          />
-                        )}
-                        minDate={date || new Date()}
-                      />
-                    </LocalizationProvider>
-                  </Grid>
-                )}
-
-                {/* Passengers */}
-                <Grid item xs={12} md={2}>
-                  <Box sx={{ border: '1px solid #ccc', borderRadius: 1, p: 1, minHeight: 56, display: 'flex', alignItems: 'center' }}>
-                    <Typography variant="body2" sx={{ color: 'text.secondary', mr: 1 }}>
-                      Passenger(S)
-                    </Typography>
-                    <Typography variant="body2" fontWeight="bold">
-                      Adult {passengerCounts.adult}
-                    </Typography>
-                  </Box>
-                </Grid>
-
-                {/* Cabin Class */}
-                <Grid item xs={12} md={2}>
-                  <FormControl fullWidth size="small">
-                    <InputLabel>Class</InputLabel>
-                    <Select
-                      value={cabinClass}
-                      label="Class"
-                      onChange={(e) => setCabinClass(e.target.value)}
-                    >
-                      {cabinClasses.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-
-                {/* Payment Type */}
-                <Grid item xs={12} md={2}>
-                  <FormControl fullWidth size="small">
-                    <InputLabel>Pay By</InputLabel>
-                    <Select
-                      value={paymentType}
-                      label="Pay By"
-                      onChange={(e) => setPaymentType(e.target.value)}
-                    >
-                      {paymentTypes.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-
-                {/* Concession Type */}
-                <Grid item xs={12} md={2}>
-                  <FormControl fullWidth size="small">
-                    <InputLabel>Concession Type</InputLabel>
-                    <Select
-                      value="none"
-                      label="Concession Type"
-                    >
-                      <MenuItem value="none">None</MenuItem>
-                      <MenuItem value="senior">Senior Citizen</MenuItem>
-                      <MenuItem value="student">Student</MenuItem>
-                      <MenuItem value="military">Military</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-              </Grid>
+                  )}
+                  minDate={new Date()}
+                />
+              </LocalizationProvider>
             </Grid>
 
-            {/* Promo Code and Search Button */}
-            <Grid item xs={12}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
-                <Button
-                  variant="text"
-                  color="primary"
-                  sx={{ textTransform: 'none' }}
-                >
-                  + Add Promo Code
-                </Button>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  disabled={!origin || !destination || !date || !paymentType || (tripType === 'roundtrip' && !returnDate) || passengerCounts.adult < 1}
-                  sx={{ px: 4, py: 1.5, fontSize: '1.1rem' }}
-                >
-                  Search
-                </Button>
+            {/* Return Date - Only for Round Trip */}
+            {tripType === 'roundtrip' && (
+              <Grid item xs={12} md={2}>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DatePicker
+                    label="Return"
+                    value={returnDate}
+                    onChange={(newValue) => setReturnDate(newValue)}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        fullWidth
+                        required
+                        size="small"
+                      />
+                    )}
+                    minDate={date || new Date()}
+                  />
+                </LocalizationProvider>
+              </Grid>
+            )}
+
+            {/* Passengers */}
+            <Grid item xs={12} md={2}>
+              <Box sx={{ border: '1px solid #ccc', borderRadius: 1, p: 1, minHeight: 56, display: 'flex', alignItems: 'center' }}>
+                <Typography variant="body2" sx={{ color: 'text.secondary', mr: 1 }}>
+                  Passenger(S)
+                </Typography>
+                <Typography variant="body2" fontWeight="bold">
+                  Adult {passengerCounts.adult}
+                </Typography>
               </Box>
             </Grid>
+
+            {/* Cabin Class */}
+            <Grid item xs={12} md={2}>
+              <FormControl fullWidth size="small">
+                <InputLabel>Class</InputLabel>
+                <Select
+                  value={cabinClass}
+                  label="Class"
+                  onChange={(e) => setCabinClass(e.target.value)}
+                >
+                  {cabinClasses.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            {/* Payment Type */}
+            <Grid item xs={12} md={2}>
+              <FormControl fullWidth size="small">
+                <InputLabel>Pay By</InputLabel>
+                <Select
+                  value={paymentType}
+                  label="Pay By"
+                  onChange={(e) => setPaymentType(e.target.value)}
+                >
+                  {paymentTypes.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            {/* Concession Type */}
+            <Grid item xs={12} md={2}>
+              <FormControl fullWidth size="small">
+                <InputLabel>Concession Type</InputLabel>
+                <Select
+                  value="none"
+                  label="Concession Type"
+                >
+                  <MenuItem value="none">None</MenuItem>
+                  <MenuItem value="senior">Senior Citizen</MenuItem>
+                  <MenuItem value="student">Student</MenuItem>
+                  <MenuItem value="military">Military</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
           </Grid>
+
+          {/* Promo Code and Search Button */}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Button
+              variant="text"
+              color="primary"
+              sx={{ textTransform: 'none' }}
+            >
+              + Add Promo Code
+            </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              size="large"
+              disabled={!origin || !destination || !date || !paymentType || (tripType === 'roundtrip' && !returnDate) || passengerCounts.adult < 1}
+              sx={{ px: 4, py: 1.5, fontSize: '1.1rem' }}
+            >
+              Search
+            </Button>
+          </Box>
         </form>
       </Paper>
 
