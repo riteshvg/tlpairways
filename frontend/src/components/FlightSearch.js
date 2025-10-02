@@ -422,9 +422,9 @@ const FlightSearch = () => {
               </LocalizationProvider>
             </Grid>
 
-            {/* Second Row - Return Date (if round trip), Passengers, Class, Payment */}
+            {/* Second Row - Return Date (if round trip), Passengers, Class, Payment, Purpose */}
             {tripType === 'roundtrip' && (
-              <Grid item xs={12} md={3}>
+              <Grid item xs={12} md={2.4}>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
                     label="Return Date"
@@ -444,14 +444,14 @@ const FlightSearch = () => {
               </Grid>
             )}
             
-            <Grid item xs={12} md={tripType === 'roundtrip' ? 3 : 4}>
+            <Grid item xs={12} md={tripType === 'roundtrip' ? 2.4 : 3}>
               <PassengerSelector
                 passengerCounts={passengerCounts}
                 onPassengerCountsChange={setPassengerCounts}
               />
             </Grid>
             
-            <Grid item xs={12} md={tripType === 'roundtrip' ? 3 : 4}>
+            <Grid item xs={12} md={tripType === 'roundtrip' ? 2.4 : 3}>
               <FormControl fullWidth required size="large">
                 <InputLabel>Cabin Class</InputLabel>
                 <Select
@@ -468,7 +468,7 @@ const FlightSearch = () => {
               </FormControl>
             </Grid>
             
-            <Grid item xs={12} md={tripType === 'roundtrip' ? 3 : 4}>
+            <Grid item xs={12} md={tripType === 'roundtrip' ? 2.4 : 3}>
               <FormControl fullWidth required size="large">
                 <InputLabel>Payment Type</InputLabel>
                 <Select
@@ -477,6 +477,23 @@ const FlightSearch = () => {
                   onChange={(e) => setPaymentType(e.target.value)}
                 >
                   {paymentTypes.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12} md={tripType === 'roundtrip' ? 2.4 : 3}>
+              <FormControl fullWidth required size="large">
+                <InputLabel>Travel Purpose</InputLabel>
+                <Select
+                  value={travelPurpose}
+                  label="Travel Purpose"
+                  onChange={(e) => setTravelPurpose(e.target.value)}
+                >
+                  {travelPurposes.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}
                     </MenuItem>
