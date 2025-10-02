@@ -14,7 +14,13 @@ import {
   MenuItem,
   Box,
   Autocomplete,
+  Card,
+  CardContent,
+  CardActions,
+  Chip,
+  IconButton,
 } from '@mui/material';
+import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -64,6 +70,88 @@ const travelPurposes = [
   { value: 'diplomat', label: 'Diplomat' }
 ];
 
+// Quick booking combinations
+const quickBookings = [
+  {
+    id: 1,
+    origin: 'Mumbai',
+    destination: 'Dubai',
+    originCode: 'BOM',
+    destinationCode: 'DXB',
+    price: '₹25,000',
+    duration: '3h 15m',
+    departure: '14:30',
+    arrival: '17:45',
+    airline: 'TL Airways',
+    popular: true
+  },
+  {
+    id: 2,
+    origin: 'Delhi',
+    destination: 'London',
+    originCode: 'DEL',
+    destinationCode: 'LHR',
+    price: '₹45,000',
+    duration: '8h 30m',
+    departure: '02:15',
+    arrival: '06:45',
+    airline: 'TL Airways',
+    popular: true
+  },
+  {
+    id: 3,
+    origin: 'Bangalore',
+    destination: 'Singapore',
+    originCode: 'BLR',
+    destinationCode: 'SIN',
+    price: '₹18,000',
+    duration: '4h 45m',
+    departure: '09:20',
+    arrival: '14:05',
+    airline: 'TL Airways',
+    popular: false
+  },
+  {
+    id: 4,
+    origin: 'Chennai',
+    destination: 'Bangkok',
+    originCode: 'MAA',
+    destinationCode: 'BKK',
+    price: '₹22,000',
+    duration: '3h 55m',
+    departure: '11:10',
+    arrival: '15:05',
+    airline: 'TL Airways',
+    popular: false
+  },
+  {
+    id: 5,
+    origin: 'Mumbai',
+    destination: 'Singapore',
+    originCode: 'BOM',
+    destinationCode: 'SIN',
+    price: '₹28,000',
+    duration: '5h 20m',
+    departure: '16:45',
+    arrival: '22:05',
+    airline: 'TL Airways',
+    popular: true
+  },
+  {
+    id: 6,
+    origin: 'Delhi',
+    destination: 'Dubai',
+    originCode: 'DEL',
+    destinationCode: 'DXB',
+    price: '₹26,000',
+    duration: '3h 45m',
+    departure: '20:30',
+    arrival: '00:15',
+    airline: 'TL Airways',
+    popular: false
+  }
+];
+
 // Passenger types are now handled by PassengerSelector component
 
 const FlightSearch = () => {
@@ -91,7 +179,7 @@ const FlightSearch = () => {
   const [cabinClass, setCabinClass] = useState('economy');
   const [travelPurpose, setTravelPurpose] = useState('personal');
   const [availableRoutes, setAvailableRoutes] = useState([]);
-  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [currentCarouselIndex, setCurrentCarouselIndex] = useState(0);
 
   // Get available routes on component mount
   React.useEffect(() => {
@@ -218,12 +306,37 @@ const FlightSearch = () => {
     return [...directRoutes, ...hubRoutes, ...regionalRoutes, ...otherInternational];
   };
 
+  // Carousel navigation functions
+  const nextCarousel = () => {
+    setCurrentCarouselIndex((prev) => (prev + 1) % quickBookings.length);
+  };
+
+  const prevCarousel = () => {
+    setCurrentCarouselIndex((prev) => (prev - 1 + quickBookings.length) % quickBookings.length);
+  };
+
+  // Handle quick booking selection
+  const handleQuickBooking = (booking) => {
+    // Find the origin and destination locations
+    const originLocation = getUniqueLocations().find(loc => loc.iata_code === booking.originCode);
+    const destinationLocation = getUniqueLocations().find(loc => loc.iata_code === booking.destinationCode);
+    
+    if (originLocation && destinationLocation) {
+      setOrigin(originLocation);
+      setDestination(destinationLocation);
+      setTripType('oneway'); // Default to one way for quick bookings
+      
+      // Scroll to search form
+      document.getElementById('search-form')?.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
       <Grid container spacing={4}>
         {/* Main Search Form - Left Side */}
         <Grid item xs={12} md={8}>
-          <Paper elevation={3} sx={{ p: 4 }}>
+          <Paper elevation={3} sx={{ p: 4 }} id="search-form">
             <Typography variant="h4" gutterBottom align="center" sx={{ mb: 4 }}>
               Search Flights
             </Typography>
@@ -333,14 +446,14 @@ const FlightSearch = () => {
                   </Grid>
                 )}
 
-                {/* Passengers and Cabin Class - Streamlined */}
-                <Grid item xs={12} md={6}>
+                {/* Passengers, Cabin Class, Payment Type - Single Row */}
+                <Grid item xs={12} md={4}>
                   <PassengerSelector
                     passengerCounts={passengerCounts}
                     onPassengerCountsChange={setPassengerCounts}
                   />
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={4}>
                   <FormControl fullWidth required size="large">
                     <InputLabel>Cabin Class</InputLabel>
                     <Select
@@ -356,56 +469,22 @@ const FlightSearch = () => {
                     </Select>
                   </FormControl>
                 </Grid>
-
-                {/* Advanced Options - Collapsible */}
-                <Grid item xs={12}>
-                  <Box sx={{ mb: 2 }}>
-                    <Button
-                      variant="text"
-                      onClick={() => setShowAdvanced(!showAdvanced)}
-                      sx={{ textTransform: 'none' }}
+                <Grid item xs={12} md={4}>
+                  <FormControl fullWidth required size="large">
+                    <InputLabel>Payment Type</InputLabel>
+                    <Select
+                      value={paymentType}
+                      label="Payment Type"
+                      onChange={(e) => setPaymentType(e.target.value)}
                     >
-                      {showAdvanced ? 'Hide' : 'Show'} Advanced Options
-                    </Button>
-                  </Box>
+                      {paymentTypes.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 </Grid>
-
-                {showAdvanced && (
-                  <>
-                    <Grid item xs={12} md={6}>
-                      <FormControl fullWidth required>
-                        <InputLabel>Payment Type</InputLabel>
-                        <Select
-                          value={paymentType}
-                          label="Payment Type"
-                          onChange={(e) => setPaymentType(e.target.value)}
-                        >
-                          {paymentTypes.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                              {option.label}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <FormControl fullWidth required>
-                        <InputLabel>Travel Purpose</InputLabel>
-                        <Select
-                          value={travelPurpose}
-                          label="Travel Purpose"
-                          onChange={(e) => setTravelPurpose(e.target.value)}
-                        >
-                          {travelPurposes.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                              {option.label}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                  </>
-                )}
 
                 {/* Search Button */}
                 <Grid item xs={12}>
@@ -429,6 +508,89 @@ const FlightSearch = () => {
         {/* Promotional Sidebar - Right Side */}
         <Grid item xs={12} md={4}>
           <Box sx={{ position: 'sticky', top: 20 }}>
+            {/* Quick Booking Carousel */}
+            <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                <Typography variant="h6">
+                  Quick Bookings
+                </Typography>
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                  <IconButton size="small" onClick={prevCarousel}>
+                    <ChevronLeft />
+                  </IconButton>
+                  <IconButton size="small" onClick={nextCarousel}>
+                    <ChevronRight />
+                  </IconButton>
+                </Box>
+              </Box>
+              
+              <Card 
+                sx={{ 
+                  mb: 2, 
+                  cursor: 'pointer',
+                  transition: 'transform 0.2s',
+                  '&:hover': { transform: 'translateY(-2px)' }
+                }}
+                onClick={() => handleQuickBooking(quickBookings[currentCarouselIndex])}
+              >
+                <CardContent sx={{ pb: 1 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                    <Typography variant="h6" color="primary">
+                      {quickBookings[currentCarouselIndex].origin} → {quickBookings[currentCarouselIndex].destination}
+                    </Typography>
+                    {quickBookings[currentCarouselIndex].popular && (
+                      <Chip label="Popular" color="secondary" size="small" />
+                    )}
+                  </Box>
+                  
+                  <Typography variant="h5" color="primary" fontWeight="bold" sx={{ mb: 1 }}>
+                    {quickBookings[currentCarouselIndex].price}
+                  </Typography>
+                  
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                    <Typography variant="body2" color="text.secondary">
+                      Duration: {quickBookings[currentCarouselIndex].duration}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {quickBookings[currentCarouselIndex].airline}
+                    </Typography>
+                  </Box>
+                  
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography variant="body2">
+                      Departure: {quickBookings[currentCarouselIndex].departure}
+                    </Typography>
+                    <Typography variant="body2">
+                      Arrival: {quickBookings[currentCarouselIndex].arrival}
+                    </Typography>
+                  </Box>
+                </CardContent>
+                <CardActions sx={{ pt: 0 }}>
+                  <Button size="small" color="primary" fullWidth>
+                    Book Now
+                  </Button>
+                </CardActions>
+              </Card>
+              
+              {/* Carousel Indicators */}
+              <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
+                {quickBookings.map((_, index) => (
+                  <Box
+                    key={index}
+                    sx={{
+                      width: 8,
+                      height: 8,
+                      borderRadius: '50%',
+                      backgroundColor: index === currentCarouselIndex ? 'primary.main' : 'grey.300',
+                      cursor: 'pointer',
+                      transition: 'background-color 0.2s'
+                    }}
+                    onClick={() => setCurrentCarouselIndex(index)}
+                  />
+                ))}
+              </Box>
+            </Paper>
+
             {/* Promotional Banner */}
             <Paper 
               elevation={2} 
