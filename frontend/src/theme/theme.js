@@ -3,24 +3,44 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#1976D2', // Classic Blue
-      light: '#42A5F5',
-      dark: '#1565C0',
+      main: '#00695C', // Deep Teal - Professional and trustworthy
+      light: '#4DB6AC', // Aqua - Modern and fresh
+      dark: '#004D40', // Dark Teal - Sophisticated
       contrastText: '#FFFFFF',
     },
     secondary: {
-      main: '#E0E0E0', // Light Gray
-      light: '#F5F5F5',
-      dark: '#BDBDBD',
-      contrastText: '#000000',
+      main: '#26A69A', // Teal - Complementary accent
+      light: '#80CBC4', // Light Teal - Soft accent
+      dark: '#00695C', // Deep Teal - Strong accent
+      contrastText: '#FFFFFF',
     },
     background: {
-      default: '#F7F9FC', // Light Blue-Gray
+      default: '#E0F2F1', // Light Teal - Calming background
       paper: '#FFFFFF',
     },
     text: {
-      primary: '#1A1A1A',
-      secondary: '#666666',
+      primary: '#004D40', // Dark Teal - Professional text
+      secondary: '#00695C', // Deep Teal - Secondary text
+    },
+    error: {
+      main: '#D32F2F',
+      light: '#EF5350',
+      dark: '#C62828',
+    },
+    warning: {
+      main: '#FFA000',
+      light: '#FFB74D',
+      dark: '#F57C00',
+    },
+    success: {
+      main: '#2E7D32',
+      light: '#4CAF50',
+      dark: '#1B5E20',
+    },
+    info: {
+      main: '#00695C', // Use teal for info
+      light: '#4DB6AC',
+      dark: '#004D40',
     },
   },
   typography: {
@@ -131,7 +151,7 @@ const theme = createTheme({
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: '#1976D2', // Use Primary Blue
+          backgroundColor: '#00695C', // Use Primary Teal
           color: '#FFFFFF', // White text
           boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
         },
@@ -150,30 +170,30 @@ const theme = createTheme({
   },
   shadows: [
     'none',
-    '0px 2px 4px rgba(0, 0, 0, 0.1)',
-    '0px 4px 8px rgba(0, 0, 0, 0.1)',
-    '0px 6px 12px rgba(0, 0, 0, 0.1)',
-    '0px 8px 16px rgba(0, 0, 0, 0.1)',
-    '0px 10px 20px rgba(0, 0, 0, 0.1)',
-    '0px 12px 24px rgba(0, 0, 0, 0.1)',
-    '0px 14px 28px rgba(0, 0, 0, 0.1)',
-    '0px 16px 32px rgba(0, 0, 0, 0.1)',
-    '0px 18px 36px rgba(0, 0, 0, 0.1)',
-    '0px 20px 40px rgba(0, 0, 0, 0.1)',
-    '0px 22px 44px rgba(0, 0, 0, 0.1)',
-    '0px 24px 48px rgba(0, 0, 0, 0.1)',
-    '0px 26px 52px rgba(0, 0, 0, 0.1)',
-    '0px 28px 56px rgba(0, 0, 0, 0.1)',
-    '0px 30px 60px rgba(0, 0, 0, 0.1)',
-    '0px 32px 64px rgba(0, 0, 0, 0.1)',
-    '0px 34px 68px rgba(0, 0, 0, 0.1)',
-    '0px 36px 72px rgba(0, 0, 0, 0.1)',
-    '0px 38px 76px rgba(0, 0, 0, 0.1)',
-    '0px 40px 80px rgba(0, 0, 0, 0.1)',
-    '0px 42px 84px rgba(0, 0, 0, 0.1)',
-    '0px 44px 88px rgba(0, 0, 0, 0.1)',
-    '0px 46px 92px rgba(0, 0, 0, 0.1)',
-    '0px 48px 96px rgba(0, 0, 0, 0.1)',
+    '0px 2px 4px rgba(0, 105, 92, 0.1)', // Subtle teal shadow
+    '0px 4px 8px rgba(0, 105, 92, 0.1)',
+    '0px 6px 12px rgba(0, 105, 92, 0.1)',
+    '0px 8px 16px rgba(0, 105, 92, 0.1)',
+    '0px 10px 20px rgba(0, 105, 92, 0.1)',
+    '0px 12px 24px rgba(0, 105, 92, 0.1)',
+    '0px 14px 28px rgba(0, 105, 92, 0.1)',
+    '0px 16px 32px rgba(0, 105, 92, 0.1)',
+    '0px 18px 36px rgba(0, 105, 92, 0.1)',
+    '0px 20px 40px rgba(0, 105, 92, 0.1)',
+    '0px 22px 44px rgba(0, 105, 92, 0.1)',
+    '0px 24px 48px rgba(0, 105, 92, 0.1)',
+    '0px 26px 52px rgba(0, 105, 92, 0.1)',
+    '0px 28px 56px rgba(0, 105, 92, 0.1)',
+    '0px 30px 60px rgba(0, 105, 92, 0.1)',
+    '0px 32px 64px rgba(0, 105, 92, 0.1)',
+    '0px 34px 68px rgba(0, 105, 92, 0.1)',
+    '0px 36px 72px rgba(0, 105, 92, 0.1)',
+    '0px 38px 76px rgba(0, 105, 92, 0.1)',
+    '0px 40px 80px rgba(0, 105, 92, 0.1)',
+    '0px 42px 84px rgba(0, 105, 92, 0.1)',
+    '0px 44px 88px rgba(0, 105, 92, 0.1)',
+    '0px 46px 92px rgba(0, 105, 92, 0.1)',
+    '0px 48px 96px rgba(0, 105, 92, 0.1)',
   ],
 });
 
