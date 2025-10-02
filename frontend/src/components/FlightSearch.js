@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useSearchPageDataLayer from '../hooks/useSearchPageDataLayer';
+import usePageView from '../hooks/usePageView';
 import {
   Container,
   Paper,
@@ -69,8 +69,12 @@ const travelPurposes = [
 const FlightSearch = () => {
   const navigate = useNavigate();
   
-  // Initialize search page data layer
-  const { trackFieldInteraction, trackSearchInitiated } = useSearchPageDataLayer();
+  // Track page view with search-specific context
+  usePageView({
+    pageCategory: 'booking',
+    searchType: 'flight',
+    sections: ['search-form', 'filters', 'quick-actions']
+  });
   
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
@@ -155,21 +159,8 @@ const FlightSearch = () => {
       searchDateTime
     };
 
-    // Track search initiation BEFORE navigation
-    trackSearchInitiated({
-      origin: origin.iata_code,
-      destination: destination.iata_code,
-      departureDate: date.toISOString().split('T')[0],
-      returnDate: returnDate ? returnDate.toISOString().split('T')[0] : null,
-      passengers: {
-        adults: passengerCounts.adult,
-        children: passengerCounts.child,
-        infants: passengerCounts.infant,
-        total: totalPassengers
-      },
-      cabinClass,
-      tripType
-    });
+    // Track search initiation
+    // Analytics call removed
 
     // Navigate to search results
     navigate('/search-results', {
@@ -237,24 +228,18 @@ const FlightSearch = () => {
             <Grid item xs={12}>
               <FormControl component="fieldset">
                 <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', mb: 2 }}>
-                <Button
-  variant={tripType === 'oneway' ? 'contained' : 'outlined'}
-  onClick={() => {
-    setTripType('oneway');
-    trackFieldInteraction('trip-type', 'oneway', 'button-click');
-  }}
->
-  One Way
-</Button>
-<Button
-  variant={tripType === 'roundtrip' ? 'contained' : 'outlined'}
-  onClick={() => {
-    setTripType('roundtrip');
-    trackFieldInteraction('trip-type', 'roundtrip', 'button-click');
-  }}
->
-  Round Trip
-</Button>
+                  <Button
+                    variant={tripType === 'oneway' ? 'contained' : 'outlined'}
+                    onClick={() => setTripType('oneway')}
+                  >
+                    One Way
+                  </Button>
+                  <Button
+                    variant={tripType === 'roundtrip' ? 'contained' : 'outlined'}
+                    onClick={() => setTripType('roundtrip')}
+                  >
+                    Round Trip
+                  </Button>
                 </Box>
               </FormControl>
             </Grid>
@@ -266,11 +251,6 @@ const FlightSearch = () => {
                 onChange={(event, newValue) => {
                   setOrigin(newValue);
                   setDestination(null); // Reset destination when origin changes
-                  
-                  // Track origin selection
-                  if (newValue) {
-                    trackFieldInteraction('origin', newValue.iata_code, 'autocomplete-selected');
-                  }
                 }}
                 renderInput={(params) => (
                   <TextField
@@ -288,14 +268,7 @@ const FlightSearch = () => {
                 options={getAvailableDestinations()}
                 getOptionLabel={(option) => option.label}
                 value={destination}
-                onChange={(event, newValue) => {
-                  setDestination(newValue);
-                  
-                  // Track destination selection
-                  if (newValue) {
-                    trackFieldInteraction('destination', newValue.iata_code, 'autocomplete-selected');
-                  }
-                }}
+                onChange={(event, newValue) => setDestination(newValue)}
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -314,14 +287,7 @@ const FlightSearch = () => {
                 <DatePicker
                   label="Departure Date"
                   value={date}
-                  onChange={(newValue) => {
-                    setDate(newValue);
-                    
-                    // Track departure date selection
-                    if (newValue) {
-                      trackFieldInteraction('departure-date', newValue.toISOString().split('T')[0], 'date-picker-selected');
-                    }
-                  }}
+                  onChange={(newValue) => setDate(newValue)}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -339,14 +305,7 @@ const FlightSearch = () => {
                   <DatePicker
                     label="Return Date"
                     value={returnDate}
-                    onChange={(newValue) => {
-                      setReturnDate(newValue);
-                      
-                      // Track return date selection
-                      if (newValue) {
-                        trackFieldInteraction('return-date', newValue.toISOString().split('T')[0], 'date-picker-selected');
-                      }
-                    }}
+                    onChange={(newValue) => setReturnDate(newValue)}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -362,13 +321,7 @@ const FlightSearch = () => {
             <Grid item xs={12} md={4}>
               <PassengerSelector
                 passengerCounts={passengerCounts}
-                onPassengerCountsChange={(newCounts) => {
-                  setPassengerCounts(newCounts);
-                  
-                  // Track passenger count changes
-                  // Track passenger count changes
-trackFieldInteraction('passengers', JSON.stringify(newCounts), 'selector-changed');
-                }}
+                onPassengerCountsChange={setPassengerCounts}
               />
               {/* Debug info */}
               <Box sx={{ mt: 1, fontSize: 12, color: 'grey.600' }}>
@@ -381,10 +334,7 @@ trackFieldInteraction('passengers', JSON.stringify(newCounts), 'selector-changed
                 <Select
                   value={paymentType}
                   label="Payment Type"
-                  onChange={(e) => {
-                    setPaymentType(e.target.value);
-                    trackFieldInteraction('payment-type', e.target.value, 'dropdown-selected');
-                  }}
+                  onChange={(e) => setPaymentType(e.target.value)}
                 >
                   {paymentTypes.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -400,10 +350,7 @@ trackFieldInteraction('passengers', JSON.stringify(newCounts), 'selector-changed
                 <Select
                   value={cabinClass}
                   label="Cabin Class"
-                  onChange={(e) => {
-                    setCabinClass(e.target.value);
-                    trackFieldInteraction('cabin-class', e.target.value, 'dropdown-selected');
-                  }}
+                  onChange={(e) => setCabinClass(e.target.value)}
                 >
                   {cabinClasses.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -419,10 +366,7 @@ trackFieldInteraction('passengers', JSON.stringify(newCounts), 'selector-changed
                 <Select
                   value={travelPurpose}
                   label="Travel Purpose"
-                  onChange={(e) => {
-                    setTravelPurpose(e.target.value);
-                    trackFieldInteraction('travel-purpose', e.target.value, 'dropdown-selected');
-                  }}
+                  onChange={(e) => setTravelPurpose(e.target.value)}
                 >
                   {travelPurposes.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
