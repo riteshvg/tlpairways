@@ -287,7 +287,7 @@ const MobileSearchResults = () => {
   }, [location.state]);
 
   // Enhanced flight data processing with mobile optimization
-  const getMatchingFlights = useCallback((origin, destination, searchDate, cabinClass) => {
+  const getMatchingFlights = useCallback((origin, destination, searchDate, cabinClass, searchOrigin = null) => {
     if (!origin || !destination || !searchDate || !cabinClass) return [];
 
     try {
@@ -311,7 +311,9 @@ const MobileSearchResults = () => {
       const allFlights = [...routeData.onward, ...routeData.return];
       
       // Determine currency based on search origin (not individual flight origin)
-      const searchOriginAirport = findAirportByCode(origin);
+      // Use searchOrigin if provided (for return flights), otherwise use origin
+      const currencyOrigin = searchOrigin || origin;
+      const searchOriginAirport = findAirportByCode(currencyOrigin);
       const searchOriginCountry = searchOriginAirport?.country || 'India';
       const searchDisplayCurrency = CURRENCY_CONFIG.getCurrencyForCountry(searchOriginCountry);
       
@@ -419,7 +421,8 @@ const MobileSearchResults = () => {
             searchParams.destinationCode,
             searchParams.originCode,
             searchParams.returnDate,
-            searchParams.cabinClass
+            searchParams.cabinClass,
+            searchParams.originCode // Pass search origin to maintain currency consistency
           );
           setReturnFlights(returnMatchingFlights);
           setFilteredReturnFlights(returnMatchingFlights);
