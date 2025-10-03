@@ -43,6 +43,16 @@ const useTravellerDetailsDataLayer = (pageViewOptions = {}) => {
     return `booking_${timestamp}_${routeCode}${randomSuffix}`;
   }, []);
 
+  // Generate PNR based on existing logic
+  const generatePNR = useCallback(() => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let pnr = '';
+    for (let i = 0; i < 6; i++) {
+      pnr += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return pnr;
+  }, []);
+
   // Generate booking ID
   const generateBookingId = useCallback((bookingData) => {
     const timestamp = Date.now();
@@ -169,6 +179,7 @@ const useTravellerDetailsDataLayer = (pageViewOptions = {}) => {
       // Generate IDs
       const bookingId = generateBookingId();
       const searchId = generateSearchId();
+      const pnr = generatePNR();
       const bookingStartTime = new Date().toISOString();
 
       // Format flight data
@@ -265,6 +276,7 @@ const useTravellerDetailsDataLayer = (pageViewOptions = {}) => {
         },
         bookingContext: {
           bookingId,
+          pnr,
           bookingStatus: 'in-progress',
           bookingStep: 'passenger-details',
           bookingStepNumber: 1,
