@@ -294,7 +294,7 @@ const useTravellerDetailsDataLayer = () => {
           isLoggedIn: false, // Would be determined by auth context
           userId: null, // Would be determined by auth context
           userLoyaltyTier: 'none',
-          sessionId: pageDataLayerManager.getSessionId(),
+          sessionId: pageDataLayerManager.getOrCreateSessionId(),
           userPreferences: {
             preferred_airlines: ['TLP Airways'],
             preferred_cabin_class: onwardFlight.cabinClass || 'economy',
@@ -311,13 +311,16 @@ const useTravellerDetailsDataLayer = () => {
         timestamp: new Date().toISOString()
       };
 
-      // Track page view with comprehensive data
-      enhancedAirlinesDataLayer.trackPageView(dataLayerObject);
+      // Push data directly to Adobe Data Layer
+      if (typeof window !== 'undefined' && window.adobeDataLayer) {
+        window.adobeDataLayer.push(dataLayerObject);
+      }
 
       // Set previous page for next navigation
       pageDataLayerManager.setPreviousPage('Traveller Details');
 
       console.log('✅ Traveller Details Data Layer initialized:', dataLayerObject);
+      console.log('📊 Data layer object pushed to adobeDataLayer:', window.adobeDataLayer);
 
     } catch (error) {
       console.error('❌ Error initializing Traveller Details Data Layer:', error);
@@ -329,6 +332,8 @@ const useTravellerDetailsDataLayer = () => {
   const trackFormFieldInteraction = useCallback((fieldName, fieldValue, passengerIndex = null) => {
     try {
       const fieldData = {
+        event: 'formFieldInteraction',
+        formType: 'traveller-details',
         fieldName,
         fieldValue: fieldValue?.toString() || '',
         passengerIndex,
@@ -336,7 +341,10 @@ const useTravellerDetailsDataLayer = () => {
         timeOnForm: Date.now() - formStartTime.current
       };
 
-      enhancedAirlinesDataLayer.trackFormInteraction('traveller-details', fieldData);
+      // Push directly to Adobe Data Layer
+      if (typeof window !== 'undefined' && window.adobeDataLayer) {
+        window.adobeDataLayer.push(fieldData);
+      }
 
       // Update form context
       setFormContext(prev => {
@@ -392,11 +400,18 @@ const useTravellerDetailsDataLayer = () => {
   // Track form validation
   const trackFormValidation = useCallback((validationResults) => {
     try {
-      enhancedAirlinesDataLayer.trackFormValidation('traveller-details', {
+      const validationData = {
+        event: 'formValidation',
+        formType: 'traveller-details',
         validationResults,
         timestamp: new Date().toISOString(),
         timeOnForm: Date.now() - formStartTime.current
-      });
+      };
+
+      // Push directly to Adobe Data Layer
+      if (typeof window !== 'undefined' && window.adobeDataLayer) {
+        window.adobeDataLayer.push(validationData);
+      }
     } catch (error) {
       console.error('❌ Error tracking form validation:', error);
     }
@@ -405,12 +420,19 @@ const useTravellerDetailsDataLayer = () => {
   // Track form submission
   const trackFormSubmission = useCallback((formData) => {
     try {
-      enhancedAirlinesDataLayer.trackFormSubmission('traveller-details', {
+      const submissionData = {
+        event: 'formSubmission',
+        formType: 'traveller-details',
         formData,
         timestamp: new Date().toISOString(),
         timeOnForm: Date.now() - formStartTime.current,
         formContext
-      });
+      };
+
+      // Push directly to Adobe Data Layer
+      if (typeof window !== 'undefined' && window.adobeDataLayer) {
+        window.adobeDataLayer.push(submissionData);
+      }
     } catch (error) {
       console.error('❌ Error tracking form submission:', error);
     }
