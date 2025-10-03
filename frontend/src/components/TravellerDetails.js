@@ -369,21 +369,42 @@ const TravellerDetails = () => {
         });
       }
 
+      // Convert all prices to INR for booking confirmation
+      const convertToINR = (flight) => {
+        if (!flight) return null;
+        
+        // Get the price for the selected cabin class
+        const cabinClassPrice = flight.displayPrices?.[flight.cabinClass] || flight.price?.amount || 0;
+        
+        // Convert to INR if not already in INR
+        let inrPrice = cabinClassPrice;
+        if (flight.displayCurrency && flight.displayCurrency !== 'INR') {
+          inrPrice = Math.round(CURRENCY_CONFIG.convertPrice(cabinClassPrice, flight.displayCurrency, 'INR'));
+        }
+        
+        return {
+          ...flight,
+          price: {
+            amount: inrPrice,
+            currency: 'INR'
+          },
+          originalDisplayPrice: cabinClassPrice,
+          originalDisplayCurrency: flight.displayCurrency,
+          cabinClass: flight.cabinClass
+        };
+      };
+
       const navigationState = {
         selectedFlights: {
           onward: {
-            ...selectedFlights.onward,
+            ...convertToINR(selectedFlights.onward),
             originCode: selectedFlights.onward.origin?.iata_code || selectedFlights.onward.originCode,
             destinationCode: selectedFlights.onward.destination?.iata_code || selectedFlights.onward.destinationCode,
-            price: selectedFlights.onward.price,
-            cabinClass: selectedFlights.onward.cabinClass
           },
           return: selectedFlights.return ? {
-            ...selectedFlights.return,
+            ...convertToINR(selectedFlights.return),
             originCode: selectedFlights.return.origin?.iata_code || selectedFlights.return.originCode,
             destinationCode: selectedFlights.return.destination?.iata_code || selectedFlights.return.destinationCode,
-            price: selectedFlights.return.price,
-            cabinClass: selectedFlights.return.cabinClass
           } : null
         },
         travellerDetails: filledTravellers,

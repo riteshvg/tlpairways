@@ -130,6 +130,19 @@ export const CURRENCY_CONFIG = {
       return usdAmount; // Return USD amount if target currency not found
     }
     
+    // Handle other currencies to INR
+    if (toCurrency === 'INR') {
+      // Convert from source currency to USD first, then to INR
+      const rates = CURRENCY_CONFIG.exchangeRates.USD;
+      if (rates && rates[fromCurrency]) {
+        const usdAmount = amount / rates[fromCurrency];
+        return usdAmount * CURRENCY_CONFIG.defaultExchangeRate;
+      }
+      // Fallback: assume source currency is USD if not found
+      return amount * CURRENCY_CONFIG.defaultExchangeRate;
+    }
+    
+    // Handle other currency to other currency conversions
     const rates = CURRENCY_CONFIG.exchangeRates[fromCurrency];
     if (!rates || !rates[toCurrency]) {
       // Fallback to USD-INR rate if specific rate not found

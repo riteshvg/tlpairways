@@ -310,6 +310,11 @@ const MobileSearchResults = () => {
 
       const allFlights = [...routeData.onward, ...routeData.return];
       
+      // Determine currency based on search origin (not individual flight origin)
+      const searchOriginAirport = findAirportByCode(origin);
+      const searchOriginCountry = searchOriginAirport?.country || 'India';
+      const searchDisplayCurrency = CURRENCY_CONFIG.getCurrencyForCountry(searchOriginCountry);
+      
       const processedFlights = allFlights
         .filter(flight => {
           return flight.origin.iata_code === origin && 
@@ -349,12 +354,14 @@ const MobileSearchResults = () => {
           const destCountry = destAirport?.country || 'India';
           
           const isInternational = CURRENCY_CONFIG.isInternationalFlight(originCountry, destCountry);
-          const displayCurrency = isInternational ? 'USD' : 'INR';
+          // Use search origin currency for all flights (both onward and return)
+          const displayCurrency = searchDisplayCurrency;
           
           const displayPrices = {};
           Object.keys(prices).forEach(className => {
-            if (isInternational) {
-              displayPrices[className] = Math.round(prices[className] / CURRENCY_CONFIG.defaultExchangeRate);
+            if (displayCurrency !== 'INR') {
+              // Convert INR to target currency for display
+              displayPrices[className] = Math.round(CURRENCY_CONFIG.convertPrice(prices[className], 'INR', displayCurrency));
             } else {
               displayPrices[className] = prices[className];
             }

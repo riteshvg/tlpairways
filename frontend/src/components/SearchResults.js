@@ -150,6 +150,11 @@ const SearchResults = () => {
       // Get all flights for the route
       const allFlights = [...routeData.onward, ...routeData.return];
       
+      // Determine currency based on search origin (not individual flight origin)
+      const searchOriginAirport = findAirportByCode(origin);
+      const searchOriginCountry = searchOriginAirport?.country || 'India';
+      const searchDisplayCurrency = CURRENCY_CONFIG.getCurrencyForCountry(searchOriginCountry);
+      
       return allFlights
         .filter(flight => {
           // Check if the flight matches the origin and destination
@@ -197,8 +202,8 @@ const SearchResults = () => {
       // Check if this is an international flight
       const isInternational = CURRENCY_CONFIG.isInternationalFlight(originCountry, destCountry);
       
-      // Determine display currency based on origin country
-      const displayCurrency = CURRENCY_CONFIG.getCurrencyForCountry(originCountry);
+      // Use search origin currency for all flights (both onward and return)
+      const displayCurrency = searchDisplayCurrency;
       
       // Convert prices for display (keep original INR prices in backend)
           const displayPrices = {};
