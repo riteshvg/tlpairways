@@ -5,7 +5,8 @@ export const CURRENCY_CONFIG = {
     USD: {
       INR: 80,
       EUR: 0.85,
-      GBP: 0.75
+      GBP: 0.75,
+      AUD: 1.5
     }
   },
   
@@ -13,13 +14,16 @@ export const CURRENCY_CONFIG = {
   defaultExchangeRate: 83,
   
   // Countries that should show USD prices
-  usdCountries: ['US', 'CA', 'MX', 'BR', 'AR', 'CL', 'PE', 'CO', 'VE', 'EC', 'BO', 'PY', 'UY', 'GY', 'SR', 'GF', 'FK'],
+  usdCountries: ['US', 'CA', 'MX', 'BR', 'AR', 'CL', 'PE', 'CO', 'VE', 'EC', 'BO', 'PY', 'UY', 'GY', 'SR', 'GF', 'FK', 'AE', 'SA', 'QA', 'KW', 'BH', 'OM', 'JO', 'LB', 'IQ', 'IR', 'TR', 'EG', 'LY', 'TN', 'DZ', 'MA'],
   
   // Countries that should show EUR prices
   eurCountries: ['DE', 'FR', 'IT', 'ES', 'NL', 'BE', 'AT', 'PT', 'IE', 'FI', 'SE', 'DK', 'NO', 'CH', 'LU', 'MT', 'CY', 'EE', 'LV', 'LT', 'SI', 'SK', 'CZ', 'PL', 'HU', 'RO', 'BG', 'HR', 'GR'],
   
   // Countries that should show GBP prices
   gbpCountries: ['GB', 'IM', 'JE', 'GG'],
+  
+  // Countries that should show AUD prices
+  audCountries: ['AU', 'NZ'],
   
   // Map country names to country codes
   countryToCode: {
@@ -73,7 +77,25 @@ export const CURRENCY_CONFIG = {
     'Isle of Man': 'IM',
     'Jersey': 'JE',
     'Guernsey': 'GG',
-    'India': 'IN'
+    'India': 'IN',
+    'Australia': 'AU',
+    'New Zealand': 'NZ',
+    'United Arab Emirates': 'AE',
+    'Saudi Arabia': 'SA',
+    'Qatar': 'QA',
+    'Kuwait': 'KW',
+    'Bahrain': 'BH',
+    'Oman': 'OM',
+    'Jordan': 'JO',
+    'Lebanon': 'LB',
+    'Iraq': 'IQ',
+    'Iran': 'IR',
+    'Turkey': 'TR',
+    'Egypt': 'EG',
+    'Libya': 'LY',
+    'Tunisia': 'TN',
+    'Algeria': 'DZ',
+    'Morocco': 'MA'
   },
   
   // Get currency for a country
@@ -84,6 +106,7 @@ export const CURRENCY_CONFIG = {
     if (CURRENCY_CONFIG.usdCountries.includes(countryCode)) return 'USD';
     if (CURRENCY_CONFIG.eurCountries.includes(countryCode)) return 'EUR';
     if (CURRENCY_CONFIG.gbpCountries.includes(countryCode)) return 'GBP';
+    if (CURRENCY_CONFIG.audCountries.includes(countryCode)) return 'AUD';
     return 'INR'; // Default to INR for other countries
   },
   
@@ -95,6 +118,17 @@ export const CURRENCY_CONFIG = {
   // Convert price from one currency to another
   convertPrice: (amount, fromCurrency, toCurrency) => {
     if (fromCurrency === toCurrency) return amount;
+    
+    // Handle INR to other currencies
+    if (fromCurrency === 'INR') {
+      // Convert INR to USD first, then to target currency
+      const usdAmount = amount / CURRENCY_CONFIG.defaultExchangeRate;
+      const rates = CURRENCY_CONFIG.exchangeRates.USD;
+      if (rates && rates[toCurrency]) {
+        return usdAmount * rates[toCurrency];
+      }
+      return usdAmount; // Return USD amount if target currency not found
+    }
     
     const rates = CURRENCY_CONFIG.exchangeRates[fromCurrency];
     if (!rates || !rates[toCurrency]) {
@@ -114,6 +148,7 @@ export const CURRENCY_CONFIG = {
       'USD': '$',
       'EUR': '€',
       'GBP': '£',
+      'AUD': 'A$',
       'INR': '₹'
     };
     

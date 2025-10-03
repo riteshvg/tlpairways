@@ -197,15 +197,15 @@ const SearchResults = () => {
       // Check if this is an international flight
       const isInternational = CURRENCY_CONFIG.isInternationalFlight(originCountry, destCountry);
       
-      // Determine display currency - for international flights, always show USD
-      const displayCurrency = isInternational ? 'USD' : 'INR';
+      // Determine display currency based on origin country
+      const displayCurrency = CURRENCY_CONFIG.getCurrencyForCountry(originCountry);
       
       // Convert prices for display (keep original INR prices in backend)
           const displayPrices = {};
           Object.keys(prices).forEach(className => {
-            if (isInternational) {
-              // Convert INR to USD for display
-              displayPrices[className] = Math.round(prices[className] / CURRENCY_CONFIG.defaultExchangeRate);
+            if (displayCurrency !== 'INR') {
+              // Convert INR to target currency for display
+              displayPrices[className] = Math.round(CURRENCY_CONFIG.convertPrice(prices[className], 'INR', displayCurrency));
             } else {
               displayPrices[className] = prices[className];
             }
