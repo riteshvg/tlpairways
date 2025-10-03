@@ -35,8 +35,8 @@ const useTravellerDetailsDataLayer = (pageViewOptions = {}) => {
     }
   });
 
-  // Generate PNR based on prevailing logic
-  const generatePNR = useCallback((bookingData) => {
+  // Generate booking ID based on prevailing logic
+  const generateBookingId = useCallback((bookingData) => {
     const timestamp = Date.now();
     const randomSuffix = Math.random().toString(36).substring(2, 8).toUpperCase();
     const routeCode = bookingData?.routeInfo?.route?.replace('-', '') || 'TLP';
@@ -53,12 +53,6 @@ const useTravellerDetailsDataLayer = (pageViewOptions = {}) => {
     return pnr;
   }, []);
 
-  // Generate booking ID
-  const generateBookingId = useCallback((bookingData) => {
-    const timestamp = Date.now();
-    const randomSuffix = Math.random().toString(36).substring(2, 8).toUpperCase();
-    return `booking_${timestamp}_${randomSuffix}`;
-  }, []);
 
   // Generate search ID
   const generateSearchId = useCallback(() => {
