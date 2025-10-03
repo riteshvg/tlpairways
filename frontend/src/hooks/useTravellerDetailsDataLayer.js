@@ -8,7 +8,7 @@ import { format, parseISO, isValid } from 'date-fns';
  * Comprehensive Traveller Details Data Layer Hook
  * Tracks passenger information form interactions and booking progression
  */
-const useTravellerDetailsDataLayer = () => {
+const useTravellerDetailsDataLayer = (pageViewOptions = {}) => {
   const location = useLocation();
   const formStartTime = useRef(Date.now());
   const [formContext, setFormContext] = useState({
@@ -250,17 +250,18 @@ const useTravellerDetailsDataLayer = () => {
           userAgent: navigator.userAgent,
           screenResolution: `${window.screen.width}x${window.screen.height}`,
           viewportSize: `${window.innerWidth}x${window.innerHeight}`,
-          pageCategory: 'booking',
-          bookingStep: 'passenger-details',
+          pageCategory: pageViewOptions.pageCategory || 'booking',
+          bookingStep: pageViewOptions.bookingStep || 'passenger-details',
           bookingStepNumber: 1,
           totalBookingSteps: 4,
-          sections: [
+          sections: pageViewOptions.sections || [
             'passenger-forms',
             'contact-information',
             'booking-summary',
             'fare-breakdown',
             'add-ons'
-          ]
+          ],
+          passengerCount: pageViewOptions.passengerCount || 1
         },
         bookingContext: {
           bookingId,

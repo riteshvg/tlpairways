@@ -34,11 +34,8 @@ const TravellerDetails = () => {
 
   const { onwardFlight, returnFlight, tripType, passengers } = location.state || {};
   
-  // Initialize comprehensive data layer tracking
-  const { formContext, trackFormFieldInteraction, trackFormValidation, trackFormSubmission } = useTravellerDetailsDataLayer();
-  
-  // Track page view with traveller details-specific context
-  usePageView({
+  // Initialize comprehensive data layer tracking (includes pageView)
+  const { formContext, trackFormFieldInteraction, trackFormValidation, trackFormSubmission } = useTravellerDetailsDataLayer({
     pageCategory: 'booking',
     bookingStep: 'traveller-details',
     sections: ['passenger-form', 'contact-details', 'special-requests'],
