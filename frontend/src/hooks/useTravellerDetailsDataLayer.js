@@ -248,7 +248,7 @@ const useTravellerDetailsDataLayer = () => {
           previousPage: 'Search Results',
           timestamp: new Date().toISOString(),
           userAgent: navigator.userAgent,
-          screenResolution: `${screen.width}x${screen.height}`,
+          screenResolution: `${window.screen.width}x${window.screen.height}`,
           viewportSize: `${window.innerWidth}x${window.innerHeight}`,
           pageCategory: 'booking',
           bookingStep: 'passenger-details',
