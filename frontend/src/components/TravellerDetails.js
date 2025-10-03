@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import usePageView from '../hooks/usePageView';
+import useTravellerDetailsDataLayer from '../hooks/useTravellerDetailsDataLayer';
 import {
   Container,
   Paper,
@@ -32,6 +33,9 @@ const TravellerDetails = () => {
   const navigate = useNavigate();
 
   const { onwardFlight, returnFlight, tripType, passengers } = location.state || {};
+  
+  // Initialize comprehensive data layer tracking
+  const { formContext, trackFormFieldInteraction, trackFormValidation, trackFormSubmission } = useTravellerDetailsDataLayer();
   
   // Track page view with traveller details-specific context
   usePageView({
@@ -258,6 +262,9 @@ const TravellerDetails = () => {
       [field]: value
     };
     setTravellers(newTravellers);
+    
+    // Track form field interaction
+    trackFormFieldInteraction(field, value, index + 1);
   };
 
   const validateForm = () => {
@@ -323,10 +330,23 @@ const TravellerDetails = () => {
 
     if (!validateForm()) {
       console.log('Form validation failed');
+      // Track form validation failure
+      trackFormValidation({ 
+        email: validationErrors.email, 
+        phone: validationErrors.phone, 
+        travellers: validationErrors.travellers 
+      });
       return;
     }
 
     try {
+      // Track successful form submission
+      trackFormSubmission({
+        travellers,
+        contactInfo: { email, phone },
+        selectedFlights,
+        passengers
+      });
       // Track passenger details added with proper flight data
       if (selectedFlights?.onward) {
         // Prepare passenger details for analytics
@@ -572,7 +592,10 @@ const TravellerDetails = () => {
                       label="Email"
                       type="email"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        trackFormFieldInteraction('contact_email', e.target.value);
+                      }}
                       error={!!validationErrors.email}
                       helperText={validationErrors.email}
                       required
@@ -584,7 +607,10 @@ const TravellerDetails = () => {
                       label="Phone Number"
                       type="tel"
                       value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
+                      onChange={(e) => {
+                        setPhone(e.target.value);
+                        trackFormFieldInteraction('contact_phone', e.target.value);
+                      }}
                       error={!!validationErrors.phone}
                       helperText={validationErrors.phone}
                       required
