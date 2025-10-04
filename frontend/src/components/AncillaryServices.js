@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import usePageView from '../hooks/usePageView';
+import useAncillaryServicesDataLayer from '../hooks/useAncillaryServicesDataLayer';
 import {
   Container,
   Typography,
@@ -50,8 +50,8 @@ const AncillaryServices = () => {
   const location = useLocation();
   const navigate = useNavigate();
   
-  // Track page view with ancillary services-specific context
-  usePageView({
+  // Initialize comprehensive data layer tracking (includes pageView)
+  const { formContext, trackFormFieldInteraction, trackFormValidation, trackFormSubmission } = useAncillaryServicesDataLayer({
     pageCategory: 'booking',
     bookingStep: 'ancillary-services',
     sections: ['seat-selection', 'meals', 'baggage', 'insurance']
@@ -242,6 +242,9 @@ const AncillaryServices = () => {
       seat,
       currentServices: selectedServices
     });
+
+    // Track form field interaction
+    trackFormFieldInteraction(`seat_${journey}_${passengerIndex}`, seat, 'seat-selection');
 
     setSelectedServices(prev => {
       const newServices = { ...prev };
@@ -996,67 +999,84 @@ Price: ₹${seatPrice}`}
   };
 
   const handleProceedToPayment = () => {
-    // Calculate total ancillary services cost
-    const ancillaryTotal = calculateTotal();
-    
-    // Calculate total flight fare
-    const flightTotal = (
-      (selectedFlights?.onward?.price?.amount || 0) + 
-      (selectedFlights?.return?.price?.amount || 0)
-    );
+    try {
+      // Track form validation
+      const validationResults = {
+        hasSelectedServices: Object.keys(selectedServices).some(journey => 
+          selectedServices[journey].seat?.length > 0 || 
+          selectedServices[journey].meal?.length > 0 || 
+          selectedServices[journey].baggage?.length > 0
+        ),
+        totalServices: calculateTotal(),
+        validationPassed: true
+      };
+      
+      trackFormValidation(validationResults);
 
-    // Calculate total amount including flight fare and ancillary services
-    const totalAmount = flightTotal + ancillaryTotal;
+      // Calculate total ancillary services cost
+      const ancillaryTotal = calculateTotal();
+      
+      // Calculate total flight fare
+      const flightTotal = (
+        (selectedFlights?.onward?.price?.amount || 0) + 
+        (selectedFlights?.return?.price?.amount || 0)
+      );
 
-    console.log('Proceeding to payment with totals:', {
-      flightTotal,
-      ancillaryTotal,
-      totalAmount,
-      selectedFlights
-    });
+      // Calculate total amount including flight fare and ancillary services
+      const totalAmount = flightTotal + ancillaryTotal;
 
-    const navigationState = {
-      selectedFlights: {
-      onward: {
-          ...selectedFlights.onward,
-          price: selectedFlights.onward.price,
-          cabinClass: selectedFlights.onward.cabinClass
+      console.log('Proceeding to payment with totals:', {
+        flightTotal,
+        ancillaryTotal,
+        totalAmount,
+        selectedFlights
+      });
+
+      const navigationState = {
+        selectedFlights: {
+        onward: {
+            ...selectedFlights.onward,
+            price: selectedFlights.onward.price,
+            cabinClass: selectedFlights.onward.cabinClass
+          },
+          return: selectedFlights.return ? {
+            ...selectedFlights.return,
+            price: selectedFlights.return.price,
+            cabinClass: selectedFlights.return.cabinClass
+          } : null
         },
-        return: selectedFlights.return ? {
-          ...selectedFlights.return,
-          price: selectedFlights.return.price,
-          cabinClass: selectedFlights.return.cabinClass
-        } : null
-      },
-      travellerDetails,
-      contactInfo,
-      selectedServices,
-      flightTotal,
-      ancillaryTotal,
-      totalAmount,
-      paymentType,
-      cabinClass: selectedFlights.onward.cabinClass,
-      previousPage: 'Ancillary Services'
-    };
+        travellerDetails,
+        contactInfo,
+        selectedServices,
+        flightTotal,
+        ancillaryTotal,
+        totalAmount,
+        paymentType,
+        cabinClass: selectedFlights.onward.cabinClass,
+        previousPage: 'Ancillary Services'
+      };
 
-    // Track proceeding to payment with complete data
-    // analytics.paymentInitiated({
-    //   ...navigationState,
-    //   flightDetails: {
-    //     onward: {
-    //       origin: selectedFlights.onward.origin?.iata_code,
-    //       destination: selectedFlights.onward.destination?.iata_code,
-    //       price: selectedFlights.onward.price
-    //     },
-    //     return: selectedFlights.return ? {
-    //       origin: selectedFlights.return.origin?.iata_code,
-    //       destination: selectedFlights.return.destination?.iata_code,
-    //       price: selectedFlights.return.price
-    //     } : null
-    //   }
-    // });
+      // Track form submission
+      trackFormSubmission({
+        action: 'proceed_to_payment',
+        ancillaryTotal,
+        flightTotal,
+        totalAmount,
+        selectedServices,
+        navigationState
+      });
 
-    navigate('/payment', { state: navigationState });
+      navigate('/payment', { state: navigationState });
+    } catch (error) {
+      console.error('Error in handleProceedToPayment:', error);
+      // Track form validation error
+      trackFormValidation({
+        hasSelectedServices: false,
+        totalServices: 0,
+        validationPassed: false,
+        error: error.message
+      });
+    }
   };
 
   const steps = ['Flight Details', 'Ancillary Services', 'Payment'];
