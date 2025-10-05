@@ -1342,9 +1342,6 @@ Price: ₹${seatPrice}`}
 
     console.log('✅ Proceed to Payment event fired:', proceedToPaymentEvent);
     
-    // BREAKPOINT: Add debugger to inspect data layer object
-    debugger;
-    
     console.log('🔍 Data Layer Object for Inspection:', {
       event: proceedToPaymentEvent,
       adobeDataLayer: window.adobeDataLayer,
