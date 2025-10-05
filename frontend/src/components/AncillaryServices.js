@@ -50,8 +50,8 @@ const AncillaryServices = () => {
   const location = useLocation();
   const navigate = useNavigate();
   
-  // Initialize comprehensive data layer tracking (includes pageView)
-  const { formContext, trackFormFieldInteraction, trackFormValidation, trackFormSubmission } = useAncillaryServicesDataLayer({
+  // Initialize data layer tracking (includes pageView)
+  const { formContext } = useAncillaryServicesDataLayer({
     pageCategory: 'booking',
     bookingStep: 'ancillary-services',
     sections: ['seat-selection', 'meals', 'baggage', 'insurance']
@@ -261,8 +261,6 @@ const AncillaryServices = () => {
       currentServices: selectedServices
     });
 
-    // Track form field interaction
-    trackFormFieldInteraction(`seat_${journey}_${passengerIndex}`, seat, 'seat-selection');
 
     setSelectedServices(prev => {
       const newServices = { ...prev };
@@ -1018,19 +1016,6 @@ Price: ₹${seatPrice}`}
 
   const handleProceedToPayment = () => {
     try {
-      // Track form validation
-      const validationResults = {
-        hasSelectedServices: Object.keys(selectedServices).some(journey => 
-          selectedServices[journey].seat?.length > 0 || 
-          selectedServices[journey].meal?.length > 0 || 
-          selectedServices[journey].baggage?.length > 0
-        ),
-        totalServices: calculateTotal(),
-        validationPassed: true
-      };
-      
-      trackFormValidation(validationResults);
-
       // Calculate total ancillary services cost
       const ancillaryTotal = calculateTotal();
       
@@ -1074,26 +1059,168 @@ Price: ₹${seatPrice}`}
         previousPage: 'Ancillary Services'
       };
 
-      // Track form submission
-      trackFormSubmission({
-        action: 'proceed_to_payment',
-        ancillaryTotal,
-        flightTotal,
-        totalAmount,
-        selectedServices,
-        navigationState
-      });
+
+      // Track proceed to payment event
+      if (typeof window !== 'undefined' && window.adobeDataLayer) {
+        window.adobeDataLayer.push({
+          event: 'proceedToPayment',
+          bookingContext: {
+            bookingId: `booking_${Date.now()}_${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+            bookingStep: 'ancillary-services',
+            nextStep: 'payment',
+            bookingStepNumber: 2,
+            totalSteps: 4
+          },
+          selectedFlights: {
+            onward: {
+              flightNumber: selectedFlights.onward.flightNumber,
+              airline: selectedFlights.onward.airline,
+              origin: selectedFlights.onward.origin?.iata_code || selectedFlights.onward.originCode,
+              destination: selectedFlights.onward.destination?.iata_code || selectedFlights.onward.destinationCode,
+              departureTime: selectedFlights.onward.departureTime,
+              price: selectedFlights.onward.price?.amount || 0,
+              cabinClass: selectedFlights.onward.cabinClass
+            },
+            return: selectedFlights.return ? {
+              flightNumber: selectedFlights.return.flightNumber,
+              airline: selectedFlights.return.airline,
+              origin: selectedFlights.return.origin?.iata_code || selectedFlights.return.originCode,
+              destination: selectedFlights.return.destination?.iata_code || selectedFlights.return.destinationCode,
+              departureTime: selectedFlights.return.departureTime,
+              price: selectedFlights.return.price?.amount || 0,
+              cabinClass: selectedFlights.return.cabinClass
+            } : null
+          },
+          ancillaryServices: {
+            totalAncillaryCost: ancillaryTotal,
+            currency: 'INR',
+            servicesSelected: {
+              onward: {
+                seats: selectedServices.onward?.seat || [],
+                meals: selectedServices.onward?.meals || [],
+                baggage: selectedServices.onward?.baggage || [],
+                priorityBoarding: selectedServices.onward?.priorityBoarding || [],
+                loungeAccess: selectedServices.onward?.loungeAccess || [],
+                cost: (() => {
+                  let total = 0;
+                  selectedServices.onward?.seat?.forEach(seat => {
+                    if (seat) {
+                      const row = parseInt(seat);
+                      const seatType = seat.slice(-1);
+                      const isPremiumRow = row <= 5;
+                      const isWindowSeat = seatType === 'W';
+                      total += (isPremiumRow || isWindowSeat) ? 500 : 100;
+                    }
+                  });
+                  selectedServices.onward?.baggage?.forEach(baggage => {
+                    if (baggage && baggage !== 'included') {
+                      const flight = selectedFlights.onward;
+                      if (flight?.origin?.iata_code && flight?.destination?.iata_code) {
+                        const isInternational = flight.origin.iata_code !== flight.destination.iata_code;
+                        total += isInternational ? 2000 : 1000;
+                      } else {
+                        total += 1000;
+                      }
+                    }
+                  });
+                  selectedServices.onward?.priorityBoarding?.forEach(priority => {
+                    if (priority) total += 500;
+                  });
+                  selectedServices.onward?.loungeAccess?.forEach(lounge => {
+                    if (lounge) total += 1500;
+                  });
+                  return total;
+                })(),
+                currency: 'INR'
+              },
+              return: selectedFlights.return ? {
+                seats: selectedServices.return?.seat || [],
+                meals: selectedServices.return?.meals || [],
+                baggage: selectedServices.return?.baggage || [],
+                priorityBoarding: selectedServices.return?.priorityBoarding || [],
+                loungeAccess: selectedServices.return?.loungeAccess || [],
+                cost: (() => {
+                  let total = 0;
+                  selectedServices.return?.seat?.forEach(seat => {
+                    if (seat) {
+                      const row = parseInt(seat);
+                      const seatType = seat.slice(-1);
+                      const isPremiumRow = row <= 5;
+                      const isWindowSeat = seatType === 'W';
+                      total += (isPremiumRow || isWindowSeat) ? 500 : 100;
+                    }
+                  });
+                  selectedServices.return?.baggage?.forEach(baggage => {
+                    if (baggage && baggage !== 'included') {
+                      const flight = selectedFlights.return;
+                      if (flight?.origin?.iata_code && flight?.destination?.iata_code) {
+                        const isInternational = flight.origin.iata_code !== flight.destination.iata_code;
+                        total += isInternational ? 2000 : 1000;
+                      } else {
+                        total += 1000;
+                      }
+                    }
+                  });
+                  selectedServices.return?.priorityBoarding?.forEach(priority => {
+                    if (priority) total += 500;
+                  });
+                  selectedServices.return?.loungeAccess?.forEach(lounge => {
+                    if (lounge) total += 1500;
+                  });
+                  return total;
+                })(),
+                currency: 'INR'
+              } : null
+            },
+            summary: {
+              totalServicesSelected: Object.values(selectedServices).reduce((total, journey) => {
+                return total + (journey.seat?.length || 0) + (journey.meals?.length || 0) + 
+                       (journey.baggage?.length || 0) + (journey.priorityBoarding?.filter(Boolean)?.length || 0) + 
+                       (journey.loungeAccess?.filter(Boolean)?.length || 0);
+              }, 0),
+              totalPaidServices: ancillaryTotal > 0 ? 1 : 0,
+              totalFreeServices: ancillaryTotal === 0 ? 1 : 0,
+              categoriesSelected: ['seating', 'dining', 'baggage', 'boarding', 'lounge'].filter(category => {
+                // Check if any services are selected in this category
+                return Object.values(selectedServices).some(journey => {
+                  switch(category) {
+                    case 'seating': return journey.seat?.length > 0;
+                    case 'dining': return journey.meals?.length > 0;
+                    case 'baggage': return journey.baggage?.length > 0;
+                    case 'boarding': return journey.priorityBoarding?.some(Boolean);
+                    case 'lounge': return journey.loungeAccess?.some(Boolean);
+                    default: return false;
+                  }
+                });
+              })
+            }
+          },
+          pricing: {
+            flightTotal,
+            ancillaryTotal,
+            totalAmount,
+            currency: 'INR'
+          },
+          passengersBreakdown: {
+            totalPassengers: travellerDetails.length,
+            adults: travellerDetails.filter(t => !t.dateOfBirth || new Date().getFullYear() - new Date(t.dateOfBirth).getFullYear() >= 12).length,
+            children: travellerDetails.filter(t => t.dateOfBirth && new Date().getFullYear() - new Date(t.dateOfBirth).getFullYear() >= 2 && new Date().getFullYear() - new Date(t.dateOfBirth).getFullYear() < 12).length,
+            infants: travellerDetails.filter(t => t.dateOfBirth && new Date().getFullYear() - new Date(t.dateOfBirth).getFullYear() < 2).length,
+            passengerDetails: travellerDetails.map(traveller => ({
+              firstName: traveller.firstName,
+              lastName: traveller.lastName,
+              email: traveller.email,
+              phone: traveller.phone
+            }))
+          },
+          tripType: selectedFlights.return ? 'roundtrip' : 'oneway',
+          timestamp: new Date().toISOString()
+        });
+      }
 
       navigate('/payment', { state: navigationState });
     } catch (error) {
       console.error('Error in handleProceedToPayment:', error);
-      // Track form validation error
-      trackFormValidation({
-        hasSelectedServices: false,
-        totalServices: 0,
-        validationPassed: false,
-        error: error.message
-      });
     }
   };
 

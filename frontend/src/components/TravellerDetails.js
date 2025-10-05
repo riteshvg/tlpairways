@@ -54,8 +54,8 @@ const TravellerDetails = () => {
   const bookingState = getBookingState();
   const { onwardFlight, returnFlight, tripType, passengers } = bookingState || {};
   
-  // Initialize comprehensive data layer tracking (includes pageView)
-  const { formContext, trackFormFieldInteraction, trackFormValidation, trackFormSubmission } = useTravellerDetailsDataLayer({
+  // Initialize data layer tracking (includes pageView)
+  const { formContext } = useTravellerDetailsDataLayer({
     pageCategory: 'booking',
     bookingStep: 'traveller-details',
     sections: ['passenger-form', 'contact-details', 'special-requests'],
@@ -292,9 +292,6 @@ const TravellerDetails = () => {
       [field]: value
     };
     setTravellers(newTravellers);
-    
-    // Track form field interaction
-    trackFormFieldInteraction(field, value, index + 1);
   };
 
   const validateForm = () => {
@@ -360,23 +357,61 @@ const TravellerDetails = () => {
 
     if (!validateForm()) {
       console.log('Form validation failed');
-      // Track form validation failure
-      trackFormValidation({ 
-        email: validationErrors.email, 
-        phone: validationErrors.phone, 
-        travellers: validationErrors.travellers 
-      });
       return;
     }
 
     try {
-      // Track successful form submission
-      trackFormSubmission({
-        travellers,
-        contactInfo: { email, phone },
-        selectedFlights,
-        passengers
-      });
+      // Track proceed to ancillary services event
+      if (typeof window !== 'undefined' && window.adobeDataLayer) {
+        window.adobeDataLayer.push({
+          event: 'proceedToAncillaryServices',
+          bookingContext: {
+            bookingId: `booking_${Date.now()}_${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+            bookingStep: 'traveller-details',
+            nextStep: 'ancillary-services',
+            bookingStepNumber: 1,
+            totalSteps: 4
+          },
+          selectedFlights: {
+            onward: {
+              flightNumber: selectedFlights.onward.flightNumber,
+              airline: selectedFlights.onward.airline,
+              origin: selectedFlights.onward.origin?.iata_code || selectedFlights.onward.originCode,
+              destination: selectedFlights.onward.destination?.iata_code || selectedFlights.onward.destinationCode,
+              departureTime: selectedFlights.onward.departureTime,
+              price: selectedFlights.onward.price?.amount || 0,
+              cabinClass: selectedFlights.onward.cabinClass
+            },
+            return: selectedFlights.return ? {
+              flightNumber: selectedFlights.return.flightNumber,
+              airline: selectedFlights.return.airline,
+              origin: selectedFlights.return.origin?.iata_code || selectedFlights.return.originCode,
+              destination: selectedFlights.return.destination?.iata_code || selectedFlights.return.destinationCode,
+              departureTime: selectedFlights.return.departureTime,
+              price: selectedFlights.return.price?.amount || 0,
+              cabinClass: selectedFlights.return.cabinClass
+            } : null
+          },
+          passengersBreakdown: {
+            totalPassengers: passengers || travellers.length,
+            adults: passengers?.adult || 1,
+            children: passengers?.child || 0,
+            infants: passengers?.infant || 0,
+            passengerDetails: travellers.map(traveller => ({
+              firstName: traveller.firstName,
+              lastName: traveller.lastName,
+              email: traveller.email,
+              phone: traveller.phone
+            }))
+          },
+          contactInfo: {
+            email,
+            phone
+          },
+          tripType: selectedFlights.return ? 'roundtrip' : 'oneway',
+          timestamp: new Date().toISOString()
+        });
+      }
       // Track passenger details added with proper flight data
       if (selectedFlights?.onward) {
         // Prepare passenger details for analytics
@@ -622,10 +657,7 @@ const TravellerDetails = () => {
                       label="Email"
                       type="email"
                       value={email}
-                      onChange={(e) => {
-                        setEmail(e.target.value);
-                        trackFormFieldInteraction('contact_email', e.target.value);
-                      }}
+                      onChange={(e) => setEmail(e.target.value)}
                       error={!!validationErrors.email}
                       helperText={validationErrors.email}
                       required
@@ -637,10 +669,7 @@ const TravellerDetails = () => {
                       label="Phone Number"
                       type="tel"
                       value={phone}
-                      onChange={(e) => {
-                        setPhone(e.target.value);
-                        trackFormFieldInteraction('contact_phone', e.target.value);
-                      }}
+                      onChange={(e) => setPhone(e.target.value)}
                       error={!!validationErrors.phone}
                       helperText={validationErrors.phone}
                       required

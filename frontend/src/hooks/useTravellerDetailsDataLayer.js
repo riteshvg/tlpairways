@@ -333,117 +333,8 @@ const useTravellerDetailsDataLayer = (pageViewOptions = {}) => {
       console.error('❌ Error initializing Traveller Details Data Layer:', error);
       enhancedAirlinesDataLayer.trackError('traveller-details-initialization', error);
     }
-  }, [location.state, generateBookingId, generateSearchId, formatFlightData, calculatePricing, calculateRouteInfo]);
+  }, [generateBookingId, generateSearchId, formatFlightData, calculatePricing, calculateRouteInfo]);
 
-  // Track form field interactions
-  const trackFormFieldInteraction = useCallback((fieldName, fieldValue, passengerIndex = null) => {
-    try {
-      const fieldData = {
-        event: 'formFieldInteraction',
-        formType: 'traveller-details',
-        fieldName,
-        fieldValue: fieldValue?.toString() || '',
-        passengerIndex,
-        timestamp: new Date().toISOString(),
-        timeOnForm: Date.now() - formStartTime.current
-      };
-
-      // Push directly to Adobe Data Layer
-      if (typeof window !== 'undefined' && window.adobeDataLayer) {
-        window.adobeDataLayer.push(fieldData);
-      }
-
-      // Update form context
-      setFormContext(prev => {
-        const updated = { ...prev };
-        
-        if (passengerIndex !== null) {
-          const passengerKey = `passenger_${passengerIndex}`;
-          if (updated.fields[passengerKey]) {
-            updated.fields[passengerKey] = {
-              ...updated.fields[passengerKey],
-              [fieldName]: fieldValue
-            };
-          }
-        } else if (fieldName.startsWith('contact_')) {
-          const contactField = fieldName.replace('contact_', '');
-          updated.contactInfo[contactField] = fieldValue;
-        }
-
-        // Recalculate progress
-        const totalFields = Object.keys(updated.fields).length * 8 + 2;
-        let completedFields = 0;
-        
-        Object.values(updated.fields).forEach(passenger => {
-          if (passenger.firstName) completedFields++;
-          if (passenger.lastName) completedFields++;
-          if (passenger.dateOfBirth) completedFields++;
-          if (passenger.gender) completedFields++;
-          if (passenger.nationality) completedFields++;
-          if (passenger.passportNumber) completedFields++;
-          if (passenger.passportExpiry) completedFields++;
-          if (passenger.frequentFlyerNumber) completedFields++;
-        });
-
-        if (updated.contactInfo.email) completedFields++;
-        if (updated.contactInfo.phoneNumber) completedFields++;
-
-        updated.formProgress = {
-          ...updated.formProgress,
-          percentComplete: Math.round((completedFields / totalFields) * 100),
-          fieldsCompleted: completedFields,
-          totalRequiredFields: totalFields,
-          timeOnForm: Date.now() - formStartTime.current
-        };
-
-        return updated;
-      });
-
-    } catch (error) {
-      console.error('❌ Error tracking form field interaction:', error);
-    }
-  }, []);
-
-  // Track form validation
-  const trackFormValidation = useCallback((validationResults) => {
-    try {
-      const validationData = {
-        event: 'formValidation',
-        formType: 'traveller-details',
-        validationResults,
-        timestamp: new Date().toISOString(),
-        timeOnForm: Date.now() - formStartTime.current
-      };
-
-      // Push directly to Adobe Data Layer
-      if (typeof window !== 'undefined' && window.adobeDataLayer) {
-        window.adobeDataLayer.push(validationData);
-      }
-    } catch (error) {
-      console.error('❌ Error tracking form validation:', error);
-    }
-  }, []);
-
-  // Track form submission
-  const trackFormSubmission = useCallback((formData) => {
-    try {
-      const submissionData = {
-        event: 'formSubmission',
-        formType: 'traveller-details',
-        formData,
-        timestamp: new Date().toISOString(),
-        timeOnForm: Date.now() - formStartTime.current,
-        formContext
-      };
-
-      // Push directly to Adobe Data Layer
-      if (typeof window !== 'undefined' && window.adobeDataLayer) {
-        window.adobeDataLayer.push(submissionData);
-      }
-    } catch (error) {
-      console.error('❌ Error tracking form submission:', error);
-    }
-  }, [formContext]);
 
   // Initialize data layer on component mount
   useEffect(() => {
@@ -451,10 +342,7 @@ const useTravellerDetailsDataLayer = (pageViewOptions = {}) => {
   }, [initializeTravellerDetailsDataLayer]);
 
   return {
-    formContext,
-    trackFormFieldInteraction,
-    trackFormValidation,
-    trackFormSubmission
+    formContext
   };
 };
 

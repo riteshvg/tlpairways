@@ -190,19 +190,157 @@ const useAncillaryServicesDataLayer = (pageViewOptions = {}) => {
         pricing,
         routeInfo,
         ancillaryServices: {
-          seats: {
-            onward: [],
-            return: []
+          availableServices: {
+            seats: {
+              category: 'seating',
+              type: 'seat_selection',
+              description: 'Choose your preferred seat',
+              pricing: {
+                standard: { price: 0, currency: 'INR', type: 'free' },
+                preferred: { price: 200, currency: 'INR', type: 'paid' },
+                extra_legroom: { price: 300, currency: 'INR', type: 'paid' },
+                exit_row: { price: 500, currency: 'INR', type: 'paid' }
+              },
+              options: {
+                window: { available: true, type: 'free', description: 'Window seat' },
+                aisle: { available: true, type: 'free', description: 'Aisle seat' },
+                middle: { available: true, type: 'free', description: 'Middle seat' }
+              },
+              onward: [],
+              return: []
+            },
+            meals: {
+              category: 'dining',
+              type: 'meal_selection',
+              description: 'Pre-order your meal',
+              pricing: {
+                standard: { price: 0, currency: 'INR', type: 'free' },
+                premium: { price: 500, currency: 'INR', type: 'paid' },
+                special_dietary: { price: 0, currency: 'INR', type: 'free' }
+              },
+              options: {
+                vegetarian: { available: true, type: 'free', description: 'Vegetarian meal' },
+                non_vegetarian: { available: true, type: 'free', description: 'Non-vegetarian meal' },
+                jain: { available: true, type: 'free', description: 'Jain meal' },
+                halal: { available: true, type: 'free', description: 'Halal meal' },
+                kosher: { available: true, type: 'free', description: 'Kosher meal' },
+                child: { available: true, type: 'free', description: 'Child meal' },
+                baby: { available: true, type: 'free', description: 'Baby meal' }
+              },
+              onward: [],
+              return: []
+            },
+            baggage: {
+              category: 'baggage',
+              type: 'baggage_selection',
+              description: 'Add extra baggage allowance',
+              pricing: {
+                included: { price: 0, currency: 'INR', type: 'free' },
+                domestic_extra: { price: 1000, currency: 'INR', type: 'paid' },
+                international_extra: { price: 2000, currency: 'INR', type: 'paid' },
+                sports_equipment: { price: 1000, currency: 'INR', type: 'paid' },
+                musical_instruments: { price: 1000, currency: 'INR', type: 'paid' }
+              },
+              options: {
+                cabin_baggage: { available: true, type: 'free', weight: '7kg', description: 'Cabin baggage' },
+                checked_baggage: { available: true, type: 'free', weight: '15kg', description: 'Checked baggage' },
+                extra_baggage: { available: true, type: 'paid', weight: '23kg', description: 'Extra baggage' },
+                sports_equipment: { available: true, type: 'paid', weight: '32kg', description: 'Sports equipment' },
+                musical_instruments: { available: true, type: 'paid', weight: '32kg', description: 'Musical instruments' }
+              },
+              onward: [],
+              return: []
+            },
+            priority_boarding: {
+              category: 'boarding',
+              type: 'priority_boarding',
+              description: 'Priority boarding access',
+              pricing: {
+                standard: { price: 0, currency: 'INR', type: 'free' },
+                priority: { price: 500, currency: 'INR', type: 'paid' }
+              },
+              options: {
+                standard_boarding: { available: true, type: 'free', description: 'Standard boarding' },
+                priority_boarding: { available: true, type: 'paid', description: 'Priority boarding' }
+              },
+              onward: [],
+              return: []
+            },
+            lounge_access: {
+              category: 'lounge',
+              type: 'lounge_access',
+              description: 'Airport lounge access',
+              pricing: {
+                standard: { price: 0, currency: 'INR', type: 'free' },
+                lounge_access: { price: 1500, currency: 'INR', type: 'paid' }
+              },
+              options: {
+                no_lounge: { available: true, type: 'free', description: 'No lounge access' },
+                lounge_access: { available: true, type: 'paid', description: 'Lounge access' }
+              },
+              onward: [],
+              return: []
+            },
+            insurance: {
+              category: 'insurance',
+              type: 'travel_insurance',
+              description: 'Travel insurance coverage',
+              pricing: {
+                no_insurance: { price: 0, currency: 'INR', type: 'free' },
+                basic: { price: 200, currency: 'INR', type: 'paid' },
+                comprehensive: { price: 500, currency: 'INR', type: 'paid' },
+                premium: { price: 1000, currency: 'INR', type: 'paid' }
+              },
+              options: {
+                no_insurance: { available: true, type: 'free', description: 'No insurance' },
+                basic_insurance: { available: true, type: 'paid', coverage: 'Basic', description: 'Basic travel insurance' },
+                comprehensive_insurance: { available: true, type: 'paid', coverage: 'Comprehensive', description: 'Comprehensive travel insurance' },
+                premium_insurance: { available: true, type: 'paid', coverage: 'Premium', description: 'Premium travel insurance' }
+              },
+              selected: null
+            }
           },
-          meals: {
-            onward: [],
-            return: []
+          selectedServices: {
+            seats: {
+              onward: [],
+              return: []
+            },
+            meals: {
+              onward: [],
+              return: []
+            },
+            baggage: {
+              onward: [],
+              return: []
+            },
+            priority_boarding: {
+              onward: [],
+              return: []
+            },
+            lounge_access: {
+              onward: [],
+              return: []
+            },
+            insurance: null
           },
-          baggage: {
-            onward: [],
-            return: []
+          pricing: {
+            totalAncillaryCost: 0,
+            currency: 'INR',
+            breakdown: {
+              seats: 0,
+              meals: 0,
+              baggage: 0,
+              priority_boarding: 0,
+              lounge_access: 0,
+              insurance: 0
+            }
           },
-          insurance: null
+          summary: {
+            totalServicesSelected: 0,
+            totalPaidServices: 0,
+            totalFreeServices: 0,
+            categoriesSelected: []
+          }
         }
       },
       formContext: {
@@ -232,81 +370,9 @@ const useAncillaryServicesDataLayer = (pageViewOptions = {}) => {
     console.log('✅ Ancillary Services Data Layer initialized:', dataLayerObject);
     console.log('📊 Data layer object pushed to adobeDataLayer:', window.adobeDataLayer);
 
-  }, [location.state, generateBookingId, generateSearchId, generatePNR, formatFlightData, calculatePricing, calculateRouteInfo, isAuthenticated, user, pageViewOptions]);
+  }, [generateBookingId, generateSearchId, generatePNR, formatFlightData, calculatePricing, calculateRouteInfo, isAuthenticated, user, pageViewOptions]);
 
   // Track form field interactions
-  const trackFormFieldInteraction = useCallback((fieldName, fieldValue, fieldType = 'input') => {
-    const interactionData = {
-      event: 'formFieldInteraction',
-      formContext: {
-        formName: 'ancillary-services-form',
-        formStep: 'service-selection',
-        fieldName,
-        fieldValue,
-        fieldType,
-        timestamp: new Date().toISOString()
-      },
-      userContext: {
-        userAuthenticated: isAuthenticated,
-        userId: user?.id || null,
-        sessionId: pageDataLayerManager.getOrCreateSessionId()
-      }
-    };
-
-    if (typeof window !== 'undefined' && window.adobeDataLayer) {
-      window.adobeDataLayer.push(interactionData);
-    }
-
-    console.log('📝 Form field interaction tracked:', interactionData);
-  }, [isAuthenticated, user]);
-
-  // Track form validation
-  const trackFormValidation = useCallback((validationResults) => {
-    const validationData = {
-      event: 'formValidation',
-      formContext: {
-        formName: 'ancillary-services-form',
-        formStep: 'service-selection',
-        validationResults,
-        timestamp: new Date().toISOString()
-      },
-      userContext: {
-        userAuthenticated: isAuthenticated,
-        userId: user?.id || null,
-        sessionId: pageDataLayerManager.getOrCreateSessionId()
-      }
-    };
-
-    if (typeof window !== 'undefined' && window.adobeDataLayer) {
-      window.adobeDataLayer.push(validationData);
-    }
-
-    console.log('✅ Form validation tracked:', validationData);
-  }, [isAuthenticated, user]);
-
-  // Track form submission
-  const trackFormSubmission = useCallback((submissionData) => {
-    const submissionEvent = {
-      event: 'formSubmission',
-      formContext: {
-        formName: 'ancillary-services-form',
-        formStep: 'service-selection',
-        submissionData,
-        timestamp: new Date().toISOString()
-      },
-      userContext: {
-        userAuthenticated: isAuthenticated,
-        userId: user?.id || null,
-        sessionId: pageDataLayerManager.getOrCreateSessionId()
-      }
-    };
-
-    if (typeof window !== 'undefined' && window.adobeDataLayer) {
-      window.adobeDataLayer.push(submissionEvent);
-    }
-
-    console.log('🚀 Form submission tracked:', submissionEvent);
-  }, [isAuthenticated, user]);
 
   // Initialize data layer on component mount
   useEffect(() => {
@@ -314,10 +380,7 @@ const useAncillaryServicesDataLayer = (pageViewOptions = {}) => {
   }, [initializeAncillaryServicesDataLayer]);
 
   return {
-    formContext,
-    trackFormFieldInteraction,
-    trackFormValidation,
-    trackFormSubmission
+    formContext
   };
 };
 
