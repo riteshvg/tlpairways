@@ -1060,18 +1060,18 @@ Price: ₹${seatPrice}`}
           });
         }
 
-        // Meals - only process if meals are actually selected
+        // Meals - only process if meals are actually selected (NON-CHARGEABLE)
         if (selectedServices.onward.meals && selectedServices.onward.meals.length > 0) {
           selectedServices.onward.meals.forEach((meal, index) => {
             if (meal && meal !== null && meal !== '') { // Only process non-empty selections
-              const mealCost = 300; // Default meal cost
+              const mealCost = 0; // Meals are non-chargeable
               ancillaryData.onward.meals.push({
                 passengerIndex: index,
                 mealType: meal,
                 cost: mealCost,
-                revenue: mealCost
+                revenue: 0 // Revenue = 0 for non-chargeable services
               });
-              ancillaryData.onward.totalCost += mealCost;
+              // Don't add to totalCost since meals are free
             }
           });
         }
@@ -1080,14 +1080,20 @@ Price: ₹${seatPrice}`}
         if (selectedServices.onward.baggage && selectedServices.onward.baggage.length > 0) {
           selectedServices.onward.baggage.forEach((baggage, index) => {
             if (baggage && baggage !== null && baggage !== '') { // Only process non-empty selections
-              const baggageCost = 800; // Default baggage cost
+              // Check if baggage is chargeable (not included/free)
+              const isChargeable = baggage !== 'included' && baggage !== 'free';
+              const baggageCost = isChargeable ? 800 : 0; // Only charge for extra baggage
+              
               ancillaryData.onward.baggage.push({
                 passengerIndex: index,
                 baggageType: baggage,
                 cost: baggageCost,
-                revenue: baggageCost
+                revenue: isChargeable ? baggageCost : 0 // Revenue = 0 for free baggage
               });
-              ancillaryData.onward.totalCost += baggageCost;
+              
+              if (isChargeable) {
+                ancillaryData.onward.totalCost += baggageCost;
+              }
             }
           });
         }
@@ -1129,18 +1135,18 @@ Price: ₹${seatPrice}`}
           });
         }
 
-        // Meals - only process if meals are actually selected
+        // Meals - only process if meals are actually selected (NON-CHARGEABLE)
         if (selectedServices.return.meals && selectedServices.return.meals.length > 0) {
           selectedServices.return.meals.forEach((meal, index) => {
             if (meal && meal !== null && meal !== '') { // Only process non-empty selections
-              const mealCost = 300;
+              const mealCost = 0; // Meals are non-chargeable
               ancillaryData.return.meals.push({
                 passengerIndex: index,
                 mealType: meal,
                 cost: mealCost,
-                revenue: mealCost
+                revenue: 0 // Revenue = 0 for non-chargeable services
               });
-              ancillaryData.return.totalCost += mealCost;
+              // Don't add to totalCost since meals are free
             }
           });
         }
@@ -1149,14 +1155,20 @@ Price: ₹${seatPrice}`}
         if (selectedServices.return.baggage && selectedServices.return.baggage.length > 0) {
           selectedServices.return.baggage.forEach((baggage, index) => {
             if (baggage && baggage !== null && baggage !== '') { // Only process non-empty selections
-              const baggageCost = 800;
+              // Check if baggage is chargeable (not included/free)
+              const isChargeable = baggage !== 'included' && baggage !== 'free';
+              const baggageCost = isChargeable ? 800 : 0; // Only charge for extra baggage
+              
               ancillaryData.return.baggage.push({
                 passengerIndex: index,
                 baggageType: baggage,
                 cost: baggageCost,
-                revenue: baggageCost
+                revenue: isChargeable ? baggageCost : 0 // Revenue = 0 for free baggage
               });
-              ancillaryData.return.totalCost += baggageCost;
+              
+              if (isChargeable) {
+                ancillaryData.return.totalCost += baggageCost;
+              }
             }
           });
         }
