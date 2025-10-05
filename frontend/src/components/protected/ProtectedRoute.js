@@ -27,8 +27,19 @@ const ProtectedRoute = ({ children, requireAuth = true }) => {
 
   // If authentication is required but user is not authenticated
   if (requireAuth && !isAuthenticated) {
-    // Store the current path for redirect after login
+    // Store the current path and state for redirect after login
     const currentPath = location.pathname + location.search;
+    const currentState = location.state;
+    
+    // Store both path and state for booking-related pages
+    const redirectData = {
+      path: currentPath,
+      state: currentState
+    };
+    
+    // Store in sessionStorage for persistence across auth redirect
+    sessionStorage.setItem('auth_redirect_data', JSON.stringify(redirectData));
+    
     login(currentPath);
     return null; // Don't render anything while redirecting
   }

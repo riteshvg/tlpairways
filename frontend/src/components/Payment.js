@@ -42,7 +42,28 @@ const Payment = () => {
     sections: ['payment-form', 'price-breakdown', 'security-info']
   });
 
-  // Extract all required data from location state with defaults
+  // Get state from location or restored from sessionStorage
+  const getBookingState = () => {
+    if (location.state) {
+      return location.state;
+    }
+    
+    // Try to restore from sessionStorage (after auth redirect)
+    const restoredState = sessionStorage.getItem('restored_booking_state');
+    if (restoredState) {
+      try {
+        return JSON.parse(restoredState);
+      } catch (error) {
+        console.error('Error parsing restored booking state:', error);
+      }
+    }
+    
+    return null;
+  };
+
+  const bookingState = getBookingState();
+
+  // Extract all required data from booking state with defaults
   const { 
     selectedFlights: initialFlights,
     travellerDetails: initialTravellerDetails = [],
@@ -53,7 +74,7 @@ const Payment = () => {
     totalAmount: initialTotalAmount = 0,
     paymentType: initialPaymentType = 'oneway',
     cabinClass: initialCabinClass = 'economy'
-  } = location.state || {};
+  } = bookingState || {};
 
   // State management
   const [selectedFlights, setSelectedFlights] = useState(initialFlights || {
@@ -88,8 +109,13 @@ const Payment = () => {
 
   // Initialize component and track page view
   useEffect(() => {
-    if (location.state) {
-      const { previousPage } = location.state;
+    if (bookingState) {
+      // Clear restored state after using it
+      if (!location.state && sessionStorage.getItem('restored_booking_state')) {
+        sessionStorage.removeItem('restored_booking_state');
+      }
+      
+      const { previousPage } = bookingState;
       
       // Track page view with complete booking details
       // analytics.pageView('Payment', previousPage, {
@@ -111,9 +137,13 @@ const Payment = () => {
         ancillaryTotal,
         totalAmount
       });
+    } else {
+      console.error('No booking state found in location or sessionStorage');
+      console.error('Redirecting to search due to missing state');
+      navigate('/search');
     }
-  }, [location.state, selectedFlights, travellerDetails, contactInfo, selectedServices, 
-      flightTotal, ancillaryTotal, totalAmount, paymentType, cabinClass]);
+  }, [bookingState, selectedFlights, travellerDetails, contactInfo, selectedServices, 
+      flightTotal, ancillaryTotal, totalAmount, paymentType, cabinClass, navigate]);
 
   const validateForm = () => {
     const errors = {};

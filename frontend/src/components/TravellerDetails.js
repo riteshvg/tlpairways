@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import usePageView from '../hooks/usePageView';
+import useTravellerDetailsDataLayer from '../hooks/useTravellerDetailsDataLayer';
 import {
   Container,
   Paper,
@@ -31,10 +32,30 @@ const TravellerDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { onwardFlight, returnFlight, tripType, passengers } = location.state || {};
+  // Get state from location or restored from sessionStorage
+  const getBookingState = () => {
+    if (location.state) {
+      return location.state;
+    }
+    
+    // Try to restore from sessionStorage (after auth redirect)
+    const restoredState = sessionStorage.getItem('restored_booking_state');
+    if (restoredState) {
+      try {
+        return JSON.parse(restoredState);
+      } catch (error) {
+        console.error('Error parsing restored booking state:', error);
+      }
+    }
+    
+    return null;
+  };
+
+  const bookingState = getBookingState();
+  const { onwardFlight, returnFlight, tripType, passengers } = bookingState || {};
   
-  // Track page view with traveller details-specific context
-  usePageView({
+  // Initialize data layer tracking (includes pageView)
+  const { formContext } = useTravellerDetailsDataLayer({
     pageCategory: 'booking',
     bookingStep: 'traveller-details',
     sections: ['passengerForm', 'contactDetails', 'specialRequests'],
@@ -74,8 +95,9 @@ const TravellerDetails = () => {
   ]);
 
   const [selectedFlights, setSelectedFlights] = useState(() => {
-    if (location.state) {
-      const { onwardFlight, returnFlight } = location.state;
+    const state = getBookingState();
+    if (state) {
+      const { onwardFlight, returnFlight } = state;
       
       // Helper function to get price based on cabin class
       const getPriceForCabinClass = (flight) => {
@@ -122,8 +144,15 @@ const TravellerDetails = () => {
     }
     return { onward: null, return: null };
   });
-  const [passengerCount, setPassengerCount] = useState(passengers);
-  const [paymentType, setPaymentType] = useState(tripType === 'roundtrip' ? 'roundtrip' : 'oneway');
+  const [passengerCount, setPassengerCount] = useState(() => {
+    const state = getBookingState();
+    return state?.passengers || passengers;
+  });
+  const [paymentType, setPaymentType] = useState(() => {
+    const state = getBookingState();
+    const tripTypeFromState = state?.tripType || tripType;
+    return tripTypeFromState === 'roundtrip' ? 'roundtrip' : 'oneway';
+  });
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
 
@@ -162,15 +191,20 @@ const TravellerDetails = () => {
     });
     
     try {
-      if (!location.state) {
-        console.error('No state found in location');
+      // Check if we have valid booking state
+      if (!bookingState) {
+        console.error('No booking state found');
         setSnackbar({
           open: true,
           message: 'No flight data found. Please search for flights again.',
           severity: 'error'
         });
         navigate('/search');
+        return;
       }
+      
+      console.log('Using booking state:', bookingState);
+      
     } catch (error) {
       console.error('Error initializing state:', error);
       setSnackbar({
@@ -180,7 +214,7 @@ const TravellerDetails = () => {
       });
       navigate('/search');
     }
-  }, [location.state, navigate, onwardFlight, returnFlight, passengers, tripType]);
+  }, [bookingState, navigate]);
 
   // Add a new useEffect to monitor selectedFlights changes
   useEffect(() => {
@@ -327,6 +361,57 @@ const TravellerDetails = () => {
     }
 
     try {
+      // Track proceed to ancillary services event
+      if (typeof window !== 'undefined' && window.adobeDataLayer) {
+        window.adobeDataLayer.push({
+          event: 'proceedToAncillaryServices',
+          bookingContext: {
+            bookingId: `booking_${Date.now()}_${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+            bookingStep: 'traveller-details',
+            nextStep: 'ancillary-services',
+            bookingStepNumber: 1,
+            totalSteps: 4
+          },
+          selectedFlights: {
+            onward: {
+              flightNumber: selectedFlights.onward.flightNumber,
+              airline: selectedFlights.onward.airline,
+              origin: selectedFlights.onward.origin?.iata_code || selectedFlights.onward.originCode,
+              destination: selectedFlights.onward.destination?.iata_code || selectedFlights.onward.destinationCode,
+              departureTime: selectedFlights.onward.departureTime,
+              price: selectedFlights.onward.price?.amount || 0,
+              cabinClass: selectedFlights.onward.cabinClass
+            },
+            return: selectedFlights.return ? {
+              flightNumber: selectedFlights.return.flightNumber,
+              airline: selectedFlights.return.airline,
+              origin: selectedFlights.return.origin?.iata_code || selectedFlights.return.originCode,
+              destination: selectedFlights.return.destination?.iata_code || selectedFlights.return.destinationCode,
+              departureTime: selectedFlights.return.departureTime,
+              price: selectedFlights.return.price?.amount || 0,
+              cabinClass: selectedFlights.return.cabinClass
+            } : null
+          },
+          passengersBreakdown: {
+            totalPassengers: passengers || travellers.length,
+            adults: passengers?.adult || 1,
+            children: passengers?.child || 0,
+            infants: passengers?.infant || 0,
+            passengerDetails: travellers.map(traveller => ({
+              firstName: traveller.firstName,
+              lastName: traveller.lastName,
+              email: traveller.email,
+              phone: traveller.phone
+            }))
+          },
+          contactInfo: {
+            email,
+            phone
+          },
+          tripType: selectedFlights.return ? 'roundtrip' : 'oneway',
+          timestamp: new Date().toISOString()
+        });
+      }
       // Track passenger details added with proper flight data
       if (selectedFlights?.onward) {
         // Prepare passenger details for analytics
@@ -369,21 +454,42 @@ const TravellerDetails = () => {
         });
       }
 
+      // Convert all prices to INR for booking confirmation
+      const convertToINR = (flight) => {
+        if (!flight) return null;
+        
+        // Get the price for the selected cabin class
+        const cabinClassPrice = flight.displayPrices?.[flight.cabinClass] || flight.price?.amount || 0;
+        
+        // Convert to INR if not already in INR
+        let inrPrice = cabinClassPrice;
+        if (flight.displayCurrency && flight.displayCurrency !== 'INR') {
+          inrPrice = Math.round(CURRENCY_CONFIG.convertPrice(cabinClassPrice, flight.displayCurrency, 'INR'));
+        }
+        
+        return {
+          ...flight,
+          price: {
+            amount: inrPrice,
+            currency: 'INR'
+          },
+          originalDisplayPrice: cabinClassPrice,
+          originalDisplayCurrency: flight.displayCurrency,
+          cabinClass: flight.cabinClass
+        };
+      };
+
       const navigationState = {
         selectedFlights: {
           onward: {
-            ...selectedFlights.onward,
+            ...convertToINR(selectedFlights.onward),
             originCode: selectedFlights.onward.origin?.iata_code || selectedFlights.onward.originCode,
             destinationCode: selectedFlights.onward.destination?.iata_code || selectedFlights.onward.destinationCode,
-            price: selectedFlights.onward.price,
-            cabinClass: selectedFlights.onward.cabinClass
           },
           return: selectedFlights.return ? {
-            ...selectedFlights.return,
+            ...convertToINR(selectedFlights.return),
             originCode: selectedFlights.return.origin?.iata_code || selectedFlights.return.originCode,
             destinationCode: selectedFlights.return.destination?.iata_code || selectedFlights.return.destinationCode,
-            price: selectedFlights.return.price,
-            cabinClass: selectedFlights.return.cabinClass
           } : null
         },
         travellerDetails: filledTravellers,

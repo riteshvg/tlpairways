@@ -138,7 +138,7 @@ const SearchResults = () => {
     }
   }, [location.state]);
 
-  const getMatchingFlights = (origin, destination, searchDate, cabinClass) => {
+  const getMatchingFlights = (origin, destination, searchDate, cabinClass, searchOrigin = null) => {
     if (!origin || !destination || !searchDate || !cabinClass) return [];
 
     try {
@@ -149,6 +149,13 @@ const SearchResults = () => {
 
       // Get all flights for the route
       const allFlights = [...routeData.onward, ...routeData.return];
+      
+      // Determine currency based on search origin (not individual flight origin)
+      // Use searchOrigin if provided (for return flights), otherwise use origin
+      const currencyOrigin = searchOrigin || origin;
+      const searchOriginAirport = findAirportByCode(currencyOrigin);
+      const searchOriginCountry = searchOriginAirport?.country || 'India';
+      const searchDisplayCurrency = CURRENCY_CONFIG.getCurrencyForCountry(searchOriginCountry);
       
       return allFlights
         .filter(flight => {
@@ -197,15 +204,15 @@ const SearchResults = () => {
       // Check if this is an international flight
       const isInternational = CURRENCY_CONFIG.isInternationalFlight(originCountry, destCountry);
       
-      // Determine display currency - for international flights, always show USD
-      const displayCurrency = isInternational ? 'USD' : 'INR';
+      // Use search origin currency for all flights (both onward and return)
+      const displayCurrency = searchDisplayCurrency;
       
       // Convert prices for display (keep original INR prices in backend)
           const displayPrices = {};
           Object.keys(prices).forEach(className => {
-            if (isInternational) {
-              // Convert INR to USD for display
-              displayPrices[className] = Math.round(prices[className] / CURRENCY_CONFIG.defaultExchangeRate);
+            if (displayCurrency !== 'INR') {
+              // Convert INR to target currency for display
+              displayPrices[className] = Math.round(CURRENCY_CONFIG.convertPrice(prices[className], 'INR', displayCurrency));
             } else {
               displayPrices[className] = prices[className];
             }
@@ -254,7 +261,8 @@ const SearchResults = () => {
             searchParams.destinationCode,
             searchParams.originCode,
             searchParams.returnDate,
-            searchParams.cabinClass
+            searchParams.cabinClass,
+            searchParams.originCode // Pass search origin to maintain currency consistency
           );
           setReturnFlights(returnMatchingFlights);
         } else {
