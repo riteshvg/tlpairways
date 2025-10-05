@@ -101,7 +101,7 @@ describe('AirlinesDataLayer Class', () => {
 
     expect(mockAdobeDataLayer).toHaveLength(1);
     expect(mockAdobeDataLayer[0]).toMatchObject({
-      event: 'hero-banner-interaction',
+      event: 'heroBannerInteraction',
       eventData: {
         interactionType: 'click',
         bannerId: 'hero-banner-1',
@@ -123,7 +123,7 @@ describe('AirlinesDataLayer Class', () => {
 
     expect(mockAdobeDataLayer).toHaveLength(1);
     expect(mockAdobeDataLayer[0]).toMatchObject({
-      event: 'promotional-banner-click',
+      event: 'promotionalBannerClick',
       eventData: {
         bannerId: 'summer-sale',
         bannerTitle: 'Summer Sale',

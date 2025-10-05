@@ -37,7 +37,7 @@ class EnhancedSearchResultsDataLayer {
     }
 
     const abandonmentEvent = {
-      event: 'search-abandonment',
+      event: 'searchAbandonment',
       searchId: this.searchId,
       searchDuration: this.searchStartTime ? 
         Date.now() - this.searchStartTime.getTime() : 0,
@@ -66,7 +66,7 @@ class EnhancedSearchResultsDataLayer {
     }
 
     const completionEvent = {
-      event: 'search-completion',
+      event: 'searchCompletion',
       searchId: this.searchId,
       searchDuration: this.searchStartTime ? 
         Date.now() - this.searchStartTime.getTime() : 0,
@@ -95,7 +95,7 @@ class EnhancedSearchResultsDataLayer {
     }
 
     const interactionEvent = {
-      event: 'search-interaction',
+      event: 'searchInteraction',
       searchId: this.searchId,
       timestamp: new Date().toISOString(),
       ...interactionData

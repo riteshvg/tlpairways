@@ -53,7 +53,7 @@ describe('AirlinesDataLayer Class', () => {
     });
 
     test('should not override existing adobeDataLayer', () => {
-      const existingDataLayer = [{ event: 'existing-event' }];
+      const existingDataLayer = [{ event: 'existingEvent' }];
       window.adobeDataLayer = existingDataLayer;
       new AirlinesDataLayer();
       expect(window.adobeDataLayer).toBe(existingDataLayer);
@@ -147,7 +147,7 @@ describe('AirlinesDataLayer Class', () => {
 
       expect(mockAdobeDataLayer).toHaveLength(1);
       expect(mockAdobeDataLayer[0]).toMatchObject({
-        event: 'hero-banner-interaction',
+        event: 'heroBannerInteraction',
         eventData: {
           interactionType: 'click',
           bannerId: 'hero-banner-1',
