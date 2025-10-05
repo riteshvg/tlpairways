@@ -32,7 +32,27 @@ const TravellerDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { onwardFlight, returnFlight, tripType, passengers } = location.state || {};
+  // Get state from location or restored from sessionStorage
+  const getBookingState = () => {
+    if (location.state) {
+      return location.state;
+    }
+    
+    // Try to restore from sessionStorage (after auth redirect)
+    const restoredState = sessionStorage.getItem('restored_booking_state');
+    if (restoredState) {
+      try {
+        return JSON.parse(restoredState);
+      } catch (error) {
+        console.error('Error parsing restored booking state:', error);
+      }
+    }
+    
+    return null;
+  };
+
+  const bookingState = getBookingState();
+  const { onwardFlight, returnFlight, tripType, passengers } = bookingState || {};
   
   // Initialize comprehensive data layer tracking (includes pageView)
   const { formContext, trackFormFieldInteraction, trackFormValidation, trackFormSubmission } = useTravellerDetailsDataLayer({
@@ -75,8 +95,9 @@ const TravellerDetails = () => {
   ]);
 
   const [selectedFlights, setSelectedFlights] = useState(() => {
-    if (location.state) {
-      const { onwardFlight, returnFlight } = location.state;
+    const state = getBookingState();
+    if (state) {
+      const { onwardFlight, returnFlight } = state;
       
       // Helper function to get price based on cabin class
       const getPriceForCabinClass = (flight) => {
@@ -123,8 +144,15 @@ const TravellerDetails = () => {
     }
     return { onward: null, return: null };
   });
-  const [passengerCount, setPassengerCount] = useState(passengers);
-  const [paymentType, setPaymentType] = useState(tripType === 'roundtrip' ? 'roundtrip' : 'oneway');
+  const [passengerCount, setPassengerCount] = useState(() => {
+    const state = getBookingState();
+    return state?.passengers || passengers;
+  });
+  const [paymentType, setPaymentType] = useState(() => {
+    const state = getBookingState();
+    const tripTypeFromState = state?.tripType || tripType;
+    return tripTypeFromState === 'roundtrip' ? 'roundtrip' : 'oneway';
+  });
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
 
@@ -163,15 +191,20 @@ const TravellerDetails = () => {
     });
     
     try {
-      if (!location.state) {
-        console.error('No state found in location');
+      // Check if we have valid booking state
+      if (!bookingState) {
+        console.error('No booking state found');
         setSnackbar({
           open: true,
           message: 'No flight data found. Please search for flights again.',
           severity: 'error'
         });
         navigate('/search');
+        return;
       }
+      
+      console.log('Using booking state:', bookingState);
+      
     } catch (error) {
       console.error('Error initializing state:', error);
       setSnackbar({
@@ -181,7 +214,7 @@ const TravellerDetails = () => {
       });
       navigate('/search');
     }
-  }, [location.state, navigate, onwardFlight, returnFlight, passengers, tripType]);
+  }, [bookingState, navigate]);
 
   // Add a new useEffect to monitor selectedFlights changes
   useEffect(() => {

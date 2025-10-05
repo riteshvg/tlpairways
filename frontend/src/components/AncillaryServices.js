@@ -93,13 +93,31 @@ const AncillaryServices = () => {
     console.log('Location state:', location.state);
     
     try {
-      if (location.state) {
-  const {
+      // Get state from location or restored from sessionStorage
+      let bookingState = location.state;
+      
+      if (!bookingState) {
+        // Try to restore state from sessionStorage (after auth redirect)
+        const restoredState = sessionStorage.getItem('restored_booking_state');
+        if (restoredState) {
+          try {
+            bookingState = JSON.parse(restoredState);
+            console.log('Restored booking state from sessionStorage:', bookingState);
+            // Clear the restored state after using it
+            sessionStorage.removeItem('restored_booking_state');
+          } catch (parseError) {
+            console.error('Error parsing restored booking state:', parseError);
+          }
+        }
+      }
+      
+      if (bookingState) {
+        const {
           selectedFlights: initialFlights,
           travellerDetails: initialTravellerDetails,
           contactInfo: initialContactInfo,
           paymentType: initialPaymentType
-        } = location.state;
+        } = bookingState;
 
         console.log('AncillaryServices received state:', {
           initialFlights,
@@ -174,7 +192,7 @@ const AncillaryServices = () => {
         //   paymentType: initialPaymentType
         // });
       } else {
-        console.error('No state found in location');
+        console.error('No booking state found in location or sessionStorage');
         console.error('Redirecting to search due to missing state');
         navigate('/search');
       }

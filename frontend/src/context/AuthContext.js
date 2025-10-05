@@ -91,10 +91,33 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     if (isAuthenticated && !isLoading && !isLoadingProfile) {
       const returnTo = sessionStorage.getItem('auth_return_to');
+      const redirectData = sessionStorage.getItem('auth_redirect_data');
+      
       if (returnTo) {
         // Clear the stored return path
         sessionStorage.removeItem('auth_return_to');
-        // Redirect to the intended destination
+        
+        // Check if we have booking state to restore
+        if (redirectData) {
+          try {
+            const { path, state } = JSON.parse(redirectData);
+            sessionStorage.removeItem('auth_redirect_data');
+            
+            // Store the booking state for the target component to use
+            if (state && (path.includes('/traveller-details') || path.includes('/ancillary-services') || path.includes('/payment'))) {
+              sessionStorage.setItem('restored_booking_state', JSON.stringify(state));
+            }
+            
+            // Redirect to the intended destination
+            window.location.href = path;
+            return;
+          } catch (error) {
+            console.error('Error parsing redirect data:', error);
+            sessionStorage.removeItem('auth_redirect_data');
+          }
+        }
+        
+        // Fallback to simple redirect
         window.location.href = returnTo;
       }
     }
