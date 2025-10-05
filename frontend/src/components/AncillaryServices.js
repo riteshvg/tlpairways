@@ -1034,12 +1034,12 @@ Price: ₹${seatPrice}`}
         }
       };
 
-      // Process onward journey ancillaries
+      // Process onward journey ancillaries - only include actually selected services
       if (selectedServices.onward) {
-        // Seats
+        // Seats - only process if seats are actually selected
         if (selectedServices.onward.seat && selectedServices.onward.seat.length > 0) {
           selectedServices.onward.seat.forEach((seat, index) => {
-            if (seat) {
+            if (seat && seat !== null && seat !== '') { // Only process non-empty selections
               const row = parseInt(seat);
               const seatType = seat.slice(-1);
               const isPremiumRow = row <= 5;
@@ -1060,10 +1060,10 @@ Price: ₹${seatPrice}`}
           });
         }
 
-        // Meals
-        if (selectedServices.onward.meal && selectedServices.onward.meal.length > 0) {
-          selectedServices.onward.meal.forEach((meal, index) => {
-            if (meal) {
+        // Meals - only process if meals are actually selected
+        if (selectedServices.onward.meals && selectedServices.onward.meals.length > 0) {
+          selectedServices.onward.meals.forEach((meal, index) => {
+            if (meal && meal !== null && meal !== '') { // Only process non-empty selections
               const mealCost = 300; // Default meal cost
               ancillaryData.onward.meals.push({
                 passengerIndex: index,
@@ -1076,10 +1076,10 @@ Price: ₹${seatPrice}`}
           });
         }
 
-        // Baggage
+        // Baggage - only process if baggage is actually selected
         if (selectedServices.onward.baggage && selectedServices.onward.baggage.length > 0) {
           selectedServices.onward.baggage.forEach((baggage, index) => {
-            if (baggage) {
+            if (baggage && baggage !== null && baggage !== '') { // Only process non-empty selections
               const baggageCost = 800; // Default baggage cost
               ancillaryData.onward.baggage.push({
                 passengerIndex: index,
@@ -1092,8 +1092,8 @@ Price: ₹${seatPrice}`}
           });
         }
 
-        // Insurance
-        if (selectedServices.onward.insurance) {
+        // Insurance - only process if insurance is actually selected
+        if (selectedServices.onward.insurance && selectedServices.onward.insurance !== null && selectedServices.onward.insurance !== '') {
           const insuranceCost = 200; // Default insurance cost
           ancillaryData.onward.insurance = {
             cost: insuranceCost,
@@ -1103,12 +1103,12 @@ Price: ₹${seatPrice}`}
         }
       }
 
-      // Process return journey ancillaries (if round trip)
+      // Process return journey ancillaries (if round trip) - only include actually selected services
       if (selectedServices.return) {
-        // Seats
+        // Seats - only process if seats are actually selected
         if (selectedServices.return.seat && selectedServices.return.seat.length > 0) {
           selectedServices.return.seat.forEach((seat, index) => {
-            if (seat) {
+            if (seat && seat !== null && seat !== '') { // Only process non-empty selections
               const row = parseInt(seat);
               const seatType = seat.slice(-1);
               const isPremiumRow = row <= 5;
@@ -1129,10 +1129,10 @@ Price: ₹${seatPrice}`}
           });
         }
 
-        // Meals
-        if (selectedServices.return.meal && selectedServices.return.meal.length > 0) {
-          selectedServices.return.meal.forEach((meal, index) => {
-            if (meal) {
+        // Meals - only process if meals are actually selected
+        if (selectedServices.return.meals && selectedServices.return.meals.length > 0) {
+          selectedServices.return.meals.forEach((meal, index) => {
+            if (meal && meal !== null && meal !== '') { // Only process non-empty selections
               const mealCost = 300;
               ancillaryData.return.meals.push({
                 passengerIndex: index,
@@ -1145,10 +1145,10 @@ Price: ₹${seatPrice}`}
           });
         }
 
-        // Baggage
+        // Baggage - only process if baggage is actually selected
         if (selectedServices.return.baggage && selectedServices.return.baggage.length > 0) {
           selectedServices.return.baggage.forEach((baggage, index) => {
-            if (baggage) {
+            if (baggage && baggage !== null && baggage !== '') { // Only process non-empty selections
               const baggageCost = 800;
               ancillaryData.return.baggage.push({
                 passengerIndex: index,
@@ -1161,8 +1161,8 @@ Price: ₹${seatPrice}`}
           });
         }
 
-        // Insurance
-        if (selectedServices.return.insurance) {
+        // Insurance - only process if insurance is actually selected
+        if (selectedServices.return.insurance && selectedServices.return.insurance !== null && selectedServices.return.insurance !== '') {
           const insuranceCost = 200;
           ancillaryData.return.insurance = {
             cost: insuranceCost,
@@ -1177,6 +1177,13 @@ Price: ₹${seatPrice}`}
 
     const ancillaryData = prepareAncillaryData();
     const totalRevenue = ancillaryData.onward.totalCost + ancillaryData.return.totalCost;
+
+    // DEBUG: Log selected services and revenue calculation
+    console.log('🔍 DEBUG - Selected Services:', selectedServices);
+    console.log('🔍 DEBUG - Ancillary Data:', ancillaryData);
+    console.log('🔍 DEBUG - Total Revenue:', totalRevenue);
+    console.log('🔍 DEBUG - Onward Total Cost:', ancillaryData.onward.totalCost);
+    console.log('🔍 DEBUG - Return Total Cost:', ancillaryData.return.totalCost);
 
     // Fire proceedToPayment event
     const proceedToPaymentEvent = {
