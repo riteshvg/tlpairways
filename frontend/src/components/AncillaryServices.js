@@ -1123,7 +1123,7 @@ Price: ₹${seatPrice}`}
         if (selectedServices.onward.loungeAccess && selectedServices.onward.loungeAccess.length > 0) {
           selectedServices.onward.loungeAccess.forEach((loungeAccess, index) => {
             if (loungeAccess === true) { // Only process if selected
-              const loungeAccessCost = 1000; // Lounge access cost
+              const loungeAccessCost = 1500; // Lounge access cost (matches UI)
               
               ancillaryData.onward.loungeAccess = ancillaryData.onward.loungeAccess || [];
               ancillaryData.onward.loungeAccess.push({
@@ -1222,7 +1222,7 @@ Price: ₹${seatPrice}`}
         if (selectedServices.return.loungeAccess && selectedServices.return.loungeAccess.length > 0) {
           selectedServices.return.loungeAccess.forEach((loungeAccess, index) => {
             if (loungeAccess === true) { // Only process if selected
-              const loungeAccessCost = 1000; // Lounge access cost
+              const loungeAccessCost = 1500; // Lounge access cost (matches UI)
               
               ancillaryData.return.loungeAccess = ancillaryData.return.loungeAccess || [];
               ancillaryData.return.loungeAccess.push({
