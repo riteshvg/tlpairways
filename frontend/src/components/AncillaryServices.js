@@ -1015,6 +1015,212 @@ Price: ₹${seatPrice}`}
       selectedFlights
     });
 
+    // Prepare ancillary services data for proceedToPayment event
+    const prepareAncillaryData = () => {
+      const ancillaryData = {
+        onward: {
+          seats: [],
+          meals: [],
+          baggage: [],
+          insurance: null,
+          totalCost: 0
+        },
+        return: {
+          seats: [],
+          meals: [],
+          baggage: [],
+          insurance: null,
+          totalCost: 0
+        }
+      };
+
+      // Process onward journey ancillaries
+      if (selectedServices.onward) {
+        // Seats
+        if (selectedServices.onward.seat && selectedServices.onward.seat.length > 0) {
+          selectedServices.onward.seat.forEach((seat, index) => {
+            if (seat) {
+              const row = parseInt(seat);
+              const seatType = seat.slice(-1);
+              const isPremiumRow = row <= 5;
+              const isWindowSeat = seatType === 'W';
+              const seatPrice = (isPremiumRow || isWindowSeat) ? 500 : 100;
+              
+              ancillaryData.onward.seats.push({
+                passengerIndex: index,
+                seatNumber: seat,
+                seatType: seatType,
+                isPremiumRow: isPremiumRow,
+                isWindowSeat: isWindowSeat,
+                cost: seatPrice,
+                revenue: seatPrice // Revenue = cost for paid services
+              });
+              ancillaryData.onward.totalCost += seatPrice;
+            }
+          });
+        }
+
+        // Meals
+        if (selectedServices.onward.meal && selectedServices.onward.meal.length > 0) {
+          selectedServices.onward.meal.forEach((meal, index) => {
+            if (meal) {
+              const mealCost = 300; // Default meal cost
+              ancillaryData.onward.meals.push({
+                passengerIndex: index,
+                mealType: meal,
+                cost: mealCost,
+                revenue: mealCost
+              });
+              ancillaryData.onward.totalCost += mealCost;
+            }
+          });
+        }
+
+        // Baggage
+        if (selectedServices.onward.baggage && selectedServices.onward.baggage.length > 0) {
+          selectedServices.onward.baggage.forEach((baggage, index) => {
+            if (baggage) {
+              const baggageCost = 800; // Default baggage cost
+              ancillaryData.onward.baggage.push({
+                passengerIndex: index,
+                baggageType: baggage,
+                cost: baggageCost,
+                revenue: baggageCost
+              });
+              ancillaryData.onward.totalCost += baggageCost;
+            }
+          });
+        }
+
+        // Insurance
+        if (selectedServices.onward.insurance) {
+          const insuranceCost = 200; // Default insurance cost
+          ancillaryData.onward.insurance = {
+            cost: insuranceCost,
+            revenue: insuranceCost
+          };
+          ancillaryData.onward.totalCost += insuranceCost;
+        }
+      }
+
+      // Process return journey ancillaries (if round trip)
+      if (selectedServices.return) {
+        // Seats
+        if (selectedServices.return.seat && selectedServices.return.seat.length > 0) {
+          selectedServices.return.seat.forEach((seat, index) => {
+            if (seat) {
+              const row = parseInt(seat);
+              const seatType = seat.slice(-1);
+              const isPremiumRow = row <= 5;
+              const isWindowSeat = seatType === 'W';
+              const seatPrice = (isPremiumRow || isWindowSeat) ? 500 : 100;
+              
+              ancillaryData.return.seats.push({
+                passengerIndex: index,
+                seatNumber: seat,
+                seatType: seatType,
+                isPremiumRow: isPremiumRow,
+                isWindowSeat: isWindowSeat,
+                cost: seatPrice,
+                revenue: seatPrice
+              });
+              ancillaryData.return.totalCost += seatPrice;
+            }
+          });
+        }
+
+        // Meals
+        if (selectedServices.return.meal && selectedServices.return.meal.length > 0) {
+          selectedServices.return.meal.forEach((meal, index) => {
+            if (meal) {
+              const mealCost = 300;
+              ancillaryData.return.meals.push({
+                passengerIndex: index,
+                mealType: meal,
+                cost: mealCost,
+                revenue: mealCost
+              });
+              ancillaryData.return.totalCost += mealCost;
+            }
+          });
+        }
+
+        // Baggage
+        if (selectedServices.return.baggage && selectedServices.return.baggage.length > 0) {
+          selectedServices.return.baggage.forEach((baggage, index) => {
+            if (baggage) {
+              const baggageCost = 800;
+              ancillaryData.return.baggage.push({
+                passengerIndex: index,
+                baggageType: baggage,
+                cost: baggageCost,
+                revenue: baggageCost
+              });
+              ancillaryData.return.totalCost += baggageCost;
+            }
+          });
+        }
+
+        // Insurance
+        if (selectedServices.return.insurance) {
+          const insuranceCost = 200;
+          ancillaryData.return.insurance = {
+            cost: insuranceCost,
+            revenue: insuranceCost
+          };
+          ancillaryData.return.totalCost += insuranceCost;
+        }
+      }
+
+      return ancillaryData;
+    };
+
+    const ancillaryData = prepareAncillaryData();
+    const totalRevenue = ancillaryData.onward.totalCost + ancillaryData.return.totalCost;
+
+    // Fire proceedToPayment event
+    const proceedToPaymentEvent = {
+      event: 'proceedToPayment',
+      pageData: {
+        pageType: 'ancillary-services',
+        pageName: 'Ancillary Services - TLP Airways',
+        pageURL: window.location.href,
+        timestamp: new Date().toISOString()
+      },
+      bookingContext: {
+        bookingId: `booking_${Date.now()}_${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+        pnr: `PNR${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+        bookingStep: 'ancillary-services',
+        tripType: selectedFlights.return ? 'roundtrip' : 'oneway',
+        passengerCount: travellerDetails?.length || 1
+      },
+      ancillaryServices: ancillaryData,
+      revenue: {
+        totalRevenue: totalRevenue,
+        flightRevenue: flightTotal,
+        ancillaryRevenue: totalRevenue,
+        currency: 'INR'
+      },
+      payment: {
+        totalAmount: totalAmount,
+        flightAmount: flightTotal,
+        ancillaryAmount: ancillaryTotal,
+        currency: 'INR',
+        paymentMethod: 'pending'
+      },
+      userContext: {
+        sessionId: sessionStorage.getItem('tlp_session_id') || `session_${Date.now()}`,
+        timestamp: new Date().toISOString()
+      }
+    };
+
+    // Push to Adobe Data Layer
+    if (typeof window !== 'undefined' && window.adobeDataLayer) {
+      window.adobeDataLayer.push(proceedToPaymentEvent);
+    }
+
+    console.log('✅ Proceed to Payment event fired:', proceedToPaymentEvent);
+
     const navigationState = {
       selectedFlights: {
       onward: {
@@ -1038,23 +1244,6 @@ Price: ₹${seatPrice}`}
       cabinClass: selectedFlights.onward.cabinClass,
       previousPage: 'Ancillary Services'
     };
-
-    // Track proceeding to payment with complete data
-    // analytics.paymentInitiated({
-    //   ...navigationState,
-    //   flightDetails: {
-    //     onward: {
-    //       origin: selectedFlights.onward.origin?.iata_code,
-    //       destination: selectedFlights.onward.destination?.iata_code,
-    //       price: selectedFlights.onward.price
-    //     },
-    //     return: selectedFlights.return ? {
-    //       origin: selectedFlights.return.origin?.iata_code,
-    //       destination: selectedFlights.return.destination?.iata_code,
-    //       price: selectedFlights.return.price
-    //     } : null
-    //   }
-    // });
 
     navigate('/payment', { state: navigationState });
   };
