@@ -1022,6 +1022,8 @@ Price: ₹${seatPrice}`}
           seats: [],
           meals: [],
           baggage: [],
+          priorityBoarding: [],
+          loungeAccess: [],
           insurance: null,
           totalCost: 0
         },
@@ -1029,6 +1031,8 @@ Price: ₹${seatPrice}`}
           seats: [],
           meals: [],
           baggage: [],
+          priorityBoarding: [],
+          loungeAccess: [],
           insurance: null,
           totalCost: 0
         }
@@ -1098,14 +1102,38 @@ Price: ₹${seatPrice}`}
           });
         }
 
-        // Insurance - only process if insurance is actually selected
-        if (selectedServices.onward.insurance && selectedServices.onward.insurance !== null && selectedServices.onward.insurance !== '') {
-          const insuranceCost = 200; // Default insurance cost
-          ancillaryData.onward.insurance = {
-            cost: insuranceCost,
-            revenue: insuranceCost
-          };
-          ancillaryData.onward.totalCost += insuranceCost;
+        // Priority Boarding - only process if priority boarding is actually selected
+        if (selectedServices.onward.priorityBoarding && selectedServices.onward.priorityBoarding.length > 0) {
+          selectedServices.onward.priorityBoarding.forEach((priorityBoarding, index) => {
+            if (priorityBoarding === true) { // Only process if selected
+              const priorityBoardingCost = 500; // Priority boarding cost
+              
+              ancillaryData.onward.priorityBoarding = ancillaryData.onward.priorityBoarding || [];
+              ancillaryData.onward.priorityBoarding.push({
+                passengerIndex: index,
+                cost: priorityBoardingCost,
+                revenue: priorityBoardingCost
+              });
+              ancillaryData.onward.totalCost += priorityBoardingCost;
+            }
+          });
+        }
+
+        // Lounge Access - only process if lounge access is actually selected
+        if (selectedServices.onward.loungeAccess && selectedServices.onward.loungeAccess.length > 0) {
+          selectedServices.onward.loungeAccess.forEach((loungeAccess, index) => {
+            if (loungeAccess === true) { // Only process if selected
+              const loungeAccessCost = 1000; // Lounge access cost
+              
+              ancillaryData.onward.loungeAccess = ancillaryData.onward.loungeAccess || [];
+              ancillaryData.onward.loungeAccess.push({
+                passengerIndex: index,
+                cost: loungeAccessCost,
+                revenue: loungeAccessCost
+              });
+              ancillaryData.onward.totalCost += loungeAccessCost;
+            }
+          });
         }
       }
 
@@ -1173,14 +1201,38 @@ Price: ₹${seatPrice}`}
           });
         }
 
-        // Insurance - only process if insurance is actually selected
-        if (selectedServices.return.insurance && selectedServices.return.insurance !== null && selectedServices.return.insurance !== '') {
-          const insuranceCost = 200;
-          ancillaryData.return.insurance = {
-            cost: insuranceCost,
-            revenue: insuranceCost
-          };
-          ancillaryData.return.totalCost += insuranceCost;
+        // Priority Boarding - only process if priority boarding is actually selected
+        if (selectedServices.return.priorityBoarding && selectedServices.return.priorityBoarding.length > 0) {
+          selectedServices.return.priorityBoarding.forEach((priorityBoarding, index) => {
+            if (priorityBoarding === true) { // Only process if selected
+              const priorityBoardingCost = 500; // Priority boarding cost
+              
+              ancillaryData.return.priorityBoarding = ancillaryData.return.priorityBoarding || [];
+              ancillaryData.return.priorityBoarding.push({
+                passengerIndex: index,
+                cost: priorityBoardingCost,
+                revenue: priorityBoardingCost
+              });
+              ancillaryData.return.totalCost += priorityBoardingCost;
+            }
+          });
+        }
+
+        // Lounge Access - only process if lounge access is actually selected
+        if (selectedServices.return.loungeAccess && selectedServices.return.loungeAccess.length > 0) {
+          selectedServices.return.loungeAccess.forEach((loungeAccess, index) => {
+            if (loungeAccess === true) { // Only process if selected
+              const loungeAccessCost = 1000; // Lounge access cost
+              
+              ancillaryData.return.loungeAccess = ancillaryData.return.loungeAccess || [];
+              ancillaryData.return.loungeAccess.push({
+                passengerIndex: index,
+                cost: loungeAccessCost,
+                revenue: loungeAccessCost
+              });
+              ancillaryData.return.totalCost += loungeAccessCost;
+            }
+          });
         }
       }
 
