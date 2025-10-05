@@ -129,13 +129,13 @@ class AirlinesDataLayer {
     const searchEvent = {
       event: 'searchSubmission',
       eventData: {
-        searchType: 'flight-search',
+        searchType: 'flightSearch',
         origin: searchData.origin,
         destination: searchData.destination,
         departureDate: searchData.departureDate,
         returnDate: searchData.returnDate,
         passengers: searchData.passengers,
-        tripType: searchData.tripType || 'round-trip',
+        tripType: searchData.tripType || 'roundTrip',
         cabinClass: searchData.cabinClass || 'economy',
         timestamp: new Date().toISOString()
       }

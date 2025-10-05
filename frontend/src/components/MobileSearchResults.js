@@ -185,7 +185,7 @@ const MobileSearchResults = () => {
   usePageView({
     pageCategory: 'booking',
     searchType: 'flight-results-mobile',
-    sections: ['results-list', 'filters', 'sorting', 'pagination', 'comparison', 'map'],
+    sections: ['resultsList', 'filters', 'sorting', 'pagination', 'comparison', 'map'],
     resultsCount: 0,
     deviceType: 'mobile',
     orientation: deviceOrientation
@@ -512,14 +512,14 @@ const MobileSearchResults = () => {
     let gestureType = 'tap';
     if (distance > 50) {
       if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        gestureType = deltaX > 0 ? 'swipe-right' : 'swipe-left';
+        gestureType = deltaX > 0 ? 'swipeRight' : 'swipeLeft';
       } else {
-        gestureType = deltaY > 0 ? 'swipe-down' : 'swipe-up';
+        gestureType = deltaY > 0 ? 'swipeDown' : 'swipeUp';
       }
     }
     
     // Track gesture
-    enhancedAirlinesDataLayer.trackEvent('mobile-gesture', {
+    enhancedAirlinesDataLayer.trackEvent('mobileGesture', {
       gestureType,
       touchDuration,
       distance,
@@ -531,7 +531,7 @@ const MobileSearchResults = () => {
     });
     
     // Handle pull-to-refresh
-    if (gestureType === 'swipe-down' && touchStartPosition.current.y < 100) {
+    if (gestureType === 'swipeDown' && touchStartPosition.current.y < 100) {
       setPullToRefresh(true);
       setTimeout(() => setPullToRefresh(false), 2000);
       
@@ -543,7 +543,7 @@ const MobileSearchResults = () => {
     }
     
     // Handle swipe gestures for flight cards
-    if (gestureType === 'swipe-left' || gestureType === 'swipe-right') {
+    if (gestureType === 'swipeLeft' || gestureType === 'swipeRight') {
       setSwipeDirection(gestureType);
       setTimeout(() => setSwipeDirection(null), 500);
     }
@@ -602,7 +602,7 @@ const MobileSearchResults = () => {
 
   // Handle mobile-specific actions
   const handleMobileAction = useCallback((action, data = {}) => {
-    enhancedAirlinesDataLayer.trackEvent('mobile-action', {
+    enhancedAirlinesDataLayer.trackEvent('mobileAction', {
       action,
       ...data,
       searchId,
@@ -629,8 +629,8 @@ const MobileSearchResults = () => {
         sx={{ 
           mb: 2, 
           border: isSelected ? '2px solid #1976d2' : '1px solid #e0e0e0',
-          transform: swipeDirection === 'swipe-left' ? 'translateX(-20px)' : 
-                    swipeDirection === 'swipe-right' ? 'translateX(20px)' : 'translateX(0)',
+          transform: swipeDirection === 'swipeLeft' ? 'translateX(-20px)' : 
+                    swipeDirection === 'swipeRight' ? 'translateX(20px)' : 'translateX(0)',
           transition: 'transform 0.3s ease',
           '&:hover': { 
             boxShadow: 3
@@ -756,7 +756,7 @@ const MobileSearchResults = () => {
         onClick={() => {
           setCurrentTab(2);
           setShowComparison(true);
-          handleMobileAction('comparison-opened');
+          handleMobileAction('comparisonOpened');
         }}
       />
       <BottomNavigationAction
@@ -765,7 +765,7 @@ const MobileSearchResults = () => {
         onClick={() => {
           setCurrentTab(3);
           setShowFilters(true);
-          handleMobileAction('filters-opened');
+          handleMobileAction('filtersOpened');
         }}
       />
     </BottomNavigation>

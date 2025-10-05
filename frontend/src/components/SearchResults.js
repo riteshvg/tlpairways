@@ -130,8 +130,8 @@ const SearchResults = () => {
     } catch (err) {
       console.error('Error initializing search parameters:', err);
       // Track search initialization error
-      airlinesDataLayer.trackEvent('search-error', {
-        errorType: 'search-initialization',
+      airlinesDataLayer.trackEvent('searchError', {
+        errorType: 'searchInitialization',
         errorMessage: err.message,
         timestamp: new Date().toISOString()
       });
@@ -332,7 +332,7 @@ const SearchResults = () => {
         const mergedEvent = {
           event: 'pageView',
           pageData: {
-            pageType: 'search-results',
+            pageType: 'searchResults',
             pageName: 'Search Results',
             pageURL: window.location.href,
             referrer: document.referrer,
@@ -342,8 +342,8 @@ const SearchResults = () => {
             screenResolution: `${window.screen.width}x${window.screen.height}`,
             viewportSize: `${window.innerWidth}x${window.innerHeight}`,
             pageCategory: 'booking',
-            searchType: 'flight-results',
-            sections: ['results-list', 'filters', 'sorting', 'pagination']
+            searchType: 'flightResults',
+            sections: ['resultsList', 'filters', 'sorting', 'pagination']
           },
           searchContext: {
             // Basic search parameters
@@ -465,8 +465,8 @@ const SearchResults = () => {
           console.log('🛩️ Enhanced pageView with merged search results tracked:', mergedEvent);
         } catch (err) {
           console.error('Error tracking merged page view:', err);
-          airlinesDataLayer.trackEvent('search-error', {
-            errorType: 'merged-pageview-tracking',
+          airlinesDataLayer.trackEvent('searchError', {
+            errorType: 'mergedPageviewTracking',
             errorMessage: err.message,
             searchId,
             timestamp: new Date().toISOString()
@@ -531,7 +531,7 @@ const SearchResults = () => {
 
     // Track flight selection with correct price
     try {
-      airlinesDataLayer.trackEvent('flight-selected', {
+      airlinesDataLayer.trackEvent('flightSelected', {
         flight: {
           flightNumber: flightWithCorrectPrice.flightNumber,
           airline: flightWithCorrectPrice.airline,
@@ -564,8 +564,8 @@ const SearchResults = () => {
       });
     } catch (error) {
       console.error('Error tracking flight selection:', error);
-      airlinesDataLayer.trackEvent('search-error', {
-        errorType: 'flight-selection-tracking',
+      airlinesDataLayer.trackEvent('searchError', {
+        errorType: 'flightSelectionTracking',
         errorMessage: error.message,
         searchId,
         timestamp: new Date().toISOString()
@@ -643,7 +643,7 @@ const SearchResults = () => {
 
     // Track proceed to traveller details
     try {
-      airlinesDataLayer.trackEvent('search-proceed-to-traveller-details', {
+      airlinesDataLayer.trackEvent('searchProceedToTravellerDetails', {
         searchId,
         selectedFlights: {
           onward: selectedOnwardFlight ? {

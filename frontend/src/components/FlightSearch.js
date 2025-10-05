@@ -161,7 +161,7 @@ const FlightSearch = () => {
   usePageView({
     pageCategory: 'booking',
     searchType: 'flight',
-    sections: ['search-form', 'filters', 'quick-actions']
+    sections: ['searchForm', 'filters', 'quickActions']
   });
   
   const [origin, setOrigin] = useState(null);

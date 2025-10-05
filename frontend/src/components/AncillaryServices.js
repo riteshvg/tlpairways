@@ -54,7 +54,7 @@ const AncillaryServices = () => {
   usePageView({
     pageCategory: 'booking',
     bookingStep: 'ancillary-services',
-    sections: ['seat-selection', 'meals', 'baggage', 'insurance']
+    sections: ['seatSelection', 'meals', 'baggage', 'insurance']
   });
   
   const [selectedFlights, setSelectedFlights] = useState({

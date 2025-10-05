@@ -37,7 +37,7 @@ const TravellerDetails = () => {
   usePageView({
     pageCategory: 'booking',
     bookingStep: 'traveller-details',
-    sections: ['passenger-form', 'contact-details', 'special-requests'],
+    sections: ['passengerForm', 'contactDetails', 'specialRequests'],
     passengerCount: passengers?.adult + passengers?.child + passengers?.infant || 1
   });
 
