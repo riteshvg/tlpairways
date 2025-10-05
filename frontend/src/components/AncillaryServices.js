@@ -1086,17 +1086,42 @@ Price: ₹${seatPrice}`}
             if (baggage && baggage !== null && baggage !== '') { // Only process non-empty selections
               // Check if baggage is chargeable (not included/free)
               const isChargeable = baggage !== 'included' && baggage !== 'free';
-              const baggageCost = isChargeable ? 800 : 0; // Only charge for extra baggage
-              
-              ancillaryData.onward.baggage.push({
-                passengerIndex: index,
-                baggageType: baggage,
-                cost: baggageCost,
-                revenue: isChargeable ? baggageCost : 0 // Revenue = 0 for free baggage
-              });
               
               if (isChargeable) {
+                // Calculate baggage cost based on type and international status
+                const isInternational = selectedFlights.onward.origin.iata_code !== selectedFlights.onward.destination.iata_code;
+                
+                let baggageCost = 0;
+                switch (baggage) {
+                  case 'extra':
+                    baggageCost = isInternational ? 2000 : 1000;
+                    break;
+                  case 'sports':
+                    baggageCost = isInternational ? 2000 : 1000;
+                    break;
+                  case 'musical':
+                    baggageCost = isInternational ? 2000 : 1000;
+                    break;
+                  default:
+                    baggageCost = 0;
+                }
+                
+                ancillaryData.onward.baggage.push({
+                  passengerIndex: index,
+                  baggageType: baggage,
+                  cost: baggageCost,
+                  revenue: baggageCost // Revenue = cost for chargeable baggage
+                });
+                
                 ancillaryData.onward.totalCost += baggageCost;
+              } else {
+                // Free baggage still tracked but with 0 cost
+                ancillaryData.onward.baggage.push({
+                  passengerIndex: index,
+                  baggageType: baggage,
+                  cost: 0,
+                  revenue: 0 // Revenue = 0 for free baggage
+                });
               }
             }
           });
@@ -1185,17 +1210,42 @@ Price: ₹${seatPrice}`}
             if (baggage && baggage !== null && baggage !== '') { // Only process non-empty selections
               // Check if baggage is chargeable (not included/free)
               const isChargeable = baggage !== 'included' && baggage !== 'free';
-              const baggageCost = isChargeable ? 800 : 0; // Only charge for extra baggage
-              
-              ancillaryData.return.baggage.push({
-                passengerIndex: index,
-                baggageType: baggage,
-                cost: baggageCost,
-                revenue: isChargeable ? baggageCost : 0 // Revenue = 0 for free baggage
-              });
               
               if (isChargeable) {
+                // Calculate baggage cost based on type and international status
+                const isInternational = selectedFlights.return.origin.iata_code !== selectedFlights.return.destination.iata_code;
+                
+                let baggageCost = 0;
+                switch (baggage) {
+                  case 'extra':
+                    baggageCost = isInternational ? 2000 : 1000;
+                    break;
+                  case 'sports':
+                    baggageCost = isInternational ? 2000 : 1000;
+                    break;
+                  case 'musical':
+                    baggageCost = isInternational ? 2000 : 1000;
+                    break;
+                  default:
+                    baggageCost = 0;
+                }
+                
+                ancillaryData.return.baggage.push({
+                  passengerIndex: index,
+                  baggageType: baggage,
+                  cost: baggageCost,
+                  revenue: baggageCost // Revenue = cost for chargeable baggage
+                });
+                
                 ancillaryData.return.totalCost += baggageCost;
+              } else {
+                // Free baggage still tracked but with 0 cost
+                ancillaryData.return.baggage.push({
+                  passengerIndex: index,
+                  baggageType: baggage,
+                  cost: 0,
+                  revenue: 0 // Revenue = 0 for free baggage
+                });
               }
             }
           });
