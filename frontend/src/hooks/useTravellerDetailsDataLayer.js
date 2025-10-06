@@ -110,7 +110,7 @@ const useTravellerDetailsDataLayer = (pageViewOptions = {}) => {
   const calculatePricing = useCallback((selectedFlights, passengers) => {
     const onwardFlight = selectedFlights?.onward;
     const returnFlight = selectedFlights?.return;
-    const numPassengers = passengers?.adult + passengers?.child + passengers?.infant || 1;
+    const numPassengers = (passengers?.adult || 1) + (passengers?.child || 0) + (passengers?.infant || 0);
 
     const onwardPrice = onwardFlight?.price?.amount || onwardFlight?.displayPrices?.[onwardFlight?.cabinClass] || 0;
     const returnPrice = returnFlight?.price?.amount || returnFlight?.displayPrices?.[returnFlight?.cabinClass] || 0;
@@ -163,10 +163,32 @@ const useTravellerDetailsDataLayer = (pageViewOptions = {}) => {
   // Initialize traveller details data layer
   const initializeTravellerDetailsDataLayer = useCallback(() => {
     try {
-      const { onwardFlight, returnFlight, tripType, passengers, travellerDetails } = location.state || {};
+      // Get booking state from sessionStorage (same as TravellerDetails component)
+      const getBookingState = () => {
+        try {
+          const authRedirectData = sessionStorage.getItem('auth_redirect_data');
+          if (authRedirectData) {
+            const parsed = JSON.parse(authRedirectData);
+            return parsed.bookingState || parsed;
+          }
+          return location.state || {};
+        } catch (error) {
+          console.error('Error parsing booking state:', error);
+          return location.state || {};
+        }
+      };
+      
+      const bookingState = getBookingState();
+      const { onwardFlight, returnFlight, tripType, passengers, travellerDetails } = bookingState || {};
+      
+      console.log('🔍 useTravellerDetailsDataLayer - Debug:', {
+        bookingState,
+        passengers,
+        passengerCount: pageViewOptions.passengerCount
+      });
       
       if (!onwardFlight) {
-        console.warn('No onward flight data found in location state');
+        console.warn('No onward flight data found in booking state');
         return;
       }
 
@@ -289,7 +311,23 @@ const useTravellerDetailsDataLayer = (pageViewOptions = {}) => {
           },
           passengers: {
             total: totalPassengers,
-            breakdown: passengerBreakdown,
+            breakdown: {
+              adults: {
+                count: passengerBreakdown.adults,
+                type: 'adult',
+                description: '12+ years'
+              },
+              children: {
+                count: passengerBreakdown.children,
+                type: 'child',
+                description: '2-11 years'
+              },
+              infants: {
+                count: passengerBreakdown.infants,
+                type: 'infant',
+                description: 'Under 2 years'
+              }
+            },
             summary: passengerSummary
           },
           tripType: tripType || 'oneway',

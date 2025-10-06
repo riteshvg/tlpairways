@@ -577,7 +577,7 @@ const EnhancedSearchResults = () => {
         state: {
           onwardFlight: flightWithCorrectPrice,
           tripType: searchParams.tripType,
-          passengers: searchParams.passengers,
+          passengers: searchParams.passengerCounts,
           cabinClass: searchParams.cabinClass,
           previousPage: 'Search Results'
         }
@@ -1143,7 +1143,7 @@ const EnhancedSearchResults = () => {
                   onwardFlight: selectedOnwardFlight,
                   returnFlight: selectedReturnFlight,
                   tripType: searchParams.tripType,
-                  passengers: searchParams.passengers,
+                  passengers: searchParams.passengerCounts,
                   cabinClass: searchParams.cabinClass,
                   previousPage: 'Search Results'
                 };

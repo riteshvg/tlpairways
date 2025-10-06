@@ -587,7 +587,7 @@ const SearchResults = () => {
         state: {
           onwardFlight: flightWithCorrectPrice,
           tripType: searchParams.tripType,
-          passengers: searchParams.passengers,
+          passengers: searchParams.passengerCounts,
           cabinClass: searchParams.cabinClass,
           previousPage: 'Search Results'
         }
@@ -642,7 +642,7 @@ const SearchResults = () => {
         prices: selectedReturnFlight.prices
       } : null,
       tripType: searchParams.tripType,
-      passengers: searchParams.passengers,
+      passengers: searchParams.passengerCounts,
       cabinClass: searchParams.cabinClass,
       previousPage: 'Search Results'
     };

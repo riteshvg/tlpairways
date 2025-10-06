@@ -602,7 +602,7 @@ const MobileSearchResults = () => {
         state: {
           onwardFlight: flightWithCorrectPrice,
           tripType: searchParams.tripType,
-          passengers: searchParams.passengers,
+          passengers: searchParams.passengerCounts,
           cabinClass: searchParams.cabinClass,
           previousPage: 'Mobile Search Results'
         }
@@ -948,7 +948,7 @@ const MobileSearchResults = () => {
               onwardFlight: selectedOnwardFlight,
               returnFlight: selectedReturnFlight,
               tripType: searchParams.tripType,
-              passengers: searchParams.passengers,
+              passengers: searchParams.passengerCounts,
               cabinClass: searchParams.cabinClass,
               previousPage: 'Mobile Search Results'
             };
