@@ -644,6 +644,8 @@ const SearchResults = () => {
       tripType: searchParams.tripType,
       passengers: searchParams.passengerCounts,
       cabinClass: searchParams.cabinClass,
+      departureDate: searchParams.date,
+      returnDate: searchParams.returnDate,
       previousPage: 'Search Results'
     };
 
@@ -742,7 +744,7 @@ const SearchResults = () => {
                 })()}
                     </Typography>
               <Typography variant="body2" color="textSecondary">
-                {format(flight.departureTime, 'MMM dd, yyyy')}
+                {isReturn ? format(searchParams.returnDate, 'MMM dd, yyyy') : format(searchParams.date, 'MMM dd, yyyy')}
                     </Typography>
               <Typography variant="body2">
                 {flight.aircraft}
@@ -931,7 +933,7 @@ const SearchResults = () => {
                   {selectedOnwardFlight.airline} {selectedOnwardFlight.flightNumber}
                 </Typography>
                 <Typography>
-                  {format(selectedOnwardFlight.departureTime, 'MMM dd, HH:mm')} - {format(selectedOnwardFlight.arrivalTime, 'MMM dd, HH:mm')}
+                  {format(searchParams.date, 'MMM dd')} {format(selectedOnwardFlight.departureTime, 'HH:mm')} - {format(selectedOnwardFlight.arrivalTime, 'HH:mm')}
                 </Typography>
                 <Typography>
                   {selectedOnwardFlight.origin.iata_code} → {selectedOnwardFlight.destination.iata_code}
@@ -962,7 +964,7 @@ const SearchResults = () => {
                   {selectedReturnFlight.airline} {selectedReturnFlight.flightNumber}
                 </Typography>
                 <Typography>
-                  {format(selectedReturnFlight.departureTime, 'MMM dd, HH:mm')} - {format(selectedReturnFlight.arrivalTime, 'MMM dd, HH:mm')}
+                  {format(searchParams.returnDate, 'MMM dd')} {format(selectedReturnFlight.departureTime, 'HH:mm')} - {format(selectedReturnFlight.arrivalTime, 'HH:mm')}
                 </Typography>
                 <Typography>
                   {selectedReturnFlight.origin.iata_code} → {selectedReturnFlight.destination.iata_code}

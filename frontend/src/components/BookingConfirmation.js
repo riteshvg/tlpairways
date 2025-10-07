@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import usePageView from '../hooks/usePageView';
 import airlinesDataLayer from '../services/AirlinesDataLayer';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 import {
   Container,
   Paper,
@@ -19,6 +21,9 @@ import {
 } from '@mui/material';
 import { format, parseISO, isValid } from 'date-fns';
 import PrintIcon from '@mui/icons-material/Print';
+import DownloadIcon from '@mui/icons-material/Download';
+import EmailIcon from '@mui/icons-material/Email';
+import SmsIcon from '@mui/icons-material/Sms';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import EventSeatIcon from '@mui/icons-material/EventSeat';
 import LuggageIcon from '@mui/icons-material/Luggage';
@@ -394,7 +399,66 @@ const BookingConfirmation = () => {
     setBookingReference(bookingRef);
     setTransactionId(txnId);
 
-    // Calculate revenue data first
+    // Calculate distance and sustainability first
+    let calculatedDistance = 0;
+    let calculatedTrees = 0;
+    try {
+      const calculateFlightDistance = (origin, destination) => {
+        if (!origin || !destination) return 0;
+        const R = 6371; // Earth's radius in km
+        const lat1 = origin[0] * Math.PI / 180;
+        const lat2 = destination[0] * Math.PI / 180;
+        const dLat = (destination[0] - origin[0]) * Math.PI / 180;
+        const dLon = (destination[1] - origin[1]) * Math.PI / 180;
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                  Math.cos(lat1) * Math.cos(lat2) *
+                  Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+      };
+
+      const getCoordinates = (airportCode) => {
+        const airport = findAirportByCode(airportCode);
+        if (airport?.coordinates) {
+          return [airport.coordinates.latitude, airport.coordinates.longitude];
+        }
+        return null;
+      };
+
+      const onwardOriginCoords = getCoordinates(selectedFlights.onward?.origin?.iata_code);
+      const onwardDestCoords = getCoordinates(selectedFlights.onward?.destination?.iata_code);
+      const onwardDistance = onwardOriginCoords && onwardDestCoords 
+        ? calculateFlightDistance(onwardOriginCoords, onwardDestCoords) 
+        : 0;
+
+      const returnOriginCoords = getCoordinates(selectedFlights.return?.origin?.iata_code);
+      const returnDestCoords = getCoordinates(selectedFlights.return?.destination?.iata_code);
+      const returnDistance = tripType === 'roundtrip' && returnOriginCoords && returnDestCoords
+        ? calculateFlightDistance(returnOriginCoords, returnDestCoords)
+        : 0;
+
+      calculatedDistance = onwardDistance + returnDistance;
+      calculatedTrees = Math.floor(calculatedDistance / 100);
+      
+      console.log('✅ Distance calculated:', {
+        onwardDistance,
+        returnDistance,
+        calculatedDistance,
+        calculatedTrees,
+        onwardOriginCoords,
+        onwardDestCoords,
+        returnOriginCoords,
+        returnDestCoords
+      });
+      
+      // Update state for UI display
+      setTotalDistance(calculatedDistance);
+      setTreesPlanted(calculatedTrees);
+    } catch (error) {
+      console.error('Error calculating distance:', error);
+    }
+
+    // Calculate revenue data
     const feeBreakdown = calculateFeeBreakdown();
     const ancillaryTotal = calculateAncillaryTotal();
 
@@ -495,7 +559,7 @@ const BookingConfirmation = () => {
     // Add flight products
     if (selectedFlights.onward) {
       products.push({
-        productId: `flight-${selectedFlights.onward.flightNumber}`,
+        productId: 'flight',
         productName: `Flight ${selectedFlights.onward.flightNumber}`,
         category: 'flight',
         subcategory: 'onward',
@@ -511,7 +575,7 @@ const BookingConfirmation = () => {
     
     if (selectedFlights.return) {
       products.push({
-        productId: `flight-${selectedFlights.return.flightNumber}`,
+        productId: 'flight',
         productName: `Flight ${selectedFlights.return.flightNumber}`,
         category: 'flight',
         subcategory: 'return',
@@ -534,7 +598,7 @@ const BookingConfirmation = () => {
             if (seat) {
               const seatPrice = calculateSeatPrice(seat);
               products.push({
-                productId: `seat-${journey}-${index}`,
+                productId: 'seat',
                 productName: `Seat ${seat} - ${journey}`,
                 category: 'ancillary',
                 subcategory: 'seat',
@@ -554,7 +618,7 @@ const BookingConfirmation = () => {
             if (baggage && baggage !== 'included') {
               const baggagePrice = calculateBaggagePrice(baggage, journey);
               products.push({
-                productId: `baggage-${journey}-${index}`,
+                productId: 'baggage',
                 productName: `Baggage ${baggage} - ${journey}`,
                 category: 'ancillary',
                 subcategory: 'baggage',
@@ -573,10 +637,10 @@ const BookingConfirmation = () => {
           selectedServices[journey].priorityBoarding.forEach((priority, index) => {
             if (priority) {
               products.push({
-                productId: `priority-${journey}-${index}`,
+                productId: 'priorityBoarding',
                 productName: `Priority Boarding - ${journey}`,
                 category: 'ancillary',
-                subcategory: 'priority_boarding',
+                subcategory: 'priorityBoarding',
                 price: 500,
                 quantity: 1,
                 currency: 'INR',
@@ -591,10 +655,10 @@ const BookingConfirmation = () => {
           selectedServices[journey].loungeAccess.forEach((lounge, index) => {
             if (lounge) {
               products.push({
-                productId: `lounge-${journey}-${index}`,
+                productId: 'loungeAccess',
                 productName: `Lounge Access - ${journey}`,
                 category: 'ancillary',
-                subcategory: 'lounge_access',
+                subcategory: 'loungeAccess',
                 price: 1500,
                 quantity: 1,
                 currency: 'INR',
@@ -616,12 +680,12 @@ const BookingConfirmation = () => {
           currency: 'INR',
           products: products,
           bookingReference: bookingRef,
-          paymentMethod: paymentDetails?.method || 'credit_card',
+          paymentMethod: (paymentDetails?.method || 'credit card').replace(/_/g, ' ').replace(/-/g, ' '),
           paymentStatus: 'completed',
           timestamp: new Date().toISOString()
         },
         paymentDetails: {
-          paymentType: paymentDetails?.method || 'credit_card',
+          paymentType: (paymentDetails?.method || 'credit card').replace(/_/g, ' ').replace(/-/g, ' '),
           paymentCurrency: 'INR',
           paymentCategories: {
             baseFare: feeBreakdown.baseFare,
@@ -643,6 +707,146 @@ const BookingConfirmation = () => {
           phone: travellerDetails[0]?.phone || null,
           loyaltyTier: 'standard'
         },
+        searchContext: {
+          searchId: `search_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          origin: selectedFlights.onward?.origin?.iata_code || null,
+          destination: selectedFlights.onward?.destination?.iata_code || null,
+          originDestination: (selectedFlights.onward?.origin?.iata_code && selectedFlights.onward?.destination?.iata_code) 
+            ? `${selectedFlights.onward.origin.iata_code}-${selectedFlights.onward.destination.iata_code}`
+            : null,
+          departureDate: selectedFlights.onward?.departureTime ? new Date(selectedFlights.onward.departureTime).toISOString().split('T')[0] : null,
+          returnDate: selectedFlights.return?.departureTime ? new Date(selectedFlights.return.departureTime).toISOString().split('T')[0] : null,
+          travelDay: selectedFlights.onward?.departureTime ? format(new Date(selectedFlights.onward.departureTime), 'EEEE') : null,
+          numberOfDays: selectedFlights.onward?.departureTime && selectedFlights.return?.departureTime 
+            ? Math.ceil((new Date(selectedFlights.return.departureTime) - new Date(selectedFlights.onward.departureTime)) / (1000 * 60 * 60 * 24))
+            : (selectedFlights.onward?.departureTime ? Math.ceil((new Date(selectedFlights.onward.departureTime) - new Date()) / (1000 * 60 * 60 * 24)) : 0),
+          passengers: {
+            total: numPassengers,
+            breakdown: {
+              adults: {
+                count: passengers?.adult || numPassengers,
+                type: 'adult',
+                description: '12+ years'
+              },
+              children: {
+                count: passengers?.child || 0,
+                type: 'child',
+                description: '2-11 years'
+              },
+              infants: {
+                count: passengers?.infant || 0,
+                type: 'infant',
+                description: 'Under 2 years'
+              }
+            },
+            summary: passengers 
+              ? Object.entries(passengers)
+                  .filter(([type, count]) => count > 0)
+                  .map(([type, count]) => `${type}: ${count}`)
+                  .join(', ')
+              : `adult: ${numPassengers}`
+          },
+          cabinClass: selectedFlights.onward?.cabinClass || 'economy',
+          tripType: tripType || 'oneWay',
+          travelPurpose: 'personal',
+          searchDateTime: new Date().toISOString().split('T')[0],
+          searchCriteria: {
+            originAirport: selectedFlights.onward?.origin?.iata_code || null,
+            originAirportName: (() => {
+              const originAirport = findAirportByCode(selectedFlights.onward?.origin?.iata_code);
+              console.log('Origin airport lookup:', {
+                code: selectedFlights.onward?.origin?.iata_code,
+                foundAirport: originAirport,
+                existingName: selectedFlights.onward?.origin?.name
+              });
+              return originAirport?.name || selectedFlights.onward?.origin?.name || null;
+            })(),
+            originCity: selectedFlights.onward?.origin?.city || (() => {
+              const originAirport = findAirportByCode(selectedFlights.onward?.origin?.iata_code);
+              return originAirport?.city || null;
+            })(),
+            originCountry: selectedFlights.onward?.origin?.country || (() => {
+              const originAirport = findAirportByCode(selectedFlights.onward?.origin?.iata_code);
+              return originAirport?.country || null;
+            })(),
+            destinationAirport: selectedFlights.onward?.destination?.iata_code || null,
+            destinationAirportName: (() => {
+              const destAirport = findAirportByCode(selectedFlights.onward?.destination?.iata_code);
+              console.log('Destination airport lookup:', {
+                code: selectedFlights.onward?.destination?.iata_code,
+                foundAirport: destAirport,
+                existingName: selectedFlights.onward?.destination?.name
+              });
+              return destAirport?.name || selectedFlights.onward?.destination?.name || null;
+            })(),
+            destinationCity: selectedFlights.onward?.destination?.city || (() => {
+              const destAirport = findAirportByCode(selectedFlights.onward?.destination?.iata_code);
+              return destAirport?.city || null;
+            })(),
+            destinationCountry: selectedFlights.onward?.destination?.country || (() => {
+              const destAirport = findAirportByCode(selectedFlights.onward?.destination?.iata_code);
+              return destAirport?.country || null;
+            })(),
+            departureDate: selectedFlights.onward?.departureTime ? new Date(selectedFlights.onward.departureTime).toISOString().split('T')[0] : null,
+            returnDate: selectedFlights.return?.departureTime ? new Date(selectedFlights.return.departureTime).toISOString().split('T')[0] : null,
+            tripType: tripType || 'oneWay',
+            passengers: {
+              adults: passengers?.adult || numPassengers,
+              children: passengers?.child || 0,
+              infants: passengers?.infant || 0,
+              total: numPassengers
+            },
+            cabinClass: selectedFlights.onward?.cabinClass || 'economy',
+            travelPurpose: 'personal',
+            searchDateTime: new Date().toISOString().split('T')[0],
+            flexibleDates: false,
+            directFlightsOnly: false
+          },
+          distanceKm: Math.round(calculatedDistance),
+          specialDays: {
+            onward: {
+              is_special: false,
+              special_day: null,
+              special_type: null,
+              country: null
+            },
+            return: selectedFlights.return ? {
+              is_special: false,
+              special_day: null,
+              special_type: null,
+              country: null
+            } : null,
+            hasSpecialDays: false
+          },
+          revenueData: {
+            potential_revenue: feeBreakdown.total,
+            avg_revenue_per_user: Math.round(feeBreakdown.total / numPassengers),
+            booking_probability_score: 1.0, // Already booked
+            estimated_conversion_value: feeBreakdown.total,
+            revenue_bucket: feeBreakdown.total < 10000 ? 'low_value' : feeBreakdown.total < 50000 ? 'medium_value' : 'high_value',
+            currency: {
+              code: 'INR',
+              symbol: '₹',
+              name: 'Indian Rupee'
+            }
+          },
+          geography: {
+            userLocation: {
+              country: 'India',
+              state: 'Unknown',
+              city: 'Unknown',
+              timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+              ipCountry: 'India',
+              currency: 'INR',
+              language: navigator.language || 'en-US'
+            }
+          },
+          searchPerformance: {
+            searchDurationMs: 0,
+            resultsLoadedAt: new Date().toISOString(),
+            searchAbandoned: false
+          }
+        },
         booking: {
           tripType: tripType || 'oneWay',
           cabinClass: selectedFlights.onward?.cabinClass || 'economy',
@@ -653,13 +857,13 @@ const BookingConfirmation = () => {
           returnDate: selectedFlights.return?.departureTime ? new Date(selectedFlights.return.departureTime).toISOString().split('T')[0] : null
         },
         sustainabilityImpact: {
-          carbonFootprint: totalDistance > 0 ? Math.round(totalDistance * 0.255) : 0, // kg CO₂
-          distance: totalDistance, // km
-          treesPlanted: treesPlanted,
-          carbonOffset: totalDistance > 0 ? Math.round(totalDistance * 0.255) : 0,
-          sustainabilityContribution: treesPlanted > 0 ? treesPlanted * 50 : 0, // INR contribution
-          impactType: 'carbon_footprint',
-          contributionType: 'trees_planted',
+          carbonFootprint: calculatedDistance > 0 ? Math.round(calculatedDistance * 0.255) : 0, // kg CO₂
+          distance: calculatedDistance, // km
+          treesPlanted: calculatedTrees,
+          carbonOffset: calculatedDistance > 0 ? Math.round(calculatedDistance * 0.255) : 0,
+          sustainabilityContribution: calculatedTrees > 0 ? calculatedTrees * 50 : 0, // INR contribution
+          impactType: 'carbonFootprint',
+          contributionType: 'treesPlanted',
           timestamp: new Date().toISOString()
         }
       },
@@ -734,18 +938,6 @@ const BookingConfirmation = () => {
     }
   };
 
-  const handleSocialSharing = (platform) => {
-    if (bookingReference) {
-      airlinesDataLayer.trackSocialSharing({
-        platform: platform,
-        shareType: 'booking_confirmation',
-        bookingReference: bookingReference,
-        contentShared: 'booking_details'
-      });
-      console.log(`Shared to ${platform}`);
-    }
-  };
-
   const handlePrintConfirmation = () => {
     if (bookingReference) {
       airlinesDataLayer.trackPrintConfirmation({
@@ -759,18 +951,63 @@ const BookingConfirmation = () => {
     }
   };
 
+  const handleDownloadPDF = async () => {
+    try {
+      // Track PDF download
+      if (bookingReference) {
+        airlinesDataLayer.trackPrintConfirmation({
+          printType: 'booking_confirmation',
+          bookingReference: bookingReference,
+          printFormat: 'pdf_download'
+        });
+      }
 
-  const handleSustainabilityContribution = (action) => {
-    if (bookingReference) {
-      airlinesDataLayer.trackSustainabilityImpact({
-        impactType: 'carbon_footprint',
-        carbonOffset: Math.round(totalDistance * 0.255),
-        unit: 'kg_co2',
-        treesPlanted: treesPlanted,
-        userAction: action, // contributed, shared
-        bookingReference: bookingReference
+      // Get the confirmation content
+      const element = document.getElementById('booking-confirmation-content');
+      if (!element) {
+        console.error('Booking confirmation content not found');
+        return;
+      }
+
+      // Create canvas from HTML
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        logging: false,
+        useCORS: true,
+        allowTaint: true
       });
-      console.log(`Sustainability ${action}`);
+
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+
+      const imgWidth = 210; // A4 width in mm
+      const pageHeight = 297; // A4 height in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      // Add first page
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      // Add additional pages if content is longer than one page
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      // Download the PDF
+      pdf.save(`TLAirways-Booking-${pnr}-${new Date().toISOString().split('T')[0]}.pdf`);
+      console.log('PDF downloaded successfully');
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Error generating PDF. Please try using the Print Ticket option instead.');
     }
   };
 
@@ -1056,7 +1293,7 @@ const BookingConfirmation = () => {
 
   return (
     <Container maxWidth="md" sx={{ py: 4 }}>
-      <Paper elevation={3} sx={{ p: 4 }}>
+      <Paper elevation={3} sx={{ p: 4 }} id="booking-confirmation-content">
         <Box sx={{ textAlign: 'center', mb: 4 }}>
           <CheckCircleIcon color="success" sx={{ fontSize: 60 }} />
           <Typography variant="h4" gutterBottom>
@@ -1084,6 +1321,31 @@ const BookingConfirmation = () => {
                 {onwardTicket}
               </Typography>
             </Grid>
+          </Grid>
+        </Box>
+
+        {/* Travel Dates Section */}
+        <Box sx={{ mb: 4 }}>
+          <Typography variant="h6" gutterBottom>
+            Travel Details
+          </Typography>
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={6}>
+              <Typography variant="subtitle1">Departure Date</Typography>
+              <Typography variant="body1">
+                {location.state?.departureDate ? format(new Date(location.state.departureDate), 'EEEE, MMMM dd, yyyy') : 
+                 selectedFlights.onward?.departureTime ? format(new Date(selectedFlights.onward.departureTime), 'EEEE, MMMM dd, yyyy') : 'N/A'}
+              </Typography>
+            </Grid>
+            {(tripType === 'roundtrip' || selectedFlights.return) && (
+              <Grid item xs={12} md={6}>
+                <Typography variant="subtitle1">Return Date</Typography>
+                <Typography variant="body1">
+                  {location.state?.returnDate ? format(new Date(location.state.returnDate), 'EEEE, MMMM dd, yyyy') :
+                   selectedFlights.return?.departureTime ? format(new Date(selectedFlights.return.departureTime), 'EEEE, MMMM dd, yyyy') : 'N/A'}
+                </Typography>
+              </Grid>
+            )}
           </Grid>
         </Box>
 
@@ -1148,6 +1410,7 @@ const BookingConfirmation = () => {
             variant="outlined"
             onClick={handleEmailConfirmation}
             disabled={emailRequested}
+            startIcon={<EmailIcon />}
           >
             {emailRequested ? 'Email Sent' : 'Email Confirmation'}
           </Button>
@@ -1155,26 +1418,16 @@ const BookingConfirmation = () => {
             variant="outlined"
             onClick={handleSMSNotification}
             disabled={smsRequested}
+            startIcon={<SmsIcon />}
           >
             {smsRequested ? 'SMS Sent' : 'SMS Notification'}
           </Button>
           <Button
             variant="outlined"
-            onClick={() => handleSocialSharing('facebook')}
+            onClick={handleDownloadPDF}
+            startIcon={<DownloadIcon />}
           >
-            Share on Facebook
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={() => handleSocialSharing('twitter')}
-          >
-            Share on Twitter
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={() => handleSustainabilityContribution('contributed')}
-          >
-            Offset Carbon Footprint
+            Download Ticket (PDF)
           </Button>
           <Button
             variant="outlined"

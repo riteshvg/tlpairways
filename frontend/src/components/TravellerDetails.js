@@ -604,6 +604,8 @@ const TravellerDetails = () => {
           phone
         },
         paymentType: selectedFlights.return ? 'roundtrip' : 'oneway',
+        departureDate: bookingState.departureDate || selectedFlights.onward?.departureTime,
+        returnDate: bookingState.returnDate || selectedFlights.return?.departureTime,
         previousPage: 'Traveller Details'
       };
       

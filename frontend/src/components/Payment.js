@@ -88,7 +88,9 @@ const Payment = () => {
     ancillaryTotal: initialAncillaryTotal = 0,
     totalAmount: initialTotalAmount = 0,
     paymentType: initialPaymentType = 'oneway',
-    cabinClass: initialCabinClass = 'economy'
+    cabinClass: initialCabinClass = 'economy',
+    departureDate: initialDepartureDate = null,
+    returnDate: initialReturnDate = null
   } = bookingState || {};
 
   // State management
@@ -190,7 +192,8 @@ const Payment = () => {
       await new Promise(resolve => setTimeout(resolve, 2000));
 
       const paymentData = {
-        paymentMethod,
+        method: paymentMethod,
+        paymentMethod: paymentMethod,
         cardDetails: {
           cardNumber,
           expiryDate,
@@ -204,7 +207,9 @@ const Payment = () => {
           zipCode: billingZipCode,
           country: billingCountry
         },
-        amount: totalAmount
+        amount: totalAmount,
+        paymentDate: new Date().toISOString(),
+        transactionId: `TXN_${Date.now()}_${Math.random().toString(36).substr(2, 9).toUpperCase()}`
       };
 
       // Track payment completion
@@ -220,6 +225,10 @@ const Payment = () => {
           paymentDetails: paymentData,
           totalAmount,
           cabinClass,
+          departureDate: initialDepartureDate,
+          returnDate: initialReturnDate,
+          tripType: paymentType,
+          passengers: bookingState?.passengers,
           previousPage: 'Payment'
         }
       });
@@ -250,7 +259,15 @@ const Payment = () => {
           {flight.airline} {flight.flightNumber}
         </Typography>
         <Typography>
-          {format(new Date(flight.departureTime), 'MMM dd, yyyy HH:mm')} - {format(new Date(flight.arrivalTime), 'MMM dd, yyyy HH:mm')}
+          {(() => {
+            let dateToShow = flight.departureTime;
+            if (type === 'onward' && initialDepartureDate) {
+              dateToShow = initialDepartureDate;
+            } else if (type === 'return' && initialReturnDate) {
+              dateToShow = initialReturnDate;
+            }
+            return `${format(new Date(dateToShow), 'MMM dd, yyyy')} ${format(new Date(flight.departureTime), 'HH:mm')} - ${format(new Date(flight.arrivalTime), 'HH:mm')}`;
+          })()}
         </Typography>
         <Typography>
           {flight.origin?.iata_code || 'N/A'} → {flight.destination?.iata_code || 'N/A'}
