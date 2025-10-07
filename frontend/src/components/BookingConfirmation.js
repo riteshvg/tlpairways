@@ -688,6 +688,7 @@ const BookingConfirmation = () => {
           loyaltyTier: 'standard'
         },
         searchContext: {
+          searchId: `search_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
           origin: selectedFlights.onward?.origin?.iata_code || null,
           destination: selectedFlights.onward?.destination?.iata_code || null,
           originDestination: (selectedFlights.onward?.origin?.iata_code && selectedFlights.onward?.destination?.iata_code) 
@@ -696,6 +697,9 @@ const BookingConfirmation = () => {
           departureDate: selectedFlights.onward?.departureTime ? new Date(selectedFlights.onward.departureTime).toISOString().split('T')[0] : null,
           returnDate: selectedFlights.return?.departureTime ? new Date(selectedFlights.return.departureTime).toISOString().split('T')[0] : null,
           travelDay: selectedFlights.onward?.departureTime ? format(new Date(selectedFlights.onward.departureTime), 'EEEE') : null,
+          numberOfDays: selectedFlights.onward?.departureTime && selectedFlights.return?.departureTime 
+            ? Math.ceil((new Date(selectedFlights.return.departureTime) - new Date(selectedFlights.onward.departureTime)) / (1000 * 60 * 60 * 24))
+            : (selectedFlights.onward?.departureTime ? Math.ceil((new Date(selectedFlights.onward.departureTime) - new Date()) / (1000 * 60 * 60 * 24)) : 0),
           passengers: {
             total: numPassengers,
             breakdown: {
@@ -714,11 +718,86 @@ const BookingConfirmation = () => {
                 type: 'infant',
                 description: 'Under 2 years'
               }
-            }
+            },
+            summary: passengers 
+              ? Object.entries(passengers)
+                  .filter(([type, count]) => count > 0)
+                  .map(([type, count]) => `${type}: ${count}`)
+                  .join(', ')
+              : `adult: ${numPassengers}`
           },
           cabinClass: selectedFlights.onward?.cabinClass || 'economy',
           tripType: tripType || 'oneWay',
-          travelPurpose: 'leisure'
+          travelPurpose: 'personal',
+          searchDateTime: new Date().toISOString().split('T')[0],
+          searchCriteria: {
+            originAirport: selectedFlights.onward?.origin?.iata_code || null,
+            originAirportName: selectedFlights.onward?.origin?.name || null,
+            originCity: selectedFlights.onward?.origin?.city || null,
+            originCountry: selectedFlights.onward?.origin?.country || null,
+            destinationAirport: selectedFlights.onward?.destination?.iata_code || null,
+            destinationAirportName: selectedFlights.onward?.destination?.name || null,
+            destinationCity: selectedFlights.onward?.destination?.city || null,
+            destinationCountry: selectedFlights.onward?.destination?.country || null,
+            departureDate: selectedFlights.onward?.departureTime ? new Date(selectedFlights.onward.departureTime).toISOString().split('T')[0] : null,
+            returnDate: selectedFlights.return?.departureTime ? new Date(selectedFlights.return.departureTime).toISOString().split('T')[0] : null,
+            tripType: tripType || 'oneWay',
+            passengers: {
+              adults: passengers?.adult || numPassengers,
+              children: passengers?.child || 0,
+              infants: passengers?.infant || 0,
+              total: numPassengers
+            },
+            cabinClass: selectedFlights.onward?.cabinClass || 'economy',
+            travelPurpose: 'personal',
+            searchDateTime: new Date().toISOString().split('T')[0],
+            flexibleDates: false,
+            directFlightsOnly: false
+          },
+          distanceKm: Math.round(calculatedDistance),
+          specialDays: {
+            onward: {
+              is_special: false,
+              special_day: null,
+              special_type: null,
+              country: null
+            },
+            return: selectedFlights.return ? {
+              is_special: false,
+              special_day: null,
+              special_type: null,
+              country: null
+            } : null,
+            hasSpecialDays: false
+          },
+          revenueData: {
+            potential_revenue: feeBreakdown.total,
+            avg_revenue_per_user: Math.round(feeBreakdown.total / numPassengers),
+            booking_probability_score: 1.0, // Already booked
+            estimated_conversion_value: feeBreakdown.total,
+            revenue_bucket: feeBreakdown.total < 10000 ? 'low_value' : feeBreakdown.total < 50000 ? 'medium_value' : 'high_value',
+            currency: {
+              code: 'INR',
+              symbol: '₹',
+              name: 'Indian Rupee'
+            }
+          },
+          geography: {
+            userLocation: {
+              country: 'India',
+              state: 'Unknown',
+              city: 'Unknown',
+              timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+              ipCountry: 'India',
+              currency: 'INR',
+              language: navigator.language || 'en-US'
+            }
+          },
+          searchPerformance: {
+            searchDurationMs: 0,
+            resultsLoadedAt: new Date().toISOString(),
+            searchAbandoned: false
+          }
         },
         booking: {
           tripType: tripType || 'oneWay',
