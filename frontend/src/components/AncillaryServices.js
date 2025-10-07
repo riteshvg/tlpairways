@@ -1060,6 +1060,8 @@ Price: ₹${seatPrice}`}
         totalAmount,
         paymentType,
         cabinClass: selectedFlights.onward.cabinClass,
+        departureDate: location.state?.departureDate || selectedFlights.onward?.departureTime,
+        returnDate: location.state?.returnDate || selectedFlights.return?.departureTime,
         previousPage: 'Ancillary Services'
       };
 

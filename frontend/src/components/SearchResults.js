@@ -644,6 +644,8 @@ const SearchResults = () => {
       tripType: searchParams.tripType,
       passengers: searchParams.passengerCounts,
       cabinClass: searchParams.cabinClass,
+      departureDate: searchParams.date,
+      returnDate: searchParams.returnDate,
       previousPage: 'Search Results'
     };
 
