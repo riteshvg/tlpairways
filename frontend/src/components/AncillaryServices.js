@@ -1024,24 +1024,10 @@ Price: ₹${seatPrice}`}
       // Calculate total flight fare (per passenger prices multiplied by number of passengers)
       const numPassengers = travellerDetails.length;
       
-      // DEBUG: Add breakpoint to debug flight fare calculation
-      debugger;
-      console.log('DEBUG - Flight fare calculation:', {
-        numPassengers,
-        travellerDetailsLength: travellerDetails.length,
-        onwardPrice: selectedFlights?.onward?.price?.amount,
-        returnPrice: selectedFlights?.return?.price?.amount,
-        onwardTotal: (selectedFlights?.onward?.price?.amount || 0) * numPassengers,
-        returnTotal: (selectedFlights?.return?.price?.amount || 0) * numPassengers,
-        selectedFlights
-      });
-      
       const flightTotal = (
         (selectedFlights?.onward?.price?.amount || 0) * numPassengers + 
         (selectedFlights?.return?.price?.amount || 0) * numPassengers
       );
-      
-      console.log('DEBUG - Final flightTotal:', flightTotal);
 
       // Calculate total amount including flight fare and ancillary services only
       const totalAmount = flightTotal + ancillaryTotal;
