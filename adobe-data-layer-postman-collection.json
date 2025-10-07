@@ -1,0 +1,195 @@
+{
+  "info": {
+    "name": "TLAirways Adobe Data Layer - All Attributes",
+    "description": "Complete data layer attributes for creating data elements using Adobe Reactor API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Search Results Page",
+      "item": [
+        {
+          "name": "pageView Event - Search Results",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event\": \"pageView\",\n  \"pageData\": {\n    \"pageType\": \"search-results\",\n    \"pageName\": \"Flight Search Results - TLP Airways\",\n    \"pageCategory\": \"booking\",\n    \"searchType\": \"flightResults\",\n    \"pageURL\": \"http://localhost:3002/search-results\",\n    \"referrer\": \"http://localhost:3002/\",\n    \"previousPage\": \"Homepage\",\n    \"timestamp\": \"2025-10-07T03:55:40.768Z\",\n    \"userAgent\": \"Mozilla/5.0...\",\n    \"screenResolution\": \"1920x1080\",\n    \"viewportSize\": \"1024x768\",\n    \"sections\": [\"resultsList\", \"filters\", \"sorting\", \"pagination\", \"comparison\"],\n    \"resultsCount\": 10\n  },\n  \"searchContext\": {\n    \"searchId\": \"search_1759809340739_cra4wdyco\",\n    \"origin\": \"DEL\",\n    \"destination\": \"MAA\",\n    \"originDestination\": \"DEL-MAA\",\n    \"departureDate\": \"2025-10-22\",\n    \"returnDate\": null,\n    \"travelDay\": \"Wednesday\",\n    \"numberOfDays\": 14,\n    \"passengers\": {\n      \"total\": 2,\n      \"breakdown\": {\n        \"adults\": {\n          \"count\": 2,\n          \"type\": \"adult\",\n          \"description\": \"12+ years\"\n        },\n        \"children\": {\n          \"count\": 0,\n          \"type\": \"child\",\n          \"description\": \"2-11 years\"\n        },\n        \"infants\": {\n          \"count\": 0,\n          \"type\": \"infant\",\n          \"description\": \"Under 2 years\"\n        }\n      },\n      \"summary\": \"adult: 2\"\n    },\n    \"cabinClass\": \"economy\",\n    \"tripType\": \"oneway\",\n    \"travelPurpose\": \"personal\",\n    \"searchDateTime\": \"2025-10-07\",\n    \"searchCriteria\": {\n      \"originAirport\": \"DEL\",\n      \"originAirportName\": \"Indira Gandhi International Airport\",\n      \"originCity\": \"Delhi\",\n      \"originCountry\": \"India\",\n      \"destinationAirport\": \"MAA\",\n      \"destinationAirportName\": \"Chennai International Airport\",\n      \"destinationCity\": \"Chennai\",\n      \"destinationCountry\": \"India\",\n      \"departureDate\": \"2025-10-22\",\n      \"returnDate\": null,\n      \"tripType\": \"oneWay\",\n      \"passengers\": {\n        \"adults\": 2,\n        \"children\": 0,\n        \"infants\": 0,\n        \"total\": 2\n      },\n      \"cabinClass\": \"economy\",\n      \"travelPurpose\": \"personal\",\n      \"searchDateTime\": \"2025-10-07\",\n      \"flexibleDates\": false,\n      \"directFlightsOnly\": false\n    },\n    \"distanceKm\": 1759,\n    \"specialDays\": {\n      \"onward\": {\n        \"is_special\": false,\n        \"special_day\": null,\n        \"special_type\": null,\n        \"country\": null\n      },\n      \"return\": null,\n      \"hasSpecialDays\": false\n    },\n    \"revenueData\": {\n      \"potential_revenue\": 10400,\n      \"avg_revenue_per_user\": 10400,\n      \"booking_probability_score\": 0.9,\n      \"estimated_conversion_value\": 9360,\n      \"revenue_bucket\": \"low_value\",\n      \"currency\": {\n        \"code\": \"INR\",\n        \"symbol\": \"₹\",\n        \"name\": \"Indian Rupee\"\n      }\n    },\n    \"geography\": {\n      \"userLocation\": {\n        \"country\": \"India\",\n        \"state\": \"Unknown\",\n        \"city\": \"Unknown\",\n        \"timezone\": \"Asia/Calcutta\",\n        \"ipCountry\": \"India\",\n        \"currency\": \"INR\",\n        \"language\": \"en-US\"\n      }\n    },\n    \"searchPerformance\": {\n      \"searchDurationMs\": 0,\n      \"resultsLoadedAt\": \"2025-10-07T03:55:40.768Z\",\n      \"searchAbandoned\": false\n    }\n  },\n  \"userContext\": {\n    \"userAuthenticated\": true,\n    \"userId\": \"user@example.com\",\n    \"userEmail\": \"user@example.com\",\n    \"userLoyaltyTier\": \"standard\",\n    \"sessionId\": \"session_1759809340739\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{adobe_endpoint}}",
+              "host": ["{{adobe_endpoint}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Traveller Details Page",
+      "item": [
+        {
+          "name": "pageView Event - Traveller Details",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event\": \"pageView\",\n  \"pageData\": {\n    \"pageType\": \"traveller-details\",\n    \"pageName\": \"Traveller Details\",\n    \"pageCategory\": \"booking\",\n    \"bookingStep\": \"traveller-details\",\n    \"sections\": [\"passenger-form\", \"contact-info\"]\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "proceedToAncillaryServices Event",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event\": \"proceedToAncillaryServices\",\n  \"bookingContext\": {\n    \"bookingId\": \"booking_1759809340739_ABC123\",\n    \"bookingStep\": \"traveller-details\",\n    \"nextStep\": \"ancillary-services\",\n    \"bookingStepNumber\": 1,\n    \"totalSteps\": 4,\n    \"passengersBreakdown\": {\n      \"totalPassengers\": 2,\n      \"adult\": 2,\n      \"child\": 0,\n      \"infant\": 0\n    }\n  },\n  \"selectedFlights\": {\n    \"onward\": {\n      \"flightNumber\": \"AI101\",\n      \"airline\": \"Air India\",\n      \"origin\": \"DEL\",\n      \"destination\": \"MAA\",\n      \"departureTime\": \"2025-10-22T10:30:00\",\n      \"price\": 5200,\n      \"cabinClass\": \"economy\"\n    },\n    \"return\": null\n  },\n  \"passengers\": [\n    {\n      \"firstName\": \"John\",\n      \"lastName\": \"Doe\",\n      \"email\": \"john@example.com\",\n      \"phone\": \"9876543210\"\n    },\n    {\n      \"firstName\": \"Jane\",\n      \"lastName\": \"Doe\",\n      \"email\": \"jane@example.com\",\n      \"phone\": \"9876543211\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Ancillary Services Page",
+      "item": [
+        {
+          "name": "pageView Event - Ancillary Services",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event\": \"pageView\",\n  \"pageData\": {\n    \"pageType\": \"ancillary-services\",\n    \"pageName\": \"Ancillary Services\",\n    \"pageCategory\": \"booking\",\n    \"bookingStep\": \"ancillary-services\",\n    \"sections\": [\"seat-selection\", \"meals\", \"baggage\", \"insurance\"]\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "proceedToPayment Event",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event\": \"proceedToPayment\",\n  \"bookingContext\": {\n    \"bookingId\": \"booking_1759809340739_ABC123\",\n    \"bookingStep\": \"ancillary-services\",\n    \"nextStep\": \"payment\",\n    \"bookingStepNumber\": 2,\n    \"totalSteps\": 4\n  },\n  \"selectedFlights\": {\n    \"onward\": {\n      \"flightNumber\": \"AI101\",\n      \"airline\": \"Air India\",\n      \"origin\": \"DEL\",\n      \"destination\": \"MAA\",\n      \"departureTime\": \"2025-10-22T10:30:00\",\n      \"price\": 10400,\n      \"cabinClass\": \"economy\",\n      \"perPassengerPrice\": 5200\n    },\n    \"return\": null\n  },\n  \"pricing\": {\n    \"flightTotal\": 10400,\n    \"ancillaryTotal\": 1200,\n    \"totalAmount\": 11600,\n    \"totalFare\": 11600,\n    \"currency\": \"INR\",\n    \"breakdown\": {\n      \"perPassengerFlightFare\": 5200,\n      \"totalPassengers\": 2,\n      \"totalFlightFare\": 10400,\n      \"totalAncillaryFare\": 1200\n    }\n  },\n  \"ancillaryServices\": {\n    \"servicesSelected\": [\n      {\n        \"passenger\": \"Passenger 1\",\n        \"onward\": {\n          \"seat\": {\n            \"details\": \"12A\",\n            \"cost\": 500,\n            \"currency\": \"INR\",\n            \"type\": \"paid\"\n          },\n          \"baggage\": {\n            \"details\": \"20kg\",\n            \"cost\": 1000,\n            \"currency\": \"INR\",\n            \"type\": \"paid\"\n          },\n          \"priorityBoarding\": {\n            \"details\": true,\n            \"cost\": 500,\n            \"currency\": \"INR\",\n            \"type\": \"paid\"\n          },\n          \"loungeAccess\": {\n            \"details\": false,\n            \"cost\": 0,\n            \"currency\": \"INR\",\n            \"type\": \"free\"\n          },\n          \"totalCost\": 2000,\n          \"currency\": \"INR\"\n        },\n        \"return\": null\n      }\n    ],\n    \"totalAncillaryCost\": 1200\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Payment Page",
+      "item": [
+        {
+          "name": "pageView Event - Payment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event\": \"pageView\",\n  \"pageData\": {\n    \"pageType\": \"payment\",\n    \"pageName\": \"Payment\",\n    \"pageCategory\": \"booking\",\n    \"bookingStep\": \"payment\",\n    \"sections\": [\"payment-form\", \"price-breakdown\", \"security-info\"]\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Confirmation Page",
+      "item": [
+        {
+          "name": "pageView Event - Confirmation",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event\": \"pageView\",\n  \"pageData\": {\n    \"pageType\": \"confirmation\",\n    \"pageName\": \"Booking Confirmation\",\n    \"pageCategory\": \"booking\",\n    \"bookingStep\": \"confirmation\",\n    \"sections\": [\"confirmation-details\", \"booking-summary\", \"next-steps\"],\n    \"bookingId\": \"booking_123456\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "purchase Event - Complete Transaction",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event\": \"purchase\",\n  \"eventData\": {\n    \"revenue\": {\n      \"transactionId\": \"TXN_ABC123XYZ\",\n      \"totalRevenue\": 12600,\n      \"currency\": \"INR\",\n      \"products\": [\n        {\n          \"productId\": \"flight\",\n          \"productName\": \"Flight AI101\",\n          \"category\": \"flight\",\n          \"subcategory\": \"onward\",\n          \"price\": 10400,\n          \"quantity\": 2,\n          \"currency\": \"INR\",\n          \"origin\": \"DEL\",\n          \"destination\": \"MAA\",\n          \"departureDate\": \"2025-10-22\",\n          \"cabinClass\": \"economy\"\n        },\n        {\n          \"productId\": \"seat\",\n          \"productName\": \"Seat 12A - onward\",\n          \"category\": \"ancillary\",\n          \"subcategory\": \"seat\",\n          \"price\": 500,\n          \"quantity\": 1,\n          \"currency\": \"INR\",\n          \"seatNumber\": \"12A\",\n          \"journey\": \"onward\"\n        },\n        {\n          \"productId\": \"baggage\",\n          \"productName\": \"Baggage 20kg - onward\",\n          \"category\": \"ancillary\",\n          \"subcategory\": \"baggage\",\n          \"price\": 1000,\n          \"quantity\": 1,\n          \"currency\": \"INR\",\n          \"baggageType\": \"20kg\",\n          \"journey\": \"onward\"\n        },\n        {\n          \"productId\": \"priorityBoarding\",\n          \"productName\": \"Priority Boarding - onward\",\n          \"category\": \"ancillary\",\n          \"subcategory\": \"priorityBoarding\",\n          \"price\": 500,\n          \"quantity\": 1,\n          \"currency\": \"INR\",\n          \"journey\": \"onward\"\n        },\n        {\n          \"productId\": \"loungeAccess\",\n          \"productName\": \"Lounge Access - onward\",\n          \"category\": \"ancillary\",\n          \"subcategory\": \"loungeAccess\",\n          \"price\": 1500,\n          \"quantity\": 1,\n          \"currency\": \"INR\",\n          \"journey\": \"onward\"\n        }\n      ],\n      \"bookingReference\": \"ABC123\",\n      \"paymentMethod\": \"credit card\",\n      \"paymentStatus\": \"completed\",\n      \"timestamp\": \"2025-10-07T04:00:00.000Z\"\n    },\n    \"paymentDetails\": {\n      \"paymentType\": \"credit card\",\n      \"paymentCurrency\": \"INR\",\n      \"paymentCategories\": {\n        \"baseFare\": 10400,\n        \"ancillaryFare\": 1200,\n        \"taxes\": 520,\n        \"convenienceFee\": 208,\n        \"surcharge\": 104,\n        \"totalFees\": 832,\n        \"totalAmount\": 12600\n      },\n      \"pnr\": \"ABC123\",\n      \"bookingId\": \"TXN_ABC123XYZ\",\n      \"passengers\": 2,\n      \"tripType\": \"oneWay\"\n    },\n    \"customer\": {\n      \"userId\": \"john@example.com\",\n      \"email\": \"john@example.com\",\n      \"phone\": \"9876543210\",\n      \"loyaltyTier\": \"standard\"\n    },\n    \"searchContext\": {\n      \"searchId\": \"search_1759809340739_cra4wdyco\",\n      \"origin\": \"DEL\",\n      \"destination\": \"MAA\",\n      \"originDestination\": \"DEL-MAA\",\n      \"departureDate\": \"2025-10-22\",\n      \"returnDate\": null,\n      \"travelDay\": \"Wednesday\",\n      \"numberOfDays\": 14,\n      \"passengers\": {\n        \"total\": 2,\n        \"breakdown\": {\n          \"adults\": {\n            \"count\": 2,\n            \"type\": \"adult\",\n            \"description\": \"12+ years\"\n          },\n          \"children\": {\n            \"count\": 0,\n            \"type\": \"child\",\n            \"description\": \"2-11 years\"\n          },\n          \"infants\": {\n            \"count\": 0,\n            \"type\": \"infant\",\n            \"description\": \"Under 2 years\"\n          }\n        },\n        \"summary\": \"adult: 2\"\n      },\n      \"cabinClass\": \"economy\",\n      \"tripType\": \"oneWay\",\n      \"travelPurpose\": \"personal\",\n      \"searchDateTime\": \"2025-10-07\",\n      \"searchCriteria\": {\n        \"originAirport\": \"DEL\",\n        \"originAirportName\": \"Indira Gandhi International Airport\",\n        \"originCity\": \"Delhi\",\n        \"originCountry\": \"India\",\n        \"destinationAirport\": \"MAA\",\n        \"destinationAirportName\": \"Chennai International Airport\",\n        \"destinationCity\": \"Chennai\",\n        \"destinationCountry\": \"India\",\n        \"departureDate\": \"2025-10-22\",\n        \"returnDate\": null,\n        \"tripType\": \"oneWay\",\n        \"passengers\": {\n          \"adults\": 2,\n          \"children\": 0,\n          \"infants\": 0,\n          \"total\": 2\n        },\n        \"cabinClass\": \"economy\",\n        \"travelPurpose\": \"personal\",\n        \"searchDateTime\": \"2025-10-07\",\n        \"flexibleDates\": false,\n        \"directFlightsOnly\": false\n      },\n      \"distanceKm\": 1759,\n      \"specialDays\": {\n        \"onward\": {\n          \"is_special\": false,\n          \"special_day\": null,\n          \"special_type\": null,\n          \"country\": null\n        },\n        \"return\": null,\n        \"hasSpecialDays\": false\n      },\n      \"revenueData\": {\n        \"potential_revenue\": 12600,\n        \"avg_revenue_per_user\": 6300,\n        \"booking_probability_score\": 1.0,\n        \"estimated_conversion_value\": 12600,\n        \"revenue_bucket\": \"medium_value\",\n        \"currency\": {\n          \"code\": \"INR\",\n          \"symbol\": \"₹\",\n          \"name\": \"Indian Rupee\"\n        }\n      },\n      \"geography\": {\n        \"userLocation\": {\n          \"country\": \"India\",\n          \"state\": \"Unknown\",\n          \"city\": \"Unknown\",\n          \"timezone\": \"Asia/Calcutta\",\n          \"ipCountry\": \"India\",\n          \"currency\": \"INR\",\n          \"language\": \"en-US\"\n        }\n      },\n      \"searchPerformance\": {\n        \"searchDurationMs\": 0,\n        \"resultsLoadedAt\": \"2025-10-07T04:00:00.000Z\",\n        \"searchAbandoned\": false\n      }\n    },\n    \"booking\": {\n      \"tripType\": \"oneWay\",\n      \"cabinClass\": \"economy\",\n      \"passengers\": 2,\n      \"origin\": \"DEL\",\n      \"destination\": \"MAA\",\n      \"departureDate\": \"2025-10-22\",\n      \"returnDate\": null\n    },\n    \"sustainabilityImpact\": {\n      \"carbonFootprint\": 448,\n      \"distance\": 1759,\n      \"treesPlanted\": 17,\n      \"carbonOffset\": 448,\n      \"sustainabilityContribution\": 850,\n      \"impactType\": \"carbonFootprint\",\n      \"contributionType\": \"treesPlanted\",\n      \"timestamp\": \"2025-10-07T04:00:00.000Z\"\n    }\n  },\n  \"timestamp\": \"2025-10-07T04:00:00.000Z\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Data Elements Reference",
+      "item": [
+        {
+          "name": "All Data Layer Paths",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"_comment\": \"Complete list of all data layer paths for creating data elements in Adobe Launch\",\n  \n  \"pageView_Attributes\": {\n    \"event\": \"adobeDataLayer[n].event\",\n    \"pageData.pageType\": \"adobeDataLayer[n].pageData.pageType\",\n    \"pageData.pageName\": \"adobeDataLayer[n].pageData.pageName\",\n    \"pageData.pageCategory\": \"adobeDataLayer[n].pageData.pageCategory\",\n    \"pageData.bookingStep\": \"adobeDataLayer[n].pageData.bookingStep\",\n    \"pageData.pageURL\": \"adobeDataLayer[n].pageData.pageURL\",\n    \"pageData.referrer\": \"adobeDataLayer[n].pageData.referrer\",\n    \"pageData.previousPage\": \"adobeDataLayer[n].pageData.previousPage\",\n    \"pageData.timestamp\": \"adobeDataLayer[n].pageData.timestamp\",\n    \"pageData.sections\": \"adobeDataLayer[n].pageData.sections\"\n  },\n  \n  \"searchContext_Attributes\": {\n    \"searchContext.searchId\": \"adobeDataLayer[n].searchContext.searchId\",\n    \"searchContext.origin\": \"adobeDataLayer[n].searchContext.origin\",\n    \"searchContext.destination\": \"adobeDataLayer[n].searchContext.destination\",\n    \"searchContext.originDestination\": \"adobeDataLayer[n].searchContext.originDestination\",\n    \"searchContext.departureDate\": \"adobeDataLayer[n].searchContext.departureDate\",\n    \"searchContext.returnDate\": \"adobeDataLayer[n].searchContext.returnDate\",\n    \"searchContext.travelDay\": \"adobeDataLayer[n].searchContext.travelDay\",\n    \"searchContext.numberOfDays\": \"adobeDataLayer[n].searchContext.numberOfDays\",\n    \"searchContext.passengers.total\": \"adobeDataLayer[n].searchContext.passengers.total\",\n    \"searchContext.passengers.breakdown.adults.count\": \"adobeDataLayer[n].searchContext.passengers.breakdown.adults.count\",\n    \"searchContext.passengers.breakdown.children.count\": \"adobeDataLayer[n].searchContext.passengers.breakdown.children.count\",\n    \"searchContext.passengers.breakdown.infants.count\": \"adobeDataLayer[n].searchContext.passengers.breakdown.infants.count\",\n    \"searchContext.passengers.summary\": \"adobeDataLayer[n].searchContext.passengers.summary\",\n    \"searchContext.cabinClass\": \"adobeDataLayer[n].searchContext.cabinClass\",\n    \"searchContext.tripType\": \"adobeDataLayer[n].searchContext.tripType\",\n    \"searchContext.travelPurpose\": \"adobeDataLayer[n].searchContext.travelPurpose\",\n    \"searchContext.searchDateTime\": \"adobeDataLayer[n].searchContext.searchDateTime\",\n    \"searchContext.distanceKm\": \"adobeDataLayer[n].searchContext.distanceKm\",\n    \"searchContext.searchCriteria.originAirport\": \"adobeDataLayer[n].searchContext.searchCriteria.originAirport\",\n    \"searchContext.searchCriteria.originAirportName\": \"adobeDataLayer[n].searchContext.searchCriteria.originAirportName\",\n    \"searchContext.searchCriteria.originCity\": \"adobeDataLayer[n].searchContext.searchCriteria.originCity\",\n    \"searchContext.searchCriteria.originCountry\": \"adobeDataLayer[n].searchContext.searchCriteria.originCountry\",\n    \"searchContext.searchCriteria.destinationAirport\": \"adobeDataLayer[n].searchContext.searchCriteria.destinationAirport\",\n    \"searchContext.searchCriteria.destinationAirportName\": \"adobeDataLayer[n].searchContext.searchCriteria.destinationAirportName\",\n    \"searchContext.searchCriteria.destinationCity\": \"adobeDataLayer[n].searchContext.searchCriteria.destinationCity\",\n    \"searchContext.searchCriteria.destinationCountry\": \"adobeDataLayer[n].searchContext.searchCriteria.destinationCountry\",\n    \"searchContext.specialDays.hasSpecialDays\": \"adobeDataLayer[n].searchContext.specialDays.hasSpecialDays\",\n    \"searchContext.revenueData.potential_revenue\": \"adobeDataLayer[n].searchContext.revenueData.potential_revenue\",\n    \"searchContext.revenueData.avg_revenue_per_user\": \"adobeDataLayer[n].searchContext.revenueData.avg_revenue_per_user\",\n    \"searchContext.revenueData.booking_probability_score\": \"adobeDataLayer[n].searchContext.revenueData.booking_probability_score\",\n    \"searchContext.revenueData.revenue_bucket\": \"adobeDataLayer[n].searchContext.revenueData.revenue_bucket\",\n    \"searchContext.geography.userLocation.country\": \"adobeDataLayer[n].searchContext.geography.userLocation.country\",\n    \"searchContext.geography.userLocation.timezone\": \"adobeDataLayer[n].searchContext.geography.userLocation.timezone\",\n    \"searchContext.geography.userLocation.currency\": \"adobeDataLayer[n].searchContext.geography.userLocation.currency\"\n  },\n  \n  \"purchase_Revenue_Attributes\": {\n    \"eventData.revenue.transactionId\": \"adobeDataLayer[n].eventData.revenue.transactionId\",\n    \"eventData.revenue.totalRevenue\": \"adobeDataLayer[n].eventData.revenue.totalRevenue\",\n    \"eventData.revenue.currency\": \"adobeDataLayer[n].eventData.revenue.currency\",\n    \"eventData.revenue.bookingReference\": \"adobeDataLayer[n].eventData.revenue.bookingReference\",\n    \"eventData.revenue.paymentMethod\": \"adobeDataLayer[n].eventData.revenue.paymentMethod\",\n    \"eventData.revenue.paymentStatus\": \"adobeDataLayer[n].eventData.revenue.paymentStatus\"\n  },\n  \n  \"purchase_Product_Attributes\": {\n    \"eventData.revenue.products[i].productId\": \"adobeDataLayer[n].eventData.revenue.products[i].productId\",\n    \"eventData.revenue.products[i].productName\": \"adobeDataLayer[n].eventData.revenue.products[i].productName\",\n    \"eventData.revenue.products[i].category\": \"adobeDataLayer[n].eventData.revenue.products[i].category\",\n    \"eventData.revenue.products[i].subcategory\": \"adobeDataLayer[n].eventData.revenue.products[i].subcategory\",\n    \"eventData.revenue.products[i].price\": \"adobeDataLayer[n].eventData.revenue.products[i].price\",\n    \"eventData.revenue.products[i].quantity\": \"adobeDataLayer[n].eventData.revenue.products[i].quantity\",\n    \"eventData.revenue.products[i].currency\": \"adobeDataLayer[n].eventData.revenue.products[i].currency\"\n  },\n  \n  \"purchase_Payment_Attributes\": {\n    \"eventData.paymentDetails.paymentType\": \"adobeDataLayer[n].eventData.paymentDetails.paymentType\",\n    \"eventData.paymentDetails.paymentCurrency\": \"adobeDataLayer[n].eventData.paymentDetails.paymentCurrency\",\n    \"eventData.paymentDetails.paymentCategories.baseFare\": \"adobeDataLayer[n].eventData.paymentDetails.paymentCategories.baseFare\",\n    \"eventData.paymentDetails.paymentCategories.ancillaryFare\": \"adobeDataLayer[n].eventData.paymentDetails.paymentCategories.ancillaryFare\",\n    \"eventData.paymentDetails.paymentCategories.taxes\": \"adobeDataLayer[n].eventData.paymentDetails.paymentCategories.taxes\",\n    \"eventData.paymentDetails.paymentCategories.convenienceFee\": \"adobeDataLayer[n].eventData.paymentDetails.paymentCategories.convenienceFee\",\n    \"eventData.paymentDetails.paymentCategories.surcharge\": \"adobeDataLayer[n].eventData.paymentDetails.paymentCategories.surcharge\",\n    \"eventData.paymentDetails.paymentCategories.totalAmount\": \"adobeDataLayer[n].eventData.paymentDetails.paymentCategories.totalAmount\",\n    \"eventData.paymentDetails.pnr\": \"adobeDataLayer[n].eventData.paymentDetails.pnr\",\n    \"eventData.paymentDetails.bookingId\": \"adobeDataLayer[n].eventData.paymentDetails.bookingId\",\n    \"eventData.paymentDetails.passengers\": \"adobeDataLayer[n].eventData.paymentDetails.passengers\",\n    \"eventData.paymentDetails.tripType\": \"adobeDataLayer[n].eventData.paymentDetails.tripType\"\n  },\n  \n  \"purchase_Customer_Attributes\": {\n    \"eventData.customer.userId\": \"adobeDataLayer[n].eventData.customer.userId\",\n    \"eventData.customer.email\": \"adobeDataLayer[n].eventData.customer.email\",\n    \"eventData.customer.phone\": \"adobeDataLayer[n].eventData.customer.phone\",\n    \"eventData.customer.loyaltyTier\": \"adobeDataLayer[n].eventData.customer.loyaltyTier\"\n  },\n  \n  \"purchase_Booking_Attributes\": {\n    \"eventData.booking.tripType\": \"adobeDataLayer[n].eventData.booking.tripType\",\n    \"eventData.booking.cabinClass\": \"adobeDataLayer[n].eventData.booking.cabinClass\",\n    \"eventData.booking.passengers\": \"adobeDataLayer[n].eventData.booking.passengers\",\n    \"eventData.booking.origin\": \"adobeDataLayer[n].eventData.booking.origin\",\n    \"eventData.booking.destination\": \"adobeDataLayer[n].eventData.booking.destination\",\n    \"eventData.booking.departureDate\": \"adobeDataLayer[n].eventData.booking.departureDate\",\n    \"eventData.booking.returnDate\": \"adobeDataLayer[n].eventData.booking.returnDate\"\n  },\n  \n  \"sustainabilityImpact_Attributes\": {\n    \"eventData.sustainabilityImpact.carbonFootprint\": \"adobeDataLayer[n].eventData.sustainabilityImpact.carbonFootprint\",\n    \"eventData.sustainabilityImpact.distance\": \"adobeDataLayer[n].eventData.sustainabilityImpact.distance\",\n    \"eventData.sustainabilityImpact.treesPlanted\": \"adobeDataLayer[n].eventData.sustainabilityImpact.treesPlanted\",\n    \"eventData.sustainabilityImpact.carbonOffset\": \"adobeDataLayer[n].eventData.sustainabilityImpact.carbonOffset\",\n    \"eventData.sustainabilityImpact.sustainabilityContribution\": \"adobeDataLayer[n].eventData.sustainabilityImpact.sustainabilityContribution\",\n    \"eventData.sustainabilityImpact.impactType\": \"adobeDataLayer[n].eventData.sustainabilityImpact.impactType\",\n    \"eventData.sustainabilityImpact.contributionType\": \"adobeDataLayer[n].eventData.sustainabilityImpact.contributionType\"\n  },\n  \n  \"userContext_Attributes\": {\n    \"userContext.userAuthenticated\": \"adobeDataLayer[n].userContext.userAuthenticated\",\n    \"userContext.userId\": \"adobeDataLayer[n].userContext.userId\",\n    \"userContext.userEmail\": \"adobeDataLayer[n].userContext.userEmail\",\n    \"userContext.userLoyaltyTier\": \"adobeDataLayer[n].userContext.userLoyaltyTier\",\n    \"userContext.sessionId\": \"adobeDataLayer[n].userContext.sessionId\"\n  },\n  \n  \"bookingContext_Attributes\": {\n    \"bookingContext.bookingId\": \"adobeDataLayer[n].bookingContext.bookingId\",\n    \"bookingContext.pnr\": \"adobeDataLayer[n].bookingContext.pnr\",\n    \"bookingContext.bookingStatus\": \"adobeDataLayer[n].bookingContext.bookingStatus\",\n    \"bookingContext.bookingStep\": \"adobeDataLayer[n].bookingContext.bookingStep\",\n    \"bookingContext.bookingStepNumber\": \"adobeDataLayer[n].bookingContext.bookingStepNumber\",\n    \"bookingContext.totalSteps\": \"adobeDataLayer[n].bookingContext.totalSteps\",\n    \"bookingContext.passengersBreakdown.totalPassengers\": \"adobeDataLayer[n].bookingContext.passengersBreakdown.totalPassengers\",\n    \"bookingContext.passengersBreakdown.adult\": \"adobeDataLayer[n].bookingContext.passengersBreakdown.adult\",\n    \"bookingContext.passengersBreakdown.child\": \"adobeDataLayer[n].bookingContext.passengersBreakdown.child\",\n    \"bookingContext.passengersBreakdown.infant\": \"adobeDataLayer[n].bookingContext.passengersBreakdown.infant\"\n  },\n  \n  \"ancillaryServices_Attributes\": {\n    \"ancillaryServices.servicesSelected[i].passenger\": \"adobeDataLayer[n].ancillaryServices.servicesSelected[i].passenger\",\n    \"ancillaryServices.servicesSelected[i].onward.seat.details\": \"adobeDataLayer[n].ancillaryServices.servicesSelected[i].onward.seat.details\",\n    \"ancillaryServices.servicesSelected[i].onward.seat.cost\": \"adobeDataLayer[n].ancillaryServices.servicesSelected[i].onward.seat.cost\",\n    \"ancillaryServices.servicesSelected[i].onward.seat.type\": \"adobeDataLayer[n].ancillaryServices.servicesSelected[i].onward.seat.type\",\n    \"ancillaryServices.servicesSelected[i].onward.baggage.details\": \"adobeDataLayer[n].ancillaryServices.servicesSelected[i].onward.baggage.details\",\n    \"ancillaryServices.servicesSelected[i].onward.baggage.cost\": \"adobeDataLayer[n].ancillaryServices.servicesSelected[i].onward.baggage.cost\",\n    \"ancillaryServices.servicesSelected[i].onward.priorityBoarding.details\": \"adobeDataLayer[n].ancillaryServices.servicesSelected[i].onward.priorityBoarding.details\",\n    \"ancillaryServices.servicesSelected[i].onward.loungeAccess.details\": \"adobeDataLayer[n].ancillaryServices.servicesSelected[i].onward.loungeAccess.details\",\n    \"ancillaryServices.totalAncillaryCost\": \"adobeDataLayer[n].ancillaryServices.totalAncillaryCost\"\n  },\n  \n  \"pricing_Attributes\": {\n    \"pricing.flightTotal\": \"adobeDataLayer[n].pricing.flightTotal\",\n    \"pricing.ancillaryTotal\": \"adobeDataLayer[n].pricing.ancillaryTotal\",\n    \"pricing.totalAmount\": \"adobeDataLayer[n].pricing.totalAmount\",\n    \"pricing.totalFare\": \"adobeDataLayer[n].pricing.totalFare\",\n    \"pricing.currency\": \"adobeDataLayer[n].pricing.currency\",\n    \"pricing.breakdown.perPassengerFlightFare\": \"adobeDataLayer[n].pricing.breakdown.perPassengerFlightFare\",\n    \"pricing.breakdown.totalPassengers\": \"adobeDataLayer[n].pricing.breakdown.totalPassengers\",\n    \"pricing.breakdown.totalFlightFare\": \"adobeDataLayer[n].pricing.breakdown.totalFlightFare\",\n    \"pricing.breakdown.totalAncillaryFare\": \"adobeDataLayer[n].pricing.breakdown.totalAncillaryFare\"\n  },\n  \n  \"_instructions\": {\n    \"note1\": \"Replace [n] with the appropriate array index or use getState() function\",\n    \"note2\": \"For arrays like products[i], loop through or use specific index\",\n    \"note3\": \"All event types: pageView, searchSubmit, flightSelect, proceedToAncillaryServices, proceedToPayment, purchase\",\n    \"note4\": \"All values are in plain text format (no hyphens or underscores)\",\n    \"note5\": \"ProductIds: flight, seat, baggage, priorityBoarding, loungeAccess\",\n    \"note6\": \"Payment methods: credit card, debit card, UPI, netbanking, wallet\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "adobe_endpoint",
+      "value": "https://your-adobe-endpoint.com/collect",
+      "type": "string"
+    }
+  ]
+}
+
