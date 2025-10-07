@@ -412,18 +412,22 @@ const BookingConfirmation = () => {
         return R * c;
       };
 
-      const getCoordinates = (airport) => {
-        return airport.coordinates ? airport.coordinates : null;
+      const getCoordinates = (airportCode) => {
+        const airport = findAirportByCode(airportCode);
+        if (airport?.coordinates) {
+          return [airport.coordinates.latitude, airport.coordinates.longitude];
+        }
+        return null;
       };
 
-      const onwardOriginCoords = getCoordinates(selectedFlights.onward?.origin);
-      const onwardDestCoords = getCoordinates(selectedFlights.onward?.destination);
+      const onwardOriginCoords = getCoordinates(selectedFlights.onward?.origin?.iata_code);
+      const onwardDestCoords = getCoordinates(selectedFlights.onward?.destination?.iata_code);
       const onwardDistance = onwardOriginCoords && onwardDestCoords 
         ? calculateFlightDistance(onwardOriginCoords, onwardDestCoords) 
         : 0;
 
-      const returnOriginCoords = getCoordinates(selectedFlights.return?.origin);
-      const returnDestCoords = getCoordinates(selectedFlights.return?.destination);
+      const returnOriginCoords = getCoordinates(selectedFlights.return?.origin?.iata_code);
+      const returnDestCoords = getCoordinates(selectedFlights.return?.destination?.iata_code);
       const returnDistance = tripType === 'roundtrip' && returnOriginCoords && returnDestCoords
         ? calculateFlightDistance(returnOriginCoords, returnDestCoords)
         : 0;
