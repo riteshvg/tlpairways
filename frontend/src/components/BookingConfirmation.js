@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import usePageView from '../hooks/usePageView';
 import airlinesDataLayer from '../services/AirlinesDataLayer';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 import {
   Container,
   Paper,
@@ -949,6 +951,66 @@ const BookingConfirmation = () => {
     }
   };
 
+  const handleDownloadPDF = async () => {
+    try {
+      // Track PDF download
+      if (bookingReference) {
+        airlinesDataLayer.trackPrintConfirmation({
+          printType: 'booking_confirmation',
+          bookingReference: bookingReference,
+          printFormat: 'pdf_download'
+        });
+      }
+
+      // Get the confirmation content
+      const element = document.getElementById('booking-confirmation-content');
+      if (!element) {
+        console.error('Booking confirmation content not found');
+        return;
+      }
+
+      // Create canvas from HTML
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        logging: false,
+        useCORS: true,
+        allowTaint: true
+      });
+
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+
+      const imgWidth = 210; // A4 width in mm
+      const pageHeight = 297; // A4 height in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      // Add first page
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      // Add additional pages if content is longer than one page
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      // Download the PDF
+      pdf.save(`TLAirways-Booking-${pnr}-${new Date().toISOString().split('T')[0]}.pdf`);
+      console.log('PDF downloaded successfully');
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Error generating PDF. Please try using the Print Ticket option instead.');
+    }
+  };
+
   const formatDate = (dateString) => {
     if (!dateString) return '';
     const date = parseISO(dateString);
@@ -1231,7 +1293,7 @@ const BookingConfirmation = () => {
 
   return (
     <Container maxWidth="md" sx={{ py: 4 }}>
-      <Paper elevation={3} sx={{ p: 4 }}>
+      <Paper elevation={3} sx={{ p: 4 }} id="booking-confirmation-content">
         <Box sx={{ textAlign: 'center', mb: 4 }}>
           <CheckCircleIcon color="success" sx={{ fontSize: 60 }} />
           <Typography variant="h4" gutterBottom>
@@ -1362,7 +1424,7 @@ const BookingConfirmation = () => {
           </Button>
           <Button
             variant="outlined"
-            onClick={() => window.print()}
+            onClick={handleDownloadPDF}
             startIcon={<DownloadIcon />}
           >
             Download Ticket (PDF)
