@@ -431,6 +431,17 @@ const BookingConfirmation = () => {
       calculatedDistance = onwardDistance + returnDistance;
       calculatedTrees = Math.floor(calculatedDistance / 100);
       
+      console.log('✅ Distance calculated:', {
+        onwardDistance,
+        returnDistance,
+        calculatedDistance,
+        calculatedTrees,
+        onwardOriginCoords,
+        onwardDestCoords,
+        returnOriginCoords,
+        returnDestCoords
+      });
+      
       // Update state for UI display
       setTotalDistance(calculatedDistance);
       setTreesPlanted(calculatedTrees);
@@ -732,13 +743,41 @@ const BookingConfirmation = () => {
           searchDateTime: new Date().toISOString().split('T')[0],
           searchCriteria: {
             originAirport: selectedFlights.onward?.origin?.iata_code || null,
-            originAirportName: selectedFlights.onward?.origin?.name || null,
-            originCity: selectedFlights.onward?.origin?.city || null,
-            originCountry: selectedFlights.onward?.origin?.country || null,
+            originAirportName: (() => {
+              const originAirport = findAirportByCode(selectedFlights.onward?.origin?.iata_code);
+              console.log('Origin airport lookup:', {
+                code: selectedFlights.onward?.origin?.iata_code,
+                foundAirport: originAirport,
+                existingName: selectedFlights.onward?.origin?.name
+              });
+              return originAirport?.name || selectedFlights.onward?.origin?.name || null;
+            })(),
+            originCity: selectedFlights.onward?.origin?.city || (() => {
+              const originAirport = findAirportByCode(selectedFlights.onward?.origin?.iata_code);
+              return originAirport?.city || null;
+            })(),
+            originCountry: selectedFlights.onward?.origin?.country || (() => {
+              const originAirport = findAirportByCode(selectedFlights.onward?.origin?.iata_code);
+              return originAirport?.country || null;
+            })(),
             destinationAirport: selectedFlights.onward?.destination?.iata_code || null,
-            destinationAirportName: selectedFlights.onward?.destination?.name || null,
-            destinationCity: selectedFlights.onward?.destination?.city || null,
-            destinationCountry: selectedFlights.onward?.destination?.country || null,
+            destinationAirportName: (() => {
+              const destAirport = findAirportByCode(selectedFlights.onward?.destination?.iata_code);
+              console.log('Destination airport lookup:', {
+                code: selectedFlights.onward?.destination?.iata_code,
+                foundAirport: destAirport,
+                existingName: selectedFlights.onward?.destination?.name
+              });
+              return destAirport?.name || selectedFlights.onward?.destination?.name || null;
+            })(),
+            destinationCity: selectedFlights.onward?.destination?.city || (() => {
+              const destAirport = findAirportByCode(selectedFlights.onward?.destination?.iata_code);
+              return destAirport?.city || null;
+            })(),
+            destinationCountry: selectedFlights.onward?.destination?.country || (() => {
+              const destAirport = findAirportByCode(selectedFlights.onward?.destination?.iata_code);
+              return destAirport?.country || null;
+            })(),
             departureDate: selectedFlights.onward?.departureTime ? new Date(selectedFlights.onward.departureTime).toISOString().split('T')[0] : null,
             returnDate: selectedFlights.return?.departureTime ? new Date(selectedFlights.return.departureTime).toISOString().split('T')[0] : null,
             tripType: tripType || 'oneWay',
