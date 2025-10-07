@@ -1,6 +1,6 @@
 # TLAirways - Premium Air Travel Experience
 
-A modern flight booking application built with React, Node.js, and Express.
+A modern flight booking application built with React, Node.js, and Express, featuring comprehensive Adobe Analytics integration and optimized data layer tracking.
 
 ## 🚀 Features
 
@@ -8,21 +8,30 @@ A modern flight booking application built with React, Node.js, and Express.
 - **Multi-Cabin Support**: Economy, Premium Economy, Business, and First Class
 - **Currency Conversion**: Automatic USD/INR conversion for international flights
 - **Ancillary Services**: Seat selection, baggage, meals, priority boarding, lounge access
-- **Responsive Design**: Modern UI that works on all devices
-- **Analytics Integration**: Adobe Data Layer integration for tracking
+- **Authentication**: Auth0 integration with state persistence across redirects
+- **Responsive Design**: Modern Material-UI based interface that works on all devices
+- **Advanced Analytics**: Comprehensive Adobe Data Layer integration with optimized event tracking
+  - Single pageView event per page load
+  - Optimized purchase event tracking
+  - Complete booking flow analytics
+  - Revenue and product tracking
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React 18, Material-UI, React Router
+- **Frontend**: React 18, Material-UI v5, React Router v6
 - **Backend**: Node.js, Express.js
 - **Database**: MongoDB (optional)
-- **Deployment**: Render.com
+- **Authentication**: Auth0
+- **Analytics**: Adobe Data Layer (ACDL)
+- **Deployment**: Railway (Production), Nixpacks build system
 
 ## 📦 Installation
 
 ### Prerequisites
 - Node.js (v16 or higher)
 - npm (v8 or higher)
+- Auth0 account (for authentication features)
+- Adobe Analytics account (for analytics features)
 
 ### Local Development
 
@@ -34,172 +43,300 @@ A modern flight booking application built with React, Node.js, and Express.
 
 2. **Install dependencies**
    ```bash
+   # Install all dependencies (frontend + backend)
    npm run install-all
    ```
 
-3. **Start development servers**
-   ```bash
-   npm run dev
+3. **Set up environment variables**
+   
+   Create `.env` file in the backend directory:
+   ```env
+   PORT=5000
+   NODE_ENV=development
+   MONGODB_URI=mongodb://localhost:27017/tlairways
+   ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3001,http://localhost:3002
    ```
 
-4. **Access the application**
-   - Frontend: http://localhost:3001
+   Create `.env` file in the frontend directory:
+   ```env
+   REACT_APP_AUTH0_DOMAIN=your-auth0-domain.auth0.com
+   REACT_APP_AUTH0_CLIENT_ID=your-auth0-client-id
+   REACT_APP_AUTH0_REDIRECT_URI=http://localhost:3002/callback
+   REACT_APP_API_URL=http://localhost:5000
+   ```
+
+4. **Start development servers**
+   ```bash
+   # Option 1: Start both frontend and backend
+   npm run dev
+   
+   # Option 2: Start separately
+   # Backend (in terminal 1)
+   cd backend && npm start
+   
+   # Frontend (in terminal 2)
+   cd frontend && npm start
+   ```
+
+5. **Access the application**
+   - Frontend: http://localhost:3002
    - Backend API: http://localhost:5000
 
-## 🚀 Deployment to Render.com
+## 🚂 Deployment to Railway
 
-### Method 1: Using Render Dashboard (Recommended)
+### Railway Configuration
 
-1. **Prepare Your Repository**
-   - Ensure all files are committed to your Git repository
-   - Make sure the repository is public or connected to Render
+The application is configured to deploy on Railway using Nixpacks build system.
 
-2. **Create a Render Account**
-   - Go to [render.com](https://render.com)
-   - Sign up with your GitHub account
+#### Configuration Files
 
-3. **Create a New Web Service**
-   - Click "New +" → "Web Service"
-   - Connect your GitHub repository
-   - Select the repository containing your TLAirways app
-
-4. **Configure the Service**
-   - **Name**: `tlairways-app` (or your preferred name)
-   - **Environment**: `Node`
-   - **Region**: Choose closest to your users
-   - **Branch**: `main` (or your default branch)
-   - **Build Command**: `npm run render-build`
-   - **Start Command**: `npm start`
-   - **Plan**: Free (or choose paid plan)
-
-5. **Set Environment Variables**
-   - Click on "Environment" tab
-   - Add the following variables:
-     ```
-     NODE_ENV=production
-     PORT=10000
-     ALLOWED_ORIGINS=https://your-app-name.onrender.com
-     ```
-
-6. **Deploy**
-   - Click "Create Web Service"
-   - Render will automatically build and deploy your application
-
-### Method 2: Using render.yaml (Blue-Green Deployment)
-
-1. **Use the provided render.yaml file**
-   - The file is already configured in your repository
-   - Render will automatically detect and use it
-
-2. **Deploy via Render Dashboard**
-   - Follow the same steps as Method 1
-   - Render will use the configuration from render.yaml
-
-### Troubleshooting Deployment Issues
-
-If you encounter the error "Cannot find module '/opt/render/project/src/backend/src/index.js'":
-
-1. **Verify File Structure**
-   ```bash
-   # Run the deployment check script
-   node deploy-check.js
+1. **nixpacks.toml** - Build and deployment configuration
+   ```toml
+   [phases.setup]
+   nixPkgs = ["nodejs-18_x"]
+   
+   [phases.build]
+   cmds = ["npm install", "cd frontend && npm install", "cd backend && npm install"]
+   
+   [start]
+   cmd = "npm start"
    ```
 
-2. **Check Build Logs**
-   - Go to your Render dashboard
-   - Click on your service
-   - Check the "Logs" tab for build errors
-
-3. **Common Solutions**
-   - Ensure all files are committed to Git
-   - Verify the build command is correct: `npm run render-build`
-   - Check that the start command is: `npm start`
-   - Make sure the root index.js file exists
-
-4. **Manual Verification**
-   ```bash
-   # Test locally before deploying
-   npm run render-build
-   npm start
+2. **railway.json** - Railway-specific settings
+   ```json
+   {
+     "$schema": "https://railway.app/railway.schema.json",
+     "build": {
+       "builder": "NIXPACKS",
+       "buildCommand": "npm install && cd frontend && npm install && npm run build && cd ../backend && npm install"
+     },
+     "deploy": {
+       "startCommand": "npm start",
+       "restartPolicyType": "ON_FAILURE",
+       "restartPolicyMaxRetries": 10
+     }
+   }
    ```
 
-5. **Health Check**
-   - After deployment, test: `https://your-app.onrender.com/api/health`
-   - Should return: `{"status":"OK","timestamp":"...","environment":"production"}`
+3. **railway-build.sh** - Build script
+   ```bash
+   #!/bin/bash
+   echo "🚂 Starting Railway Build Process..."
+   
+   # Install root dependencies
+   npm install
+   
+   # Build frontend
+   cd frontend
+   npm install
+   npm run build
+   
+   # Install backend dependencies
+   cd ../backend
+   npm install
+   
+   echo "✅ Build Complete!"
+   ```
 
-## 🔧 Configuration
+### Deployment Steps
 
-### Environment Variables
+1. **Connect to Railway**
+   - Go to [railway.app](https://railway.app)
+   - Sign up/Login with GitHub
+   - Click "New Project" → "Deploy from GitHub repo"
+   - Select your repository
 
-Create a `.env` file in the backend directory:
+2. **Configure Environment Variables**
+   
+   In Railway dashboard, add these variables:
+   ```env
+   NODE_ENV=production
+   PORT=3000
+   MONGODB_URI=your-mongodb-atlas-uri
+   ALLOWED_ORIGINS=https://your-app.up.railway.app
+   
+   # Auth0 Configuration
+   REACT_APP_AUTH0_DOMAIN=your-auth0-domain.auth0.com
+   REACT_APP_AUTH0_CLIENT_ID=your-auth0-client-id
+   REACT_APP_AUTH0_REDIRECT_URI=https://your-app.up.railway.app/callback
+   
+   # API Configuration
+   REACT_APP_API_URL=https://your-app.up.railway.app
+   ```
 
-```env
-# Server Configuration
-PORT=5000
-NODE_ENV=development
+3. **Deploy**
+   - Railway will automatically detect the configuration
+   - Build and deployment will start automatically
+   - Check logs for build progress
 
-# Database Configuration (if using MongoDB)
-MONGODB_URI=mongodb://localhost:27017/tlairways
+4. **Verify Deployment**
+   - Health check: `https://your-app.up.railway.app/api/health`
+   - Expected response: `{"status":"OK","timestamp":"...","environment":"production"}`
 
-# CORS Origins
-ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3001
+### Deployment Scripts
 
-# Adobe Analytics Configuration
-ADOBE_ANALYTICS_ENABLED=true
-ADOBE_ENVIRONMENT=development
-ADOBE_SCRIPT_URL=https://assets.adobedtm.com/01296dd00565/26201e3c8f15/launch-2f8b80d50cb3-development.min.js
+- `npm run railway-build` - Build the application for Railway
+- `npm start` - Start the production server
+- `node deploy-check.js` - Verify deployment configuration
 
-# Security
-JWT_SECRET=your-super-secret-jwt-key-here
-SESSION_SECRET=your-super-secret-session-key-here
-```
+## 📊 Adobe Data Layer Integration
 
-### Production Configuration
+### Overview
 
-For production deployment on Render:
+The application features a comprehensive Adobe Data Layer implementation with optimized event tracking to prevent duplicates and ensure accurate analytics.
 
-```env
-NODE_ENV=production
-PORT=10000
-MONGODB_URI=your-mongodb-atlas-uri
-ALLOWED_ORIGINS=https://tlpairways.onrender.com
-ADOBE_ANALYTICS_ENABLED=true
-ADOBE_ENVIRONMENT=production
-```
+### Key Features
+
+1. **Optimized Event Tracking**
+   - Single pageView event per page load
+   - Single purchase event on confirmation page
+   - Duplicate prevention using React refs and flags
+
+2. **Complete Booking Flow Tracking**
+   - Search context (origin, destination, dates, passengers)
+   - Flight selection
+   - Traveller details
+   - Ancillary services selection (passenger-wise)
+   - Payment details
+   - Booking confirmation with revenue tracking
+
+3. **Data Layer Structure**
+   ```javascript
+   window.adobeDataLayer = [
+     {
+       event: 'pageView',
+       pageData: { /* page details */ },
+       bookingContext: { /* booking state */ },
+       userContext: { /* user details */ }
+     },
+     {
+       event: 'purchase',
+       eventData: {
+         revenue: { /* transaction details */ },
+         paymentDetails: { /* payment info */ },
+         customer: { /* customer data */ },
+         booking: { /* booking details */ }
+       }
+     }
+   ];
+   ```
+
+### Key Components
+
+- **AirlinesDataLayer.js** - Core data layer service
+- **usePageView.js** - Global page view tracking hook with duplicate prevention
+- **useHomepageDataLayer.js** - Homepage-specific tracking
+- **useAncillaryServicesDataLayer.js** - Ancillary services tracking
+- **useTravellerDetailsDataLayer.js** - Traveller details tracking
+
+### Data Layer Events
+
+| Event | Description | Page |
+|-------|-------------|------|
+| `pageView` | Page load tracking | All pages |
+| `searchSubmit` | Flight search submission | Home, Search |
+| `flightSelect` | Flight selection | Search Results |
+| `proceedToAncillaryServices` | Navigate to ancillary | Traveller Details |
+| `proceedToPayment` | Navigate to payment | Ancillary Services |
+| `purchase` | Booking confirmation | Confirmation |
+
+### Analytics Best Practices
+
+1. **Single Event Per Action**
+   - Each user action triggers exactly one event
+   - Duplicate prevention using useRef flags
+   - Global tracking to prevent cross-component duplicates
+
+2. **Passenger-Wise Tracking**
+   - Ancillary services tracked per passenger
+   - Revenue calculated per passenger
+   - Complete passenger breakdown in booking context
+
+3. **Revenue Tracking**
+   - Base fare (per passenger)
+   - Ancillary services (seats, meals, baggage, etc.)
+   - Taxes and fees
+   - Total transaction value
 
 ## 📁 Project Structure
 
 ```
 tlpairways/
-├── frontend/                 # React frontend application
-│   ├── public/              # Static files
-│   │   ├── components/      # React components
-│   │   ├── pages/          # Page components
-│   │   ├── services/       # API services
-│   │   ├── config/         # Configuration files
-│   │   └── data/           # Static data files
-│   └── package.json
-├── backend/                 # Node.js backend API
+├── frontend/                    # React frontend application
+│   ├── public/                 # Static files
 │   ├── src/
-│   │   ├── routes/         # API routes
-│   │   ├── models/         # Database models
-│   │   ├── config/         # Configuration
-│   │   └── scripts/        # Utility scripts
+│   │   ├── components/         # React components
+│   │   │   ├── auth/          # Auth0 components
+│   │   │   ├── protected/     # Protected route wrappers
+│   │   │   ├── FlightSearch.js
+│   │   │   ├── SearchResults.js
+│   │   │   ├── TravellerDetails.js
+│   │   │   ├── AncillaryServices.js
+│   │   │   ├── Payment.js
+│   │   │   └── BookingConfirmation.js
+│   │   ├── hooks/             # Custom React hooks
+│   │   │   ├── usePageView.js
+│   │   │   ├── useHomepageDataLayer.js
+│   │   │   ├── useAncillaryServicesDataLayer.js
+│   │   │   └── useTravellerDetailsDataLayer.js
+│   │   ├── services/          # API and analytics services
+│   │   │   ├── AirlinesDataLayer.js
+│   │   │   ├── PageViewTracker.js
+│   │   │   └── api.js
+│   │   ├── context/           # React context providers
+│   │   │   └── AuthContext.js
+│   │   ├── config/            # Configuration files
+│   │   └── tests/             # Test files
 │   └── package.json
-├── package.json            # Root package.json
-├── render.yaml             # Render deployment config
+├── backend/                    # Node.js backend API
+│   ├── src/
+│   │   ├── routes/            # API routes
+│   │   │   ├── flights.js
+│   │   │   ├── airports.js
+│   │   │   └── userLocation.js
+│   │   ├── models/            # Database models
+│   │   ├── config/            # Configuration
+│   │   ├── middleware/        # Express middleware
+│   │   └── scripts/           # Utility scripts
+│   └── package.json
+├── documentation/              # Project documentation
+│   ├── ADOBE_API_USAGE.md
+│   ├── ADOBE_DATALAYER_STRUCTURE.md
+│   ├── AUTH0_ENVIRONMENT_SETUP.md
+│   ├── RAILWAY_DEPLOYMENT_GUIDE.md
+│   └── REAL_BOOKING_DATA_IMPLEMENTATION.md
+├── package.json               # Root package.json
+├── nixpacks.toml              # Railway/Nixpacks configuration
+├── railway.json               # Railway deployment settings
+├── railway-build.sh           # Railway build script
+├── deploy-check.js            # Deployment verification script
 └── README.md
 ```
 
 ## 🔍 API Endpoints
 
-- `GET /api/health` - Health check
+### Health & Status
+- `GET /api/health` - Health check endpoint
+- Returns: `{"status":"OK","timestamp":"...","environment":"..."}`
+
+### Airports
 - `GET /api/airports` - Get all airports
-- `GET /api/flights` - Get flights (with query parameters)
+- `GET /api/airports/:code` - Get airport by IATA code
+
+### Flights
+- `GET /api/flights` - Search flights
+  - Query params: `origin`, `destination`, `departureDate`, `returnDate`, `passengers`, `cabinClass`
+
+### User Location
+- `GET /api/user-location` - Get user's location based on IP
+  - Returns: Country, city, coordinates
 
 ## 🧪 Testing
 
 ```bash
+# Run all tests
+npm test
+
 # Test frontend
 cd frontend
 npm test
@@ -207,41 +344,145 @@ npm test
 # Test backend
 cd backend
 npm test
+
+# Run specific test file
+npm test -- SearchResults.test.js
 ```
 
-## 📊 Monitoring
-
-- **Health Check**: `/api/health`
-- **Logs**: Available in Render dashboard
-- **Analytics**: Adobe Data Layer integration
+### Test Coverage
+- Component tests using React Testing Library
+- Hook tests for custom hooks
+- Data layer integration tests
+- Auth flow tests
 
 ## 🔒 Security
 
-- Helmet.js for security headers
-- CORS configuration
-- Input validation
-- Rate limiting (recommended for production)
+- **Helmet.js** - Security headers
+- **CORS** - Configured for specific origins
+- **Auth0** - OAuth 2.0 authentication
+- **Input Validation** - Server-side validation
+- **Content Security Policy** - CSP headers for Auth0 and Adobe
+- **Rate Limiting** - Recommended for production
 
-## 🚀 Performance
+### CSP Configuration
+```javascript
+contentSecurityPolicy: {
+  directives: {
+    defaultSrc: ["'self'"],
+    scriptSrc: ["'self'", "'unsafe-inline'", "*.auth0.com", "*.adobedtm.com"],
+    connectSrc: ["'self'", "*.auth0.com", "*.adobe.io"],
+    imgSrc: ["'self'", "data:", "*.auth0.com"],
+    frameSrc: ["*.auth0.com"]
+  }
+}
+```
 
-- Gzip compression enabled
-- Static file serving
-- React production build
-- Optimized bundle size
+## 🚀 Performance Optimizations
 
-## 📞 Support
+- **Gzip Compression** - Reduced bundle size
+- **Code Splitting** - React lazy loading
+- **Memoization** - useMemo and useCallback for performance
+- **Optimized Images** - Compressed and lazy-loaded
+- **Production Build** - Minified and optimized
+- **Bundle Size**: 312.39 KB (gzipped)
 
-For deployment issues:
-1. Check Render logs in the dashboard
-2. Verify environment variables
-3. Ensure all dependencies are installed
-4. Check the health endpoint: `https://your-app.onrender.com/api/health`
+### Data Layer Optimizations
+- Single pageView event per page (eliminated duplicates)
+- Ref-based duplicate prevention
+- Optimized useEffect dependencies
+- Memoized page configurations
 
-## 📝 License
+## 📊 Monitoring & Analytics
+
+### Application Monitoring
+- **Health Checks**: Automatic via Railway
+- **Logs**: Available in Railway dashboard
+- **Error Tracking**: Console logs and error boundaries
+
+### Analytics Tracking
+- **Adobe Data Layer**: Complete booking flow
+- **Custom Events**: User interactions
+- **Revenue Tracking**: Transaction-level data
+- **User Journey**: End-to-end tracking
+
+## 🔧 Configuration Management
+
+### Branch Strategy
+- `main` - Production branch (auto-deploys to Railway)
+- `enhancements` - Development branch for new features
+
+### Deployment Workflow
+1. Develop on `enhancements` branch
+2. Test locally
+3. Merge to `main` via pull request
+4. Automatic deployment to Railway
+5. Verify production deployment
+
+## 📞 Support & Troubleshooting
+
+### Common Issues
+
+1. **Build Fails on Railway**
+   - Check build logs in Railway dashboard
+   - Verify all dependencies in package.json
+   - Ensure environment variables are set
+
+2. **Auth0 Not Working**
+   - Verify Auth0 configuration in dashboard
+   - Check callback URLs match deployment URL
+   - Ensure CSP headers allow Auth0 domains
+
+3. **Data Layer Events Not Firing**
+   - Check browser console for errors
+   - Verify Adobe Data Layer is initialized
+   - Check duplicate prevention flags
+
+4. **Application Not Loading**
+   - Check health endpoint: `/api/health`
+   - Verify environment variables
+   - Check Railway logs for errors
+
+### Support Resources
+- Railway Dashboard: https://railway.app/dashboard
+- Documentation: `/documentation` folder
+- Health Check: `https://your-app.up.railway.app/api/health`
+
+## 📝 Environment Variables Reference
+
+### Required Variables
+```env
+# Server
+NODE_ENV=production
+PORT=3000
+
+# Database
+MONGODB_URI=mongodb+srv://...
+
+# CORS
+ALLOWED_ORIGINS=https://your-app.up.railway.app
+
+# Auth0
+REACT_APP_AUTH0_DOMAIN=your-domain.auth0.com
+REACT_APP_AUTH0_CLIENT_ID=your-client-id
+REACT_APP_AUTH0_REDIRECT_URI=https://your-app.up.railway.app/callback
+
+# API
+REACT_APP_API_URL=https://your-app.up.railway.app
+```
+
+## 📄 License
 
 MIT License - see LICENSE file for details
 
+## 🙏 Acknowledgments
+
+- Material-UI for the component library
+- Auth0 for authentication services
+- Adobe for analytics platform
+- Railway for hosting and deployment
+
 ---
 
-**Happy Flying with TLAirways! ✈️**# Railway Deployment Test - Fri Sep 19 21:26:07 IST 2025
-# Trigger Railway Deployment - Sun Sep 28 11:41:56 IST 2025
+**Happy Flying with TLAirways! ✈️**
+
+*Last Updated: January 2025*
