@@ -56,6 +56,7 @@ const BookingConfirmation = () => {
   
   const [error, setError] = useState('');
   const hasFiredBookingConfirmed = useRef(false);
+  const hasFiredPurchaseEvent = useRef(false);
   const [totalDistance, setTotalDistance] = useState(0);
   const [treesPlanted, setTreesPlanted] = useState(0);
   
@@ -382,6 +383,10 @@ const BookingConfirmation = () => {
   // Comprehensive data layer implementation for confirmation page
   useEffect(() => {
     if (!selectedFlights?.onward || !travellerDetails) return;
+    
+    // Prevent duplicate purchase events
+    if (hasFiredPurchaseEvent.current) return;
+    hasFiredPurchaseEvent.current = true;
 
     // Generate booking reference and transaction ID
     const bookingRef = airlinesDataLayer.generateBookingReference();
@@ -404,8 +409,9 @@ const BookingConfirmation = () => {
       transactionId: txnId
     });
 
-    // Push PageView event to data layer
-    if (typeof window !== 'undefined' && window.adobeDataLayer) {
+    // PageView event is handled by usePageView hook
+    // Removed manual pageView push to prevent duplicates
+    if (false && typeof window !== 'undefined' && window.adobeDataLayer) {
       window.adobeDataLayer.push({
         event: 'pageView',
         pageData: {
@@ -668,7 +674,7 @@ const BookingConfirmation = () => {
 
 
 
-  }, [selectedFlights, travellerDetails, tripType, numPassengers, selectedServices, paymentDetails, totalDistance, treesPlanted]);
+  }, [selectedFlights, travellerDetails, tripType, numPassengers, selectedServices, paymentDetails]);
 
   // Helper function to calculate seat price
   const calculateSeatPrice = (seat) => {
