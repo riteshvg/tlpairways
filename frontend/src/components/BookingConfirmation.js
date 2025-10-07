@@ -19,6 +19,9 @@ import {
 } from '@mui/material';
 import { format, parseISO, isValid } from 'date-fns';
 import PrintIcon from '@mui/icons-material/Print';
+import DownloadIcon from '@mui/icons-material/Download';
+import EmailIcon from '@mui/icons-material/Email';
+import SmsIcon from '@mui/icons-material/Sms';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import EventSeatIcon from '@mui/icons-material/EventSeat';
 import LuggageIcon from '@mui/icons-material/Luggage';
@@ -933,18 +936,6 @@ const BookingConfirmation = () => {
     }
   };
 
-  const handleSocialSharing = (platform) => {
-    if (bookingReference) {
-      airlinesDataLayer.trackSocialSharing({
-        platform: platform,
-        shareType: 'booking_confirmation',
-        bookingReference: bookingReference,
-        contentShared: 'booking_details'
-      });
-      console.log(`Shared to ${platform}`);
-    }
-  };
-
   const handlePrintConfirmation = () => {
     if (bookingReference) {
       airlinesDataLayer.trackPrintConfirmation({
@@ -955,21 +946,6 @@ const BookingConfirmation = () => {
       console.log('Print confirmation triggered');
       // Trigger actual print
       window.print();
-    }
-  };
-
-
-  const handleSustainabilityContribution = (action) => {
-    if (bookingReference) {
-      airlinesDataLayer.trackSustainabilityImpact({
-        impactType: 'carbon_footprint',
-        carbonOffset: Math.round(totalDistance * 0.255),
-        unit: 'kg_co2',
-        treesPlanted: treesPlanted,
-        userAction: action, // contributed, shared
-        bookingReference: bookingReference
-      });
-      console.log(`Sustainability ${action}`);
     }
   };
 
@@ -1286,6 +1262,31 @@ const BookingConfirmation = () => {
           </Grid>
         </Box>
 
+        {/* Travel Dates Section */}
+        <Box sx={{ mb: 4 }}>
+          <Typography variant="h6" gutterBottom>
+            Travel Details
+          </Typography>
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={6}>
+              <Typography variant="subtitle1">Departure Date</Typography>
+              <Typography variant="body1">
+                {location.state?.departureDate ? format(new Date(location.state.departureDate), 'EEEE, MMMM dd, yyyy') : 
+                 selectedFlights.onward?.departureTime ? format(new Date(selectedFlights.onward.departureTime), 'EEEE, MMMM dd, yyyy') : 'N/A'}
+              </Typography>
+            </Grid>
+            {(tripType === 'roundtrip' || selectedFlights.return) && (
+              <Grid item xs={12} md={6}>
+                <Typography variant="subtitle1">Return Date</Typography>
+                <Typography variant="body1">
+                  {location.state?.returnDate ? format(new Date(location.state.returnDate), 'EEEE, MMMM dd, yyyy') :
+                   selectedFlights.return?.departureTime ? format(new Date(selectedFlights.return.departureTime), 'EEEE, MMMM dd, yyyy') : 'N/A'}
+                </Typography>
+              </Grid>
+            )}
+          </Grid>
+        </Box>
+
         {/* Trees Planted and Distance Section */}
         <Box sx={{ mb: 4, textAlign: 'center', bgcolor: 'success.light', borderRadius: 2, p: 3, color: 'success.contrastText' }}>
           <Typography variant="h6" gutterBottom>
@@ -1347,6 +1348,7 @@ const BookingConfirmation = () => {
             variant="outlined"
             onClick={handleEmailConfirmation}
             disabled={emailRequested}
+            startIcon={<EmailIcon />}
           >
             {emailRequested ? 'Email Sent' : 'Email Confirmation'}
           </Button>
@@ -1354,26 +1356,16 @@ const BookingConfirmation = () => {
             variant="outlined"
             onClick={handleSMSNotification}
             disabled={smsRequested}
+            startIcon={<SmsIcon />}
           >
             {smsRequested ? 'SMS Sent' : 'SMS Notification'}
           </Button>
           <Button
             variant="outlined"
-            onClick={() => handleSocialSharing('facebook')}
+            onClick={() => window.print()}
+            startIcon={<DownloadIcon />}
           >
-            Share on Facebook
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={() => handleSocialSharing('twitter')}
-          >
-            Share on Twitter
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={() => handleSustainabilityContribution('contributed')}
-          >
-            Offset Carbon Footprint
+            Download Ticket (PDF)
           </Button>
           <Button
             variant="outlined"

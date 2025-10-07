@@ -192,7 +192,8 @@ const Payment = () => {
       await new Promise(resolve => setTimeout(resolve, 2000));
 
       const paymentData = {
-        paymentMethod,
+        method: paymentMethod,
+        paymentMethod: paymentMethod,
         cardDetails: {
           cardNumber,
           expiryDate,
@@ -206,7 +207,9 @@ const Payment = () => {
           zipCode: billingZipCode,
           country: billingCountry
         },
-        amount: totalAmount
+        amount: totalAmount,
+        paymentDate: new Date().toISOString(),
+        transactionId: `TXN_${Date.now()}_${Math.random().toString(36).substr(2, 9).toUpperCase()}`
       };
 
       // Track payment completion
