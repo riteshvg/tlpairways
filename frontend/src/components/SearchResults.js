@@ -742,7 +742,7 @@ const SearchResults = () => {
                 })()}
                     </Typography>
               <Typography variant="body2" color="textSecondary">
-                {format(flight.departureTime, 'MMM dd, yyyy')}
+                {isReturn ? format(searchParams.returnDate, 'MMM dd, yyyy') : format(searchParams.date, 'MMM dd, yyyy')}
                     </Typography>
               <Typography variant="body2">
                 {flight.aircraft}
