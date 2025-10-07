@@ -179,7 +179,7 @@ class EnhancedAirlinesDataLayer {
     if (!this.hasConsent('analytics')) return;
 
     const eventData = {
-      event: 'search-results-displayed',
+      event: 'searchResultsDisplayed',
       searchContext: {
         searchId: searchContext.searchId || this.generateSearchId(),
         origin: searchContext.origin,
@@ -229,7 +229,7 @@ class EnhancedAirlinesDataLayer {
     }
 
     const eventData = {
-      event: 'flight-selected',
+      event: 'flightSelected',
       flight: {
         flightNumber: flight.flightNumber,
         airline: flight.airline,
@@ -277,7 +277,7 @@ class EnhancedAirlinesDataLayer {
     if (!this.hasConsent('analytics')) return;
 
     const eventData = {
-      event: 'search-filter-applied',
+      event: 'searchFilterApplied',
       filterType,
       filterValue,
       previousFilters: context.previousFilters || [],
@@ -302,7 +302,7 @@ class EnhancedAirlinesDataLayer {
     if (!this.hasConsent('analytics')) return;
 
     const eventData = {
-      event: 'search-sort-applied',
+      event: 'searchSortApplied',
       sortBy,
       sortOrder,
       previousSort: context.previousSort || null,
@@ -325,7 +325,7 @@ class EnhancedAirlinesDataLayer {
     if (!this.hasConsent('analytics')) return;
 
     const eventData = {
-      event: 'search-pagination',
+      event: 'searchPagination',
       pageNumber,
       resultsPerPage,
       totalPages: context.totalPages || 0,
@@ -346,7 +346,7 @@ class EnhancedAirlinesDataLayer {
     if (!this.hasConsent('analytics')) return;
 
     const eventData = {
-      event: 'search-refinement',
+      event: 'searchRefinement',
       refinementType: refinementData.type || 'unknown',
       previousSearch: refinementData.previousSearch || {},
       newSearch: refinementData.newSearch || {},
@@ -367,7 +367,7 @@ class EnhancedAirlinesDataLayer {
     if (!this.hasConsent('analytics')) return;
 
     const eventData = {
-      event: 'search-abandonment',
+      event: 'searchAbandonment',
       abandonmentReason: abandonmentData.reason || 'unknown',
       timeOnPage: abandonmentData.timeOnPage || 0,
       lastAction: abandonmentData.lastAction || 'unknown',
@@ -388,7 +388,7 @@ class EnhancedAirlinesDataLayer {
     if (!this.hasConsent('analytics')) return;
 
     const eventData = {
-      event: 'search-no-results',
+      event: 'searchNoResults',
       searchContext: {
         origin: searchContext.origin,
         destination: searchContext.destination,
@@ -418,7 +418,7 @@ class EnhancedAirlinesDataLayer {
     if (!this.hasConsent('analytics')) return;
 
     const eventData = {
-      event: 'flight-comparison',
+      event: 'flightComparison',
       action, // 'added', 'removed', 'viewed', 'cleared'
       flight: {
         flightNumber: flight.flightNumber,
@@ -447,7 +447,7 @@ class EnhancedAirlinesDataLayer {
    */
   trackError(errorType, error, context = {}) {
     const eventData = {
-      event: 'search-error',
+      event: 'searchError',
       errorType,
       errorMessage: error.message || 'Unknown error',
       errorStack: error.stack || null,

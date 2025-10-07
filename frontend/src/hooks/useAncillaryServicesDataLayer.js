@@ -117,7 +117,7 @@ const useAncillaryServicesDataLayer = (pageViewOptions = {}) => {
     };
   }, []);
 
-  // Initialize ancillary services data layer
+  // Initialize ancillary services data layer - PageView event only
   const initializeAncillaryServicesDataLayer = useCallback(() => {
     const { selectedFlights, travellerDetails, contactInfo, tripType } = location.state || {};
     
@@ -140,8 +140,8 @@ const useAncillaryServicesDataLayer = (pageViewOptions = {}) => {
     const pricing = calculatePricing(selectedFlights.onward, selectedFlights.return);
     const routeInfo = calculateRouteInfo(selectedFlights.onward, selectedFlights.return);
 
-    // Build comprehensive data layer object
-    const dataLayerObject = {
+    // Build PageView data layer object
+    const pageViewObject = {
       event: 'pageView',
       pageData: {
         pageType: 'ancillary-services',
@@ -188,31 +188,7 @@ const useAncillaryServicesDataLayer = (pageViewOptions = {}) => {
         contactInfo: contactInfo || {},
         tripType: tripType || 'oneway',
         pricing,
-        routeInfo,
-        ancillaryServices: {
-          seats: {
-            onward: [],
-            return: []
-          },
-          meals: {
-            onward: [],
-            return: []
-          },
-          baggage: {
-            onward: [],
-            return: []
-          },
-          insurance: null
-        }
-      },
-      formContext: {
-        formName: 'ancillary-services-form',
-        formStep: 'service-selection',
-        totalSteps: 2,
-        currentStep: 1,
-        fieldsInteracted: [],
-        totalRequiredFields: 0,
-        timeOnForm: 0
+        routeInfo
       },
       userContext: {
         userAuthenticated: isAuthenticated,
@@ -223,90 +199,16 @@ const useAncillaryServicesDataLayer = (pageViewOptions = {}) => {
       }
     };
 
-    // Push data directly to Adobe Data Layer
+    // Push PageView data to Adobe Data Layer
     if (typeof window !== 'undefined' && window.adobeDataLayer) {
-      window.adobeDataLayer.push(dataLayerObject);
+      window.adobeDataLayer.push(pageViewObject);
     }
 
     pageDataLayerManager.setPreviousPage('Ancillary Services');
-    console.log('✅ Ancillary Services Data Layer initialized:', dataLayerObject);
-    console.log('📊 Data layer object pushed to adobeDataLayer:', window.adobeDataLayer);
+    console.log('✅ Ancillary Services PageView Data Layer initialized:', pageViewObject);
 
-  }, [location.state, generateBookingId, generateSearchId, generatePNR, formatFlightData, calculatePricing, calculateRouteInfo, isAuthenticated, user, pageViewOptions]);
+  }, [generateBookingId, generateSearchId, generatePNR, formatFlightData, calculatePricing, calculateRouteInfo, isAuthenticated, user]);
 
-  // Track form field interactions
-  const trackFormFieldInteraction = useCallback((fieldName, fieldValue, fieldType = 'input') => {
-    const interactionData = {
-      event: 'formFieldInteraction',
-      formContext: {
-        formName: 'ancillary-services-form',
-        formStep: 'service-selection',
-        fieldName,
-        fieldValue,
-        fieldType,
-        timestamp: new Date().toISOString()
-      },
-      userContext: {
-        userAuthenticated: isAuthenticated,
-        userId: user?.id || null,
-        sessionId: pageDataLayerManager.getOrCreateSessionId()
-      }
-    };
-
-    if (typeof window !== 'undefined' && window.adobeDataLayer) {
-      window.adobeDataLayer.push(interactionData);
-    }
-
-    console.log('📝 Form field interaction tracked:', interactionData);
-  }, [isAuthenticated, user]);
-
-  // Track form validation
-  const trackFormValidation = useCallback((validationResults) => {
-    const validationData = {
-      event: 'formValidation',
-      formContext: {
-        formName: 'ancillary-services-form',
-        formStep: 'service-selection',
-        validationResults,
-        timestamp: new Date().toISOString()
-      },
-      userContext: {
-        userAuthenticated: isAuthenticated,
-        userId: user?.id || null,
-        sessionId: pageDataLayerManager.getOrCreateSessionId()
-      }
-    };
-
-    if (typeof window !== 'undefined' && window.adobeDataLayer) {
-      window.adobeDataLayer.push(validationData);
-    }
-
-    console.log('✅ Form validation tracked:', validationData);
-  }, [isAuthenticated, user]);
-
-  // Track form submission
-  const trackFormSubmission = useCallback((submissionData) => {
-    const submissionEvent = {
-      event: 'formSubmission',
-      formContext: {
-        formName: 'ancillary-services-form',
-        formStep: 'service-selection',
-        submissionData,
-        timestamp: new Date().toISOString()
-      },
-      userContext: {
-        userAuthenticated: isAuthenticated,
-        userId: user?.id || null,
-        sessionId: pageDataLayerManager.getOrCreateSessionId()
-      }
-    };
-
-    if (typeof window !== 'undefined' && window.adobeDataLayer) {
-      window.adobeDataLayer.push(submissionEvent);
-    }
-
-    console.log('🚀 Form submission tracked:', submissionEvent);
-  }, [isAuthenticated, user]);
 
   // Initialize data layer on component mount
   useEffect(() => {
@@ -314,10 +216,7 @@ const useAncillaryServicesDataLayer = (pageViewOptions = {}) => {
   }, [initializeAncillaryServicesDataLayer]);
 
   return {
-    formContext,
-    trackFormFieldInteraction,
-    trackFormValidation,
-    trackFormSubmission
+    formContext
   };
 };
 

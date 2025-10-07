@@ -149,8 +149,8 @@ const EnhancedSearchResults = () => {
   // Track page view with enhanced context
   usePageView({
     pageCategory: 'booking',
-    searchType: 'flight-results',
-    sections: ['results-list', 'filters', 'sorting', 'pagination', 'comparison'],
+    searchType: 'flightResults',
+    sections: ['resultsList', 'filters', 'sorting', 'pagination', 'comparison'],
     resultsCount: 0 // Will be updated when results are loaded
   });
 
@@ -194,7 +194,7 @@ const EnhancedSearchResults = () => {
     } catch (err) {
       setError(err.message);
       console.error('Error initializing search parameters:', err);
-      enhancedAirlinesDataLayer.trackError('search-initialization', err);
+        enhancedAirlinesDataLayer.trackError('searchInitialization', err);
     }
   }, [location.state]);
 
@@ -410,7 +410,7 @@ const EnhancedSearchResults = () => {
       } catch (err) {
         setError('Error loading flights');
         console.error('Error updating flights:', err);
-        enhancedAirlinesDataLayer.trackError('flight-loading', err, { searchId });
+        enhancedAirlinesDataLayer.trackError('flightLoading', err, { searchId });
       } finally {
         setLoading(false);
       }
@@ -434,7 +434,7 @@ const EnhancedSearchResults = () => {
       // Departure time filter
       if (filters.departureTime.length > 0) {
         const hour = flight.departureTime.getHours();
-        const timeCategory = hour < 6 ? 'early-morning' : 
+        const timeCategory = hour < 6 ? 'earlyMorning' : 
                            hour < 12 ? 'morning' : 
                            hour < 18 ? 'afternoon' : 'evening';
         if (!filters.departureTime.includes(timeCategory)) {
@@ -470,7 +470,7 @@ const EnhancedSearchResults = () => {
     
     // Track filter application
     if (onwardFlights.length > 0) {
-      enhancedAirlinesDataLayer.trackFilterInteraction('all-filters', filters, {
+      enhancedAirlinesDataLayer.trackFilterInteraction('allFilters', filters, {
         searchId,
         resultsBeforeFilter: onwardFlights.length,
         resultsAfterFilter: filteredOnward.length,
@@ -577,7 +577,7 @@ const EnhancedSearchResults = () => {
         state: {
           onwardFlight: flightWithCorrectPrice,
           tripType: searchParams.tripType,
-          passengers: searchParams.passengers,
+          passengers: searchParams.passengerCounts,
           cabinClass: searchParams.cabinClass,
           previousPage: 'Search Results'
         }
@@ -638,14 +638,14 @@ const EnhancedSearchResults = () => {
     // Track comparison
     enhancedAirlinesDataLayer.trackFlightComparison(action, flight, {
       totalFlightsInComparison: comparisonFlights.length,
-      additionMethod: 'compare-button'
+      additionMethod: 'compareButton'
     });
   }, [comparisonFlights.length]);
 
   // Handle search refinement
   const handleSearchRefinement = useCallback(() => {
     enhancedAirlinesDataLayer.trackSearchRefinement({
-      type: 'modify-search',
+      type: 'modifySearch',
       previousSearch: searchParams,
       newSearch: searchParams // In real implementation, this would be the new search
     }, { searchId });
@@ -657,9 +657,9 @@ const EnhancedSearchResults = () => {
   const handleSearchAbandonment = useCallback(() => {
     const timeOnPage = Date.now() - pageStartTime.current;
     enhancedAirlinesDataLayer.trackSearchAbandonment({
-      reason: 'user-navigation',
+      reason: 'userNavigation',
       timeOnPage,
-      lastAction: 'page-leave'
+      lastAction: 'pageLeave'
     }, { searchId });
   }, [searchId]);
 
@@ -871,7 +871,7 @@ const EnhancedSearchResults = () => {
         <Typography gutterBottom>Departure Time</Typography>
         <FormGroup>
           {[
-            { value: 'early-morning', label: 'Early Morning (12AM-6AM)' },
+            { value: 'earlyMorning', label: 'Early Morning (12AM-6AM)' },
             { value: 'morning', label: 'Morning (6AM-12PM)' },
             { value: 'afternoon', label: 'Afternoon (12PM-6PM)' },
             { value: 'evening', label: 'Evening (6PM-12AM)' }
@@ -1143,7 +1143,7 @@ const EnhancedSearchResults = () => {
                   onwardFlight: selectedOnwardFlight,
                   returnFlight: selectedReturnFlight,
                   tripType: searchParams.tripType,
-                  passengers: searchParams.passengers,
+                  passengers: searchParams.passengerCounts,
                   cabinClass: searchParams.cabinClass,
                   previousPage: 'Search Results'
                 };

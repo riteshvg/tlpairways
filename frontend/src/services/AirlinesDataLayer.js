@@ -129,13 +129,13 @@ class AirlinesDataLayer {
     const searchEvent = {
       event: 'searchSubmission',
       eventData: {
-        searchType: 'flight-search',
+        searchType: 'flightSearch',
         origin: searchData.origin,
         destination: searchData.destination,
         departureDate: searchData.departureDate,
         returnDate: searchData.returnDate,
         passengers: searchData.passengers,
-        tripType: searchData.tripType || 'round-trip',
+        tripType: searchData.tripType || 'roundTrip',
         cabinClass: searchData.cabinClass || 'economy',
         timestamp: new Date().toISOString()
       }
@@ -229,10 +229,196 @@ class AirlinesDataLayer {
   }
 
   /**
+   * Set revenue data for transaction tracking
+   * @param {Object} revenueData - Revenue and transaction data
+   */
+  setRevenueData(revenueData) {
+    const revenueEvent = {
+      event: 'purchase',
+      eventData: {
+        revenue: {
+          transactionId: revenueData.transactionId || this.generateTransactionId(),
+          totalRevenue: revenueData.totalRevenue || 0,
+          currency: revenueData.currency || 'INR',
+          products: revenueData.products || [],
+          bookingReference: revenueData.bookingReference || this.generateBookingReference(),
+          paymentMethod: revenueData.paymentMethod || 'unknown',
+          paymentStatus: revenueData.paymentStatus || 'completed',
+          timestamp: new Date().toISOString()
+        },
+        customer: {
+          userId: revenueData.userId || null,
+          email: revenueData.email || null,
+          phone: revenueData.phone || null,
+          loyaltyTier: revenueData.loyaltyTier || 'standard'
+        },
+        booking: {
+          tripType: revenueData.tripType || 'oneWay',
+          cabinClass: revenueData.cabinClass || 'economy',
+          passengers: revenueData.passengers || 1,
+          origin: revenueData.origin || null,
+          destination: revenueData.destination || null,
+          departureDate: revenueData.departureDate || null,
+          returnDate: revenueData.returnDate || null
+        }
+      },
+      timestamp: new Date().toISOString()
+    };
+
+    this.pushToDataLayer(revenueEvent);
+    this.log('Revenue data set', revenueEvent);
+  }
+
+  /**
+   * Track confirmation email requests
+   * @param {Object} emailData - Email request data
+   */
+  trackConfirmationEmailRequest(emailData) {
+    const emailEvent = {
+      event: 'confirmationEmailRequest',
+      eventData: {
+        emailType: emailData.emailType || 'booking_confirmation',
+        recipientEmail: emailData.recipientEmail,
+        bookingReference: emailData.bookingReference,
+        requestStatus: emailData.requestStatus || 'requested',
+        timestamp: new Date().toISOString()
+      }
+    };
+
+    this.pushToDataLayer(emailEvent);
+    this.log('Confirmation email request tracked', emailEvent);
+  }
+
+  /**
+   * Track travel insurance upsells
+   * @param {Object} insuranceData - Insurance upsell data
+   */
+  trackTravelInsuranceUpsell(insuranceData) {
+    const insuranceEvent = {
+      event: 'travelInsuranceUpsell',
+      eventData: {
+        upsellType: insuranceData.upsellType || 'travel_insurance',
+        insuranceProvider: insuranceData.insuranceProvider || 'unknown',
+        coverageAmount: insuranceData.coverageAmount || 0,
+        premium: insuranceData.premium || 0,
+        currency: insuranceData.currency || 'INR',
+        userAction: insuranceData.userAction || 'viewed', // viewed, accepted, declined
+        bookingReference: insuranceData.bookingReference,
+        timestamp: new Date().toISOString()
+      }
+    };
+
+    this.pushToDataLayer(insuranceEvent);
+    this.log('Travel insurance upsell tracked', insuranceEvent);
+  }
+
+  /**
+   * Track social sharing interactions
+   * @param {Object} sharingData - Social sharing data
+   */
+  trackSocialSharing(sharingData) {
+    const sharingEvent = {
+      event: 'socialSharing',
+      eventData: {
+        platform: sharingData.platform, // facebook, twitter, linkedin, whatsapp, etc.
+        shareType: sharingData.shareType || 'booking_confirmation',
+        bookingReference: sharingData.bookingReference,
+        contentShared: sharingData.contentShared || 'booking_details',
+        timestamp: new Date().toISOString()
+      }
+    };
+
+    this.pushToDataLayer(sharingEvent);
+    this.log('Social sharing tracked', sharingEvent);
+  }
+
+  /**
+   * Track print confirmation actions
+   * @param {Object} printData - Print action data
+   */
+  trackPrintConfirmation(printData) {
+    const printEvent = {
+      event: 'printConfirmation',
+      eventData: {
+        printType: printData.printType || 'booking_confirmation',
+        bookingReference: printData.bookingReference,
+        printFormat: printData.printFormat || 'pdf',
+        timestamp: new Date().toISOString()
+      }
+    };
+
+    this.pushToDataLayer(printEvent);
+    this.log('Print confirmation tracked', printEvent);
+  }
+
+  /**
+   * Track sustainability impact views
+   * @param {Object} sustainabilityData - Sustainability data
+   */
+  trackSustainabilityImpact(sustainabilityData) {
+    const sustainabilityEvent = {
+      event: 'sustainabilityImpact',
+      eventData: {
+        impactType: sustainabilityData.impactType || 'carbon_footprint',
+        carbonOffset: sustainabilityData.carbonOffset || 0,
+        unit: sustainabilityData.unit || 'kg_co2',
+        treesPlanted: sustainabilityData.treesPlanted || 0,
+        userAction: sustainabilityData.userAction || 'viewed', // viewed, contributed, shared
+        bookingReference: sustainabilityData.bookingReference,
+        timestamp: new Date().toISOString()
+      }
+    };
+
+    this.pushToDataLayer(sustainabilityEvent);
+    this.log('Sustainability impact tracked', sustainabilityEvent);
+  }
+
+  /**
+   * Track SMS notification preferences
+   * @param {Object} smsData - SMS notification data
+   */
+  trackSMSNotification(smsData) {
+    const smsEvent = {
+      event: 'smsNotification',
+      eventData: {
+        notificationType: smsData.notificationType || 'booking_confirmation',
+        phoneNumber: smsData.phoneNumber,
+        bookingReference: smsData.bookingReference,
+        requestStatus: smsData.requestStatus || 'requested',
+        timestamp: new Date().toISOString()
+      }
+    };
+
+    this.pushToDataLayer(smsEvent);
+    this.log('SMS notification tracked', smsEvent);
+  }
+
+  /**
+   * Generate a unique transaction ID
+   * @returns {string} Transaction ID
+   */
+  generateTransactionId() {
+    return 'TXN' + Date.now() + Math.random().toString(36).substr(2, 9).toUpperCase();
+  }
+
+  /**
+   * Generate a unique booking reference
+   * @returns {string} Booking reference
+   */
+  generateBookingReference() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result = '';
+    for (let i = 0; i < 6; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+  }
+
+  /**
    * Send data to Adobe Experience Platform
    * This method would typically integrate with Adobe Launch or Edge
    */
-  sendToAdobeExperiencePlatform(eventData) {
+  sendToAEP(eventData) {
     try {
       // In a real implementation, this would send to Adobe Edge
       // For now, we'll log the data that would be sent
@@ -245,6 +431,14 @@ class AirlinesDataLayer {
     } catch (error) {
       this.log('Error sending data to Adobe Experience Platform', error, 'error');
     }
+  }
+
+  /**
+   * Send data to Adobe Experience Platform (alias for sendToAEP)
+   * This method would typically integrate with Adobe Launch or Edge
+   */
+  sendToAdobeExperiencePlatform(eventData) {
+    this.sendToAEP(eventData);
   }
 
   /**

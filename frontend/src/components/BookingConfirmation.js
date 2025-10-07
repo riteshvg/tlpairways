@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import usePageView from '../hooks/usePageView';
+import airlinesDataLayer from '../services/AirlinesDataLayer';
 import {
   Container,
   Paper,
@@ -55,8 +56,15 @@ const BookingConfirmation = () => {
   
   const [error, setError] = useState('');
   const hasFiredBookingConfirmed = useRef(false);
+  const hasFiredPurchaseEvent = useRef(false);
   const [totalDistance, setTotalDistance] = useState(0);
   const [treesPlanted, setTreesPlanted] = useState(0);
+  
+  // State for tracking user interactions
+  const [bookingReference, setBookingReference] = useState('');
+  const [transactionId, setTransactionId] = useState('');
+  const [emailRequested, setEmailRequested] = useState(false);
+  const [smsRequested, setSmsRequested] = useState(false);
 
   const {
     selectedFlights,
@@ -64,7 +72,8 @@ const BookingConfirmation = () => {
     passengers,
     travellerDetails,
     selectedServices,
-    paymentDetails
+    paymentDetails,
+    contactInfo
   } = location.state || {};
 
   // Find the number of passengers
@@ -371,6 +380,302 @@ const BookingConfirmation = () => {
     }
   }, [selectedFlights, tripType, passengers, selectedServices, navigate, pnr, onwardTicket, returnTicket, paymentDetails, location.state]);
 
+  // Comprehensive data layer implementation for confirmation page
+  useEffect(() => {
+    if (!selectedFlights?.onward || !travellerDetails) return;
+    
+    // Prevent duplicate purchase events
+    if (hasFiredPurchaseEvent.current) return;
+    hasFiredPurchaseEvent.current = true;
+
+    // Generate booking reference and transaction ID
+    const bookingRef = airlinesDataLayer.generateBookingReference();
+    const txnId = airlinesDataLayer.generateTransactionId();
+    setBookingReference(bookingRef);
+    setTransactionId(txnId);
+
+    // Calculate revenue data first
+    const feeBreakdown = calculateFeeBreakdown();
+    const ancillaryTotal = calculateAncillaryTotal();
+
+    // Set page data with confirmation page type
+    airlinesDataLayer.setPageDataWithView({
+      pageType: 'confirmation',
+      pageName: 'Booking Confirmation',
+      pageCategory: 'booking',
+      bookingStep: 'confirmation',
+      sections: ['booking-details', 'passenger-info', 'price-breakdown', 'next-steps'],
+      bookingReference: bookingRef,
+      transactionId: txnId
+    });
+
+    // PageView event is handled by usePageView hook
+    // Removed manual pageView push to prevent duplicates
+    if (false && typeof window !== 'undefined' && window.adobeDataLayer) {
+      window.adobeDataLayer.push({
+        event: 'pageView',
+        pageData: {
+          pageType: 'confirmation',
+          pageName: 'Booking Confirmation - TLP Airways',
+          pageURL: window.location.href,
+          referrer: document.referrer,
+          previousPage: 'Payment',
+          timestamp: new Date().toISOString(),
+          userAgent: navigator.userAgent,
+          screenResolution: `${window.screen.width}x${window.screen.height}`,
+          viewportSize: `${window.innerWidth}x${window.innerHeight}`,
+          pageCategory: 'booking',
+          bookingStep: 'confirmation',
+          bookingStepNumber: 4,
+          totalBookingSteps: 4,
+          sections: ['booking-summary', 'passenger-details', 'flight-details', 'ancillary-services', 'payment-summary', 'confirmation-actions']
+        },
+        bookingContext: {
+          bookingId: txnId,
+          pnr: bookingRef,
+          bookingStatus: 'confirmed',
+          bookingStep: 'confirmation',
+          bookingStepNumber: 4,
+          totalSteps: 4,
+          bookingSteps: ['passenger-details', 'ancillary-services', 'payment', 'confirmation'],
+          bookingStartTime: new Date().toISOString(),
+          selectedFlights: {
+            outbound: {
+              flightNumber: selectedFlights.onward?.flightNumber,
+              airline: selectedFlights.onward?.airline,
+              origin: selectedFlights.onward?.origin?.iata_code,
+              destination: selectedFlights.onward?.destination?.iata_code,
+              departureTime: selectedFlights.onward?.departureTime,
+              departureDate: selectedFlights.onward?.departureTime ? new Date(selectedFlights.onward.departureTime).toISOString().split('T')[0] : null,
+              arrivalTime: selectedFlights.onward?.arrivalTime,
+              arrivalDate: selectedFlights.onward?.arrivalTime ? new Date(selectedFlights.onward.arrivalTime).toISOString().split('T')[0] : null,
+              cabinClass: selectedFlights.onward?.cabinClass || 'economy',
+              price: selectedFlights.onward?.price?.amount || 0
+            },
+            return: selectedFlights.return ? {
+              flightNumber: selectedFlights.return?.flightNumber,
+              airline: selectedFlights.return?.airline,
+              origin: selectedFlights.return?.origin?.iata_code,
+              destination: selectedFlights.return?.destination?.iata_code,
+              departureTime: selectedFlights.return?.departureTime,
+              departureDate: selectedFlights.return?.departureTime ? new Date(selectedFlights.return.departureTime).toISOString().split('T')[0] : null,
+              arrivalTime: selectedFlights.return?.arrivalTime,
+              arrivalDate: selectedFlights.return?.arrivalTime ? new Date(selectedFlights.return.arrivalTime).toISOString().split('T')[0] : null,
+              cabinClass: selectedFlights.return?.cabinClass || 'economy',
+              price: selectedFlights.return?.price?.amount || 0
+            } : null
+          },
+          passengers: travellerDetails || [],
+          contactInfo: contactInfo || {},
+          tripType: tripType || 'oneWay',
+          pricing: {
+            baseFare: feeBreakdown.baseFare,
+            ancillaryTotal: feeBreakdown.ancillaryTotal,
+            taxes: feeBreakdown.taxes,
+            convenienceFee: feeBreakdown.convenienceFee,
+            surcharge: feeBreakdown.surcharge,
+            total: feeBreakdown.total,
+            currency: 'INR'
+          }
+        },
+        userContext: {
+          userAuthenticated: true,
+          userId: travellerDetails[0]?.email || null,
+          userEmail: travellerDetails[0]?.email || null,
+          userLoyaltyTier: 'standard',
+          sessionId: `session_${Date.now()}`
+        }
+      });
+      console.log('✅ Confirmation PageView event pushed to adobeDataLayer');
+    }
+    
+    // Build products array for revenue tracking
+    const products = [];
+    
+    // Add flight products
+    if (selectedFlights.onward) {
+      products.push({
+        productId: `flight-${selectedFlights.onward.flightNumber}`,
+        productName: `Flight ${selectedFlights.onward.flightNumber}`,
+        category: 'flight',
+        subcategory: 'onward',
+        price: (selectedFlights.onward.price?.amount || 0) * numPassengers,
+        quantity: numPassengers,
+        currency: 'INR',
+        origin: selectedFlights.onward.origin?.iata_code,
+        destination: selectedFlights.onward.destination?.iata_code,
+        departureDate: selectedFlights.onward.departureTime ? new Date(selectedFlights.onward.departureTime).toISOString().split('T')[0] : null,
+        cabinClass: selectedFlights.onward.cabinClass || 'economy'
+      });
+    }
+    
+    if (selectedFlights.return) {
+      products.push({
+        productId: `flight-${selectedFlights.return.flightNumber}`,
+        productName: `Flight ${selectedFlights.return.flightNumber}`,
+        category: 'flight',
+        subcategory: 'return',
+        price: (selectedFlights.return.price?.amount || 0) * numPassengers,
+        quantity: numPassengers,
+        currency: 'INR',
+        origin: selectedFlights.return.origin?.iata_code,
+        destination: selectedFlights.return.destination?.iata_code,
+        departureDate: selectedFlights.return.departureTime ? new Date(selectedFlights.return.departureTime).toISOString().split('T')[0] : null,
+        cabinClass: selectedFlights.return.cabinClass || 'economy'
+      });
+    }
+
+    // Add ancillary service products
+    ['onward', 'return'].forEach(journey => {
+      if (selectedServices?.[journey]) {
+        // Seats
+        if (selectedServices[journey].seat) {
+          selectedServices[journey].seat.forEach((seat, index) => {
+            if (seat) {
+              const seatPrice = calculateSeatPrice(seat);
+              products.push({
+                productId: `seat-${journey}-${index}`,
+                productName: `Seat ${seat} - ${journey}`,
+                category: 'ancillary',
+                subcategory: 'seat',
+                price: seatPrice,
+                quantity: 1,
+                currency: 'INR',
+                seatNumber: seat,
+                journey: journey
+              });
+            }
+          });
+        }
+
+        // Baggage
+        if (selectedServices[journey].baggage) {
+          selectedServices[journey].baggage.forEach((baggage, index) => {
+            if (baggage && baggage !== 'included') {
+              const baggagePrice = calculateBaggagePrice(baggage, journey);
+              products.push({
+                productId: `baggage-${journey}-${index}`,
+                productName: `Baggage ${baggage} - ${journey}`,
+                category: 'ancillary',
+                subcategory: 'baggage',
+                price: baggagePrice,
+                quantity: 1,
+                currency: 'INR',
+                baggageType: baggage,
+                journey: journey
+              });
+            }
+          });
+        }
+
+        // Priority Boarding
+        if (selectedServices[journey].priorityBoarding) {
+          selectedServices[journey].priorityBoarding.forEach((priority, index) => {
+            if (priority) {
+              products.push({
+                productId: `priority-${journey}-${index}`,
+                productName: `Priority Boarding - ${journey}`,
+                category: 'ancillary',
+                subcategory: 'priority_boarding',
+                price: 500,
+                quantity: 1,
+                currency: 'INR',
+                journey: journey
+              });
+            }
+          });
+        }
+
+        // Lounge Access
+        if (selectedServices[journey].loungeAccess) {
+          selectedServices[journey].loungeAccess.forEach((lounge, index) => {
+            if (lounge) {
+              products.push({
+                productId: `lounge-${journey}-${index}`,
+                productName: `Lounge Access - ${journey}`,
+                category: 'ancillary',
+                subcategory: 'lounge_access',
+                price: 1500,
+                quantity: 1,
+                currency: 'INR',
+                journey: journey
+              });
+            }
+          });
+        }
+      }
+    });
+
+    // Set comprehensive Purchase event with all purchase parameters
+    const purchaseEvent = {
+      event: 'purchase',
+      eventData: {
+        revenue: {
+          transactionId: txnId,
+          totalRevenue: feeBreakdown.total,
+          currency: 'INR',
+          products: products,
+          bookingReference: bookingRef,
+          paymentMethod: paymentDetails?.method || 'credit_card',
+          paymentStatus: 'completed',
+          timestamp: new Date().toISOString()
+        },
+        paymentDetails: {
+          paymentType: paymentDetails?.method || 'credit_card',
+          paymentCurrency: 'INR',
+          paymentCategories: {
+            baseFare: feeBreakdown.baseFare,
+            ancillaryFare: feeBreakdown.ancillaryTotal,
+            taxes: feeBreakdown.taxes,
+            convenienceFee: feeBreakdown.convenienceFee,
+            surcharge: feeBreakdown.surcharge,
+            totalFees: feeBreakdown.taxes + feeBreakdown.convenienceFee + feeBreakdown.surcharge,
+            totalAmount: feeBreakdown.total
+          },
+          pnr: bookingRef,
+          bookingId: txnId,
+          passengers: numPassengers,
+          tripType: tripType || 'oneWay'
+        },
+        customer: {
+          userId: travellerDetails[0]?.email || null,
+          email: travellerDetails[0]?.email || null,
+          phone: travellerDetails[0]?.phone || null,
+          loyaltyTier: 'standard'
+        },
+        booking: {
+          tripType: tripType || 'oneWay',
+          cabinClass: selectedFlights.onward?.cabinClass || 'economy',
+          passengers: numPassengers,
+          origin: selectedFlights.onward?.origin?.iata_code,
+          destination: selectedFlights.onward?.destination?.iata_code,
+          departureDate: selectedFlights.onward?.departureTime ? new Date(selectedFlights.onward.departureTime).toISOString().split('T')[0] : null,
+          returnDate: selectedFlights.return?.departureTime ? new Date(selectedFlights.return.departureTime).toISOString().split('T')[0] : null
+        },
+        sustainabilityImpact: {
+          carbonFootprint: totalDistance > 0 ? Math.round(totalDistance * 0.255) : 0, // kg CO₂
+          distance: totalDistance, // km
+          treesPlanted: treesPlanted,
+          carbonOffset: totalDistance > 0 ? Math.round(totalDistance * 0.255) : 0,
+          sustainabilityContribution: treesPlanted > 0 ? treesPlanted * 50 : 0, // INR contribution
+          impactType: 'carbon_footprint',
+          contributionType: 'trees_planted',
+          timestamp: new Date().toISOString()
+        }
+      },
+      timestamp: new Date().toISOString()
+    };
+
+    // Push Purchase event to data layer
+    if (typeof window !== 'undefined' && window.adobeDataLayer) {
+      window.adobeDataLayer.push(purchaseEvent);
+      console.log('✅ Purchase event pushed to adobeDataLayer:', purchaseEvent);
+    }
+
+
+
+  }, [selectedFlights, travellerDetails, tripType, numPassengers, selectedServices, paymentDetails]);
+
   // Helper function to calculate seat price
   const calculateSeatPrice = (seat) => {
     if (!seat) return 0;
@@ -383,6 +688,89 @@ const BookingConfirmation = () => {
     } catch (error) {
       console.warn('Error calculating seat price:', error);
       return 0;
+    }
+  };
+
+  // Helper function to calculate baggage price
+  const calculateBaggagePrice = (baggage, journey) => {
+    if (!baggage || baggage === 'included') return 0;
+    try {
+      const flight = journey === 'onward' ? selectedFlights?.onward : selectedFlights?.return;
+      if (flight?.origin?.iata_code && flight?.destination?.iata_code) {
+        const isInternational = flight.origin.iata_code !== flight.destination.iata_code;
+        return isInternational ? 2000 : 1000;
+      }
+      return 1000; // Default domestic price
+    } catch (error) {
+      console.warn('Error calculating baggage price:', error);
+      return 1000;
+    }
+  };
+
+  // Interactive functions for data layer tracking
+  const handleEmailConfirmation = () => {
+    if (!emailRequested && bookingReference) {
+      airlinesDataLayer.trackConfirmationEmailRequest({
+        emailType: 'booking_confirmation',
+        recipientEmail: travellerDetails[0]?.email || '',
+        bookingReference: bookingReference,
+        requestStatus: 'requested'
+      });
+      setEmailRequested(true);
+      console.log('Email confirmation requested');
+    }
+  };
+
+  const handleSMSNotification = () => {
+    if (!smsRequested && bookingReference) {
+      airlinesDataLayer.trackSMSNotification({
+        notificationType: 'booking_confirmation',
+        phoneNumber: travellerDetails[0]?.phone || '',
+        bookingReference: bookingReference,
+        requestStatus: 'requested'
+      });
+      setSmsRequested(true);
+      console.log('SMS notification requested');
+    }
+  };
+
+  const handleSocialSharing = (platform) => {
+    if (bookingReference) {
+      airlinesDataLayer.trackSocialSharing({
+        platform: platform,
+        shareType: 'booking_confirmation',
+        bookingReference: bookingReference,
+        contentShared: 'booking_details'
+      });
+      console.log(`Shared to ${platform}`);
+    }
+  };
+
+  const handlePrintConfirmation = () => {
+    if (bookingReference) {
+      airlinesDataLayer.trackPrintConfirmation({
+        printType: 'booking_confirmation',
+        bookingReference: bookingReference,
+        printFormat: 'pdf'
+      });
+      console.log('Print confirmation triggered');
+      // Trigger actual print
+      window.print();
+    }
+  };
+
+
+  const handleSustainabilityContribution = (action) => {
+    if (bookingReference) {
+      airlinesDataLayer.trackSustainabilityImpact({
+        impactType: 'carbon_footprint',
+        carbonOffset: Math.round(totalDistance * 0.255),
+        unit: 'kg_co2',
+        treesPlanted: treesPlanted,
+        userAction: action, // contributed, shared
+        bookingReference: bookingReference
+      });
+      console.log(`Sustainability ${action}`);
     }
   };
 
@@ -718,13 +1106,75 @@ const BookingConfirmation = () => {
 
         {renderFeeBreakdown()}
 
-        <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center', gap: 2 }}>
+        {/* Sustainability Impact Section */}
+        {totalDistance > 0 && (
+          <Box sx={{ mt: 3 }}>
+            <Typography variant="h6" gutterBottom>
+              <ForestIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
+              Sustainability Impact
+            </Typography>
+            <Paper variant="outlined" sx={{ p: 3, bgcolor: 'success.light', color: 'success.contrastText' }}>
+              <Grid container spacing={2} alignItems="center">
+                <Grid item xs={12} md={6}>
+                  <Typography variant="body1">
+                    <strong>Carbon Footprint:</strong> {Math.round(totalDistance * 0.255)} kg CO₂
+                  </Typography>
+                  <Typography variant="body2" sx={{ mt: 1 }}>
+                    Distance: {totalDistance.toFixed(0)} km
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography variant="body1">
+                    <strong>Trees Planted:</strong> {treesPlanted} trees
+                  </Typography>
+                  <Typography variant="body2" sx={{ mt: 1 }}>
+                    Equivalent to offsetting your flight's carbon footprint
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Paper>
+          </Box>
+        )}
+
+        <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center', gap: 2, flexWrap: 'wrap' }}>
           <Button
             variant="contained"
-            onClick={() => window.print()}
+            onClick={handlePrintConfirmation}
             startIcon={<PrintIcon />}
           >
             Print Ticket
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={handleEmailConfirmation}
+            disabled={emailRequested}
+          >
+            {emailRequested ? 'Email Sent' : 'Email Confirmation'}
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={handleSMSNotification}
+            disabled={smsRequested}
+          >
+            {smsRequested ? 'SMS Sent' : 'SMS Notification'}
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={() => handleSocialSharing('facebook')}
+          >
+            Share on Facebook
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={() => handleSocialSharing('twitter')}
+          >
+            Share on Twitter
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={() => handleSustainabilityContribution('contributed')}
+          >
+            Offset Carbon Footprint
           </Button>
           <Button
             variant="outlined"

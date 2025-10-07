@@ -50,8 +50,8 @@ const AncillaryServices = () => {
   const location = useLocation();
   const navigate = useNavigate();
   
-  // Initialize comprehensive data layer tracking (includes pageView)
-  const { formContext, trackFormFieldInteraction, trackFormValidation, trackFormSubmission } = useAncillaryServicesDataLayer({
+  // Initialize data layer tracking (includes pageView)
+  const { formContext } = useAncillaryServicesDataLayer({
     pageCategory: 'booking',
     bookingStep: 'ancillary-services',
     sections: ['seat-selection', 'meals', 'baggage', 'insurance']
@@ -85,6 +85,7 @@ const AncillaryServices = () => {
   const [seatSelectionOpen, setSeatSelectionOpen] = useState(false);
   const [currentJourney, setCurrentJourney] = useState('onward');
   const [currentAircraft, setCurrentAircraft] = useState(null);
+  const [currentPassengerIndex, setCurrentPassengerIndex] = useState(0);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
 
   // Initialize state from location
@@ -261,8 +262,6 @@ const AncillaryServices = () => {
       currentServices: selectedServices
     });
 
-    // Track form field interaction
-    trackFormFieldInteraction(`seat_${journey}_${passengerIndex}`, seat, 'seat-selection');
 
     setSelectedServices(prev => {
       const newServices = { ...prev };
@@ -334,9 +333,10 @@ const AncillaryServices = () => {
     });
   };
 
-  const openSeatSelection = (journey, aircraft) => {
+  const openSeatSelection = (journey, aircraft, passengerIndex) => {
     setCurrentJourney(journey);
     setCurrentAircraft(aircraft);
+    setCurrentPassengerIndex(passengerIndex);
     setSeatSelectionOpen(true);
   };
 
@@ -496,7 +496,7 @@ const AncillaryServices = () => {
         for (let i = 0; i < seatType.count; i++) {
           const seatNumber = `${row}${seatType.type}`;
           const uniqueKey = `${row}-${seatType.type}-${typeIndex}-${i}-${seatIndex}`;
-          const isSelected = selectedServices[currentJourney].seat?.includes(seatNumber);
+          const isSelected = selectedServices[currentJourney].seat?.[currentPassengerIndex] === seatNumber;
           const isExitRow = cabinConfig.exit_rows?.includes(row);
           const isExtraLegroom = cabinConfig.extra_legroom_rows?.includes(row);
           const isPreferred = cabinConfig.preferred_rows?.includes(row);
@@ -535,7 +535,7 @@ Price: ₹${seatPrice}`}
                     bgcolor: isSelected ? 'primary.dark' : 'grey.300'
                   }
                 }}
-                onClick={() => handleSeatSelect(currentJourney, 0, seatNumber)}
+                onClick={() => handleSeatSelect(currentJourney, currentPassengerIndex, seatNumber)}
               >
                 {seatNumber}
               </Box>
@@ -803,7 +803,7 @@ Price: ₹${seatPrice}`}
                         </Box>
                         <Button
                           variant="outlined"
-                          onClick={() => openSeatSelection(journey, flight.aircraft)}
+                          onClick={() => openSeatSelection(journey, flight.aircraft, index)}
                           fullWidth
                         >
                           {selectedServices[journey].seat?.[index] || 'Select Seat'}
@@ -1018,29 +1018,32 @@ Price: ₹${seatPrice}`}
 
   const handleProceedToPayment = () => {
     try {
-      // Track form validation
-      const validationResults = {
-        hasSelectedServices: Object.keys(selectedServices).some(journey => 
-          selectedServices[journey].seat?.length > 0 || 
-          selectedServices[journey].meal?.length > 0 || 
-          selectedServices[journey].baggage?.length > 0
-        ),
-        totalServices: calculateTotal(),
-        validationPassed: true
-      };
-      
-      trackFormValidation(validationResults);
-
       // Calculate total ancillary services cost
       const ancillaryTotal = calculateTotal();
       
-      // Calculate total flight fare
+      // Calculate total flight fare (per passenger prices multiplied by number of passengers)
+      const numPassengers = travellerDetails.length;
+      
+      // DEBUG: Add breakpoint to debug flight fare calculation
+      debugger;
+      console.log('DEBUG - Flight fare calculation:', {
+        numPassengers,
+        travellerDetailsLength: travellerDetails.length,
+        onwardPrice: selectedFlights?.onward?.price?.amount,
+        returnPrice: selectedFlights?.return?.price?.amount,
+        onwardTotal: (selectedFlights?.onward?.price?.amount || 0) * numPassengers,
+        returnTotal: (selectedFlights?.return?.price?.amount || 0) * numPassengers,
+        selectedFlights
+      });
+      
       const flightTotal = (
-        (selectedFlights?.onward?.price?.amount || 0) + 
-        (selectedFlights?.return?.price?.amount || 0)
+        (selectedFlights?.onward?.price?.amount || 0) * numPassengers + 
+        (selectedFlights?.return?.price?.amount || 0) * numPassengers
       );
+      
+      console.log('DEBUG - Final flightTotal:', flightTotal);
 
-      // Calculate total amount including flight fare and ancillary services
+      // Calculate total amount including flight fare and ancillary services only
       const totalAmount = flightTotal + ancillaryTotal;
 
       console.log('Proceeding to payment with totals:', {
@@ -1074,26 +1077,270 @@ Price: ₹${seatPrice}`}
         previousPage: 'Ancillary Services'
       };
 
-      // Track form submission
-      trackFormSubmission({
-        action: 'proceed_to_payment',
-        ancillaryTotal,
-        flightTotal,
-        totalAmount,
-        selectedServices,
-        navigationState
-      });
+
+      // Track proceed to payment event (simple navigation event)
+      if (typeof window !== 'undefined' && window.adobeDataLayer) {
+        window.adobeDataLayer.push({
+          event: 'proceedToPayment',
+          bookingContext: {
+            bookingId: `booking_${Date.now()}_${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+            bookingStep: 'ancillary-services',
+            nextStep: 'payment',
+            bookingStepNumber: 2,
+            totalSteps: 4
+          },
+          selectedFlights: {
+            onward: {
+              flightNumber: selectedFlights.onward.flightNumber,
+              airline: selectedFlights.onward.airline,
+              origin: selectedFlights.onward.origin?.iata_code || selectedFlights.onward.originCode,
+              destination: selectedFlights.onward.destination?.iata_code || selectedFlights.onward.destinationCode,
+              departureTime: selectedFlights.onward.departureTime,
+              price: (selectedFlights.onward.price?.amount || 0) * numPassengers,
+              cabinClass: selectedFlights.onward.cabinClass,
+              perPassengerPrice: selectedFlights.onward.price?.amount || 0
+            },
+            return: selectedFlights.return ? {
+              flightNumber: selectedFlights.return.flightNumber,
+              airline: selectedFlights.return.airline,
+              origin: selectedFlights.return.origin?.iata_code || selectedFlights.return.originCode,
+              destination: selectedFlights.return.destination?.iata_code || selectedFlights.return.destinationCode,
+              departureTime: selectedFlights.return.departureTime,
+              price: (selectedFlights.return.price?.amount || 0) * numPassengers,
+              cabinClass: selectedFlights.return.cabinClass,
+              perPassengerPrice: selectedFlights.return.price?.amount || 0
+            } : null
+          },
+          ancillaryServices: {
+            totalAncillaryCost: ancillaryTotal,
+            currency: 'INR',
+            servicesSelected: (() => {
+              const passengerServices = {};
+              
+              // Create passenger-wise breakdown
+              travellerDetails.forEach((traveller, index) => {
+                const passengerKey = `passenger${index + 1}`;
+                passengerServices[passengerKey] = {
+                  passengerName: `${traveller.firstName} ${traveller.lastName}`,
+                  onward: {
+                    seats: {
+                      details: selectedServices.onward?.seat?.[index] || null,
+                      cost: (() => {
+                        const seat = selectedServices.onward?.seat?.[index];
+                        if (seat) {
+                          const row = parseInt(seat);
+                          const seatType = seat.slice(-1);
+                          const isPremiumRow = row <= 5;
+                          const isWindowSeat = seatType === 'W';
+                          return (isPremiumRow || isWindowSeat) ? 500 : 100;
+                        }
+                        return 0;
+                      })(),
+                      currency: 'INR',
+                      type: 'paid'
+                    },
+                    meals: {
+                      details: selectedServices.onward?.meals?.[index] || null,
+                      cost: 0,
+                      currency: 'INR',
+                      type: 'free'
+                    },
+                    baggage: {
+                      details: selectedServices.onward?.baggage?.[index] || null,
+                      cost: (() => {
+                        const baggage = selectedServices.onward?.baggage?.[index];
+                        if (baggage && baggage !== 'included') {
+                          const flight = selectedFlights.onward;
+                          if (flight?.origin?.iata_code && flight?.destination?.iata_code) {
+                            const isInternational = flight.origin.iata_code !== flight.destination.iata_code;
+                            return isInternational ? 2000 : 1000;
+                          }
+                          return 1000;
+                        }
+                        return 0;
+                      })(),
+                      currency: 'INR',
+                      type: 'paid'
+                    },
+                    priorityBoarding: {
+                      details: selectedServices.onward?.priorityBoarding?.[index] || false,
+                      cost: selectedServices.onward?.priorityBoarding?.[index] ? 500 : 0,
+                      currency: 'INR',
+                      type: 'paid'
+                    },
+                    loungeAccess: {
+                      details: selectedServices.onward?.loungeAccess?.[index] || false,
+                      cost: selectedServices.onward?.loungeAccess?.[index] ? 1500 : 0,
+                      currency: 'INR',
+                      type: 'paid'
+                    },
+                    totalCost: (() => {
+                      let total = 0;
+                      const seat = selectedServices.onward?.seat?.[index];
+                      if (seat) {
+                        const row = parseInt(seat);
+                        const seatType = seat.slice(-1);
+                        const isPremiumRow = row <= 5;
+                        const isWindowSeat = seatType === 'W';
+                        total += (isPremiumRow || isWindowSeat) ? 500 : 100;
+                      }
+                      const baggage = selectedServices.onward?.baggage?.[index];
+                      if (baggage && baggage !== 'included') {
+                        const flight = selectedFlights.onward;
+                        if (flight?.origin?.iata_code && flight?.destination?.iata_code) {
+                          const isInternational = flight.origin.iata_code !== flight.destination.iata_code;
+                          total += isInternational ? 2000 : 1000;
+                        } else {
+                          total += 1000;
+                        }
+                      }
+                      if (selectedServices.onward?.priorityBoarding?.[index]) total += 500;
+                      if (selectedServices.onward?.loungeAccess?.[index]) total += 1500;
+                      return total;
+                    })(),
+                    currency: 'INR'
+                  },
+                  return: selectedFlights.return ? {
+                    seats: {
+                      details: selectedServices.return?.seat?.[index] || null,
+                      cost: (() => {
+                        const seat = selectedServices.return?.seat?.[index];
+                        if (seat) {
+                          const row = parseInt(seat);
+                          const seatType = seat.slice(-1);
+                          const isPremiumRow = row <= 5;
+                          const isWindowSeat = seatType === 'W';
+                          return (isPremiumRow || isWindowSeat) ? 500 : 100;
+                        }
+                        return 0;
+                      })(),
+                      currency: 'INR',
+                      type: 'paid'
+                    },
+                    meals: {
+                      details: selectedServices.return?.meals?.[index] || null,
+                      cost: 0,
+                      currency: 'INR',
+                      type: 'free'
+                    },
+                    baggage: {
+                      details: selectedServices.return?.baggage?.[index] || null,
+                      cost: (() => {
+                        const baggage = selectedServices.return?.baggage?.[index];
+                        if (baggage && baggage !== 'included') {
+                          const flight = selectedFlights.return;
+                          if (flight?.origin?.iata_code && flight?.destination?.iata_code) {
+                            const isInternational = flight.origin.iata_code !== flight.destination.iata_code;
+                            return isInternational ? 2000 : 1000;
+                          }
+                          return 1000;
+                        }
+                        return 0;
+                      })(),
+                      currency: 'INR',
+                      type: 'paid'
+                    },
+                    priorityBoarding: {
+                      details: selectedServices.return?.priorityBoarding?.[index] || false,
+                      cost: selectedServices.return?.priorityBoarding?.[index] ? 500 : 0,
+                      currency: 'INR',
+                      type: 'paid'
+                    },
+                    loungeAccess: {
+                      details: selectedServices.return?.loungeAccess?.[index] || false,
+                      cost: selectedServices.return?.loungeAccess?.[index] ? 1500 : 0,
+                      currency: 'INR',
+                      type: 'paid'
+                    },
+                    totalCost: (() => {
+                      let total = 0;
+                      const seat = selectedServices.return?.seat?.[index];
+                      if (seat) {
+                        const row = parseInt(seat);
+                        const seatType = seat.slice(-1);
+                        const isPremiumRow = row <= 5;
+                        const isWindowSeat = seatType === 'W';
+                        total += (isPremiumRow || isWindowSeat) ? 500 : 100;
+                      }
+                      const baggage = selectedServices.return?.baggage?.[index];
+                      if (baggage && baggage !== 'included') {
+                        const flight = selectedFlights.return;
+                        if (flight?.origin?.iata_code && flight?.destination?.iata_code) {
+                          const isInternational = flight.origin.iata_code !== flight.destination.iata_code;
+                          total += isInternational ? 2000 : 1000;
+                        } else {
+                          total += 1000;
+                        }
+                      }
+                      if (selectedServices.return?.priorityBoarding?.[index]) total += 500;
+                      if (selectedServices.return?.loungeAccess?.[index]) total += 1500;
+                      return total;
+                    })(),
+                    currency: 'INR'
+                  } : null
+                };
+              });
+              
+              return passengerServices;
+            })(),
+            summary: {
+              totalServicesSelected: Object.values(selectedServices).reduce((total, journey) => {
+                return total + (journey.seat?.length || 0) + (journey.meals?.length || 0) + 
+                       (journey.baggage?.length || 0) + (journey.priorityBoarding?.filter(Boolean)?.length || 0) + 
+                       (journey.loungeAccess?.filter(Boolean)?.length || 0);
+              }, 0),
+              totalPaidServices: ancillaryTotal > 0 ? 1 : 0,
+              totalFreeServices: ancillaryTotal === 0 ? 1 : 0,
+              categoriesSelected: ['seating', 'dining', 'baggage', 'boarding', 'lounge'].filter(category => {
+                // Check if any services are selected in this category
+                return Object.values(selectedServices).some(journey => {
+                  switch(category) {
+                    case 'seating': return journey.seat?.length > 0;
+                    case 'dining': return journey.meals?.length > 0;
+                    case 'baggage': return journey.baggage?.length > 0;
+                    case 'boarding': return journey.priorityBoarding?.some(Boolean);
+                    case 'lounge': return journey.loungeAccess?.some(Boolean);
+                    default: return false;
+                  }
+                });
+              })
+            }
+          },
+          pricing: {
+            flightTotal,
+            ancillaryTotal,
+            totalAmount: flightTotal + ancillaryTotal,
+            currency: 'INR',
+            breakdown: {
+              baseFare: flightTotal,
+              ancillaryFare: ancillaryTotal,
+              totalFare: flightTotal + ancillaryTotal,
+              passengers: numPassengers,
+              perPassengerFlightFare: (selectedFlights?.onward?.price?.amount || 0) + (selectedFlights?.return?.price?.amount || 0),
+              perPassengerTotalFare: (flightTotal + ancillaryTotal) / numPassengers
+            }
+          },
+          passengersBreakdown: {
+            totalPassengers: travellerDetails.length,
+            adults: travellerDetails.filter(t => !t.dateOfBirth || new Date().getFullYear() - new Date(t.dateOfBirth).getFullYear() >= 12).length,
+            children: travellerDetails.filter(t => t.dateOfBirth && new Date().getFullYear() - new Date(t.dateOfBirth).getFullYear() >= 2 && new Date().getFullYear() - new Date(t.dateOfBirth).getFullYear() < 12).length,
+            infants: travellerDetails.filter(t => t.dateOfBirth && new Date().getFullYear() - new Date(t.dateOfBirth).getFullYear() < 2).length,
+            passengerDetails: travellerDetails.map(traveller => ({
+              firstName: traveller.firstName,
+              lastName: traveller.lastName,
+              email: traveller.email,
+              phone: traveller.phone
+            }))
+          },
+          tripType: selectedFlights.return ? 'roundtrip' : 'oneway',
+          timestamp: new Date().toISOString()
+        });
+        console.log('✅ Proceed to payment event pushed to adobeDataLayer');
+      }
 
       navigate('/payment', { state: navigationState });
     } catch (error) {
       console.error('Error in handleProceedToPayment:', error);
-      // Track form validation error
-      trackFormValidation({
-        hasSelectedServices: false,
-        totalServices: 0,
-        validationPassed: false,
-        error: error.message
-      });
     }
   };
 

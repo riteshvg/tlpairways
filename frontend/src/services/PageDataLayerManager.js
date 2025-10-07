@@ -209,7 +209,7 @@ class PageDataLayerManager {
    */
   trackSearchFieldInteraction(fieldType, fieldValue, interactionType) {
     const event = {
-      event: "search-field-interaction",
+      event: "searchFieldInteraction",
       eventData: {
         fieldType,
         fieldValue,
@@ -238,7 +238,7 @@ class PageDataLayerManager {
     sessionStorage.setItem('tlp_session_search_count', (currentCount + 1).toString());
 
     const event = {
-      event: "flight-search-initiated",
+      event: "flightSearchInitiated",
       eventData: {
         origin: searchParams.origin,
         destination: searchParams.destination,

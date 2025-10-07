@@ -91,7 +91,7 @@ const FlightComparisonModal = ({
       setComparisonId(id);
       
       // Track comparison modal opened
-      enhancedAirlinesDataLayer.trackFlightComparison('modal-opened', null, {
+      enhancedAirlinesDataLayer.trackFlightComparison('modalOpened', null, {
         comparisonId: id,
         totalFlightsInComparison: flights.length,
         searchId
@@ -133,10 +133,10 @@ const FlightComparisonModal = ({
     setSelectedFlight(flight);
     
     // Track flight selection in comparison
-    enhancedAirlinesDataLayer.trackFlightComparison('flight-selected', flight, {
+    enhancedAirlinesDataLayer.trackFlightComparison('flightSelected', flight, {
       comparisonId,
       totalFlightsInComparison: flights.length,
-      selectionMethod: 'comparison-modal',
+      selectionMethod: 'comparisonModal',
       searchId
     });
     
@@ -183,7 +183,7 @@ const FlightComparisonModal = ({
       }
       
       // Track share action
-      enhancedAirlinesDataLayer.trackEvent('comparison-shared', {
+      enhancedAirlinesDataLayer.trackEvent('comparisonShared', {
         shareMethod: method,
         comparisonId,
         flightCount: flights.length,
@@ -192,7 +192,7 @@ const FlightComparisonModal = ({
       
     } catch (error) {
       console.error('Error sharing comparison:', error);
-      enhancedAirlinesDataLayer.trackError('comparison-share', error, { comparisonId });
+      enhancedAirlinesDataLayer.trackError('comparisonShare', error, { comparisonId });
     } finally {
       setLoading(false);
     }
@@ -203,7 +203,7 @@ const FlightComparisonModal = ({
     window.print();
     
     // Track print action
-    enhancedAirlinesDataLayer.trackEvent('comparison-printed', {
+    enhancedAirlinesDataLayer.trackEvent('comparisonPrinted', {
       comparisonId,
       flightCount: flights.length,
       searchId
@@ -216,7 +216,7 @@ const FlightComparisonModal = ({
     flight.isBookmarked = !flight.isBookmarked;
     
     // Track bookmark action
-    enhancedAirlinesDataLayer.trackEvent('flight-bookmarked', {
+    enhancedAirlinesDataLayer.trackEvent('flightBookmarked', {
       flightNumber: flight.flightNumber,
       action: flight.isBookmarked ? 'added' : 'removed',
       comparisonId,

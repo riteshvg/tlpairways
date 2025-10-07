@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import usePageView from '../hooks/usePageView';
 import useTravellerDetailsDataLayer from '../hooks/useTravellerDetailsDataLayer';
 import {
   Container,
@@ -18,9 +17,6 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Stepper,
-  Step,
-  StepLabel,
   Snackbar,
   Alert,
 } from '@mui/material';
@@ -54,12 +50,12 @@ const TravellerDetails = () => {
   const bookingState = getBookingState();
   const { onwardFlight, returnFlight, tripType, passengers } = bookingState || {};
   
-  // Initialize comprehensive data layer tracking (includes pageView)
-  const { formContext, trackFormFieldInteraction, trackFormValidation, trackFormSubmission } = useTravellerDetailsDataLayer({
+  // Initialize data layer tracking (includes pageView)
+  useTravellerDetailsDataLayer({
     pageCategory: 'booking',
     bookingStep: 'traveller-details',
-    sections: ['passenger-form', 'contact-details', 'special-requests'],
-    passengerCount: passengers?.adult + passengers?.child + passengers?.infant || 1
+    sections: ['passengerForm', 'contactDetails', 'specialRequests'],
+    passengerCount: (passengers?.adult || 1) + (passengers?.child || 0) + (passengers?.infant || 0)
   });
 
   console.log('TravellerDetails received state:', {
@@ -69,20 +65,12 @@ const TravellerDetails = () => {
     passengers
   });
 
-  // Move getCabinPrice function before state initialization
-  const getCabinPrice = (basePrice, cabinClass) => {
-    switch (cabinClass?.toLowerCase()) {
-      case 'business':
-        return basePrice * 2.5; // Business class is 2.5x economy
-      case 'premium economy':
-        return basePrice * 1.5; // Premium economy is 1.5x economy
-      default:
-        return basePrice; // Economy class
-    }
-  };
 
-  const [travellers, setTravellers] = useState([
-    {
+  const [travellers, setTravellers] = useState(() => {
+    const state = getBookingState();
+    const passengerCount = (state?.passengers?.adult || 1) + (state?.passengers?.child || 0) + (state?.passengers?.infant || 0);
+    
+    return Array.from({ length: passengerCount }, () => ({
       firstName: '',
       lastName: '',
       email: '',
@@ -91,10 +79,10 @@ const TravellerDetails = () => {
       gender: '',
       passportNumber: '',
       nationality: '',
-    }
-  ]);
+    }));
+  });
 
-  const [selectedFlights, setSelectedFlights] = useState(() => {
+  const [selectedFlights] = useState(() => {
     const state = getBookingState();
     if (state) {
       const { onwardFlight, returnFlight } = state;
@@ -144,15 +132,6 @@ const TravellerDetails = () => {
     }
     return { onward: null, return: null };
   });
-  const [passengerCount, setPassengerCount] = useState(() => {
-    const state = getBookingState();
-    return state?.passengers || passengers;
-  });
-  const [paymentType, setPaymentType] = useState(() => {
-    const state = getBookingState();
-    const tripTypeFromState = state?.tripType || tripType;
-    return tripTypeFromState === 'roundtrip' ? 'roundtrip' : 'oneway';
-  });
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
 
@@ -179,6 +158,152 @@ const TravellerDetails = () => {
   const validatePhone = (phone) => {
     const phoneRegex = /^\d{10}$/;
     return phoneRegex.test(phone);
+  };
+
+  // Random data generators
+  const generateRandomName = () => {
+    const firstNames = [
+      'Aarav', 'Aditya', 'Akshay', 'Arjun', 'Deepak', 'Gaurav', 'Harsh', 'Karan', 'Manish', 'Nikhil',
+      'Priya', 'Sneha', 'Anita', 'Kavya', 'Meera', 'Pooja', 'Riya', 'Sakshi', 'Tanya', 'Vidya'
+    ];
+    const lastNames = [
+      'Sharma', 'Patel', 'Singh', 'Kumar', 'Gupta', 'Verma', 'Jain', 'Agarwal', 'Malhotra', 'Chopra',
+      'Reddy', 'Nair', 'Iyer', 'Menon', 'Pillai', 'Rao', 'Joshi', 'Mehta', 'Agarwal', 'Bansal'
+    ];
+    return {
+      firstName: firstNames[Math.floor(Math.random() * firstNames.length)],
+      lastName: lastNames[Math.floor(Math.random() * lastNames.length)]
+    };
+  };
+
+  const generateRandomEmail = (firstName, lastName) => {
+    const domains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'rediffmail.com'];
+    const domain = domains[Math.floor(Math.random() * domains.length)];
+    return `${firstName.toLowerCase()}.${lastName.toLowerCase()}${Math.floor(Math.random() * 100)}@${domain}`;
+  };
+
+  const generateRandomPhone = () => {
+    const prefixes = ['6', '7', '8', '9'];
+    const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+    const remaining = Math.floor(Math.random() * 100000000).toString().padStart(8, '0');
+    return prefix + remaining;
+  };
+
+  const generateRandomDateOfBirth = () => {
+    const start = new Date(1950, 0, 1);
+    const end = new Date(2005, 11, 31);
+    const randomDate = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+    return format(randomDate, 'yyyy-MM-dd');
+  };
+
+  const generateRandomGender = () => {
+    const genders = ['male', 'female', 'other'];
+    return genders[Math.floor(Math.random() * genders.length)];
+  };
+
+  const generateRandomNationality = () => {
+    const nationalities = [
+      'Indian', 'American', 'British', 'Canadian', 'Australian', 'German', 'French', 'Italian', 'Spanish', 'Japanese',
+      'Chinese', 'Korean', 'Brazilian', 'Mexican', 'Russian', 'Dutch', 'Swedish', 'Norwegian', 'Danish', 'Finnish'
+    ];
+    return nationalities[Math.floor(Math.random() * nationalities.length)];
+  };
+
+  const generateRandomPassportNumber = () => {
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const numbers = '0123456789';
+    let passport = '';
+    for (let i = 0; i < 2; i++) {
+      passport += letters[Math.floor(Math.random() * letters.length)];
+    }
+    for (let i = 0; i < 7; i++) {
+      passport += numbers[Math.floor(Math.random() * numbers.length)];
+    }
+    return passport;
+  };
+
+  // Handler functions
+  const handleFillRandomDetails = () => {
+    const totalPassengers = (passengers?.adult || 1) + (passengers?.child || 0) + (passengers?.infant || 0);
+    
+    // Fill passenger details
+    const updatedTravellers = travellers.map(() => {
+      const { firstName, lastName } = generateRandomName();
+      return {
+        firstName,
+        lastName,
+        email: generateRandomEmail(firstName, lastName),
+        phone: generateRandomPhone(),
+        dateOfBirth: generateRandomDateOfBirth(),
+        gender: generateRandomGender(),
+        passportNumber: generateRandomPassportNumber(),
+        nationality: generateRandomNationality(),
+      };
+    });
+
+    // Ensure we have the correct number of travellers
+    while (updatedTravellers.length < totalPassengers) {
+      const { firstName, lastName } = generateRandomName();
+      updatedTravellers.push({
+        firstName,
+        lastName,
+        email: generateRandomEmail(firstName, lastName),
+        phone: generateRandomPhone(),
+        dateOfBirth: generateRandomDateOfBirth(),
+        gender: generateRandomGender(),
+        passportNumber: generateRandomPassportNumber(),
+        nationality: generateRandomNationality(),
+      });
+    }
+
+    setTravellers(updatedTravellers);
+
+    // Fill contact information
+    const { firstName, lastName } = generateRandomName();
+    setEmail(generateRandomEmail(firstName, lastName));
+    setPhone(generateRandomPhone());
+
+    // Show success message
+    setSnackbar({
+      open: true,
+      message: `Filled random details for ${totalPassengers} passenger${totalPassengers > 1 ? 's' : ''}`,
+      severity: 'success'
+    });
+  };
+
+  const handleClearAllDetails = () => {
+    const totalPassengers = (passengers?.adult || 1) + (passengers?.child || 0) + (passengers?.infant || 0);
+    
+    // Clear passenger details
+    const clearedTravellers = Array.from({ length: totalPassengers }, () => ({
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      dateOfBirth: '',
+      gender: '',
+      passportNumber: '',
+      nationality: '',
+    }));
+
+    setTravellers(clearedTravellers);
+
+    // Clear contact information
+    setEmail('');
+    setPhone('');
+
+    // Clear validation errors
+    setValidationErrors({
+      email: '',
+      phone: '',
+    });
+
+    // Show success message
+    setSnackbar({
+      open: true,
+      message: 'Cleared all passenger details',
+      severity: 'info'
+    });
   };
 
   useEffect(() => {
@@ -214,7 +339,7 @@ const TravellerDetails = () => {
       });
       navigate('/search');
     }
-  }, [bookingState, navigate]);
+  }, [bookingState, navigate, location.state, onwardFlight, returnFlight, tripType, passengers]);
 
   // Add a new useEffect to monitor selectedFlights changes
   useEffect(() => {
@@ -228,41 +353,6 @@ const TravellerDetails = () => {
     }
   }, [selectedFlights]);
 
-  // Update handleCabinClassChange to use the prices object
-  const handleCabinClassChange = (journey, newCabinClass) => {
-    console.log('Cabin class change:', { journey, newCabinClass });
-    
-    setSelectedFlights(prevFlights => {
-      const updatedFlights = { ...prevFlights };
-      const flight = updatedFlights[journey];
-      
-      if (flight) {
-        const newPrice = flight.prices?.[newCabinClass.toLowerCase()] || 
-                        getCabinPrice(flight.basePrice, newCabinClass);
-        
-        console.log('Price update:', {
-          journey,
-          oldPrice: flight.price.amount,
-          newPrice,
-          oldCabinClass: flight.cabinClass,
-          newCabinClass
-        });
-
-        updatedFlights[journey] = {
-          ...flight,
-          price: {
-            ...flight.price,
-            amount: newPrice
-          },
-          cabinClass: newCabinClass
-        };
-
-        return { ...updatedFlights };
-      }
-
-      return prevFlights;
-    });
-  };
 
   const handleAddTraveller = () => {
     setTravellers([
@@ -292,9 +382,6 @@ const TravellerDetails = () => {
       [field]: value
     };
     setTravellers(newTravellers);
-    
-    // Track form field interaction
-    trackFormFieldInteraction(field, value, index + 1);
   };
 
   const validateForm = () => {
@@ -360,23 +447,79 @@ const TravellerDetails = () => {
 
     if (!validateForm()) {
       console.log('Form validation failed');
-      // Track form validation failure
-      trackFormValidation({ 
-        email: validationErrors.email, 
-        phone: validationErrors.phone, 
-        travellers: validationErrors.travellers 
-      });
       return;
     }
 
     try {
-      // Track successful form submission
-      trackFormSubmission({
-        travellers,
-        contactInfo: { email, phone },
-        selectedFlights,
-        passengers
-      });
+      // Track proceed to ancillary services event
+      if (typeof window !== 'undefined' && window.adobeDataLayer) {
+        window.adobeDataLayer.push({
+          event: 'proceedToAncillaryServices',
+          bookingContext: {
+            bookingId: `booking_${Date.now()}_${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+            bookingStep: 'traveller-details',
+            nextStep: 'ancillary-services',
+            bookingStepNumber: 1,
+            totalSteps: 4
+          },
+          selectedFlights: {
+            onward: {
+              flightNumber: selectedFlights.onward.flightNumber,
+              airline: selectedFlights.onward.airline,
+              origin: selectedFlights.onward.origin?.iata_code || selectedFlights.onward.originCode,
+              destination: selectedFlights.onward.destination?.iata_code || selectedFlights.onward.destinationCode,
+              departureTime: selectedFlights.onward.departureTime,
+              price: selectedFlights.onward.price?.amount || 0,
+              cabinClass: selectedFlights.onward.cabinClass
+            },
+            return: selectedFlights.return ? {
+              flightNumber: selectedFlights.return.flightNumber,
+              airline: selectedFlights.return.airline,
+              origin: selectedFlights.return.origin?.iata_code || selectedFlights.return.originCode,
+              destination: selectedFlights.return.destination?.iata_code || selectedFlights.return.destinationCode,
+              departureTime: selectedFlights.return.departureTime,
+              price: selectedFlights.return.price?.amount || 0,
+              cabinClass: selectedFlights.return.cabinClass
+            } : null
+          },
+          passengersBreakdown: {
+            totalPassengers: (passengers?.adult || 1) + (passengers?.child || 0) + (passengers?.infant || 0),
+            breakdown: {
+              adults: {
+                count: passengers?.adult || 1,
+                type: 'adult',
+                description: '12+ years'
+              },
+              children: {
+                count: passengers?.child || 0,
+                type: 'child',
+                description: '2-11 years'
+              },
+              infants: {
+                count: passengers?.infant || 0,
+                type: 'infant',
+                description: 'Under 2 years'
+              }
+            },
+            passengerDetails: travellers.map(traveller => ({
+              firstName: traveller.firstName,
+              lastName: traveller.lastName,
+              email: traveller.email,
+              phone: traveller.phone
+            }))
+          },
+          contactInfo: {
+            email,
+            phone
+          },
+          tripType: selectedFlights.return ? 'roundtrip' : 'oneway',
+          timestamp: new Date().toISOString()
+        });
+      }
+
+      // Ensure travellerDetails array matches the number of passengers
+      const totalPassengers = (passengers?.adult || 1) + (passengers?.child || 0) + (passengers?.infant || 0);
+
       // Track passenger details added with proper flight data
       if (selectedFlights?.onward) {
         // Prepare passenger details for analytics
@@ -395,7 +538,7 @@ const TravellerDetails = () => {
           date: selectedFlights.onward.departureTime,
           returnDate: selectedFlights.return?.departureTime || null,
           tripType: selectedFlights.return ? 'roundtrip' : 'oneway',
-          passengers: passengers || travellers.length || 1
+          passengers: totalPassengers
         };
 
         console.log('Tracking analytics with passenger details:', passengerDetails);
@@ -403,10 +546,8 @@ const TravellerDetails = () => {
         
         // Analytics tracking removed
       }
-
-      // Ensure travellerDetails array matches the number of passengers
       let filledTravellers = [...travellers];
-      while (filledTravellers.length < (passengers || 1)) {
+      while (filledTravellers.length < totalPassengers) {
         filledTravellers.push({
           firstName: '',
           lastName: '',
@@ -546,7 +687,7 @@ const TravellerDetails = () => {
     </Card>
   );
 
-  const numPassengers = passengers || travellers.length || 1;
+  const numPassengers = (passengers?.adult || 1) + (passengers?.child || 0) + (passengers?.infant || 0) || travellers.length || 1;
 
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
@@ -573,41 +714,27 @@ const TravellerDetails = () => {
             )}
 
             <form onSubmit={handleSubmit}>
-              {/* Test Analytics Button */}
-              <Box sx={{ mb: 4, p: 2, border: '1px solid #ccc', borderRadius: 1 }}>
+              {/* Random Passenger Details Button */}
+              <Box sx={{ mb: 4, p: 2, border: '1px solid #e0e0e0', borderRadius: 1, backgroundColor: '#f5f5f5' }}>
                 <Typography variant="h6" gutterBottom>
-                  Analytics Test
+                  Quick Fill
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                  Fill all passenger details with random data for testing
                 </Typography>
                 <Button
-                  variant="outlined"
-                  onClick={() => {
-                    console.log('Manual analytics test triggered');
-                    // Analytics call removed
-                  }}
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleFillRandomDetails}
                   sx={{ mr: 2 }}
                 >
-                  Test Analytics
+                  Fill Random Details
                 </Button>
                 <Button
                   variant="outlined"
-                  onClick={() => {
-                    console.log('Manual passengerDetailsAdded test triggered');
-                    const testPassengerDetails = {
-                      passengers: [{ firstName: 'Test', lastName: 'User' }],
-                      contactInfo: { email: 'test@example.com', phone: '1234567890' }
-                    };
-                    const testSearchParams = {
-                      originCode: 'DEL',
-                      destinationCode: 'BOM',
-                      date: '2024-01-01',
-                      returnDate: null,
-                      tripType: 'oneway',
-                      passengers: 1
-                    };
-                    // Analytics call removed
-                  }}
+                  onClick={handleClearAllDetails}
                 >
-                  Test passengerDetailsAdded
+                  Clear All
                 </Button>
               </Box>
 
@@ -622,10 +749,7 @@ const TravellerDetails = () => {
                       label="Email"
                       type="email"
                       value={email}
-                      onChange={(e) => {
-                        setEmail(e.target.value);
-                        trackFormFieldInteraction('contact_email', e.target.value);
-                      }}
+                      onChange={(e) => setEmail(e.target.value)}
                       error={!!validationErrors.email}
                       helperText={validationErrors.email}
                       required
@@ -637,12 +761,10 @@ const TravellerDetails = () => {
                       label="Phone Number"
                       type="tel"
                       value={phone}
-                      onChange={(e) => {
-                        setPhone(e.target.value);
-                        trackFormFieldInteraction('contact_phone', e.target.value);
-                      }}
+                      onChange={(e) => setPhone(e.target.value)}
                       error={!!validationErrors.phone}
                       helperText={validationErrors.phone}
+                      inputProps={{ maxLength: 10 }}
                       required
                     />
                   </Grid>
@@ -697,7 +819,7 @@ const TravellerDetails = () => {
                       />
                     </Grid>
                     <Grid item xs={12} md={6}>
-                      <FormControl fullWidth required>
+                      <FormControl fullWidth required error={!!validationErrors.travellers?.[index]?.gender}>
                         <InputLabel>Gender</InputLabel>
                         <Select
                           value={traveller.gender}
@@ -708,6 +830,11 @@ const TravellerDetails = () => {
                           <MenuItem value="female">Female</MenuItem>
                           <MenuItem value="other">Other</MenuItem>
                         </Select>
+                        {validationErrors.travellers?.[index]?.gender && (
+                          <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 2 }}>
+                            {validationErrors.travellers[index].gender}
+                          </Typography>
+                        )}
                       </FormControl>
                     </Grid>
                     <Grid item xs={12} md={6}>
@@ -732,7 +859,7 @@ const TravellerDetails = () => {
                 </Box>
               ))}
 
-              {travellers.length < passengers && (
+              {travellers.length < numPassengers && (
                 <Button
                   startIcon={<AddIcon />}
                   onClick={handleAddTraveller}
