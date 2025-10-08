@@ -428,8 +428,8 @@ const Payment = () => {
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
       <Grid container spacing={4}>
-        {/* Payment Summary */}
-        <Grid item xs={12} md={4}>
+        {/* Payment Summary - Display on RIGHT */}
+        <Grid item xs={12} md={4} sx={{ order: { xs: 1, md: 2 } }}>
           <Paper elevation={3} sx={{ p: 4 }}>
             <Typography variant="h5" gutterBottom>
               Payment Summary
@@ -482,8 +482,8 @@ const Payment = () => {
           </Paper>
         </Grid>
 
-        {/* Payment Form */}
-        <Grid item xs={12} md={8}>
+        {/* Payment Form - Display on LEFT */}
+        <Grid item xs={12} md={8} sx={{ order: { xs: 2, md: 1 } }}>
           <Paper elevation={3} sx={{ p: 4 }}>
             <Typography variant="h4" gutterBottom>
               Payment Details
