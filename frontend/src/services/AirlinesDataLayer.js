@@ -21,9 +21,9 @@ class AirlinesDataLayer {
         window.adobeDataLayer = [];
       }
       
-      // Initialize computed state object for current page data
-      if (!window.adobeDataLayer.computedState) {
-        window.adobeDataLayer.computedState = {};
+      // Initialize computed state object for current page data (separate from array)
+      if (!window._adobeDataLayerState) {
+        window._adobeDataLayerState = {};
       }
       
       this.log('AirlinesDataLayer initialized', {
@@ -505,20 +505,20 @@ class AirlinesDataLayer {
    * @param {Object} stateData - State data to set
    */
   setComputedState(stateData) {
-    if (typeof window !== 'undefined' && window.adobeDataLayer) {
+    if (typeof window !== 'undefined') {
       // Initialize if doesn't exist
-      if (!window.adobeDataLayer.computedState) {
-        window.adobeDataLayer.computedState = {};
+      if (!window._adobeDataLayerState) {
+        window._adobeDataLayerState = {};
       }
       
       // Merge new state, replacing old values
-      window.adobeDataLayer.computedState = {
-        ...window.adobeDataLayer.computedState,
+      window._adobeDataLayerState = {
+        ...window._adobeDataLayerState,
         ...stateData,
         _lastUpdated: new Date().toISOString()
       };
       
-      this.log('Computed state updated', window.adobeDataLayer.computedState);
+      this.log('Computed state updated', window._adobeDataLayerState);
     }
   }
 
@@ -528,15 +528,15 @@ class AirlinesDataLayer {
    * @param {Array} keysToKeep - Keys to preserve (e.g., user data)
    */
   clearPageState(keysToKeep = ['userContext', 'sessionId']) {
-    if (typeof window !== 'undefined' && window.adobeDataLayer && window.adobeDataLayer.computedState) {
+    if (typeof window !== 'undefined' && window._adobeDataLayerState) {
       const preservedData = {};
       keysToKeep.forEach(key => {
-        if (window.adobeDataLayer.computedState[key]) {
-          preservedData[key] = window.adobeDataLayer.computedState[key];
+        if (window._adobeDataLayerState[key]) {
+          preservedData[key] = window._adobeDataLayerState[key];
         }
       });
       
-      window.adobeDataLayer.computedState = preservedData;
+      window._adobeDataLayerState = preservedData;
       this.log('Page state cleared, preserved:', keysToKeep);
     }
   }
@@ -547,8 +547,8 @@ class AirlinesDataLayer {
    * @returns {Object} Current page state
    */
   getComputedState() {
-    if (typeof window !== 'undefined' && window.adobeDataLayer) {
-      return window.adobeDataLayer.computedState || {};
+    if (typeof window !== 'undefined' && window._adobeDataLayerState) {
+      return window._adobeDataLayerState;
     }
     return {};
   }

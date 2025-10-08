@@ -23,7 +23,7 @@ We've implemented a **Computed State Pattern** that maintains the current page d
 
 #### 1. Computed State Object
 ```javascript
-window.adobeDataLayer.computedState = {
+window._adobeDataLayerState = {
   pageData: { /* current page data only */ },
   searchContext: { /* current search context */ },
   bookingContext: { /* current booking context */ },
@@ -45,7 +45,7 @@ window.adobeDataLayer.push({
 });
 
 // computedState is automatically updated:
-window.adobeDataLayer.computedState = {
+window._adobeDataLayerState = {
   pageData: { pageType: 'confirmation' },  // Replaced, not appended
   searchContext: { origin: 'DEL', destination: 'BOM' },  // Replaced
   userContext: { /* preserved from before */ }
@@ -65,8 +65,8 @@ window.adobeDataLayer.computedState = {
 ```javascript
 // Data Element: Page Type
 // Custom Code:
-return window.adobeDataLayer && window.adobeDataLayer.computedState 
-  ? window.adobeDataLayer.computedState.pageData?.pageType 
+return window._adobeDataLayerState 
+  ? window._adobeDataLayerState.pageData?.pageType 
   : null;
 
 // Or use the helper function:
@@ -78,55 +78,55 @@ return _satellite.getVar('airlinesDataLayer').getComputedState().pageData?.pageT
 ### 1. Page Data Elements
 ```javascript
 // Page Type
-return window.adobeDataLayer?.computedState?.pageData?.pageType || '';
+return window._adobeDataLayerState?.pageData?.pageType || '';
 
 // Page Name
-return window.adobeDataLayer?.computedState?.pageData?.pageName || '';
+return window._adobeDataLayerState?.pageData?.pageName || '';
 
 // Page Category
-return window.adobeDataLayer?.computedState?.pageData?.pageCategory || '';
+return window._adobeDataLayerState?.pageData?.pageCategory || '';
 
 // Booking Step
-return window.adobeDataLayer?.computedState?.pageData?.bookingStep || '';
+return window._adobeDataLayerState?.pageData?.bookingStep || '';
 ```
 
 ### 2. Search Context Elements
 ```javascript
 // Origin
-return window.adobeDataLayer?.computedState?.searchContext?.origin || '';
+return window._adobeDataLayerState?.searchContext?.origin || '';
 
 // Destination
-return window.adobeDataLayer?.computedState?.searchContext?.destination || '';
+return window._adobeDataLayerState?.searchContext?.destination || '';
 
 // Departure Date
-return window.adobeDataLayer?.computedState?.searchContext?.departureDate || '';
+return window._adobeDataLayerState?.searchContext?.departureDate || '';
 
 // Total Passengers
-return window.adobeDataLayer?.computedState?.searchContext?.passengers?.total || 0;
+return window._adobeDataLayerState?.searchContext?.passengers?.total || 0;
 ```
 
 ### 3. Booking Context Elements
 ```javascript
 // PNR
-return window.adobeDataLayer?.computedState?.bookingContext?.pnr || '';
+return window._adobeDataLayerState?.bookingContext?.pnr || '';
 
 // Booking Step
-return window.adobeDataLayer?.computedState?.bookingContext?.bookingStep || '';
+return window._adobeDataLayerState?.bookingContext?.bookingStep || '';
 
 // Total Passengers
-return window.adobeDataLayer?.computedState?.bookingContext?.passengersBreakdown?.totalPassengers || 0;
+return window._adobeDataLayerState?.bookingContext?.passengersBreakdown?.totalPassengers || 0;
 ```
 
 ### 4. Purchase Event Elements
 ```javascript
 // Transaction ID
-return window.adobeDataLayer?.computedState?.eventData?.revenue?.transactionId || '';
+return window._adobeDataLayerState?.eventData?.revenue?.transactionId || '';
 
 // Total Revenue
-return window.adobeDataLayer?.computedState?.eventData?.revenue?.totalRevenue || 0;
+return window._adobeDataLayerState?.eventData?.revenue?.totalRevenue || 0;
 
 // Payment Method
-return window.adobeDataLayer?.computedState?.eventData?.paymentDetails?.paymentType || '';
+return window._adobeDataLayerState?.eventData?.paymentDetails?.paymentType || '';
 ```
 
 ## API Methods
@@ -209,7 +209,7 @@ Rules that listen for events can continue as-is. The computed state is for data 
 ### Console Testing
 ```javascript
 // After navigating to confirmation page
-console.log(window.adobeDataLayer.computedState);
+console.log(window._adobeDataLayerState);
 
 // Expected output:
 {
@@ -222,15 +222,15 @@ console.log(window.adobeDataLayer.computedState);
 }
 
 // Navigate to different page
-// computedState.pageData should immediately update to new page
+// _adobeDataLayerState.pageData should immediately update to new page
 ```
 
 ## Troubleshooting
 
 ### Issue: Data element returns null
-**Solution**: Check that the exact path exists in computedState:
+**Solution**: Check that the exact path exists in state:
 ```javascript
-console.log(window.adobeDataLayer.computedState.pageData);
+console.log(window._adobeDataLayerState.pageData);
 ```
 
 ### Issue: Old values still showing
@@ -258,7 +258,7 @@ airlinesDataLayer.clearPageState(['userContext', 'sessionId', 'yourCustomKey']);
 // Code:
 return (function() {
   try {
-    return window.adobeDataLayer?.computedState?.pageData?.pageType || '';
+    return window._adobeDataLayerState?.pageData?.pageType || '';
   } catch(e) {
     console.error('Error getting page type:', e);
     return '';
@@ -269,7 +269,7 @@ return (function() {
 ## Support
 
 For issues or questions about the computed state pattern, check:
-1. Browser console: `window.adobeDataLayer.computedState`
+1. Browser console: `window._adobeDataLayerState`
 2. Event array: `window.adobeDataLayer` (for event history)
 3. Debug logs: Enable in `AirlinesDataLayer.js` (development mode)
 
