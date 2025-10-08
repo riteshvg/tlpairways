@@ -18,6 +18,10 @@ import {
   TableRow,
   Chip,
   Tooltip,
+  Card,
+  CardContent,
+  Divider,
+  Stack,
 } from '@mui/material';
 import { format, parseISO, isValid } from 'date-fns';
 import PrintIcon from '@mui/icons-material/Print';
@@ -1292,151 +1296,194 @@ const BookingConfirmation = () => {
   }
 
   return (
-    <Container maxWidth="md" sx={{ py: 4 }}>
-      <Paper elevation={3} sx={{ p: 4 }} id="booking-confirmation-content">
-        <Box sx={{ textAlign: 'center', mb: 4 }}>
-          <CheckCircleIcon color="success" sx={{ fontSize: 60 }} />
-          <Typography variant="h4" gutterBottom>
+    <Container maxWidth="lg" sx={{ py: 4 }}>
+      <div id="booking-confirmation-content">
+        {/* Success Header */}
+        <Paper elevation={3} sx={{ p: 4, mb: 3, textAlign: 'center', bgcolor: 'success.light' }}>
+          <CheckCircleIcon color="success" sx={{ fontSize: 80, mb: 2 }} />
+          <Typography variant="h3" gutterBottom fontWeight="bold">
             Booking Confirmed!
           </Typography>
-          <Typography variant="subtitle1" color="text.secondary">
-            Your booking has been successfully confirmed
+          <Typography variant="h6" color="text.secondary" sx={{ mb: 2 }}>
+            PNR: <Box component="span" sx={{ color: 'primary.main', fontWeight: 'bold', fontSize: '1.5rem' }}>{pnr}</Box>
           </Typography>
-        </Box>
+          <Typography variant="body1" color="text.secondary">
+            A confirmation email will be sent to {travellerDetails?.[0]?.email}
+          </Typography>
+        </Paper>
 
-        <Box sx={{ mb: 4 }}>
-          <Typography variant="h6" gutterBottom>
-            Booking Reference
-          </Typography>
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={6}>
-              <Typography variant="subtitle1">PNR Number</Typography>
-              <Typography variant="h5" color="primary">
-                {pnr}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="subtitle1">Ticket Number</Typography>
-              <Typography variant="h5" color="primary">
-                {onwardTicket}
-              </Typography>
-            </Grid>
-          </Grid>
-        </Box>
-
-        {/* Travel Dates Section */}
-        <Box sx={{ mb: 4 }}>
-          <Typography variant="h6" gutterBottom>
-            Travel Details
-          </Typography>
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={6}>
-              <Typography variant="subtitle1">Departure Date</Typography>
-              <Typography variant="body1">
-                {location.state?.departureDate ? format(new Date(location.state.departureDate), 'EEEE, MMMM dd, yyyy') : 
-                 selectedFlights.onward?.departureTime ? format(new Date(selectedFlights.onward.departureTime), 'EEEE, MMMM dd, yyyy') : 'N/A'}
-              </Typography>
-            </Grid>
-            {(tripType === 'roundtrip' || selectedFlights.return) && (
-              <Grid item xs={12} md={6}>
-                <Typography variant="subtitle1">Return Date</Typography>
-                <Typography variant="body1">
-                  {location.state?.returnDate ? format(new Date(location.state.returnDate), 'EEEE, MMMM dd, yyyy') :
-                   selectedFlights.return?.departureTime ? format(new Date(selectedFlights.return.departureTime), 'EEEE, MMMM dd, yyyy') : 'N/A'}
+        <Grid container spacing={3}>
+          {/* Left Column - Key Information */}
+          <Grid item xs={12} md={5}>
+            {/* Booking Reference Card */}
+            <Card elevation={2} sx={{ mb: 3 }}>
+              <CardContent>
+                <Typography variant="h6" gutterBottom color="primary">
+                  Booking Details
                 </Typography>
-              </Grid>
+                <Divider sx={{ mb: 2 }} />
+                <Stack spacing={2}>
+                  <Box>
+                    <Typography variant="caption" color="text.secondary">PNR Number</Typography>
+                    <Typography variant="h5" fontWeight="bold">{pnr}</Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="caption" color="text.secondary">Ticket Number</Typography>
+                    <Typography variant="body1" fontWeight="medium">{onwardTicket}</Typography>
+                  </Box>
+                  {returnTicket && (
+                    <Box>
+                      <Typography variant="caption" color="text.secondary">Return Ticket Number</Typography>
+                      <Typography variant="body1" fontWeight="medium">{returnTicket}</Typography>
+                    </Box>
+                  )}
+                </Stack>
+              </CardContent>
+            </Card>
+
+            {/* Travel Dates Card */}
+            <Card elevation={2} sx={{ mb: 3 }}>
+              <CardContent>
+                <Typography variant="h6" gutterBottom color="primary">
+                  Travel Dates
+                </Typography>
+                <Divider sx={{ mb: 2 }} />
+                <Stack spacing={2}>
+                  <Box>
+                    <Typography variant="caption" color="text.secondary">Departure</Typography>
+                    <Typography variant="body1" fontWeight="medium">
+                      {location.state?.departureDate ? format(new Date(location.state.departureDate), 'EEEE, MMM dd, yyyy') : 
+                       selectedFlights.onward?.departureTime ? format(new Date(selectedFlights.onward.departureTime), 'EEEE, MMM dd, yyyy') : 'N/A'}
+                    </Typography>
+                  </Box>
+                  {(tripType === 'roundtrip' || selectedFlights.return) && (
+                    <Box>
+                      <Typography variant="caption" color="text.secondary">Return</Typography>
+                      <Typography variant="body1" fontWeight="medium">
+                        {location.state?.returnDate ? format(new Date(location.state.returnDate), 'EEEE, MMM dd, yyyy') :
+                         selectedFlights.return?.departureTime ? format(new Date(selectedFlights.return.departureTime), 'EEEE, MMM dd, yyyy') : 'N/A'}
+                      </Typography>
+                    </Box>
+                  )}
+                </Stack>
+              </CardContent>
+            </Card>
+
+            {/* Sustainability Impact Card */}
+            {totalDistance > 0 && (
+              <Card elevation={2} sx={{ bgcolor: 'success.50', border: '1px solid', borderColor: 'success.main' }}>
+                <CardContent>
+                  <Typography variant="h6" gutterBottom color="success.dark">
+                    <ForestIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
+                    Sustainability Impact
+                  </Typography>
+                  <Divider sx={{ mb: 2 }} />
+                  <Grid container spacing={2}>
+                    <Grid item xs={6}>
+                      <Typography variant="caption" color="text.secondary">Distance</Typography>
+                      <Typography variant="h6" fontWeight="bold">{totalDistance.toLocaleString()} km</Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="caption" color="text.secondary">Trees Planted</Typography>
+                      <Typography variant="h6" fontWeight="bold" color="success.dark">{treesPlanted}</Typography>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
             )}
           </Grid>
-        </Box>
 
-        {/* Trees Planted and Distance Section */}
-        <Box sx={{ mb: 4, textAlign: 'center', bgcolor: 'success.light', borderRadius: 2, p: 3, color: 'success.contrastText' }}>
-          <Typography variant="h6" gutterBottom>
-            <ForestIcon sx={{ verticalAlign: 'middle', color: 'success.main', mr: 1 }} />
-            Sustainability Impact
+          {/* Right Column - Details */}
+          <Grid item xs={12} md={7}>
+
+            {/* Flight Details */}
+            <Card elevation={2} sx={{ mb: 3 }}>
+              <CardContent>
+                <Typography variant="h6" gutterBottom color="primary">
+                  Flight Details
+                </Typography>
+                <Divider sx={{ mb: 2 }} />
+                {selectedFlights?.onward && renderFlightDetails(selectedFlights.onward, 'onward')}
+                {selectedFlights?.return && renderFlightDetails(selectedFlights.return, 'return')}
+              </CardContent>
+            </Card>
+
+            {/* Ancillary Services */}
+            {renderAncillaryServices()}
+
+            {/* Payment Details */}
+            {renderPaymentDetails()}
+
+            {/* Price Breakdown */}
+            {renderFeeBreakdown()}
+          </Grid>
+        </Grid>
+
+
+        {/* Action Buttons */}
+        <Paper elevation={2} sx={{ mt: 3, p: 3, bgcolor: 'grey.50' }}>
+          <Typography variant="h6" gutterBottom align="center" color="primary">
+            What would you like to do next?
           </Typography>
-          <Typography variant="body1">
-            Your journey covers <b>{totalDistance.toLocaleString()} km</b> and will help plant <b>{treesPlanted}</b> tree{treesPlanted !== 1 ? 's' : ''}!
-          </Typography>
-        </Box>
-
-        {selectedFlights?.onward && renderFlightDetails(selectedFlights.onward, 'onward')}
-        {selectedFlights?.return && renderFlightDetails(selectedFlights.return, 'return')}
-
-        {renderAncillaryServices()}
-        {renderPaymentDetails()}
-
-        {renderFeeBreakdown()}
-
-        {/* Sustainability Impact Section */}
-        {totalDistance > 0 && (
-          <Box sx={{ mt: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              <ForestIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
-              Sustainability Impact
-            </Typography>
-            <Paper variant="outlined" sx={{ p: 3, bgcolor: 'success.light', color: 'success.contrastText' }}>
-              <Grid container spacing={2} alignItems="center">
-                <Grid item xs={12} md={6}>
-                  <Typography variant="body1">
-                    <strong>Carbon Footprint:</strong> {Math.round(totalDistance * 0.255)} kg CO₂
-                  </Typography>
-                  <Typography variant="body2" sx={{ mt: 1 }}>
-                    Distance: {totalDistance.toFixed(0)} km
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <Typography variant="body1">
-                    <strong>Trees Planted:</strong> {treesPlanted} trees
-                  </Typography>
-                  <Typography variant="body2" sx={{ mt: 1 }}>
-                    Equivalent to offsetting your flight's carbon footprint
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Paper>
+          <Grid container spacing={2} sx={{ mt: 1 }}>
+            <Grid item xs={12} sm={6} md={3}>
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={handleDownloadPDF}
+                startIcon={<DownloadIcon />}
+                size="large"
+              >
+                Download PDF
+              </Button>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <Button
+                fullWidth
+                variant="outlined"
+                onClick={handlePrintConfirmation}
+                startIcon={<PrintIcon />}
+                size="large"
+              >
+                Print Ticket
+              </Button>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <Button
+                fullWidth
+                variant="outlined"
+                onClick={handleEmailConfirmation}
+                disabled={emailRequested}
+                startIcon={<EmailIcon />}
+                size="large"
+              >
+                {emailRequested ? 'Sent' : 'Email'}
+              </Button>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <Button
+                fullWidth
+                variant="outlined"
+                onClick={handleSMSNotification}
+                disabled={smsRequested}
+                startIcon={<SmsIcon />}
+                size="large"
+              >
+                {smsRequested ? 'Sent' : 'SMS'}
+              </Button>
+            </Grid>
+          </Grid>
+          <Box sx={{ mt: 3, textAlign: 'center' }}>
+            <Button
+              variant="text"
+              onClick={handleNewBooking}
+              size="large"
+            >
+              Book Another Flight
+            </Button>
           </Box>
-        )}
-
-        <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center', gap: 2, flexWrap: 'wrap' }}>
-          <Button
-            variant="contained"
-            onClick={handlePrintConfirmation}
-            startIcon={<PrintIcon />}
-          >
-            Print Ticket
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={handleEmailConfirmation}
-            disabled={emailRequested}
-            startIcon={<EmailIcon />}
-          >
-            {emailRequested ? 'Email Sent' : 'Email Confirmation'}
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={handleSMSNotification}
-            disabled={smsRequested}
-            startIcon={<SmsIcon />}
-          >
-            {smsRequested ? 'SMS Sent' : 'SMS Notification'}
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={handleDownloadPDF}
-            startIcon={<DownloadIcon />}
-          >
-            Download Ticket (PDF)
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={handleNewBooking}
-          >
-            Back to Home
-          </Button>
-        </Box>
-      </Paper>
+        </Paper>
+      </div>
     </Container>
   );
 };
