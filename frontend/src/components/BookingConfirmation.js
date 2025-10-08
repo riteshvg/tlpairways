@@ -1298,18 +1298,56 @@ const BookingConfirmation = () => {
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <div id="booking-confirmation-content">
-        {/* Success Header */}
-        <Paper elevation={3} sx={{ p: 4, mb: 3, textAlign: 'center', bgcolor: 'success.light' }}>
-          <CheckCircleIcon color="success" sx={{ fontSize: 80, mb: 2 }} />
-          <Typography variant="h3" gutterBottom fontWeight="bold">
-            Booking Confirmed!
-          </Typography>
-          <Typography variant="h6" color="text.secondary" sx={{ mb: 2 }}>
-            PNR: <Box component="span" sx={{ color: 'primary.main', fontWeight: 'bold', fontSize: '1.5rem' }}>{pnr}</Box>
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
-            A confirmation email will be sent to {travellerDetails?.[0]?.email}
-          </Typography>
+        {/* Success Header with Destination Image */}
+        <Paper 
+          elevation={3} 
+          sx={{ 
+            position: 'relative',
+            overflow: 'hidden',
+            mb: 3,
+            minHeight: 300,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            bgcolor: 'success.light'
+          }}
+        >
+          {/* Background Image - Placeholder for Adobe Target personalization */}
+          <Box
+            sx={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundImage: 'url(https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1200&auto=format&fit=crop)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              opacity: 0.3,
+              filter: 'blur(2px)'
+            }}
+            className="personalization-container"
+            data-target-placeholder="destination-hero-image"
+          />
+          
+          {/* Content overlay */}
+          <Box sx={{ position: 'relative', zIndex: 1, textAlign: 'center', p: 4 }}>
+            <CheckCircleIcon color="success" sx={{ fontSize: 80, mb: 2 }} />
+            <Typography variant="h3" gutterBottom fontWeight="bold" sx={{ color: 'success.dark' }}>
+              Booking Confirmed!
+            </Typography>
+            <Typography variant="h6" color="text.secondary" sx={{ mb: 2 }}>
+              PNR: <Box component="span" sx={{ color: 'primary.main', fontWeight: 'bold', fontSize: '1.5rem' }}>{pnr}</Box>
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              A confirmation email will be sent to {travellerDetails?.[0]?.email}
+            </Typography>
+            <Chip 
+              label="Image will personalize based on destination via Adobe Target" 
+              size="small" 
+              sx={{ mt: 2, bgcolor: 'info.light' }}
+            />
+          </Box>
         </Paper>
 
         <Grid container spacing={3}>
@@ -1345,6 +1383,45 @@ const BookingConfirmation = () => {
 
             {/* Price Breakdown */}
             {renderFeeBreakdown()}
+
+            {/* Sustainability Impact Card - Compact */}
+            {totalDistance > 0 && (
+              <Card elevation={2} sx={{ mt: 3, bgcolor: 'success.50', border: '1px solid', borderColor: 'success.main' }}>
+                <CardContent>
+                  <Typography variant="h6" gutterBottom color="success.dark">
+                    <ForestIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
+                    Sustainability Impact
+                  </Typography>
+                  <Divider sx={{ mb: 2 }} />
+                  <Grid container spacing={2}>
+                    <Grid item xs={4} textAlign="center">
+                      <Typography variant="h6" fontWeight="bold" color="success.dark">
+                        {totalDistance.toLocaleString()}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        km
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={4} textAlign="center">
+                      <Typography variant="h6" fontWeight="bold" color="error.main">
+                        {Math.round(totalDistance * 0.255)}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        kg CO₂
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={4} textAlign="center">
+                      <Typography variant="h6" fontWeight="bold" color="success.dark">
+                        {treesPlanted}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        Trees
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            )}
           </Grid>
 
           {/* Right Column - Flight & Booking Details */}
@@ -1415,46 +1492,6 @@ const BookingConfirmation = () => {
           </Grid>
         </Grid>
 
-
-        {/* Sustainability Impact - Full Width Section */}
-        {totalDistance > 0 && (
-          <Paper elevation={2} sx={{ mt: 3, p: 3, bgcolor: 'success.50', border: '2px solid', borderColor: 'success.main' }}>
-            <Typography variant="h5" gutterBottom align="center" color="success.dark" fontWeight="bold">
-              <ForestIcon sx={{ verticalAlign: 'middle', mr: 1, fontSize: 32 }} />
-              Sustainability Impact
-            </Typography>
-            <Divider sx={{ mb: 3, bgcolor: 'success.main' }} />
-            <Grid container spacing={3} alignItems="center" justifyContent="center">
-              <Grid item xs={12} sm={4} textAlign="center">
-                <Typography variant="h3" fontWeight="bold" color="success.dark">
-                  {totalDistance.toLocaleString()}
-                </Typography>
-                <Typography variant="body1" color="text.secondary">
-                  Kilometers Traveled
-                </Typography>
-              </Grid>
-              <Grid item xs={12} sm={4} textAlign="center">
-                <Typography variant="h3" fontWeight="bold" color="error.main">
-                  {Math.round(totalDistance * 0.255)}
-                </Typography>
-                <Typography variant="body1" color="text.secondary">
-                  kg CO₂ Footprint
-                </Typography>
-              </Grid>
-              <Grid item xs={12} sm={4} textAlign="center">
-                <Typography variant="h3" fontWeight="bold" color="success.dark">
-                  {treesPlanted}
-                </Typography>
-                <Typography variant="body1" color="text.secondary">
-                  Trees Planted
-                </Typography>
-              </Grid>
-            </Grid>
-            <Typography variant="body2" align="center" sx={{ mt: 2 }} color="text.secondary">
-              Your journey helps offset {Math.round(totalDistance * 0.255)} kg of carbon emissions
-            </Typography>
-          </Paper>
-        )}
 
         {/* Action Buttons */}
         <Paper elevation={2} sx={{ mt: 3, p: 3, bgcolor: 'grey.50' }}>
