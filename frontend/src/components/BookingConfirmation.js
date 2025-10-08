@@ -1343,38 +1343,8 @@ const BookingConfirmation = () => {
               </CardContent>
             </Card>
 
-            {/* Payment Details */}
-            {renderPaymentDetails()}
-
             {/* Price Breakdown */}
             {renderFeeBreakdown()}
-
-            {/* Sustainability Impact Card */}
-            {totalDistance > 0 && (
-              <Card elevation={2} sx={{ bgcolor: 'success.50', border: '1px solid', borderColor: 'success.main' }}>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom color="success.dark">
-                    <ForestIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
-                    Sustainability Impact
-                  </Typography>
-                  <Divider sx={{ mb: 2 }} />
-                  <Grid container spacing={2}>
-                    <Grid item xs={6}>
-                      <Typography variant="caption" color="text.secondary">Distance</Typography>
-                      <Typography variant="h6" fontWeight="bold">{totalDistance.toLocaleString()} km</Typography>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Typography variant="caption" color="text.secondary">Trees Planted</Typography>
-                      <Typography variant="h6" fontWeight="bold" color="success.dark">{treesPlanted}</Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Typography variant="caption" color="text.secondary">Carbon Footprint</Typography>
-                      <Typography variant="body2">{Math.round(totalDistance * 0.255)} kg CO₂</Typography>
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
-            )}
           </Grid>
 
           {/* Right Column - Flight & Booking Details */}
@@ -1391,11 +1361,11 @@ const BookingConfirmation = () => {
               </CardContent>
             </Card>
 
-            {/* Booking Reference Card */}
+            {/* Booking & Payment Details Combined */}
             <Card elevation={2} sx={{ mb: 3 }}>
               <CardContent>
                 <Typography variant="h6" gutterBottom color="primary">
-                  Booking Details
+                  Booking & Payment Details
                 </Typography>
                 <Divider sx={{ mb: 2 }} />
                 <Stack spacing={2}>
@@ -1417,6 +1387,25 @@ const BookingConfirmation = () => {
                     <Typography variant="caption" color="text.secondary">Number of Passengers</Typography>
                     <Typography variant="body1" fontWeight="medium">{numPassengers}</Typography>
                   </Box>
+                  <Divider sx={{ my: 2 }} />
+                  <Box>
+                    <Typography variant="caption" color="text.secondary">Payment Method</Typography>
+                    <Typography variant="body1" fontWeight="medium">
+                      {paymentDetails?.method?.replace(/_/g, ' ').replace(/-/g, ' ') || 'N/A'}
+                    </Typography>
+                  </Box>
+                  {paymentDetails?.transactionId && (
+                    <Box>
+                      <Typography variant="caption" color="text.secondary">Transaction ID</Typography>
+                      <Typography variant="body1" fontWeight="medium">{paymentDetails.transactionId}</Typography>
+                    </Box>
+                  )}
+                  <Box>
+                    <Typography variant="caption" color="text.secondary">Payment Date</Typography>
+                    <Typography variant="body1" fontWeight="medium">
+                      {paymentDetails?.paymentDate ? format(new Date(paymentDetails.paymentDate), 'MMM dd, yyyy HH:mm') : format(new Date(), 'MMM dd, yyyy HH:mm')}
+                    </Typography>
+                  </Box>
                 </Stack>
               </CardContent>
             </Card>
@@ -1426,6 +1415,46 @@ const BookingConfirmation = () => {
           </Grid>
         </Grid>
 
+
+        {/* Sustainability Impact - Full Width Section */}
+        {totalDistance > 0 && (
+          <Paper elevation={2} sx={{ mt: 3, p: 3, bgcolor: 'success.50', border: '2px solid', borderColor: 'success.main' }}>
+            <Typography variant="h5" gutterBottom align="center" color="success.dark" fontWeight="bold">
+              <ForestIcon sx={{ verticalAlign: 'middle', mr: 1, fontSize: 32 }} />
+              Sustainability Impact
+            </Typography>
+            <Divider sx={{ mb: 3, bgcolor: 'success.main' }} />
+            <Grid container spacing={3} alignItems="center" justifyContent="center">
+              <Grid item xs={12} sm={4} textAlign="center">
+                <Typography variant="h3" fontWeight="bold" color="success.dark">
+                  {totalDistance.toLocaleString()}
+                </Typography>
+                <Typography variant="body1" color="text.secondary">
+                  Kilometers Traveled
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm={4} textAlign="center">
+                <Typography variant="h3" fontWeight="bold" color="error.main">
+                  {Math.round(totalDistance * 0.255)}
+                </Typography>
+                <Typography variant="body1" color="text.secondary">
+                  kg CO₂ Footprint
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm={4} textAlign="center">
+                <Typography variant="h3" fontWeight="bold" color="success.dark">
+                  {treesPlanted}
+                </Typography>
+                <Typography variant="body1" color="text.secondary">
+                  Trees Planted
+                </Typography>
+              </Grid>
+            </Grid>
+            <Typography variant="body2" align="center" sx={{ mt: 2 }} color="text.secondary">
+              Your journey helps offset {Math.round(totalDistance * 0.255)} kg of carbon emissions
+            </Typography>
+          </Paper>
+        )}
 
         {/* Action Buttons */}
         <Paper elevation={2} sx={{ mt: 3, p: 3, bgcolor: 'grey.50' }}>
