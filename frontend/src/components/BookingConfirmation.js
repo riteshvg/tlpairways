@@ -1313,34 +1313,8 @@ const BookingConfirmation = () => {
         </Paper>
 
         <Grid container spacing={3}>
-          {/* Left Column - Key Information */}
+          {/* Left Column - Travel & Payment Info */}
           <Grid item xs={12} md={5}>
-            {/* Booking Reference Card */}
-            <Card elevation={2} sx={{ mb: 3 }}>
-              <CardContent>
-                <Typography variant="h6" gutterBottom color="primary">
-                  Booking Details
-                </Typography>
-                <Divider sx={{ mb: 2 }} />
-                <Stack spacing={2}>
-                  <Box>
-                    <Typography variant="caption" color="text.secondary">PNR Number</Typography>
-                    <Typography variant="h5" fontWeight="bold">{pnr}</Typography>
-                  </Box>
-                  <Box>
-                    <Typography variant="caption" color="text.secondary">Ticket Number</Typography>
-                    <Typography variant="body1" fontWeight="medium">{onwardTicket}</Typography>
-                  </Box>
-                  {returnTicket && (
-                    <Box>
-                      <Typography variant="caption" color="text.secondary">Return Ticket Number</Typography>
-                      <Typography variant="body1" fontWeight="medium">{returnTicket}</Typography>
-                    </Box>
-                  )}
-                </Stack>
-              </CardContent>
-            </Card>
-
             {/* Travel Dates Card */}
             <Card elevation={2} sx={{ mb: 3 }}>
               <CardContent>
@@ -1369,6 +1343,12 @@ const BookingConfirmation = () => {
               </CardContent>
             </Card>
 
+            {/* Payment Details */}
+            {renderPaymentDetails()}
+
+            {/* Price Breakdown */}
+            {renderFeeBreakdown()}
+
             {/* Sustainability Impact Card */}
             {totalDistance > 0 && (
               <Card elevation={2} sx={{ bgcolor: 'success.50', border: '1px solid', borderColor: 'success.main' }}>
@@ -1387,15 +1367,18 @@ const BookingConfirmation = () => {
                       <Typography variant="caption" color="text.secondary">Trees Planted</Typography>
                       <Typography variant="h6" fontWeight="bold" color="success.dark">{treesPlanted}</Typography>
                     </Grid>
+                    <Grid item xs={12}>
+                      <Typography variant="caption" color="text.secondary">Carbon Footprint</Typography>
+                      <Typography variant="body2">{Math.round(totalDistance * 0.255)} kg CO₂</Typography>
+                    </Grid>
                   </Grid>
                 </CardContent>
               </Card>
             )}
           </Grid>
 
-          {/* Right Column - Details */}
+          {/* Right Column - Flight & Booking Details */}
           <Grid item xs={12} md={7}>
-
             {/* Flight Details */}
             <Card elevation={2} sx={{ mb: 3 }}>
               <CardContent>
@@ -1408,14 +1391,38 @@ const BookingConfirmation = () => {
               </CardContent>
             </Card>
 
+            {/* Booking Reference Card */}
+            <Card elevation={2} sx={{ mb: 3 }}>
+              <CardContent>
+                <Typography variant="h6" gutterBottom color="primary">
+                  Booking Details
+                </Typography>
+                <Divider sx={{ mb: 2 }} />
+                <Stack spacing={2}>
+                  <Box>
+                    <Typography variant="caption" color="text.secondary">PNR Number</Typography>
+                    <Typography variant="h5" fontWeight="bold" color="primary">{pnr}</Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="caption" color="text.secondary">Onward Ticket Number</Typography>
+                    <Typography variant="body1" fontWeight="medium">{onwardTicket}</Typography>
+                  </Box>
+                  {returnTicket && (
+                    <Box>
+                      <Typography variant="caption" color="text.secondary">Return Ticket Number</Typography>
+                      <Typography variant="body1" fontWeight="medium">{returnTicket}</Typography>
+                    </Box>
+                  )}
+                  <Box>
+                    <Typography variant="caption" color="text.secondary">Number of Passengers</Typography>
+                    <Typography variant="body1" fontWeight="medium">{numPassengers}</Typography>
+                  </Box>
+                </Stack>
+              </CardContent>
+            </Card>
+
             {/* Ancillary Services */}
             {renderAncillaryServices()}
-
-            {/* Payment Details */}
-            {renderPaymentDetails()}
-
-            {/* Price Breakdown */}
-            {renderFeeBreakdown()}
           </Grid>
         </Grid>
 
