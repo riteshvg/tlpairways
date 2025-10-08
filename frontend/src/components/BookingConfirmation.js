@@ -1342,11 +1342,6 @@ const BookingConfirmation = () => {
             <Typography variant="body1" color="text.secondary">
               A confirmation email will be sent to {travellerDetails?.[0]?.email}
             </Typography>
-            <Chip 
-              label="Image will personalize based on destination via Adobe Target" 
-              size="small" 
-              sx={{ mt: 2, bgcolor: 'info.light' }}
-            />
           </Box>
         </Paper>
 
