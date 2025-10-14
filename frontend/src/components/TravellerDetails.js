@@ -606,7 +606,8 @@ const TravellerDetails = () => {
         paymentType: selectedFlights.return ? 'roundtrip' : 'oneway',
         departureDate: bookingState.departureDate || selectedFlights.onward?.departureTime,
         returnDate: bookingState.returnDate || selectedFlights.return?.departureTime,
-        previousPage: 'Traveller Details'
+        previousPage: 'Traveller Details',
+        pnr: bookingState.pnr // Pass the PNR through the booking flow
       };
       
       console.log('Navigating to ancillary services with state:', navigationState);

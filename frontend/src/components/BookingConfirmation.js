@@ -82,22 +82,14 @@ const BookingConfirmation = () => {
     travellerDetails,
     selectedServices,
     paymentDetails,
-    contactInfo
+    contactInfo,
+    pnr: passedPNR // Get PNR from location state (generated in SearchResults)
   } = location.state || {};
 
   // Find the number of passengers
   const numPassengers = (location.state?.passengers || travellerDetails?.length || 1);
 
-  // Generate PNR and ticket numbers
-  const generatePNR = () => {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let pnr = '';
-    for (let i = 0; i < 6; i++) {
-      pnr += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-    return pnr;
-  };
-
+  // Generate ticket numbers only (PNR comes from SearchResults)
   const generateTicketNumber = () => {
     const characters = '0123456789';
     let ticket = '';
@@ -107,15 +99,17 @@ const BookingConfirmation = () => {
     return ticket;
   };
 
-  // Generate PNR and ticket numbers once and store them
+  // Use the PNR passed from SearchResults, or generate one as fallback
   const [bookingDetails] = useState(() => ({
-    pnr: generatePNR(),
+    pnr: passedPNR || airlinesDataLayer.generateBookingReference(), // Use passed PNR or generate as fallback
     onwardTicket: generateTicketNumber(),
     returnTicket: tripType === 'roundtrip' ? generateTicketNumber() : null
   }));
 
   // Use the stored PNR and ticket numbers
   const { pnr, onwardTicket, returnTicket } = bookingDetails;
+  
+  console.log('Using PNR in BookingConfirmation:', pnr, passedPNR ? '(from SearchResults)' : '(generated as fallback)');
 
   // Calculate ancillary services total
   const calculateAncillaryTotal = () => {
@@ -420,11 +414,14 @@ const BookingConfirmation = () => {
     if (hasFiredPurchaseEvent.current) return;
     hasFiredPurchaseEvent.current = true;
 
-    // Generate booking reference and transaction ID
-    const bookingRef = airlinesDataLayer.generateBookingReference();
+    // Use the PNR from bookingDetails (which was passed from SearchResults)
+    // Generate transaction ID
+    const bookingRef = pnr; // Use the PNR from bookingDetails
     const txnId = airlinesDataLayer.generateTransactionId();
     setBookingReference(bookingRef);
     setTransactionId(txnId);
+    
+    console.log('Using consistent PNR in Adobe Data Layer:', bookingRef);
 
     // Calculate distance and sustainability first
     let calculatedDistance = 0;

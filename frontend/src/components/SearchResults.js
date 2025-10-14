@@ -617,6 +617,10 @@ const SearchResults = () => {
       return;
     }
 
+    // Generate PNR at the start of booking flow
+    const pnr = airlinesDataLayer.generateBookingReference();
+    console.log('Generated PNR for booking:', pnr);
+
     const navigationState = {
       onwardFlight: {
         ...selectedOnwardFlight,
@@ -651,7 +655,8 @@ const SearchResults = () => {
       cabinClass: searchParams.cabinClass,
       departureDate: searchParams.date,
       returnDate: searchParams.returnDate,
-      previousPage: 'Search Results'
+      previousPage: 'Search Results',
+      pnr: pnr // Pass the generated PNR through the booking flow
     };
 
     console.log('Navigating to traveller details with state:', navigationState);
@@ -660,6 +665,7 @@ const SearchResults = () => {
     try {
       airlinesDataLayer.trackEvent('searchProceedToTravellerDetails', {
         searchId,
+        pnr: pnr, // Include PNR in the data layer event
         selectedFlights: {
           onward: selectedOnwardFlight ? {
             flightNumber: selectedOnwardFlight.flightNumber,
