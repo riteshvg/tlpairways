@@ -21,6 +21,11 @@ class AirlinesDataLayer {
         window.adobeDataLayer = [];
       }
       
+      // Initialize computed state object for current page data (separate from array)
+      if (!window._adobeDataLayerState) {
+        window._adobeDataLayerState = {};
+      }
+      
       this.log('AirlinesDataLayer initialized', {
         dataLayerLength: window.adobeDataLayer.length,
         timestamp: new Date().toISOString()
@@ -447,7 +452,29 @@ class AirlinesDataLayer {
    */
   pushToDataLayer(data) {
     if (typeof window !== 'undefined' && window.adobeDataLayer) {
+      // Push event to array for history
       window.adobeDataLayer.push(data);
+      
+      // Update computed state with latest page-specific data
+      const stateUpdate = {};
+      if (data.pageData) stateUpdate.pageData = data.pageData;
+      if (data.searchContext) stateUpdate.searchContext = data.searchContext;
+      if (data.bookingContext) stateUpdate.bookingContext = data.bookingContext;
+      if (data.userContext) stateUpdate.userContext = data.userContext;
+      if (data.eventData) stateUpdate.eventData = data.eventData;
+      if (data.pricing) stateUpdate.pricing = data.pricing;
+      if (data.ancillaryServices) stateUpdate.ancillaryServices = data.ancillaryServices;
+      
+      if (Object.keys(stateUpdate).length > 0) {
+        this.setComputedState(stateUpdate);
+      }
+      
+      // Limit array size to prevent memory issues
+      if (window.adobeDataLayer.length > 50) {
+        // Keep only the last 30 events
+        window.adobeDataLayer.splice(0, window.adobeDataLayer.length - 30);
+        this.log('Data layer pruned to prevent memory issues');
+      }
       
       // Automatically send to Adobe Experience Platform on key interactions
       this.sendToAdobeExperiencePlatform(data);
@@ -470,6 +497,60 @@ class AirlinesDataLayer {
       window.adobeDataLayer.length = 0;
       this.log('Data layer cleared');
     }
+  }
+
+  /**
+   * Update computed state for current page
+   * This replaces old page data instead of appending
+   * @param {Object} stateData - State data to set
+   */
+  setComputedState(stateData) {
+    if (typeof window !== 'undefined') {
+      // Initialize if doesn't exist
+      if (!window._adobeDataLayerState) {
+        window._adobeDataLayerState = {};
+      }
+      
+      // Merge new state, replacing old values
+      window._adobeDataLayerState = {
+        ...window._adobeDataLayerState,
+        ...stateData,
+        _lastUpdated: new Date().toISOString()
+      };
+      
+      this.log('Computed state updated', window._adobeDataLayerState);
+    }
+  }
+
+  /**
+   * Clear page-specific data from computed state
+   * Call this on page navigation to prevent stale data
+   * @param {Array} keysToKeep - Keys to preserve (e.g., user data)
+   */
+  clearPageState(keysToKeep = ['userContext', 'sessionId']) {
+    if (typeof window !== 'undefined' && window._adobeDataLayerState) {
+      const preservedData = {};
+      keysToKeep.forEach(key => {
+        if (window._adobeDataLayerState[key]) {
+          preservedData[key] = window._adobeDataLayerState[key];
+        }
+      });
+      
+      window._adobeDataLayerState = preservedData;
+      this.log('Page state cleared, preserved:', keysToKeep);
+    }
+  }
+
+  /**
+   * Get current computed state
+   * Use this in Adobe Launch data elements instead of array indexing
+   * @returns {Object} Current page state
+   */
+  getComputedState() {
+    if (typeof window !== 'undefined' && window._adobeDataLayerState) {
+      return window._adobeDataLayerState;
+    }
+    return {};
   }
 
   /**

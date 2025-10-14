@@ -1148,7 +1148,10 @@ Price: ₹${seatPrice}`}
                         return 0;
                       })(),
                       currency: 'INR',
-                      type: 'paid'
+                      type: (() => {
+                        const baggage = selectedServices.onward?.baggage?.[index];
+                        return (baggage && baggage !== 'included') ? 'paid' : 'free';
+                      })()
                     },
                     priorityBoarding: {
                       details: selectedServices.onward?.priorityBoarding?.[index] || false,
@@ -1226,7 +1229,10 @@ Price: ₹${seatPrice}`}
                         return 0;
                       })(),
                       currency: 'INR',
-                      type: 'paid'
+                      type: (() => {
+                        const baggage = selectedServices.return?.baggage?.[index];
+                        return (baggage && baggage !== 'included') ? 'paid' : 'free';
+                      })()
                     },
                     priorityBoarding: {
                       details: selectedServices.return?.priorityBoarding?.[index] || false,
@@ -1277,8 +1283,40 @@ Price: ₹${seatPrice}`}
                        (journey.baggage?.length || 0) + (journey.priorityBoarding?.filter(Boolean)?.length || 0) + 
                        (journey.loungeAccess?.filter(Boolean)?.length || 0);
               }, 0),
-              totalPaidServices: ancillaryTotal > 0 ? 1 : 0,
-              totalFreeServices: ancillaryTotal === 0 ? 1 : 0,
+              totalPaidServices: (() => {
+                let count = 0;
+                travellerDetails.forEach((_, index) => {
+                  // Count paid seats
+                  if (selectedServices.onward?.seat?.[index]) count++;
+                  if (selectedServices.return?.seat?.[index]) count++;
+                  // Count paid baggage (not 'included')
+                  const onwardBaggage = selectedServices.onward?.baggage?.[index];
+                  if (onwardBaggage && onwardBaggage !== 'included') count++;
+                  const returnBaggage = selectedServices.return?.baggage?.[index];
+                  if (returnBaggage && returnBaggage !== 'included') count++;
+                  // Count priority boarding
+                  if (selectedServices.onward?.priorityBoarding?.[index]) count++;
+                  if (selectedServices.return?.priorityBoarding?.[index]) count++;
+                  // Count lounge access
+                  if (selectedServices.onward?.loungeAccess?.[index]) count++;
+                  if (selectedServices.return?.loungeAccess?.[index]) count++;
+                });
+                return count;
+              })(),
+              totalFreeServices: (() => {
+                let count = 0;
+                travellerDetails.forEach((_, index) => {
+                  // Count free meals (if selected)
+                  if (selectedServices.onward?.meals?.[index]) count++;
+                  if (selectedServices.return?.meals?.[index]) count++;
+                  // Count included baggage
+                  const onwardBaggage = selectedServices.onward?.baggage?.[index];
+                  if (onwardBaggage === 'included' || !onwardBaggage) count++;
+                  const returnBaggage = selectedServices.return?.baggage?.[index];
+                  if (returnBaggage === 'included' || !returnBaggage) count++;
+                });
+                return count;
+              })(),
               categoriesSelected: ['seating', 'dining', 'baggage', 'boarding', 'lounge'].filter(category => {
                 // Check if any services are selected in this category
                 return Object.values(selectedServices).some(journey => {

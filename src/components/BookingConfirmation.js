@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { generateProductListItems } from '../utils/productListItemsHelper';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Container,
@@ -251,6 +252,29 @@ const BookingConfirmation = () => {
     return airport.coordinates ? airport.coordinates : null;
   };
 
+  // Helper function to determine if flight is long haul or short haul
+  const calculateHaulType = (distance, duration) => {
+    // Convert duration string (e.g., "0h 45m", "6h 30m") to hours
+    const parseDuration = (durationStr) => {
+      if (!durationStr) return 0;
+      const hoursMatch = durationStr.match(/(\d+)h/);
+      const minutesMatch = durationStr.match(/(\d+)m/);
+      const hours = hoursMatch ? parseInt(hoursMatch[1]) : 0;
+      const minutes = minutesMatch ? parseInt(minutesMatch[1]) : 0;
+      return hours + (minutes / 60);
+    };
+    
+    const durationInHours = parseDuration(duration);
+    
+    // Short haul: distance < 4800 km OR duration < 6 hours
+    // Long haul: distance >= 4800 km OR duration >= 6 hours
+    if (distance >= 4800 || durationInHours >= 6) {
+      return 'long haul';
+    } else {
+      return 'short haul';
+    }
+  };
+
   useEffect(() => {
     if (hasFiredBookingConfirmed.current) return;
     hasFiredBookingConfirmed.current = true;
@@ -320,22 +344,9 @@ const BookingConfirmation = () => {
         });
       }
 
-      // Booking confirmed
-        services: selectedServices,
-        payment: {
-          method: paymentDetails?.method || 'cash',
-          amount: calculateFeeBreakdown().total,
-          currency: 'INR',
-          status: 'completed'
-        },
-        totalPrice: calculateFeeBreakdown().total,
-        pnr,
-        tickets: {
-          onward: onwardTicket,
-          return: returnTicket
-        }
-      });
-
+      // Calculate fee breakdown for revenue data
+      const feeBreakdown = calculateFeeBreakdown();
+      
       // Calculate distance using Haversine formula
       const toRad = (value) => (value * Math.PI) / 180;
       const calculateDistance = (origin, destination) => {
@@ -368,6 +379,133 @@ const BookingConfirmation = () => {
       const total = onwardDistance + returnDistance;
       setTotalDistance(total);
       setTreesPlanted(Math.floor(total / 100));
+
+      // Calculate haul type for onward flight
+      console.log('Onward flight distance:', onwardDistance);
+      console.log('Onward flight duration:', flightsWithCoordinates.onward.duration);
+      const onwardHaulType = calculateHaulType(
+        onwardDistance, 
+        flightsWithCoordinates.onward.duration
+      );
+      console.log('Onward haul type:', onwardHaulType);
+      
+      // Calculate haul type for return flight if exists
+      const returnHaulType = flightsWithCoordinates.return 
+        ? calculateHaulType(
+            returnDistance,
+            flightsWithCoordinates.return.duration
+          )
+        : null;
+      console.log('Return haul type:', returnHaulType);
+      
+      // Generate transaction and booking IDs
+      const transactionId = `TXN${Date.now()}${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+      const bookingId = `booking_${Date.now()}_${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+
+      // Generate Adobe Analytics productListItems
+      const productListItems = generateProductListItems({
+        selectedFlights: flightsWithCoordinates,
+        selectedServices,
+        travellerDetails,
+        pricing: {
+          taxes: feeBreakdown.taxes || 0,
+          convenienceFee: feeBreakdown.convenienceFee || 0,
+          surcharge: feeBreakdown.surcharge || 0
+        },
+        ancillaryServices: selectedServices,
+        flightTotal: feeBreakdown.baseFare,
+        ancillaryTotal: feeBreakdown.ancillaryTotal,
+        totalAmount: feeBreakdown.total
+      });
+
+      // Push Purchase Event to Adobe Data Layer
+      if (typeof window !== 'undefined' && window.adobeDataLayer) {
+        const purchaseEvent = {
+          event: 'purchase',
+          eventData: {
+            revenue: {
+              transactionId: transactionId,
+              totalRevenue: feeBreakdown.total,
+              currency: 'INR',
+              productListItems: productListItems, // Adobe Analytics format with eVars
+              bookingReference: pnr,
+              paymentMethod: (paymentDetails?.method || 'credit card').replace(/_/g, ' ').replace(/-/g, ' '),
+              paymentStatus: 'completed',
+              timestamp: new Date().toISOString()
+            },
+            paymentDetails: {
+              paymentType: (paymentDetails?.method || 'credit card').replace(/_/g, ' ').replace(/-/g, ' '),
+              paymentCurrency: 'INR',
+              paymentCategories: {
+                baseFare: feeBreakdown.baseFare,
+                ancillaryFare: feeBreakdown.ancillaryTotal,
+                taxes: feeBreakdown.taxes,
+                convenienceFee: feeBreakdown.convenienceFee,
+                surcharge: feeBreakdown.surcharge,
+                totalFees: feeBreakdown.taxes + feeBreakdown.convenienceFee + feeBreakdown.surcharge,
+                totalAmount: feeBreakdown.total
+              },
+              pnr: pnr,
+              bookingId: bookingId,
+              passengers: numPassengers,
+              tripType: tripType || 'oneWay'
+            },
+            customer: {
+              userId: travellerDetails?.[0]?.email || null,
+              email: travellerDetails?.[0]?.email || null,
+              phone: travellerDetails?.[0]?.phone || null,
+              loyaltyTier: 'standard'
+            },
+            booking: {
+              tripType: tripType || 'oneWay',
+              cabinClass: flightsWithCoordinates.onward?.cabinClass || 'economy',
+              passengers: numPassengers,
+              origin: flightsWithCoordinates.onward?.origin?.iata_code,
+              destination: flightsWithCoordinates.onward?.destination?.iata_code,
+              departureDate: flightsWithCoordinates.onward?.departureTime ? 
+                new Date(flightsWithCoordinates.onward.departureTime).toISOString().split('T')[0] : null,
+              returnDate: flightsWithCoordinates.return?.departureTime ? 
+                new Date(flightsWithCoordinates.return.departureTime).toISOString().split('T')[0] : null,
+              haulType: {
+                onward: onwardHaulType,
+                ...(returnHaulType && { return: returnHaulType }),
+                overall: returnHaulType ? 
+                  (onwardHaulType === 'long haul' || returnHaulType === 'long haul' ? 'long haul' : 'short haul') : 
+                  onwardHaulType
+              }
+            },
+            sustainability: {
+              totalDistance: totalDistance,
+              treesPlanted: treesPlanted,
+              carbonOffset: Math.round(totalDistance * 0.115), // kg CO2 per km
+              sustainabilityScore: treesPlanted > 0 ? 'high' : 'medium'
+            }
+          },
+          timestamp: new Date().toISOString()
+        };
+
+        console.log('Purchase Event with haulType:', JSON.stringify(purchaseEvent.eventData.booking.haulType, null, 2));
+        console.log('Full Purchase Event:', purchaseEvent);
+        window.adobeDataLayer.push(purchaseEvent);
+      }
+
+      // Store booking data
+      setBookingData({
+        flights: flightsWithCoordinates,
+        services: selectedServices,
+        payment: {
+          method: paymentDetails?.method || 'cash',
+          amount: feeBreakdown.total,
+          currency: 'INR',
+          status: 'completed'
+        },
+        totalPrice: feeBreakdown.total,
+        pnr,
+        tickets: {
+          onward: onwardTicket,
+          return: returnTicket
+        }
+      });
     } catch (error) {
       console.error('Error tracking booking confirmation:', error);
     }

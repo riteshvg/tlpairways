@@ -265,6 +265,29 @@ const BookingConfirmation = () => {
     return airport.coordinates ? airport.coordinates : null;
   };
 
+  // Helper function to determine if flight is long haul or short haul
+  const calculateHaulType = (distance, duration) => {
+    // Convert duration string (e.g., "0h 45m", "6h 30m") to hours
+    const parseDuration = (durationStr) => {
+      if (!durationStr) return 0;
+      const hoursMatch = durationStr.match(/(\d+)h/);
+      const minutesMatch = durationStr.match(/(\d+)m/);
+      const hours = hoursMatch ? parseInt(hoursMatch[1]) : 0;
+      const minutes = minutesMatch ? parseInt(minutesMatch[1]) : 0;
+      return hours + (minutes / 60);
+    };
+    
+    const durationInHours = parseDuration(duration);
+    
+    // Short haul: distance < 4800 km OR duration < 6 hours
+    // Long haul: distance >= 4800 km OR duration >= 6 hours
+    if (distance >= 4800 || durationInHours >= 6) {
+      return 'long haul';
+    } else {
+      return 'short haul';
+    }
+  };
+
   useEffect(() => {
     if (hasFiredBookingConfirmed.current) return;
     hasFiredBookingConfirmed.current = true;
@@ -460,6 +483,35 @@ const BookingConfirmation = () => {
       setTreesPlanted(calculatedTrees);
     } catch (error) {
       console.error('Error calculating distance:', error);
+    }
+
+    // Calculate haul type for flights
+    let onwardHaulType = 'short haul';
+    let returnHaulType = null;
+    try {
+      const onwardFlightDistance = calculatedDistance / (tripType === 'roundtrip' ? 2 : 1);
+      console.log('Onward flight distance:', onwardFlightDistance);
+      console.log('Onward flight duration:', selectedFlights.onward?.duration);
+      
+      onwardHaulType = calculateHaulType(
+        onwardFlightDistance,
+        selectedFlights.onward?.duration
+      );
+      console.log('Onward haul type:', onwardHaulType);
+      
+      if (tripType === 'roundtrip' && selectedFlights.return) {
+        const returnFlightDistance = calculatedDistance / 2;
+        console.log('Return flight distance:', returnFlightDistance);
+        console.log('Return flight duration:', selectedFlights.return?.duration);
+        
+        returnHaulType = calculateHaulType(
+          returnFlightDistance,
+          selectedFlights.return?.duration
+        );
+        console.log('Return haul type:', returnHaulType);
+      }
+    } catch (error) {
+      console.error('Error calculating haul type:', error);
     }
 
     // Calculate revenue data
@@ -858,7 +910,14 @@ const BookingConfirmation = () => {
           origin: selectedFlights.onward?.origin?.iata_code,
           destination: selectedFlights.onward?.destination?.iata_code,
           departureDate: selectedFlights.onward?.departureTime ? new Date(selectedFlights.onward.departureTime).toISOString().split('T')[0] : null,
-          returnDate: selectedFlights.return?.departureTime ? new Date(selectedFlights.return.departureTime).toISOString().split('T')[0] : null
+          returnDate: selectedFlights.return?.departureTime ? new Date(selectedFlights.return.departureTime).toISOString().split('T')[0] : null,
+          haulType: {
+            onward: onwardHaulType,
+            ...(returnHaulType && { return: returnHaulType }),
+            overall: returnHaulType ? 
+              (onwardHaulType === 'long haul' || returnHaulType === 'long haul' ? 'long haul' : 'short haul') : 
+              onwardHaulType
+          }
         },
         sustainabilityImpact: {
           carbonFootprint: calculatedDistance > 0 ? Math.round(calculatedDistance * 0.255) : 0, // kg CO₂
@@ -876,6 +935,7 @@ const BookingConfirmation = () => {
 
     // Push Purchase event to data layer
     if (typeof window !== 'undefined' && window.adobeDataLayer) {
+      console.log('Purchase Event with haulType:', JSON.stringify(purchaseEvent.eventData.booking.haulType, null, 2));
       window.adobeDataLayer.push(purchaseEvent);
       console.log('✅ Purchase event pushed to adobeDataLayer:', purchaseEvent);
     }

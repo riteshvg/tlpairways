@@ -583,15 +583,20 @@ const SearchResults = () => {
     // For one-way journey, proceed to traveller details after selecting onward flight
     if (searchParams.tripType === 'oneway' && type === 'onward') {
       console.log('One-way journey detected, navigating to traveller details');
-      navigate('/traveller-details', {
-        state: {
-          onwardFlight: flightWithCorrectPrice,
-          tripType: searchParams.tripType,
-          passengers: searchParams.passengerCounts,
-          cabinClass: searchParams.cabinClass,
-          previousPage: 'Search Results'
-        }
-      });
+      // Add 1-2 second delay before navigation for data layer processing
+      setTimeout(() => {
+        navigate('/traveller-details', {
+          state: {
+            onwardFlight: flightWithCorrectPrice,
+            tripType: searchParams.tripType,
+            passengers: searchParams.passengerCounts,
+            cabinClass: searchParams.cabinClass,
+            departureDate: searchParams.date,
+            returnDate: searchParams.returnDate,
+            previousPage: 'Search Results'
+          }
+        });
+      }, 1500); // 1.5 second delay for data layer
     }
   };
 
@@ -687,9 +692,12 @@ const SearchResults = () => {
       console.error('Error tracking proceed to traveller details:', error);
     }
 
-    navigate('/traveller-details', {
-      state: navigationState
-    });
+    // Add 1-2 second delay before navigation for data layer processing
+    setTimeout(() => {
+      navigate('/traveller-details', {
+        state: navigationState
+      });
+    }, 1500); // 1.5 second delay for data layer
   };
 
   const renderFlightCard = (flight, isReturn = false) => {
