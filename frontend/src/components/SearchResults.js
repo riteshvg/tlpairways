@@ -24,6 +24,8 @@ import {
   DialogTitle,
   DialogContent,
   IconButton,
+  Alert,
+  Snackbar,
 } from '@mui/material';
 import { format, differenceInMinutes, differenceInDays } from 'date-fns';
 import CloseIcon from '@mui/icons-material/Close';
@@ -64,6 +66,7 @@ const SearchResults = () => {
   const [selectedFlight, setSelectedFlight] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isReturnModalOpen, setIsReturnModalOpen] = useState(false);
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
 
   // Initialize search parameters from location state
   useEffect(() => {
@@ -608,11 +611,29 @@ const SearchResults = () => {
     });
 
     if (!selectedOnwardFlight) {
+      setSnackbar({
+        open: true,
+        message: 'Please select an onward flight to continue',
+        severity: 'warning'
+      });
       console.warn('No onward flight selected');
       return;
     }
 
     if (searchParams.tripType === 'roundtrip' && !selectedReturnFlight) {
+      if (returnFlights.length === 0) {
+        setSnackbar({
+          open: true,
+          message: 'No return flights available for this route. Please contact support or try a different date.',
+          severity: 'error'
+        });
+      } else {
+        setSnackbar({
+          open: true,
+          message: 'Please select a return flight to continue with roundtrip booking',
+          severity: 'warning'
+        });
+      }
       console.warn('Round trip selected but no return flight chosen');
       return;
     }
@@ -1092,6 +1113,21 @@ const SearchResults = () => {
           )}
         </DialogContent>
       </Dialog>
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+          severity={snackbar.severity}
+          sx={{ width: '100%' }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };
