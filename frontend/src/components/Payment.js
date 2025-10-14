@@ -229,7 +229,8 @@ const Payment = () => {
           returnDate: initialReturnDate,
           tripType: paymentType,
           passengers: bookingState?.passengers,
-          previousPage: 'Payment'
+          previousPage: 'Payment',
+          pnr: bookingState?.pnr // Pass the PNR to confirmation page
         }
       });
     } catch (error) {
