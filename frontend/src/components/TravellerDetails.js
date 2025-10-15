@@ -23,6 +23,7 @@ import {
 import { Add as AddIcon, Remove as RemoveIcon } from '@mui/icons-material';
 import { format } from 'date-fns';
 import CURRENCY_CONFIG from '../config/currencyConfig';
+import BookingSteps from './BookingSteps';
 
 const TravellerDetails = () => {
   const location = useLocation();
@@ -737,8 +738,10 @@ const TravellerDetails = () => {
   const numPassengers = (passengers?.adult || 1) + (passengers?.child || 0) + (passengers?.infant || 0) || travellers.length || 1;
 
   return (
-    <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
-      <Grid container spacing={4}>
+    <>
+      <BookingSteps activeStep={0} />
+      <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
+        <Grid container spacing={4}>
         {/* Traveller Details Form */}
         <Grid item xs={12} md={8}>
           <Paper elevation={3} sx={{ p: 4 }}>
@@ -1072,6 +1075,7 @@ const TravellerDetails = () => {
         </Alert>
       </Snackbar>
     </Container>
+    </>
   );
 };
 
