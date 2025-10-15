@@ -1555,6 +1555,2794 @@
         "business",
         "first"
       ]
+    },
+    {
+      "itineraryId": "DEL-AMD-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "DEL",
+        "city": "Delhi",
+        "airport": "Indira Gandhi International Airport"
+      },
+      "destination": {
+        "iata_code": "AMD",
+        "city": "Ahmedabad",
+        "airport": "Sardar Vallabhbhai Patel International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 57m",
+      "price": {
+        "amount": 2700,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "AMD-DEL-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "AMD",
+        "city": "Ahmedabad",
+        "airport": "Sardar Vallabhbhai Patel International Airport"
+      },
+      "destination": {
+        "iata_code": "DEL",
+        "city": "Delhi",
+        "airport": "Indira Gandhi International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 57m",
+      "price": {
+        "amount": 2011,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "DEL-GOI-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "DEL",
+        "city": "Delhi",
+        "airport": "Indira Gandhi International Airport"
+      },
+      "destination": {
+        "iata_code": "GOI",
+        "city": "Goa",
+        "airport": "Goa International Airport (Dabolim)"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T09:00:00",
+      "duration": "1h 53m",
+      "price": {
+        "amount": 4925,
+        "currency": "INR"
+      },
+      "aircraft": "Airbus A320",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "GOI-DEL-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "GOI",
+        "city": "Goa",
+        "airport": "Goa International Airport (Dabolim)"
+      },
+      "destination": {
+        "iata_code": "DEL",
+        "city": "Delhi",
+        "airport": "Indira Gandhi International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T09:00:00",
+      "duration": "1h 53m",
+      "price": {
+        "amount": 4594,
+        "currency": "INR"
+      },
+      "aircraft": "Airbus A320",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "DEL-PNQ-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "DEL",
+        "city": "Delhi",
+        "airport": "Indira Gandhi International Airport"
+      },
+      "destination": {
+        "iata_code": "PNQ",
+        "city": "Pune",
+        "airport": "Pune Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T09:00:00",
+      "duration": "1h 27m",
+      "price": {
+        "amount": 3844,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "PNQ-DEL-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "PNQ",
+        "city": "Pune",
+        "airport": "Pune Airport"
+      },
+      "destination": {
+        "iata_code": "DEL",
+        "city": "Delhi",
+        "airport": "Indira Gandhi International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T09:00:00",
+      "duration": "1h 27m",
+      "price": {
+        "amount": 3863,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "DXB-DOH-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "DXB",
+        "city": "Dubai",
+        "airport": "Dubai International Airport"
+      },
+      "destination": {
+        "iata_code": "DOH",
+        "city": "Doha",
+        "airport": "Hamad International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 28m",
+      "price": {
+        "amount": 2000,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "DOH-DXB-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "DOH",
+        "city": "Doha",
+        "airport": "Hamad International Airport"
+      },
+      "destination": {
+        "iata_code": "DXB",
+        "city": "Dubai",
+        "airport": "Dubai International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 28m",
+      "price": {
+        "amount": 2000,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "SIN-BKK-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "SIN",
+        "city": "Singapore",
+        "airport": "Singapore Changi Airport"
+      },
+      "destination": {
+        "iata_code": "BKK",
+        "city": "Bangkok",
+        "airport": "Suvarnabhumi Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T09:00:00",
+      "duration": "1h 46m",
+      "price": {
+        "amount": 3781,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "BKK-SIN-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "BKK",
+        "city": "Bangkok",
+        "airport": "Suvarnabhumi Airport"
+      },
+      "destination": {
+        "iata_code": "SIN",
+        "city": "Singapore",
+        "airport": "Singapore Changi Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T09:00:00",
+      "duration": "1h 46m",
+      "price": {
+        "amount": 4582,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "SIN-KUL-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "SIN",
+        "city": "Singapore",
+        "airport": "Singapore Changi Airport"
+      },
+      "destination": {
+        "iata_code": "KUL",
+        "city": "Kuala Lumpur",
+        "airport": "Kuala Lumpur International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 22m",
+      "price": {
+        "amount": 2000,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "KUL-SIN-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "KUL",
+        "city": "Kuala Lumpur",
+        "airport": "Kuala Lumpur International Airport"
+      },
+      "destination": {
+        "iata_code": "SIN",
+        "city": "Singapore",
+        "airport": "Singapore Changi Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 22m",
+      "price": {
+        "amount": 2000,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "HKG-HKG-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "HKG",
+        "city": "Hong Kong",
+        "airport": "Hong Kong International Airport"
+      },
+      "destination": {
+        "iata_code": "HKG",
+        "city": "Hong Kong",
+        "airport": "Hong Kong International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 0m",
+      "price": {
+        "amount": 2000,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "HKG-HKG-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "HKG",
+        "city": "Hong Kong",
+        "airport": "Hong Kong International Airport"
+      },
+      "destination": {
+        "iata_code": "HKG",
+        "city": "Hong Kong",
+        "airport": "Hong Kong International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 0m",
+      "price": {
+        "amount": 2000,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "HKG-ICN-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "HKG",
+        "city": "Hong Kong",
+        "airport": "Hong Kong International Airport"
+      },
+      "destination": {
+        "iata_code": "ICN",
+        "city": "Seoul",
+        "airport": "Incheon International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T10:00:00",
+      "duration": "2h 35m",
+      "price": {
+        "amount": 6174,
+        "currency": "INR"
+      },
+      "aircraft": "Airbus A320",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "ICN-HKG-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "ICN",
+        "city": "Seoul",
+        "airport": "Incheon International Airport"
+      },
+      "destination": {
+        "iata_code": "HKG",
+        "city": "Hong Kong",
+        "airport": "Hong Kong International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T10:00:00",
+      "duration": "2h 35m",
+      "price": {
+        "amount": 6534,
+        "currency": "INR"
+      },
+      "aircraft": "Airbus A320",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "NRT-NRT-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "NRT",
+        "city": "Tokyo",
+        "airport": "Narita International Airport"
+      },
+      "destination": {
+        "iata_code": "NRT",
+        "city": "Tokyo",
+        "airport": "Narita International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 0m",
+      "price": {
+        "amount": 2000,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "NRT-NRT-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "NRT",
+        "city": "Tokyo",
+        "airport": "Narita International Airport"
+      },
+      "destination": {
+        "iata_code": "NRT",
+        "city": "Tokyo",
+        "airport": "Narita International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 0m",
+      "price": {
+        "amount": 2000,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "LHR-AMS-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "LHR",
+        "city": "London",
+        "airport": "London Heathrow Airport"
+      },
+      "destination": {
+        "iata_code": "AMS",
+        "city": "Amsterdam",
+        "airport": "Amsterdam Airport Schiphol"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 28m",
+      "price": {
+        "amount": 2000,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "AMS-LHR-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "AMS",
+        "city": "Amsterdam",
+        "airport": "Amsterdam Airport Schiphol"
+      },
+      "destination": {
+        "iata_code": "LHR",
+        "city": "London",
+        "airport": "London Heathrow Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 28m",
+      "price": {
+        "amount": 2000,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "LHR-FRA-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "LHR",
+        "city": "London",
+        "airport": "London Heathrow Airport"
+      },
+      "destination": {
+        "iata_code": "FRA",
+        "city": "Frankfurt",
+        "airport": "Frankfurt Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 49m",
+      "price": {
+        "amount": 2318,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "FRA-LHR-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "FRA",
+        "city": "Frankfurt",
+        "airport": "Frankfurt Airport"
+      },
+      "destination": {
+        "iata_code": "LHR",
+        "city": "London",
+        "airport": "London Heathrow Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 49m",
+      "price": {
+        "amount": 2452,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "LHR-BCN-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "LHR",
+        "city": "London",
+        "airport": "London Heathrow Airport"
+      },
+      "destination": {
+        "iata_code": "BCN",
+        "city": "Barcelona",
+        "airport": "Josep Tarradellas Barcelona-El Prat Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T09:00:00",
+      "duration": "1h 26m",
+      "price": {
+        "amount": 3442,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "BCN-LHR-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "BCN",
+        "city": "Barcelona",
+        "airport": "Josep Tarradellas Barcelona-El Prat Airport"
+      },
+      "destination": {
+        "iata_code": "LHR",
+        "city": "London",
+        "airport": "London Heathrow Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T09:00:00",
+      "duration": "1h 26m",
+      "price": {
+        "amount": 3689,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "LHR-FCO-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "LHR",
+        "city": "London",
+        "airport": "London Heathrow Airport"
+      },
+      "destination": {
+        "iata_code": "FCO",
+        "city": "Rome",
+        "airport": "Leonardo da Vinci-Fiumicino Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T09:00:00",
+      "duration": "1h 48m",
+      "price": {
+        "amount": 4409,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "FCO-LHR-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "FCO",
+        "city": "Rome",
+        "airport": "Leonardo da Vinci-Fiumicino Airport"
+      },
+      "destination": {
+        "iata_code": "LHR",
+        "city": "London",
+        "airport": "London Heathrow Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T09:00:00",
+      "duration": "1h 48m",
+      "price": {
+        "amount": 3948,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "JFK-LAX-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "JFK",
+        "city": "New York",
+        "airport": "John F. Kennedy International Airport"
+      },
+      "destination": {
+        "iata_code": "LAX",
+        "city": "Los Angeles",
+        "airport": "Los Angeles International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T12:00:00",
+      "duration": "4h 58m",
+      "price": {
+        "amount": 12078,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 777",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "LAX-JFK-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "LAX",
+        "city": "Los Angeles",
+        "airport": "Los Angeles International Airport"
+      },
+      "destination": {
+        "iata_code": "JFK",
+        "city": "New York",
+        "airport": "John F. Kennedy International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T12:00:00",
+      "duration": "4h 58m",
+      "price": {
+        "amount": 11962,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 777",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "JFK-SFO-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "JFK",
+        "city": "New York",
+        "airport": "John F. Kennedy International Airport"
+      },
+      "destination": {
+        "iata_code": "SFO",
+        "city": "San Francisco",
+        "airport": "San Francisco International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T13:00:00",
+      "duration": "5h 11m",
+      "price": {
+        "amount": 12547,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 777",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "SFO-JFK-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "SFO",
+        "city": "San Francisco",
+        "airport": "San Francisco International Airport"
+      },
+      "destination": {
+        "iata_code": "JFK",
+        "city": "New York",
+        "airport": "John F. Kennedy International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T13:00:00",
+      "duration": "5h 11m",
+      "price": {
+        "amount": 12371,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 777",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "JFK-ORD-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "JFK",
+        "city": "New York",
+        "airport": "John F. Kennedy International Airport"
+      },
+      "destination": {
+        "iata_code": "ORD",
+        "city": "Chicago",
+        "airport": "O'Hare International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T09:00:00",
+      "duration": "1h 29m",
+      "price": {
+        "amount": 3106,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "ORD-JFK-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "ORD",
+        "city": "Chicago",
+        "airport": "O'Hare International Airport"
+      },
+      "destination": {
+        "iata_code": "JFK",
+        "city": "New York",
+        "airport": "John F. Kennedy International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T09:00:00",
+      "duration": "1h 29m",
+      "price": {
+        "amount": 3179,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "JFK-EWR-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "JFK",
+        "city": "New York",
+        "airport": "John F. Kennedy International Airport"
+      },
+      "destination": {
+        "iata_code": "EWR",
+        "city": "New York",
+        "airport": "Newark Liberty International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 3m",
+      "price": {
+        "amount": 2000,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "EWR-JFK-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "EWR",
+        "city": "New York",
+        "airport": "Newark Liberty International Airport"
+      },
+      "destination": {
+        "iata_code": "JFK",
+        "city": "New York",
+        "airport": "John F. Kennedy International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 3m",
+      "price": {
+        "amount": 2000,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "SYD-MEL-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "SYD",
+        "city": "Sydney",
+        "airport": "Sydney Kingsford Smith Airport"
+      },
+      "destination": {
+        "iata_code": "MEL",
+        "city": "Melbourne",
+        "airport": "Melbourne Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 53m",
+      "price": {
+        "amount": 2260,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "MEL-SYD-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "MEL",
+        "city": "Melbourne",
+        "airport": "Melbourne Airport"
+      },
+      "destination": {
+        "iata_code": "SYD",
+        "city": "Sydney",
+        "airport": "Sydney Kingsford Smith Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 53m",
+      "price": {
+        "amount": 2259,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "DEL-ATQ-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "DEL",
+        "city": "Delhi",
+        "airport": "Indira Gandhi International Airport"
+      },
+      "destination": {
+        "iata_code": "ATQ",
+        "city": "Amritsar",
+        "airport": "Sri Guru Ram Dass Jee International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 31m",
+      "price": {
+        "amount": 2000,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "ATQ-DEL-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "ATQ",
+        "city": "Amritsar",
+        "airport": "Sri Guru Ram Dass Jee International Airport"
+      },
+      "destination": {
+        "iata_code": "DEL",
+        "city": "Delhi",
+        "airport": "Indira Gandhi International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 31m",
+      "price": {
+        "amount": 2000,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "DEL-JAI-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "DEL",
+        "city": "Delhi",
+        "airport": "Indira Gandhi International Airport"
+      },
+      "destination": {
+        "iata_code": "JAI",
+        "city": "Jaipur",
+        "airport": "Jaipur International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 17m",
+      "price": {
+        "amount": 2000,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "JAI-DEL-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "JAI",
+        "city": "Jaipur",
+        "airport": "Jaipur International Airport"
+      },
+      "destination": {
+        "iata_code": "DEL",
+        "city": "Delhi",
+        "airport": "Indira Gandhi International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 17m",
+      "price": {
+        "amount": 2000,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "DEL-COK-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "DEL",
+        "city": "Delhi",
+        "airport": "Indira Gandhi International Airport"
+      },
+      "destination": {
+        "iata_code": "COK",
+        "city": "Kochi",
+        "airport": "Cochin International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T10:00:00",
+      "duration": "2h 34m",
+      "price": {
+        "amount": 6261,
+        "currency": "INR"
+      },
+      "aircraft": "Airbus A320",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "COK-DEL-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "COK",
+        "city": "Kochi",
+        "airport": "Cochin International Airport"
+      },
+      "destination": {
+        "iata_code": "DEL",
+        "city": "Delhi",
+        "airport": "Indira Gandhi International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T10:00:00",
+      "duration": "2h 34m",
+      "price": {
+        "amount": 6545,
+        "currency": "INR"
+      },
+      "aircraft": "Airbus A320",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "DXB-AUH-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "DXB",
+        "city": "Dubai",
+        "airport": "Dubai International Airport"
+      },
+      "destination": {
+        "iata_code": "AUH",
+        "city": "Abu Dhabi",
+        "airport": "Abu Dhabi International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 9m",
+      "price": {
+        "amount": 2000,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "AUH-DXB-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "AUH",
+        "city": "Abu Dhabi",
+        "airport": "Abu Dhabi International Airport"
+      },
+      "destination": {
+        "iata_code": "DXB",
+        "city": "Dubai",
+        "airport": "Dubai International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 9m",
+      "price": {
+        "amount": 2000,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "SIN-CGK-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "SIN",
+        "city": "Singapore",
+        "airport": "Singapore Changi Airport"
+      },
+      "destination": {
+        "iata_code": "CGK",
+        "city": "Jakarta",
+        "airport": "Soekarno-Hatta International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T09:00:00",
+      "duration": "1h 6m",
+      "price": {
+        "amount": 3131,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "CGK-SIN-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "CGK",
+        "city": "Jakarta",
+        "airport": "Soekarno-Hatta International Airport"
+      },
+      "destination": {
+        "iata_code": "SIN",
+        "city": "Singapore",
+        "airport": "Singapore Changi Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T09:00:00",
+      "duration": "1h 6m",
+      "price": {
+        "amount": 2404,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "SIN-MNL-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "SIN",
+        "city": "Singapore",
+        "airport": "Singapore Changi Airport"
+      },
+      "destination": {
+        "iata_code": "MNL",
+        "city": "Manila",
+        "airport": "Ninoy Aquino International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T10:00:00",
+      "duration": "2h 58m",
+      "price": {
+        "amount": 6669,
+        "currency": "INR"
+      },
+      "aircraft": "Airbus A320",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "MNL-SIN-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "MNL",
+        "city": "Manila",
+        "airport": "Ninoy Aquino International Airport"
+      },
+      "destination": {
+        "iata_code": "SIN",
+        "city": "Singapore",
+        "airport": "Singapore Changi Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T10:00:00",
+      "duration": "2h 58m",
+      "price": {
+        "amount": 7046,
+        "currency": "INR"
+      },
+      "aircraft": "Airbus A320",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "SIN-SGN-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "SIN",
+        "city": "Singapore",
+        "airport": "Singapore Changi Airport"
+      },
+      "destination": {
+        "iata_code": "SGN",
+        "city": "Ho Chi Minh City",
+        "airport": "Tan Son Nhat International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T09:00:00",
+      "duration": "1h 22m",
+      "price": {
+        "amount": 3775,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "SGN-SIN-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "SGN",
+        "city": "Ho Chi Minh City",
+        "airport": "Tan Son Nhat International Airport"
+      },
+      "destination": {
+        "iata_code": "SIN",
+        "city": "Singapore",
+        "airport": "Singapore Changi Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T09:00:00",
+      "duration": "1h 22m",
+      "price": {
+        "amount": 3409,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "SIN-HKT-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "SIN",
+        "city": "Singapore",
+        "airport": "Singapore Changi Airport"
+      },
+      "destination": {
+        "iata_code": "HKT",
+        "city": "Phuket",
+        "airport": "Phuket International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T09:00:00",
+      "duration": "1h 13m",
+      "price": {
+        "amount": 2598,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "HKT-SIN-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "HKT",
+        "city": "Phuket",
+        "airport": "Phuket International Airport"
+      },
+      "destination": {
+        "iata_code": "SIN",
+        "city": "Singapore",
+        "airport": "Singapore Changi Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T09:00:00",
+      "duration": "1h 13m",
+      "price": {
+        "amount": 3016,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "LHR-MUC-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "LHR",
+        "city": "London",
+        "airport": "London Heathrow Airport"
+      },
+      "destination": {
+        "iata_code": "MUC",
+        "city": "Munich",
+        "airport": "Munich Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T09:00:00",
+      "duration": "1h 11m",
+      "price": {
+        "amount": 2386,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "MUC-LHR-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "MUC",
+        "city": "Munich",
+        "airport": "Munich Airport"
+      },
+      "destination": {
+        "iata_code": "LHR",
+        "city": "London",
+        "airport": "London Heathrow Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T09:00:00",
+      "duration": "1h 11m",
+      "price": {
+        "amount": 3026,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "LHR-MAD-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "LHR",
+        "city": "London",
+        "airport": "London Heathrow Airport"
+      },
+      "destination": {
+        "iata_code": "MAD",
+        "city": "Madrid",
+        "airport": "Adolfo Suárez Madrid-Barajas Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T09:00:00",
+      "duration": "1h 33m",
+      "price": {
+        "amount": 3966,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "MAD-LHR-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "MAD",
+        "city": "Madrid",
+        "airport": "Adolfo Suárez Madrid-Barajas Airport"
+      },
+      "destination": {
+        "iata_code": "LHR",
+        "city": "London",
+        "airport": "London Heathrow Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T09:00:00",
+      "duration": "1h 33m",
+      "price": {
+        "amount": 3590,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "LHR-MXP-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "LHR",
+        "city": "London",
+        "airport": "London Heathrow Airport"
+      },
+      "destination": {
+        "iata_code": "MXP",
+        "city": "Milan",
+        "airport": "Milan Malpensa Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T09:00:00",
+      "duration": "1h 10m",
+      "price": {
+        "amount": 2882,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "MXP-LHR-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "MXP",
+        "city": "Milan",
+        "airport": "Milan Malpensa Airport"
+      },
+      "destination": {
+        "iata_code": "LHR",
+        "city": "London",
+        "airport": "London Heathrow Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T09:00:00",
+      "duration": "1h 10m",
+      "price": {
+        "amount": 3236,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "LHR-ZRH-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "LHR",
+        "city": "London",
+        "airport": "London Heathrow Airport"
+      },
+      "destination": {
+        "iata_code": "ZRH",
+        "city": "Zurich",
+        "airport": "Zurich Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 59m",
+      "price": {
+        "amount": 2379,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "ZRH-LHR-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "ZRH",
+        "city": "Zurich",
+        "airport": "Zurich Airport"
+      },
+      "destination": {
+        "iata_code": "LHR",
+        "city": "London",
+        "airport": "London Heathrow Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 59m",
+      "price": {
+        "amount": 2860,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "JFK-BOS-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "JFK",
+        "city": "New York",
+        "airport": "John F. Kennedy International Airport"
+      },
+      "destination": {
+        "iata_code": "BOS",
+        "city": "Boston",
+        "airport": "Boston Logan International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 23m",
+      "price": {
+        "amount": 2000,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "BOS-JFK-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "BOS",
+        "city": "Boston",
+        "airport": "Boston Logan International Airport"
+      },
+      "destination": {
+        "iata_code": "JFK",
+        "city": "New York",
+        "airport": "John F. Kennedy International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 23m",
+      "price": {
+        "amount": 2000,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "JFK-SEA-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "JFK",
+        "city": "New York",
+        "airport": "John F. Kennedy International Airport"
+      },
+      "destination": {
+        "iata_code": "SEA",
+        "city": "Seattle",
+        "airport": "Seattle-Tacoma International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T12:00:00",
+      "duration": "4h 52m",
+      "price": {
+        "amount": 11485,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 777",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "SEA-JFK-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "SEA",
+        "city": "Seattle",
+        "airport": "Seattle-Tacoma International Airport"
+      },
+      "destination": {
+        "iata_code": "JFK",
+        "city": "New York",
+        "airport": "John F. Kennedy International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T12:00:00",
+      "duration": "4h 52m",
+      "price": {
+        "amount": 11446,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 777",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "SYD-PER-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "SYD",
+        "city": "Sydney",
+        "airport": "Sydney Kingsford Smith Airport"
+      },
+      "destination": {
+        "iata_code": "PER",
+        "city": "Perth",
+        "airport": "Perth Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T12:00:00",
+      "duration": "4h 6m",
+      "price": {
+        "amount": 9923,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 777",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "PER-SYD-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "PER",
+        "city": "Perth",
+        "airport": "Perth Airport"
+      },
+      "destination": {
+        "iata_code": "SYD",
+        "city": "Sydney",
+        "airport": "Sydney Kingsford Smith Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T12:00:00",
+      "duration": "4h 6m",
+      "price": {
+        "amount": 9643,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 777",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "SYD-AKL-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "SYD",
+        "city": "Sydney",
+        "airport": "Sydney Kingsford Smith Airport"
+      },
+      "destination": {
+        "iata_code": "AKL",
+        "city": "Auckland",
+        "airport": "Auckland Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T10:00:00",
+      "duration": "2h 42m",
+      "price": {
+        "amount": 6165,
+        "currency": "INR"
+      },
+      "aircraft": "Airbus A320",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "AKL-SYD-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "AKL",
+        "city": "Auckland",
+        "airport": "Auckland Airport"
+      },
+      "destination": {
+        "iata_code": "SYD",
+        "city": "Sydney",
+        "airport": "Sydney Kingsford Smith Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T10:00:00",
+      "duration": "2h 42m",
+      "price": {
+        "amount": 6178,
+        "currency": "INR"
+      },
+      "aircraft": "Airbus A320",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "DEL-CMB-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "DEL",
+        "city": "Delhi",
+        "airport": "Indira Gandhi International Airport"
+      },
+      "destination": {
+        "iata_code": "CMB",
+        "city": "Colombo",
+        "airport": "Bandaranaike International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T10:00:00",
+      "duration": "2h 60m",
+      "price": {
+        "amount": 6961,
+        "currency": "INR"
+      },
+      "aircraft": "Airbus A320",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "CMB-DEL-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "CMB",
+        "city": "Colombo",
+        "airport": "Bandaranaike International Airport"
+      },
+      "destination": {
+        "iata_code": "DEL",
+        "city": "Delhi",
+        "airport": "Indira Gandhi International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T10:00:00",
+      "duration": "2h 60m",
+      "price": {
+        "amount": 6854,
+        "currency": "INR"
+      },
+      "aircraft": "Airbus A320",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "DEL-BBI-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "DEL",
+        "city": "Delhi",
+        "airport": "Indira Gandhi International Airport"
+      },
+      "destination": {
+        "iata_code": "BBI",
+        "city": "Bhubaneswar",
+        "airport": "Biju Patnaik International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T09:00:00",
+      "duration": "1h 36m",
+      "price": {
+        "amount": 4198,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "BBI-DEL-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "BBI",
+        "city": "Bhubaneswar",
+        "airport": "Biju Patnaik International Airport"
+      },
+      "destination": {
+        "iata_code": "DEL",
+        "city": "Delhi",
+        "airport": "Indira Gandhi International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T09:00:00",
+      "duration": "1h 36m",
+      "price": {
+        "amount": 3740,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "DEL-LKO-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "DEL",
+        "city": "Delhi",
+        "airport": "Indira Gandhi International Airport"
+      },
+      "destination": {
+        "iata_code": "LKO",
+        "city": "Lucknow",
+        "airport": "Chaudhary Charan Singh International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 32m",
+      "price": {
+        "amount": 2000,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "LKO-DEL-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "LKO",
+        "city": "Lucknow",
+        "airport": "Chaudhary Charan Singh International Airport"
+      },
+      "destination": {
+        "iata_code": "DEL",
+        "city": "Delhi",
+        "airport": "Indira Gandhi International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 32m",
+      "price": {
+        "amount": 2000,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "DEL-VNS-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "DEL",
+        "city": "Delhi",
+        "airport": "Indira Gandhi International Airport"
+      },
+      "destination": {
+        "iata_code": "VNS",
+        "city": "Varanasi",
+        "airport": "Lal Bahadur Shastri International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 50m",
+      "price": {
+        "amount": 2000,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "VNS-DEL-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "VNS",
+        "city": "Varanasi",
+        "airport": "Lal Bahadur Shastri International Airport"
+      },
+      "destination": {
+        "iata_code": "DEL",
+        "city": "Delhi",
+        "airport": "Indira Gandhi International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 50m",
+      "price": {
+        "amount": 2477,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "DXB-BAH-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "DXB",
+        "city": "Dubai",
+        "airport": "Dubai International Airport"
+      },
+      "destination": {
+        "iata_code": "BAH",
+        "city": "Manama",
+        "airport": "Bahrain International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 37m",
+      "price": {
+        "amount": 2000,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "BAH-DXB-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "BAH",
+        "city": "Manama",
+        "airport": "Bahrain International Airport"
+      },
+      "destination": {
+        "iata_code": "DXB",
+        "city": "Dubai",
+        "airport": "Dubai International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T08:00:00",
+      "duration": "0h 37m",
+      "price": {
+        "amount": 2000,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "DXB-RUH-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "DXB",
+        "city": "Dubai",
+        "airport": "Dubai International Airport"
+      },
+      "destination": {
+        "iata_code": "RUH",
+        "city": "Riyadh",
+        "airport": "King Khalid International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T09:00:00",
+      "duration": "1h 5m",
+      "price": {
+        "amount": 2292,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "RUH-DXB-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "RUH",
+        "city": "Riyadh",
+        "airport": "King Khalid International Airport"
+      },
+      "destination": {
+        "iata_code": "DXB",
+        "city": "Dubai",
+        "airport": "Dubai International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T09:00:00",
+      "duration": "1h 5m",
+      "price": {
+        "amount": 2336,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 737",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "DXB-JED-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "DXB",
+        "city": "Dubai",
+        "airport": "Dubai International Airport"
+      },
+      "destination": {
+        "iata_code": "JED",
+        "city": "Jeddah",
+        "airport": "King Abdulaziz International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T10:00:00",
+      "duration": "2h 7m",
+      "price": {
+        "amount": 5006,
+        "currency": "INR"
+      },
+      "aircraft": "Airbus A320",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "JED-DXB-1",
+      "flightNumber": "TL2100",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "JED",
+        "city": "Jeddah",
+        "airport": "King Abdulaziz International Airport"
+      },
+      "destination": {
+        "iata_code": "DXB",
+        "city": "Dubai",
+        "airport": "Dubai International Airport"
+      },
+      "departureTime": "2024-03-25T08:00:00",
+      "arrivalTime": "2024-03-25T10:00:00",
+      "duration": "2h 7m",
+      "price": {
+        "amount": 4769,
+        "currency": "INR"
+      },
+      "aircraft": "Airbus A320",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
     }
   ]
 }
