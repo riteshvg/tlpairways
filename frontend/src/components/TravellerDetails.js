@@ -633,62 +633,85 @@ const TravellerDetails = () => {
     }
   };
 
-  const renderFlightPreview = (flight, isReturn = false) => (
-    <Card sx={{ mb: 2 }}>
-      <CardContent>
-        <Typography variant="h6" gutterBottom>
-          {isReturn ? 'Return Flight' : 'Onward Flight'}
-        </Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={4}>
-            <Typography variant="subtitle1">
-              {format(new Date(flight.departureTime), 'HH:mm')}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {flight.origin.iata_code}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {format(new Date(flight.departureTime), 'MMM dd, yyyy')}
-            </Typography>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Box sx={{ textAlign: 'center' }}>
-              <Typography variant="body2" color="text.secondary">
-                {flight.duration}
+  const renderFlightPreview = (flight, isReturn = false) => {
+    // Get the user-selected date (not the hardcoded date from JSON)
+    const userSelectedDate = isReturn 
+      ? (bookingState.returnDate || flight.departureTime)
+      : (bookingState.departureDate || flight.departureTime);
+    
+    // Extract time from flight.departureTime and combine with user-selected date
+    const getDateTimeWithUserDate = (flightDateTime, userDate) => {
+      const flightTime = new Date(flightDateTime);
+      const selectedDate = new Date(userDate);
+      
+      // Combine user-selected date with flight time
+      selectedDate.setHours(flightTime.getHours());
+      selectedDate.setMinutes(flightTime.getMinutes());
+      selectedDate.setSeconds(0);
+      
+      return selectedDate;
+    };
+    
+    const departureDateTime = getDateTimeWithUserDate(flight.departureTime, userSelectedDate);
+    const arrivalDateTime = getDateTimeWithUserDate(flight.arrivalTime, userSelectedDate);
+    
+    return (
+      <Card sx={{ mb: 2 }}>
+        <CardContent>
+          <Typography variant="h6" gutterBottom>
+            {isReturn ? 'Return Flight' : 'Onward Flight'}
+          </Typography>
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={4}>
+              <Typography variant="subtitle1">
+                {format(departureDateTime, 'HH:mm')}
               </Typography>
-              <Divider sx={{ my: 1 }}>
+              <Typography variant="body2" color="text.secondary">
+                {flight.origin.iata_code}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {format(departureDateTime, 'MMM dd, yyyy')}
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <Box sx={{ textAlign: 'center' }}>
                 <Typography variant="body2" color="text.secondary">
-                  →
+                  {flight.duration}
                 </Typography>
-              </Divider>
-              <Typography variant="body2" color="text.secondary">
-                {flight.segments ? 'Connecting Flight' : 'Direct Flight'}
+                <Divider sx={{ my: 1 }}>
+                  <Typography variant="body2" color="text.secondary">
+                    →
+                  </Typography>
+                </Divider>
+                <Typography variant="body2" color="text.secondary">
+                  {flight.segments ? 'Connecting Flight' : 'Direct Flight'}
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <Typography variant="subtitle1">
+                {format(arrivalDateTime, 'HH:mm')}
               </Typography>
-            </Box>
+              <Typography variant="body2" color="text.secondary">
+                {flight.destination.iata_code}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {format(arrivalDateTime, 'MMM dd, yyyy')}
+              </Typography>
+            </Grid>
           </Grid>
-          <Grid item xs={12} md={4}>
-            <Typography variant="subtitle1">
-              {format(new Date(flight.arrivalTime), 'HH:mm')}
+          <Box sx={{ mt: 2 }}>
+            <Typography variant="body2" color="text.secondary">
+              Flight: {flight.flightNumber} | {flight.airline}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {flight.destination.iata_code}
+              Aircraft: {flight.aircraft}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {format(new Date(flight.arrivalTime), 'MMM dd, yyyy')}
-            </Typography>
-          </Grid>
-        </Grid>
-        <Box sx={{ mt: 2 }}>
-          <Typography variant="body2" color="text.secondary">
-            Flight: {flight.flightNumber} | {flight.airline}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Aircraft: {flight.aircraft}
-          </Typography>
-        </Box>
-      </CardContent>
-    </Card>
-  );
+          </Box>
+        </CardContent>
+      </Card>
+    );
+  };
 
   const numPassengers = (passengers?.adult || 1) + (passengers?.child || 0) + (passengers?.infant || 0) || travellers.length || 1;
 

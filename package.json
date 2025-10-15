@@ -11,10 +11,22 @@
     "build": "npm run build:frontend",
     "start": "npm run start:backend",
     "render-build": "npm run install:all && npm run build",
-    "railway-build": "npm run install:all && npm run build"
+    "railway-build": "npm run install:all && npm run build",
+    "test:e2e": "cypress run",
+    "test:e2e:open": "cypress open",
+    "test:e2e:chrome": "cypress run --browser chrome",
+    "test:e2e:firefox": "cypress run --browser firefox",
+    "test:e2e:headed": "cypress run --headed",
+    "test:booking": "cypress run --spec 'cypress/e2e/booking-flow/**'",
+    "test:datalayer": "cypress run --spec 'cypress/e2e/data-layer/**'",
+    "cypress:install": "npm install --save-dev cypress @testing-library/cypress"
   },
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=8.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/cypress": "^10.1.0",
+    "cypress": "^13.17.0"
   }
 }
