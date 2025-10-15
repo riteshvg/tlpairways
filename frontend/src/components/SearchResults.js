@@ -221,14 +221,23 @@ const SearchResults = () => {
             }
           });
 
-          // Calculate duration in minutes
-          const durationMinutes = differenceInMinutes(arrivalTime, departureTime);
-          const duration = `${Math.floor(durationMinutes / 60)}h ${durationMinutes % 60}m`;
+          // Use duration from flight data (already accounts for timezones)
+          // Don't recalculate using differenceInMinutes as it doesn't handle timezone differences
+          const duration = flight.duration;
+          
+          // Parse duration string to minutes for filtering (e.g., "9h 15m" -> 555 minutes)
+          const parseDurationToMinutes = (durationStr) => {
+            const hours = durationStr.match(/(\d+)h/);
+            const mins = durationStr.match(/(\d+)m/);
+            return (hours ? parseInt(hours[1]) * 60 : 0) + (mins ? parseInt(mins[1]) : 0);
+          };
+          const durationMinutes = parseDurationToMinutes(duration);
 
           return {
             ...flight,
             departureTime,
             arrivalTime,
+            duration, // Use the correct duration from JSON (timezone-aware)
             prices,
             displayPrices,
             isInternational,
@@ -236,8 +245,7 @@ const SearchResults = () => {
             originalPrices: prices, // Keep original INR prices
             availableClasses,
             currentPrice: prices[cabinClass] || basePrice,
-            duration,
-            durationMinutes,
+            durationMinutes, // For filtering purposes
             resultPosition: index + 1
           };
     });
