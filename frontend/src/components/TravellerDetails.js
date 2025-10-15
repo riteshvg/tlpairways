@@ -50,6 +50,14 @@ const TravellerDetails = () => {
   const bookingState = getBookingState();
   const { onwardFlight, returnFlight, tripType, passengers } = bookingState || {};
   
+  // Debug: Log the dates we received
+  console.log('TravellerDetails - Received dates:', {
+    departureDate: bookingState?.departureDate,
+    returnDate: bookingState?.returnDate,
+    fromOnwardFlight: onwardFlight?.departureTime,
+    fromReturnFlight: returnFlight?.departureTime
+  });
+  
   // Initialize data layer tracking (includes pageView)
   useTravellerDetailsDataLayer({
     pageCategory: 'booking',
@@ -639,6 +647,14 @@ const TravellerDetails = () => {
       ? (bookingState.returnDate || flight.departureTime)
       : (bookingState.departureDate || flight.departureTime);
     
+    // Debug logging
+    console.log(`renderFlightPreview (${isReturn ? 'Return' : 'Onward'}):`, {
+      userSelectedDate,
+      flightDepartureTime: flight.departureTime,
+      bookingStateDepartureDate: bookingState?.departureDate,
+      bookingStateReturnDate: bookingState?.returnDate
+    });
+    
     // Extract time from flight.departureTime and combine with user-selected date
     const getDateTimeWithUserDate = (flightDateTime, userDate) => {
       const flightTime = new Date(flightDateTime);
@@ -654,6 +670,11 @@ const TravellerDetails = () => {
     
     const departureDateTime = getDateTimeWithUserDate(flight.departureTime, userSelectedDate);
     const arrivalDateTime = getDateTimeWithUserDate(flight.arrivalTime, userSelectedDate);
+    
+    console.log(`Final dates for ${isReturn ? 'Return' : 'Onward'}:`, {
+      departure: format(departureDateTime, 'MMM dd, yyyy HH:mm'),
+      arrival: format(arrivalDateTime, 'MMM dd, yyyy HH:mm')
+    });
     
     return (
       <Card sx={{ mb: 2 }}>
