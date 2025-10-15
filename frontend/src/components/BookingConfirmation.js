@@ -22,6 +22,7 @@ import {
   CardContent,
   Divider,
   Stack,
+  Alert,
 } from '@mui/material';
 import { format, parseISO, isValid } from 'date-fns';
 import PrintIcon from '@mui/icons-material/Print';
@@ -35,6 +36,8 @@ import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import LocalAirportIcon from '@mui/icons-material/LocalAirport';
 import ForestIcon from '@mui/icons-material/Forest';
 import airports from '../data/airports.json';
+import { sendBookingConfirmationEmail } from '../utils/emailHelper';
+import CURRENCY_CONFIG from '../config/currencyConfig';
 
 // Helper function to find airport by code in the new structure
 const findAirportByCode = (code) => {
@@ -74,6 +77,10 @@ const BookingConfirmation = () => {
   const [transactionId, setTransactionId] = useState('');
   const [emailRequested, setEmailRequested] = useState(false);
   const [smsRequested, setSmsRequested] = useState(false);
+  
+  // Email status state
+  const [emailSent, setEmailSent] = useState(false);
+  const [emailError, setEmailError] = useState(null);
 
   const {
     selectedFlights,
@@ -937,7 +944,51 @@ const BookingConfirmation = () => {
       console.log('✅ Purchase event pushed to adobeDataLayer:', purchaseEvent);
     }
 
+    // Send booking confirmation email
+    const sendConfirmationEmail = async () => {
+      try {
+        // Get primary passenger email
+        const primaryPassenger = travellerDetails && travellerDetails.length > 0 
+          ? travellerDetails[0] 
+          : null;
 
+        if (!primaryPassenger || !primaryPassenger.email) {
+          console.warn('⚠️ No email address found for passenger');
+          return;
+        }
+
+        console.log('📧 Sending booking confirmation email to:', primaryPassenger.email);
+
+        const emailResult = await sendBookingConfirmationEmail({
+          email: primaryPassenger.email,
+          pnr: pnr,
+          passengerName: `${primaryPassenger.firstName} ${primaryPassenger.lastName}`,
+          selectedFlights: selectedFlights,
+          travellerDetails: travellerDetails,
+          totalPrice: bookingDetails.totalAmount,
+          currency: CURRENCY_CONFIG.default.code,
+          selectedServices: selectedServices
+        });
+
+        if (emailResult.success) {
+          console.log('✅ Booking confirmation email sent successfully');
+          setEmailSent(true);
+          setEmailError(null);
+        } else {
+          console.error('❌ Failed to send email:', emailResult.error);
+          setEmailError(emailResult.error);
+        }
+
+      } catch (error) {
+        console.error('❌ Email sending exception:', error);
+        setEmailError(error.message || 'Failed to send email');
+      }
+    };
+
+    // Call email sending function (only if we have all required data)
+    if (selectedFlights && travellerDetails && pnr && bookingDetails) {
+      sendConfirmationEmail();
+    }
 
   }, [selectedFlights, travellerDetails, tripType, numPassengers, selectedServices, paymentDetails]);
 
@@ -1396,11 +1447,41 @@ const BookingConfirmation = () => {
             <Typography variant="h6" color="text.secondary" sx={{ mb: 2 }}>
               PNR: <Box component="span" sx={{ color: 'primary.main', fontWeight: 'bold', fontSize: '1.5rem' }}>{pnr}</Box>
             </Typography>
-            <Typography variant="body1" color="text.secondary">
-              A confirmation email will be sent to {travellerDetails?.[0]?.email}
-            </Typography>
+            
+            {/* Email Status Messages */}
+            {emailSent ? (
+              <Typography variant="body1" sx={{ color: 'success.dark', fontWeight: 'medium' }}>
+                📧 Confirmation email sent to {travellerDetails?.[0]?.email}
+              </Typography>
+            ) : emailError ? (
+              <Typography variant="body1" sx={{ color: 'warning.dark' }}>
+                ⚠️ Booking confirmed, but email could not be sent
+              </Typography>
+            ) : (
+              <Typography variant="body1" color="text.secondary">
+                A confirmation email will be sent to {travellerDetails?.[0]?.email}
+              </Typography>
+            )}
           </Box>
         </Paper>
+
+        {/* Email Status Alerts */}
+        {emailSent && (
+          <Alert severity="success" sx={{ mt: 3 }} icon={<EmailIcon />}>
+            <strong>Email Confirmation Sent!</strong>
+            <br />
+            Booking confirmation has been sent to <strong>{travellerDetails?.[0]?.email}</strong>
+          </Alert>
+        )}
+
+        {emailError && (
+          <Alert severity="warning" sx={{ mt: 3 }}>
+            <strong>Booking Confirmed</strong>
+            <br />
+            Your booking is confirmed (PNR: <strong>{pnr}</strong>), but we couldn't send the confirmation email. 
+            Please save your booking reference or contact support.
+          </Alert>
+        )}
 
         <Grid container spacing={3}>
           {/* Left Column - Travel & Payment Info */}
