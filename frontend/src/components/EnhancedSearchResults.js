@@ -291,9 +291,16 @@ const EnhancedSearchResults = () => {
             }
           });
 
-          // Calculate duration in minutes
-          const durationMinutes = differenceInMinutes(arrivalTime, departureTime);
-          const duration = `${Math.floor(durationMinutes / 60)}h ${durationMinutes % 60}m`;
+          // Use duration from flight data (already accounts for timezones)
+          const duration = flight.duration;
+          
+          // Parse duration string to minutes for filtering
+          const parseDurationToMinutes = (durationStr) => {
+            const hours = durationStr.match(/(\d+)h/);
+            const mins = durationStr.match(/(\d+)m/);
+            return (hours ? parseInt(hours[1]) * 60 : 0) + (mins ? parseInt(mins[1]) : 0);
+          };
+          const durationMinutes = parseDurationToMinutes(duration);
 
           return {
             ...flight,
