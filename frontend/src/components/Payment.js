@@ -30,6 +30,7 @@ import {
 } from '@mui/material';
 import { format, isValid, parseISO } from 'date-fns';
 import CURRENCY_CONFIG from '../config/currencyConfig';
+import BookingSteps from './BookingSteps';
 
 const Payment = () => {
   const location = useLocation();
@@ -427,8 +428,10 @@ const Payment = () => {
   }
 
   return (
-    <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
-      <Grid container spacing={4}>
+    <>
+      <BookingSteps activeStep={2} />
+      <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
+        <Grid container spacing={4}>
         {/* Payment Summary - Display on RIGHT */}
         <Grid item xs={12} md={4} sx={{ order: { xs: 1, md: 2 } }}>
           <Paper elevation={3} sx={{ p: 4 }}>
@@ -635,6 +638,7 @@ const Payment = () => {
         message={paymentError}
       />
     </Container>
+    </>
   );
 };
 

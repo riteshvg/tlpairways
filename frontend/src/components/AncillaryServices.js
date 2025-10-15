@@ -45,6 +45,7 @@ import { format } from 'date-fns';
 import seatConfigurations from '../data/ancillary/seat_configurations.json';
 import baggageRulesData from '../data/ancillary/baggage_rules.json';
 import { CURRENCY_CONFIG } from '../config/currencyConfig';
+import BookingSteps from './BookingSteps';
 
 const AncillaryServices = () => {
   const location = useLocation();
@@ -1377,8 +1378,10 @@ Price: ₹${seatPrice}`}
   const numPassengers = (location.state?.passengers || travellerDetails?.length || 1);
 
   return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
-      <Stepper activeStep={activeStep} sx={{ mb: 4 }}>
+    <>
+      <BookingSteps activeStep={1} />
+      <Container maxWidth="xl" sx={{ py: 4 }}>
+        <Stepper activeStep={activeStep} sx={{ mb: 4 }}>
         {steps.map((label) => (
           <Step key={label}>
             <StepLabel>{label}</StepLabel>
@@ -1543,6 +1546,7 @@ Price: ₹${seatPrice}`}
         </Alert>
       </Snackbar>
     </Container>
+    </>
   );
 };
 
