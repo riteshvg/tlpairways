@@ -66,8 +66,69 @@
         }
       })(document, document.location.href.indexOf("adobe_authoring_enabled") !== -1, ".personalization-container { opacity: 0 !important }", 3000);
     </script>
-    <!-- Adobe Launch/DTM Script -->
-    <script src="https://assets.adobedtm.com/01296dd00565/26201e3c8f15/launch-2f8b80d50cb3-development.min.js" async crossorigin="anonymous"></script>
+    
+    <!-- Adobe Launch/DTM Script - Dynamic Loading based on User Preference -->
+    <script>
+      (function() {
+        // Default Adobe Launch script URL and attributes
+        var defaultScriptUrl = 'https://assets.adobedtm.com/01296dd00565/26201e3c8f15/launch-2f8b80d50cb3-development.min.js';
+        var defaultAttributes = {
+          async: true,
+          crossOrigin: 'anonymous'
+        };
+        
+        // Check localStorage for custom script URL and attributes
+        var customScriptUrl = null;
+        var customAttributes = null;
+        
+        try {
+          customScriptUrl = localStorage.getItem('tlairways_adobe_script_url');
+          var storedAttrs = localStorage.getItem('tlairways_adobe_script_attributes');
+          customAttributes = storedAttrs ? JSON.parse(storedAttrs) : null;
+        } catch (e) {
+          console.warn('Could not access localStorage for Adobe script preference:', e);
+        }
+        
+        // Use custom script if available, otherwise use default
+        var scriptUrl = customScriptUrl || defaultScriptUrl;
+        var scriptAttributes = customAttributes || defaultAttributes;
+        
+        // Create and load the script with attributes
+        var script = document.createElement('script');
+        script.src = scriptUrl;
+        
+        // Apply attributes
+        if (scriptAttributes.async) {
+          script.async = true;
+        }
+        if (scriptAttributes.defer) {
+          script.defer = true;
+        }
+        if (scriptAttributes.crossOrigin) {
+          script.crossOrigin = scriptAttributes.crossOrigin;
+        }
+        
+        script.onload = function() {
+          console.log('✅ Adobe Launch script loaded:', scriptUrl);
+          console.log('✅ Script attributes:', scriptAttributes);
+        };
+        
+        script.onerror = function() {
+          console.error('❌ Failed to load Adobe Launch script:', scriptUrl);
+          // Fallback to default if custom script fails
+          if (customScriptUrl && scriptUrl !== defaultScriptUrl) {
+            console.log('🔄 Attempting to load default script...');
+            var fallbackScript = document.createElement('script');
+            fallbackScript.src = defaultScriptUrl;
+            fallbackScript.async = true;
+            fallbackScript.crossOrigin = 'anonymous';
+            document.head.appendChild(fallbackScript);
+          }
+        };
+        
+        document.head.appendChild(script);
+      })();
+    </script>
 
   </head>
   <body>
