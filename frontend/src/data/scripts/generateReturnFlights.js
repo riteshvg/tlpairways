@@ -97,13 +97,14 @@ function adjustReturnDepartureTime(arrivalTime) {
 }
 
 function adjustReturnArrivalTime(departureTime, duration) {
-  // Calculate arrival time based on duration
+  // Calculate arrival time based on duration only (no extra layover time)
   const date = new Date(departureTime);
   const match = duration.match(/(\d+)h\s*(\d+)m/);
   if (match) {
     const hours = parseInt(match[1]);
     const minutes = parseInt(match[2]);
-    date.setHours(date.getHours() + hours + 3); // Add flight duration + layover
+    // Add flight duration only (layover is already in departure time)
+    date.setHours(date.getHours() + hours);
     date.setMinutes(date.getMinutes() + minutes);
   }
   return date.toISOString().replace('.000Z', '');

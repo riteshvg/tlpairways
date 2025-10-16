@@ -193,13 +193,25 @@ const generateFlight = (origin, destination, originDetails, destDetails, index =
   const baseHour = 6 + (index * 3); // 6, 9, 12, 15, 18, 21
   const departureTime = `2024-03-25T${String(baseHour).padStart(2, '0')}:00:00`;
   
-  // Calculate arrival time based on duration
+  // Calculate arrival time based on duration (properly handling day rollover)
   const durationMatch = duration.match(/(\d+)h (\d+)m/);
   const durationHours = durationMatch ? parseInt(durationMatch[1]) : 2;
   const durationMinutes = durationMatch ? parseInt(durationMatch[2]) : 0;
-  const arrivalHour = baseHour + durationHours;
-  const arrivalMinute = durationMinutes;
-  const arrivalTime = `2024-03-25T${String(arrivalHour % 24).padStart(2, '0')}:${String(arrivalMinute).padStart(2, '0')}:00`;
+  
+  // Create departure date object
+  const departureDate = new Date(departureTime);
+  
+  // Add duration to departure time
+  const arrivalDate = new Date(departureDate.getTime() + (durationHours * 60 + durationMinutes) * 60 * 1000);
+  
+  // Format arrival time in local time (not UTC)
+  const year = arrivalDate.getFullYear();
+  const month = String(arrivalDate.getMonth() + 1).padStart(2, '0');
+  const day = String(arrivalDate.getDate()).padStart(2, '0');
+  const hours = String(arrivalDate.getHours()).padStart(2, '0');
+  const minutes = String(arrivalDate.getMinutes()).padStart(2, '0');
+  const seconds = String(arrivalDate.getSeconds()).padStart(2, '0');
+  const arrivalTime = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
   
   return {
     itineraryId: `${origin}-${destination}-${index}`,
