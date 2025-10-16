@@ -199,7 +199,13 @@ const Payment = () => {
       if (!cvv || !/^\d{3,4}$/.test(cvv)) {
         errors.cvv = 'Please enter a valid CVV';
       }
+    } else if (paymentMethod === 'upi') {
+      if (!billingName || billingName.trim().length < 3) {
+        errors.billingName = 'Please enter a valid UPI ID';
+      }
     }
+    // Net Banking only requires vendor selection (no billing name needed)
+    
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -635,7 +641,7 @@ const Payment = () => {
               ) : paymentMethod === 'upi' ? (
                 <TextField
                   fullWidth
-                  label="Billing Name"
+                  label="UPI ID"
                   placeholder="example@upi"
                   value={billingName}
                   onChange={(e) => setBillingName(e.target.value)}
@@ -643,21 +649,13 @@ const Payment = () => {
                   helperText={validationErrors.billingName || "Enter your UPI ID (e.g., name@upi)"}
                   required
                 />
-              ) : (
-                <FormControl fullWidth required error={!!validationErrors.billingName}>
-                  <InputLabel>Billing Name</InputLabel>
-                  <Select
-                    value={billingName}
-                    onChange={(e) => setBillingName(e.target.value)}
-                    label="Select Bank"
-                  >
-                    <MenuItem value="sbi">State Bank of India</MenuItem>
-                    <MenuItem value="hdfc">HDFC Bank</MenuItem>
-                    <MenuItem value="icici">ICICI Bank</MenuItem>
-                    <MenuItem value="axis">Axis Bank</MenuItem>
-                  </Select>
-                </FormControl>
-              )}
+              ) : paymentMethod === 'netbanking' ? (
+                <Alert severity="info" sx={{ mt: 2 }}>
+                  <Typography variant="body2">
+                    You will be redirected to your selected bank's secure payment gateway to complete the transaction.
+                  </Typography>
+                </Alert>
+              ) : null}
 
               <Box sx={{ mt: 4, display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
                 <Button
