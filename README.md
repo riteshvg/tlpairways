@@ -10,11 +10,17 @@ A modern flight booking application built with React, Node.js, and Express, feat
 - **Ancillary Services**: Seat selection, baggage, meals, priority boarding, lounge access
 - **Authentication**: Auth0 integration with state persistence across redirects
 - **Responsive Design**: Modern Material-UI based interface that works on all devices
+- **Adobe Launch Script Manager**: Dynamic Adobe DTM script switching directly from Settings page
+  - Switch between Development, Staging, and Production environments
+  - Support for custom Adobe Launch script URLs
+  - Automatic async attribute preservation
+  - No code changes or redeployment required
 - **Advanced Analytics**: Comprehensive Adobe Data Layer integration with optimized event tracking
   - Single pageView event per page load
   - Optimized purchase event tracking
   - Complete booking flow analytics
   - Revenue and product tracking
+  - Haul type classification (short/long haul)
 
 ## 🛠️ Tech Stack
 
