@@ -46,6 +46,7 @@ import {
   resetToDefaultAdobeScript,
   validateAdobeScriptUrl,
   detectAdobeEnvironment,
+  parseScriptInput,
   ADOBE_SCRIPT_PRESETS,
 } from '../utils/adobeScriptManager';
 
@@ -122,13 +123,19 @@ const SettingsPage = () => {
 
   // Adobe Script Management Handlers
   const handleAdobeScriptChange = (event) => {
-    const newUrl = event.target.value;
-    setAdobeScriptUrl(newUrl);
+    const input = event.target.value;
+    
+    // Parse input to extract URL (handles both full script tags and URLs)
+    const { src } = parseScriptInput(input);
+    
+    // Update with the extracted URL (or original input if not a script tag)
+    const urlToDisplay = src || input;
+    setAdobeScriptUrl(urlToDisplay);
     
     // Validate URL as user types
-    const validation = validateAdobeScriptUrl(newUrl);
+    const validation = validateAdobeScriptUrl(input);
     setScriptValidation(validation);
-    setCurrentEnvironment(detectAdobeEnvironment(newUrl));
+    setCurrentEnvironment(detectAdobeEnvironment(urlToDisplay));
   };
 
   const handleSaveAdobeScript = () => {
@@ -256,8 +263,8 @@ const SettingsPage = () => {
                 value={adobeScriptUrl}
                 onChange={handleAdobeScriptChange}
                 error={!scriptValidation.isValid}
-                helperText={scriptValidation.error}
-                placeholder="https://assets.adobedtm.com/..."
+                helperText={scriptValidation.error || 'Paste full script tag or just the URL'}
+                placeholder='<script src="https://assets.adobedtm.com/..." async></script>'
                 variant="outlined"
                 size="small"
                 sx={{

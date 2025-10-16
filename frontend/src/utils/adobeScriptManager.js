@@ -6,12 +6,19 @@
  */
 
 const STORAGE_KEY = 'tlairways_adobe_script_url';
+const STORAGE_KEY_ATTRIBUTES = 'tlairways_adobe_script_attributes';
 
 // Default Adobe script URLs for different environments
 export const ADOBE_SCRIPT_PRESETS = {
   development: 'https://assets.adobedtm.com/01296dd00565/26201e3c8f15/launch-2f8b80d50cb3-development.min.js',
   staging: 'https://assets.adobedtm.com/01296dd00565/26201e3c8f15/launch-staging.min.js',
   production: 'https://assets.adobedtm.com/01296dd00565/26201e3c8f15/launch-production.min.js',
+};
+
+// Default attributes (async and crossorigin)
+const DEFAULT_ATTRIBUTES = {
+  async: true,
+  crossOrigin: 'anonymous'
 };
 
 /**
@@ -29,26 +36,51 @@ export const getCurrentAdobeScriptUrl = () => {
 };
 
 /**
- * Save a new Adobe script URL to localStorage
- * @param {string} url - The new script URL to save
+ * Get the currently configured Adobe script attributes
+ * @returns {object} The current script attributes
+ */
+export const getCurrentAdobeScriptAttributes = () => {
+  try {
+    const storedAttrs = localStorage.getItem(STORAGE_KEY_ATTRIBUTES);
+    return storedAttrs ? JSON.parse(storedAttrs) : DEFAULT_ATTRIBUTES;
+  } catch (error) {
+    console.error('Error reading Adobe script attributes from localStorage:', error);
+    return DEFAULT_ATTRIBUTES;
+  }
+};
+
+/**
+ * Save a new Adobe script (URL or full script tag) to localStorage
+ * @param {string} input - The script tag or URL to save
  * @returns {boolean} Success status
  */
-export const saveAdobeScriptUrl = (url) => {
+export const saveAdobeScriptUrl = (input) => {
   try {
-    if (!url || !url.trim()) {
-      throw new Error('Script URL cannot be empty');
+    if (!input || !input.trim()) {
+      throw new Error('Script input cannot be empty');
+    }
+
+    // Parse the input to get URL and attributes
+    const { src, attributes } = parseScriptInput(input);
+
+    if (!src) {
+      throw new Error('Could not extract URL from input');
     }
 
     // Validate URL format
-    if (!url.startsWith('https://assets.adobedtm.com/') && !url.startsWith('https://')) {
+    if (!src.startsWith('https://')) {
       throw new Error('Invalid Adobe DTM script URL format');
     }
 
-    localStorage.setItem(STORAGE_KEY, url.trim());
-    console.log('✅ Adobe script URL saved:', url);
+    // Save URL and attributes separately
+    localStorage.setItem(STORAGE_KEY, src);
+    localStorage.setItem(STORAGE_KEY_ATTRIBUTES, JSON.stringify(attributes));
+    
+    console.log('✅ Adobe script saved:', src);
+    console.log('✅ Script attributes:', attributes);
     return true;
   } catch (error) {
-    console.error('❌ Error saving Adobe script URL:', error);
+    console.error('❌ Error saving Adobe script:', error);
     return false;
   }
 };
@@ -59,6 +91,7 @@ export const saveAdobeScriptUrl = (url) => {
 export const resetToDefaultAdobeScript = () => {
   try {
     localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(STORAGE_KEY_ATTRIBUTES);
     console.log('🔄 Reset to default Adobe script');
     return true;
   } catch (error) {
@@ -132,29 +165,88 @@ export const detectAdobeEnvironment = (url) => {
 };
 
 /**
+ * Parse script tag or URL to extract src and attributes
+ * @param {string} input - Script tag or URL
+ * @returns {object} Parsed result with src and attributes
+ */
+export const parseScriptInput = (input) => {
+  if (!input || !input.trim()) {
+    return { src: '', attributes: {} };
+  }
+
+  const trimmed = input.trim();
+  
+  // Check if input is a full script tag
+  if (trimmed.startsWith('<script') && trimmed.includes('src=')) {
+    try {
+      // Extract src attribute
+      const srcMatch = trimmed.match(/src=["']([^"']+)["']/);
+      const src = srcMatch ? srcMatch[1] : '';
+      
+      // Extract other attributes
+      const attributes = {};
+      
+      // Check for async
+      if (trimmed.includes('async')) {
+        attributes.async = true;
+      }
+      
+      // Check for defer
+      if (trimmed.includes('defer')) {
+        attributes.defer = true;
+      }
+      
+      // Check for crossorigin
+      const crossoriginMatch = trimmed.match(/crossorigin=["']([^"']+)["']/);
+      if (crossoriginMatch) {
+        attributes.crossOrigin = crossoriginMatch[1];
+      } else if (trimmed.includes('crossorigin')) {
+        attributes.crossOrigin = 'anonymous';
+      }
+      
+      return { src, attributes };
+    } catch (error) {
+      console.error('Error parsing script tag:', error);
+      return { src: '', attributes: {} };
+    }
+  }
+  
+  // If it's just a URL, default to async
+  return { 
+    src: trimmed, 
+    attributes: { async: true, crossOrigin: 'anonymous' } 
+  };
+};
+
+/**
  * Validate Adobe script URL format
- * @param {string} url - URL to validate
+ * @param {string} input - Script tag or URL to validate
  * @returns {object} Validation result with isValid and error message
  */
-export const validateAdobeScriptUrl = (url) => {
-  if (!url || !url.trim()) {
+export const validateAdobeScriptUrl = (input) => {
+  if (!input || !input.trim()) {
     return { isValid: false, error: 'URL cannot be empty' };
   }
 
-  const trimmedUrl = url.trim();
+  // Parse input to get URL
+  const { src } = parseScriptInput(input);
+  
+  if (!src) {
+    return { isValid: false, error: 'Could not extract URL from input' };
+  }
 
   // Check if it's HTTPS
-  if (!trimmedUrl.startsWith('https://')) {
+  if (!src.startsWith('https://')) {
     return { isValid: false, error: 'URL must use HTTPS protocol' };
   }
 
   // Check if it's from Adobe DTM domain
-  if (!trimmedUrl.includes('adobedtm.com')) {
+  if (!src.includes('adobedtm.com')) {
     return { isValid: false, error: 'URL must be from assets.adobedtm.com domain' };
   }
 
   // Check if it's a .js file
-  if (!trimmedUrl.endsWith('.js')) {
+  if (!src.endsWith('.js')) {
     return { isValid: false, error: 'URL must point to a .js file' };
   }
 
@@ -163,6 +255,7 @@ export const validateAdobeScriptUrl = (url) => {
 
 export default {
   getCurrentAdobeScriptUrl,
+  getCurrentAdobeScriptAttributes,
   saveAdobeScriptUrl,
   resetToDefaultAdobeScript,
   hasCustomAdobeScript,
@@ -170,6 +263,7 @@ export default {
   removeAdobeScript,
   detectAdobeEnvironment,
   validateAdobeScriptUrl,
+  parseScriptInput,
   ADOBE_SCRIPT_PRESETS,
 };
 
