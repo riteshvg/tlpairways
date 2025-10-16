@@ -487,29 +487,40 @@ const BookingConfirmation = () => {
     let returnHaulType = null;
     try {
       const onwardFlightDistance = calculatedDistance / (tripType === 'roundtrip' ? 2 : 1);
-      console.log('Onward flight distance:', onwardFlightDistance);
-      console.log('Onward flight duration:', selectedFlights.onward?.duration);
+      console.log('🔍 Calculating Haul Type - Onward flight distance:', onwardFlightDistance);
+      console.log('🔍 Onward flight duration:', selectedFlights.onward?.duration);
       
       onwardHaulType = calculateHaulType(
         onwardFlightDistance,
         selectedFlights.onward?.duration
       );
-      console.log('Onward haul type:', onwardHaulType);
+      console.log('✅ Onward haul type calculated:', onwardHaulType);
       
       if (tripType === 'roundtrip' && selectedFlights.return) {
         const returnFlightDistance = calculatedDistance / 2;
-        console.log('Return flight distance:', returnFlightDistance);
-        console.log('Return flight duration:', selectedFlights.return?.duration);
+        console.log('🔍 Return flight distance:', returnFlightDistance);
+        console.log('🔍 Return flight duration:', selectedFlights.return?.duration);
         
         returnHaulType = calculateHaulType(
           returnFlightDistance,
           selectedFlights.return?.duration
         );
-        console.log('Return haul type:', returnHaulType);
+        console.log('✅ Return haul type calculated:', returnHaulType);
       }
     } catch (error) {
-      console.error('Error calculating haul type:', error);
+      console.error('❌ Error calculating haul type:', error);
+      // Ensure defaults even if error occurs
+      onwardHaulType = onwardHaulType || 'short haul';
     }
+    
+    // Log haul type before creating purchase event
+    console.log('📊 Final Haul Type Values:', {
+      onward: onwardHaulType,
+      return: returnHaulType,
+      overall: returnHaulType ? 
+        (onwardHaulType === 'long haul' || returnHaulType === 'long haul' ? 'long haul' : 'short haul') : 
+        onwardHaulType
+    });
 
     // Calculate revenue data
     const feeBreakdown = calculateFeeBreakdown();
@@ -932,9 +943,16 @@ const BookingConfirmation = () => {
 
     // Push Purchase event to data layer
     if (typeof window !== 'undefined' && window.adobeDataLayer) {
-      console.log('Purchase Event with haulType:', JSON.stringify(purchaseEvent.eventData.booking.haulType, null, 2));
+      // Verify haulType is present before pushing
+      if (!purchaseEvent.eventData.booking.haulType) {
+        console.error('⚠️ WARNING: haulType is missing from purchase event!');
+      } else {
+        console.log('✅ Purchase Event with haulType:', JSON.stringify(purchaseEvent.eventData.booking.haulType, null, 2));
+      }
+      
       window.adobeDataLayer.push(purchaseEvent);
       console.log('✅ Purchase event pushed to adobeDataLayer:', purchaseEvent);
+      console.log('📋 Booking object in data layer:', JSON.stringify(purchaseEvent.eventData.booking, null, 2));
     }
 
 
