@@ -241,8 +241,30 @@ const Payment = () => {
         transactionId: `TXN_${Date.now()}_${Math.random().toString(36).substr(2, 9).toUpperCase()}`
       };
 
-      // Track payment completion
-      // Analytics call removed
+      // Push payment details to Adobe Data Layer
+      if (typeof window !== 'undefined' && window.adobeDataLayer) {
+        const paymentDetails = {
+          paymentMethod: paymentMethod,
+          paymentVendor: paymentVendor,
+          cardNetwork: paymentMethod === 'credit' || paymentMethod === 'debit' ? paymentVendor : null,
+          bankName: paymentMethod === 'netbanking' ? paymentVendor : null,
+          upiId: paymentMethod === 'upi' ? billingName : null,
+          cardLast4: cardNumber ? cardNumber.slice(-4) : null,
+          expiryDate: expiryDate || null,
+          amount: totalAmount,
+          currency: 'INR',
+          transactionId: paymentData.transactionId,
+          paymentDate: paymentData.paymentDate
+        };
+
+        window.adobeDataLayer.push({
+          event: 'paymentSubmitted',
+          paymentDetails: paymentDetails,
+          timestamp: new Date().toISOString()
+        });
+
+        console.log('✅ Payment details pushed to adobeDataLayer:', paymentDetails);
+      }
 
       // Navigate to confirmation
       navigate('/confirmation', {
