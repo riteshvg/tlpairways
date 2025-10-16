@@ -72,19 +72,39 @@ app.use(corsMiddleware);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Routes
+// Health check endpoints (must be before other routes)
+app.get('/api/health', (req, res) => {
+  const mongoose = require('mongoose');
+  const dbStatus = mongoose.connection.readyState;
+  const dbStatusMap = {
+    0: 'disconnected',
+    1: 'connected',
+    2: 'connecting',
+    3: 'disconnecting'
+  };
+
+  res.json({ 
+    status: 'OK',
+    server: 'running',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development',
+    database: {
+      status: dbStatusMap[dbStatus] || 'unknown',
+      connected: dbStatus === 1
+    },
+    version: '1.0.0'
+  });
+});
+
+// Root health check (backup)
+app.get('/health', (req, res) => {
+  res.json({ status: 'OK', message: 'TLAirways Backend is running' });
+});
+
+// API Routes
 app.use('/api/flights', require('./routes/flights'));
 app.use('/api/airports', require('./routes/airports'));
 app.use('/api/user-location', require('./routes/userLocation'));
-
-// Health check endpoint
-app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'OK', 
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || 'development'
-  });
-});
 
 // Serve static files from the React app in production
 if (process.env.NODE_ENV === 'production') {
@@ -99,16 +119,11 @@ if (process.env.NODE_ENV === 'production') {
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  console.error('❌ Error:', err.stack);
   res.status(500).json({ 
     error: 'Something went wrong!',
     message: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error'
   });
-});
-
-// 404 handler
-app.use('*', (req, res) => {
-  res.status(404).json({ error: 'Route not found' });
 });
 
 const PORT = process.env.PORT || 5000;
@@ -116,4 +131,5 @@ app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`�� Health check: http://localhost:${PORT}/api/health`);
+}); 
 }); 
