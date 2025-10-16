@@ -20,10 +20,7 @@ import {
   Card,
   CardContent,
   TextField,
-  Chip,
   Stack,
-  IconButton,
-  Tooltip,
 } from '@mui/material';
 import {
   Notifications as NotificationsIcon,
@@ -35,8 +32,6 @@ import {
   Save as SaveIcon,
   Code as CodeIcon,
   Refresh as RefreshIcon,
-  ContentCopy as ContentCopyIcon,
-  CheckCircle as CheckCircleIcon,
 } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -45,9 +40,7 @@ import {
   saveAdobeScriptUrl,
   resetToDefaultAdobeScript,
   validateAdobeScriptUrl,
-  detectAdobeEnvironment,
   parseScriptInput,
-  ADOBE_SCRIPT_PRESETS,
 } from '../utils/adobeScriptManager';
 
 const SettingsPage = () => {
@@ -75,15 +68,12 @@ const SettingsPage = () => {
   
   // Adobe Script Management State
   const [adobeScriptUrl, setAdobeScriptUrl] = useState('');
-  const [currentEnvironment, setCurrentEnvironment] = useState('development');
   const [scriptValidation, setScriptValidation] = useState({ isValid: true, error: null });
-  const [copied, setCopied] = useState(false);
 
   // Load current Adobe script URL on mount
   useEffect(() => {
     const currentUrl = getCurrentAdobeScriptUrl();
     setAdobeScriptUrl(currentUrl);
-    setCurrentEnvironment(detectAdobeEnvironment(currentUrl));
   }, []);
 
   if (!isAuthenticated || !user) {
@@ -135,7 +125,6 @@ const SettingsPage = () => {
     // Validate URL as user types
     const validation = validateAdobeScriptUrl(input);
     setScriptValidation(validation);
-    setCurrentEnvironment(detectAdobeEnvironment(urlToDisplay));
   };
 
   const handleSaveAdobeScript = () => {
@@ -173,7 +162,6 @@ const SettingsPage = () => {
     if (success) {
       const defaultUrl = getCurrentAdobeScriptUrl();
       setAdobeScriptUrl(defaultUrl);
-      setCurrentEnvironment(detectAdobeEnvironment(defaultUrl));
       setScriptValidation({ isValid: true, error: null });
       
       setSnackbar({
@@ -182,19 +170,6 @@ const SettingsPage = () => {
         severity: 'info',
       });
     }
-  };
-
-  const handleSetPresetScript = (presetKey) => {
-    const presetUrl = ADOBE_SCRIPT_PRESETS[presetKey];
-    setAdobeScriptUrl(presetUrl);
-    setCurrentEnvironment(presetKey);
-    setScriptValidation({ isValid: true, error: null });
-  };
-
-  const handleCopyScriptUrl = () => {
-    navigator.clipboard.writeText(adobeScriptUrl);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
@@ -236,27 +211,10 @@ const SettingsPage = () => {
 
             <Divider sx={{ mb: 3, borderColor: 'rgba(255,255,255,0.3)' }} />
 
-            {/* Current Environment Badge */}
-            <Box sx={{ mb: 2 }}>
-              <Typography variant="subtitle2" sx={{ mb: 1, opacity: 0.9 }}>
-                Current Environment:
-              </Typography>
-              <Chip 
-                label={currentEnvironment.toUpperCase()}
-                color={
-                  currentEnvironment === 'production' ? 'success' :
-                  currentEnvironment === 'staging' ? 'warning' :
-                  currentEnvironment === 'development' ? 'info' : 'default'
-                }
-                icon={<CheckCircleIcon />}
-                sx={{ fontWeight: 600 }}
-              />
-            </Box>
-
             {/* Script URL Input */}
             <Box sx={{ mb: 2 }}>
               <Typography variant="subtitle2" sx={{ mb: 1, opacity: 0.9 }}>
-                Adobe Launch Script URL:
+                Adobe Launch Script:
               </Typography>
               <TextField
                 fullWidth
@@ -275,69 +233,11 @@ const SettingsPage = () => {
                     fontSize: '0.85rem',
                   }
                 }}
-                InputProps={{
-                  endAdornment: (
-                    <Tooltip title={copied ? 'Copied!' : 'Copy URL'}>
-                      <IconButton 
-                        size="small" 
-                        onClick={handleCopyScriptUrl}
-                        sx={{ color: copied ? 'success.main' : 'inherit' }}
-                      >
-                        {copied ? <CheckCircleIcon /> : <ContentCopyIcon />}
-                      </IconButton>
-                    </Tooltip>
-                  )
-                }}
               />
             </Box>
 
-            {/* Quick Presets */}
-            <Box sx={{ mb: 2 }}>
-              <Typography variant="subtitle2" sx={{ mb: 1, opacity: 0.9 }}>
-                Quick Switch (Presets):
-              </Typography>
-              <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-                <Button
-                  variant={currentEnvironment === 'development' ? 'contained' : 'outlined'}
-                  size="small"
-                  onClick={() => handleSetPresetScript('development')}
-                  sx={{ 
-                    color: currentEnvironment === 'development' ? 'white' : 'white',
-                    borderColor: 'white',
-                    '&:hover': { borderColor: 'white', backgroundColor: 'rgba(255,255,255,0.1)' }
-                  }}
-                >
-                  Development
-                </Button>
-                <Button
-                  variant={currentEnvironment === 'staging' ? 'contained' : 'outlined'}
-                  size="small"
-                  onClick={() => handleSetPresetScript('staging')}
-                  sx={{ 
-                    color: currentEnvironment === 'staging' ? 'white' : 'white',
-                    borderColor: 'white',
-                    '&:hover': { borderColor: 'white', backgroundColor: 'rgba(255,255,255,0.1)' }
-                  }}
-                >
-                  Staging
-                </Button>
-                <Button
-                  variant={currentEnvironment === 'production' ? 'contained' : 'outlined'}
-                  size="small"
-                  onClick={() => handleSetPresetScript('production')}
-                  sx={{ 
-                    color: currentEnvironment === 'production' ? 'white' : 'white',
-                    borderColor: 'white',
-                    '&:hover': { borderColor: 'white', backgroundColor: 'rgba(255,255,255,0.1)' }
-                  }}
-                >
-                  Production
-                </Button>
-              </Stack>
-            </Box>
-
             {/* Action Buttons */}
-            <Stack direction="row" spacing={2}>
+            <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
               <Button
                 variant="contained"
                 startIcon={<SaveIcon />}
@@ -367,7 +267,7 @@ const SettingsPage = () => {
             </Stack>
 
             {/* Info Alert */}
-            <Alert severity="info" sx={{ mt: 2, backgroundColor: 'rgba(255,255,255,0.95)' }}>
+            <Alert severity="info" sx={{ backgroundColor: 'rgba(255,255,255,0.95)' }}>
               <Typography variant="body2">
                 <strong>Note:</strong> After saving, you must <strong>reload the page</strong> for the new script to take effect. 
                 The Adobe Launch script loads during initial page load.
