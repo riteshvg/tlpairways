@@ -1,11 +1,13 @@
 #!/bin/bash
 
 echo "--- Starting Railway Build Process ---"
+echo "Build timestamp: $(date)"
 
 # 1. Clean previous builds
 echo "Cleaning previous frontend build artifacts..."
 rm -rf frontend/build
-echo "Previous build artifacts removed."
+rm -rf frontend/node_modules/.cache
+echo "Previous build artifacts and cache removed."
 
 # 2. Install all dependencies
 echo "Installing all dependencies (backend and frontend)..."
