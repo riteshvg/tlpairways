@@ -110,6 +110,7 @@ const Payment = () => {
   
   // Payment form state
   const [paymentMethod, setPaymentMethod] = useState('credit');
+  const [paymentVendor, setPaymentVendor] = useState('');
   const [cardNumber, setCardNumber] = useState('');
   const [expiryDate, setExpiryDate] = useState('');
   const [cvv, setCvv] = useState('');
@@ -124,6 +125,15 @@ const Payment = () => {
   const [paymentError, setPaymentError] = useState('');
   const [validationErrors, setValidationErrors] = useState({});
   const [loading, setLoading] = useState(false);
+
+  // Payment vendors/networks by type
+  const paymentVendors = {
+    credit: ['Visa', 'Mastercard', 'American Express', 'Diners Club', 'RuPay'],
+    debit: ['Visa Debit', 'Mastercard Debit', 'RuPay Debit', 'Maestro'],
+    netbanking: ['HDFC Bank', 'ICICI Bank', 'State Bank of India', 'Axis Bank', 'Kotak Mahindra Bank', 
+                  'Punjab National Bank', 'Bank of Baroda', 'Canara Bank', 'Union Bank', 'IDBI Bank'],
+    upi: ['UPI']
+  };
 
   // Initialize component and track page view
   useEffect(() => {
@@ -163,8 +173,19 @@ const Payment = () => {
   }, [bookingState, selectedFlights, travellerDetails, contactInfo, selectedServices, 
       flightTotal, ancillaryTotal, totalAmount, paymentType, cabinClass, navigate]);
 
+  // Reset vendor when payment method changes
+  useEffect(() => {
+    setPaymentVendor('');
+  }, [paymentMethod]);
+
   const validateForm = () => {
     const errors = {};
+    
+    // Vendor validation for all payment methods
+    if (!paymentVendor || paymentVendor.trim() === '') {
+      errors.paymentVendor = 'Please select a payment vendor';
+    }
+    
     if (paymentMethod === 'credit' || paymentMethod === 'debit') {
       if (!cardNumber || !/^\d{16}$/.test(cardNumber)) {
         errors.cardNumber = 'Please enter a valid 16-digit card number';
@@ -195,6 +216,7 @@ const Payment = () => {
       const paymentData = {
         method: paymentMethod,
         paymentMethod: paymentMethod,
+        vendor: paymentVendor,
         cardDetails: {
           cardNumber,
           expiryDate,
@@ -524,6 +546,37 @@ const Payment = () => {
                       label="Net Banking"
                     />
                   </RadioGroup>
+                </FormControl>
+              </Box>
+
+              {/* Payment Vendor/Network Selection */}
+              <Box sx={{ mb: 3 }}>
+                <FormControl fullWidth required error={!!validationErrors.paymentVendor}>
+                  <InputLabel>
+                    {paymentMethod === 'credit' ? 'Card Network' :
+                     paymentMethod === 'debit' ? 'Card Network' :
+                     paymentMethod === 'netbanking' ? 'Select Bank' :
+                     'Payment Method'}
+                  </InputLabel>
+                  <Select
+                    value={paymentVendor}
+                    label={
+                      paymentMethod === 'credit' ? 'Card Network' :
+                      paymentMethod === 'debit' ? 'Card Network' :
+                      paymentMethod === 'netbanking' ? 'Select Bank' :
+                      'Payment Method'
+                    }
+                    onChange={(e) => setPaymentVendor(e.target.value)}
+                  >
+                    {paymentVendors[paymentMethod]?.map((vendor) => (
+                      <MenuItem key={vendor} value={vendor}>
+                        {vendor}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {validationErrors.paymentVendor && (
+                    <FormHelperText>{validationErrors.paymentVendor}</FormHelperText>
+                  )}
                 </FormControl>
               </Box>
 

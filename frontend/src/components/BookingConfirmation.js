@@ -74,6 +74,13 @@ const BookingConfirmation = () => {
   const [transactionId, setTransactionId] = useState('');
   const [emailRequested, setEmailRequested] = useState(false);
   const [smsRequested, setSmsRequested] = useState(false);
+  
+  // State for haul types (for UI display)
+  const [haulTypes, setHaulTypes] = useState({
+    onward: 'short haul',
+    return: null,
+    overall: 'short haul'
+  });
 
   const {
     selectedFlights,
@@ -513,13 +520,23 @@ const BookingConfirmation = () => {
       onwardHaulType = onwardHaulType || 'short haul';
     }
     
+    // Calculate overall haul type
+    const overallHaulType = returnHaulType ? 
+      (onwardHaulType === 'long haul' || returnHaulType === 'long haul' ? 'long haul' : 'short haul') : 
+      onwardHaulType;
+    
+    // Set haul types for UI display
+    setHaulTypes({
+      onward: onwardHaulType,
+      return: returnHaulType,
+      overall: overallHaulType
+    });
+    
     // Log haul type before creating purchase event
     console.log('📊 Final Haul Type Values:', {
       onward: onwardHaulType,
       return: returnHaulType,
-      overall: returnHaulType ? 
-        (onwardHaulType === 'long haul' || returnHaulType === 'long haul' ? 'long haul' : 'short haul') : 
-        onwardHaulType
+      overall: overallHaulType
     });
 
     // Calculate revenue data
@@ -1127,6 +1144,23 @@ const BookingConfirmation = () => {
             </Typography>
             <Typography variant="body2" color="text.secondary">
               Cabin Class: {flight.cabinClass?.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+              Flight Type: <Chip 
+                label={(type === 'onward' ? haulTypes.onward : haulTypes.return || 'short haul').toUpperCase()}
+                size="small"
+                color={
+                  (type === 'onward' ? haulTypes.onward : haulTypes.return) === 'long haul' 
+                    ? 'primary' 
+                    : 'success'
+                }
+                sx={{ 
+                  height: 20, 
+                  fontSize: '0.7rem',
+                  fontWeight: 600,
+                  ml: 1
+                }}
+              />
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
