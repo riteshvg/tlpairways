@@ -28,6 +28,10 @@ function App() {
   useEffect(() => {
     globalClickTracker.init();
     
+    // Log build version for debugging
+    console.log('🚀 TLAirways App - Build Version: 2025-01-17-v2');
+    console.log('✅ Latest changes: City names fixed, seat selection fixed, payment methods updated');
+    
     // Cleanup on unmount
     return () => {
       globalClickTracker.destroy();
