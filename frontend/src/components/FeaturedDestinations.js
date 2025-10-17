@@ -5,45 +5,55 @@ import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
 const featuredDestinations = [
   {
     id: 1,
+    origin: 'Mumbai',
+    originCode: 'BOM',
     destination: 'Dubai',
     destinationCode: 'DXB',
     image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     price: 'From ₹25,000',
     description: 'Experience luxury and modern architecture',
-    duration: '3h 45m'
+    duration: '3h 15m'
   },
   {
     id: 2,
+    origin: 'Bangalore',
+    originCode: 'BLR',
     destination: 'Singapore',
     destinationCode: 'SIN',
     image: 'https://images.unsplash.com/photo-1525625293386-3f8f99389edd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     price: 'From ₹18,000',
     description: 'The Lion City awaits your adventure',
-    duration: '5h 20m'
+    duration: '4h 30m'
   },
   {
     id: 3,
+    origin: 'Chennai',
+    originCode: 'MAA',
     destination: 'Bangkok',
     destinationCode: 'BKK',
     image: 'https://images.unsplash.com/photo-1563492065-1a71ac7b5f24?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    price: 'From ₹15,000',
+    price: 'From ₹22,000',
     description: 'Vibrant culture and amazing street food',
-    duration: '3h 15m'
+    duration: '3h 25m'
   },
   {
     id: 4,
-    destination: 'Maldives',
-    destinationCode: 'MLE',
-    image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    price: 'From ₹35,000',
-    description: 'Paradise islands and crystal clear waters',
-    duration: '2h 30m'
+    origin: 'Delhi',
+    originCode: 'DEL',
+    destination: 'Bangkok',
+    destinationCode: 'BKK',
+    image: 'https://images.unsplash.com/photo-1563492065-1a71ac7b5f24?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    price: 'From ₹20,000',
+    description: 'Vibrant culture and amazing street food',
+    duration: '4h 05m'
   }
 ];
 
 const FeaturedDestinations = ({ onDestinationClick }) => {
   const handleDestinationClick = (destination) => {
     onDestinationClick({
+      origin: destination.origin,
+      originCode: destination.originCode,
       destination: destination.destination,
       destinationCode: destination.destinationCode,
       price: destination.price,
@@ -80,6 +90,14 @@ const FeaturedDestinations = ({ onDestinationClick }) => {
               }}
             />
             <CardContent sx={{ flexGrow: 1, p: 3 }}>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                gutterBottom
+                sx={{ mb: 0.5 }}
+              >
+                {destination.origin} → {destination.destination}
+              </Typography>
               <Typography
                 variant="h6"
                 component="h3"

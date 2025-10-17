@@ -19,6 +19,8 @@ const HomePage = () => {
   const handleFeaturedDestinationClick = (destinationData) => {
     navigate('/search', {
       state: {
+        origin: destinationData.origin,
+        originCode: destinationData.originCode,
         destination: destinationData.destination,
         destinationCode: destinationData.destinationCode
       }
