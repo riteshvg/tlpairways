@@ -18,7 +18,7 @@
       "arrivalTime": "2024-03-20T10:15:00",
       "duration": "2h 15m",
       "price": {
-        "amount": 4500,
+        "amount": 3090.5,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -52,10 +52,10 @@
       "arrivalTime": "2024-03-20T16:45:00",
       "duration": "2h 15m",
       "price": {
-        "amount": 5200,
+        "amount": 3090.5,
         "currency": "INR"
       },
-      "aircraft": "Airbus A320",
+      "aircraft": "Boeing 737",
       "availableSeats": 150,
       "mealOptions": [
         "veg",
@@ -86,7 +86,7 @@
       "arrivalTime": "2024-03-20T23:15:00",
       "duration": "2h 15m",
       "price": {
-        "amount": 4800,
+        "amount": 2689.5,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -120,10 +120,10 @@
       "arrivalTime": "2024-03-20T09:45:00",
       "duration": "2h 15m",
       "price": {
-        "amount": 4700,
+        "amount": 3036.5,
         "currency": "INR"
       },
-      "aircraft": "Airbus A320",
+      "aircraft": "Boeing 737",
       "availableSeats": 140,
       "mealOptions": [
         "veg",
@@ -154,7 +154,7 @@
       "arrivalTime": "2024-03-20T15:15:00",
       "duration": "2h 15m",
       "price": {
-        "amount": 5100,
+        "amount": 3082.5,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -185,10 +185,10 @@
         "airport": "Kempegowda International Airport Bengaluru"
       },
       "departureTime": "2024-03-20T06:00:00",
-      "arrivalTime": "2024-03-20T08:45:00",
-      "duration": "2h 45m",
+      "arrivalTime": "2024-03-20T08:56:00",
+      "duration": "2h 56m",
       "price": {
-        "amount": 5500,
+        "amount": 4262.5,
         "currency": "INR"
       },
       "aircraft": "Airbus A320",
@@ -219,13 +219,13 @@
         "airport": "Kempegowda International Airport Bengaluru"
       },
       "departureTime": "2024-03-20T12:30:00",
-      "arrivalTime": "2024-03-20T15:15:00",
-      "duration": "2h 45m",
+      "arrivalTime": "2024-03-20T15:26:00",
+      "duration": "2h 56m",
       "price": {
-        "amount": 5800,
+        "amount": 4376.5,
         "currency": "INR"
       },
-      "aircraft": "Boeing 737",
+      "aircraft": "Airbus A320",
       "availableSeats": 135,
       "mealOptions": [
         "veg",
@@ -253,10 +253,10 @@
         "airport": "Indira Gandhi International Airport"
       },
       "departureTime": "2024-03-20T08:30:00",
-      "arrivalTime": "2024-03-20T11:15:00",
-      "duration": "2h 45m",
+      "arrivalTime": "2024-03-20T11:26:00",
+      "duration": "2h 56m",
       "price": {
-        "amount": 5600,
+        "amount": 4483.5,
         "currency": "INR"
       },
       "aircraft": "Airbus A320",
@@ -287,13 +287,13 @@
         "airport": "Chennai International Airport"
       },
       "departureTime": "2024-03-20T07:00:00",
-      "arrivalTime": "2024-03-20T09:45:00",
-      "duration": "2h 45m",
+      "arrivalTime": "2024-03-20T09:59:00",
+      "duration": "2h 59m",
       "price": {
-        "amount": 5200,
+        "amount": 4825.5,
         "currency": "INR"
       },
-      "aircraft": "Boeing 737",
+      "aircraft": "Airbus A320",
       "availableSeats": 125,
       "mealOptions": [
         "veg",
@@ -321,10 +321,10 @@
         "airport": "Indira Gandhi International Airport"
       },
       "departureTime": "2024-03-20T10:30:00",
-      "arrivalTime": "2024-03-20T13:15:00",
-      "duration": "2h 45m",
+      "arrivalTime": "2024-03-20T13:29:00",
+      "duration": "2h 59m",
       "price": {
-        "amount": 5400,
+        "amount": 4807.5,
         "currency": "INR"
       },
       "aircraft": "Airbus A320",
@@ -355,13 +355,13 @@
         "airport": "Heathrow Airport"
       },
       "departureTime": "2024-03-20T02:30:00",
-      "arrivalTime": "2024-03-20T07:30:00",
-      "duration": "9h 00m",
+      "arrivalTime": "2024-03-20T10:44:00",
+      "duration": "8h 14m",
       "price": {
-        "amount": 65000,
+        "amount": 16941.5,
         "currency": "INR"
       },
-      "aircraft": "Boeing 787-9",
+      "aircraft": "Boeing 777",
       "availableSeats": 180,
       "mealOptions": [
         "veg",
@@ -389,13 +389,13 @@
         "airport": "Heathrow Airport"
       },
       "departureTime": "2024-03-20T14:00:00",
-      "arrivalTime": "2024-03-20T19:00:00",
-      "duration": "9h 00m",
+      "arrivalTime": "2024-03-20T22:14:00",
+      "duration": "8h 14m",
       "price": {
-        "amount": 72000,
+        "amount": 16794.5,
         "currency": "INR"
       },
-      "aircraft": "Airbus A350-900",
+      "aircraft": "Boeing 777",
       "availableSeats": 200,
       "mealOptions": [
         "veg",
@@ -423,13 +423,13 @@
         "airport": "Indira Gandhi International Airport"
       },
       "departureTime": "2024-03-20T10:00:00",
-      "arrivalTime": "2024-03-21T00:30:00",
-      "duration": "8h 30m",
+      "arrivalTime": "2024-03-20T18:14:00",
+      "duration": "8h 14m",
       "price": {
-        "amount": 68000,
+        "amount": 17268.5,
         "currency": "INR"
       },
-      "aircraft": "Boeing 787-9",
+      "aircraft": "Boeing 777",
       "availableSeats": 180,
       "mealOptions": [
         "veg",
@@ -457,13 +457,13 @@
         "airport": "John F. Kennedy International Airport"
       },
       "departureTime": "2024-03-20T01:00:00",
-      "arrivalTime": "2024-03-20T07:00:00",
-      "duration": "16h 00m",
+      "arrivalTime": "2024-03-20T14:42:00",
+      "duration": "13h 42m",
       "price": {
-        "amount": 85000,
+        "amount": 29173.5,
         "currency": "INR"
       },
-      "aircraft": "Boeing 777-300ER",
+      "aircraft": "Boeing 777",
       "availableSeats": 300,
       "mealOptions": [
         "veg",
@@ -529,13 +529,13 @@
         "airport": "John F. Kennedy International Airport"
       },
       "departureTime": "2024-03-20T13:00:00",
-      "arrivalTime": "2024-03-21T05:00:00",
-      "duration": "20h 00m",
+      "arrivalTime": "2024-03-21T02:42:00",
+      "duration": "13h 42m",
       "price": {
-        "amount": 90000,
+        "amount": 28983.5,
         "currency": "INR"
       },
-      "aircraft": "Boeing 777-300ER",
+      "aircraft": "Boeing 777",
       "availableSeats": 300,
       "mealOptions": [
         "veg",
@@ -601,13 +601,13 @@
         "airport": "Indira Gandhi International Airport"
       },
       "departureTime": "2024-03-20T22:00:00",
-      "arrivalTime": "2024-03-21T21:30:00",
-      "duration": "19h 30m",
+      "arrivalTime": "2024-03-21T11:42:00",
+      "duration": "13h 42m",
       "price": {
-        "amount": 88000,
+        "amount": 29525.5,
         "currency": "INR"
       },
-      "aircraft": "Boeing 777-300ER",
+      "aircraft": "Boeing 777",
       "availableSeats": 300,
       "mealOptions": [
         "veg",
@@ -673,13 +673,13 @@
         "airport": "Singapore Changi Airport"
       },
       "departureTime": "2024-03-20T03:00:00",
-      "arrivalTime": "2024-03-20T11:30:00",
-      "duration": "5h 30m",
+      "arrivalTime": "2024-03-20T08:26:00",
+      "duration": "5h 26m",
       "price": {
-        "amount": 35000,
+        "amount": 10640.5,
         "currency": "INR"
       },
-      "aircraft": "Airbus A330-300",
+      "aircraft": "Boeing 777",
       "availableSeats": 250,
       "mealOptions": [
         "veg",
@@ -707,13 +707,13 @@
         "airport": "Indira Gandhi International Airport"
       },
       "departureTime": "2024-03-20T14:00:00",
-      "arrivalTime": "2024-03-20T17:30:00",
-      "duration": "5h 30m",
+      "arrivalTime": "2024-03-20T19:26:00",
+      "duration": "5h 26m",
       "price": {
-        "amount": 38000,
+        "amount": 10679.5,
         "currency": "INR"
       },
-      "aircraft": "Airbus A330-300",
+      "aircraft": "Boeing 777",
       "availableSeats": 250,
       "mealOptions": [
         "veg",
@@ -741,13 +741,13 @@
         "airport": "Heathrow Airport"
       },
       "departureTime": "2024-03-20T02:00:00",
-      "arrivalTime": "2024-03-20T07:00:00",
-      "duration": "9h 00m",
+      "arrivalTime": "2024-03-20T10:45:00",
+      "duration": "8h 45m",
       "price": {
-        "amount": 60000,
+        "amount": 18515,
         "currency": "INR"
       },
-      "aircraft": "Boeing 787-9",
+      "aircraft": "Boeing 777",
       "availableSeats": 180,
       "mealOptions": [
         "veg",
@@ -775,13 +775,13 @@
         "airport": "Chhatrapati Shivaji Maharaj International Airport"
       },
       "departureTime": "2024-03-20T11:00:00",
-      "arrivalTime": "2024-03-21T00:30:00",
-      "duration": "8h 30m",
+      "arrivalTime": "2024-03-20T19:45:00",
+      "duration": "8h 45m",
       "price": {
-        "amount": 62000,
+        "amount": 18210,
         "currency": "INR"
       },
-      "aircraft": "Boeing 787-9",
+      "aircraft": "Boeing 777",
       "availableSeats": 180,
       "mealOptions": [
         "veg",
@@ -809,13 +809,13 @@
         "airport": "Kempegowda International Airport Bengaluru"
       },
       "departureTime": "2024-03-21T09:00:00",
-      "arrivalTime": "2024-03-21T10:45:00",
-      "duration": "1h 45m",
+      "arrivalTime": "2024-03-21T10:54:00",
+      "duration": "1h 54m",
       "price": {
-        "amount": 3800,
+        "amount": 2168,
         "currency": "INR"
       },
-      "aircraft": "Airbus A320",
+      "aircraft": "Boeing 737",
       "availableSeats": 160,
       "mealOptions": [
         "veg",
@@ -843,10 +843,10 @@
         "airport": "Chhatrapati Shivaji Maharaj International Airport"
       },
       "departureTime": "2024-03-21T18:00:00",
-      "arrivalTime": "2024-03-21T19:45:00",
-      "duration": "1h 45m",
+      "arrivalTime": "2024-03-21T19:54:00",
+      "duration": "1h 54m",
       "price": {
-        "amount": 4200,
+        "amount": 2201,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -877,13 +877,13 @@
         "airport": "Netaji Subhash Chandra Bose International Airport"
       },
       "departureTime": "2024-03-21T05:30:00",
-      "arrivalTime": "2024-03-21T07:45:00",
-      "duration": "2h 15m",
+      "arrivalTime": "2024-03-21T07:58:00",
+      "duration": "2h 28m",
       "price": {
-        "amount": 4800,
+        "amount": 2880,
         "currency": "INR"
       },
-      "aircraft": "Airbus A321",
+      "aircraft": "Boeing 737",
       "availableSeats": 170,
       "mealOptions": [
         "veg",
@@ -911,13 +911,13 @@
         "airport": "Indira Gandhi International Airport"
       },
       "departureTime": "2024-03-21T20:00:00",
-      "arrivalTime": "2024-03-21T22:15:00",
-      "duration": "2h 15m",
+      "arrivalTime": "2024-03-21T22:28:00",
+      "duration": "2h 28m",
       "price": {
-        "amount": 5100,
+        "amount": 3706,
         "currency": "INR"
       },
-      "aircraft": "Airbus A320",
+      "aircraft": "Boeing 737",
       "availableSeats": 130,
       "mealOptions": [
         "veg",
@@ -945,13 +945,13 @@
         "airport": "John F. Kennedy International Airport"
       },
       "departureTime": "2024-03-21T11:00:00",
-      "arrivalTime": "2024-03-21T14:00:00",
-      "duration": "8h 00m",
+      "arrivalTime": "2024-03-21T17:56:00",
+      "duration": "6h 56m",
       "price": {
-        "amount": 45000,
+        "amount": 13776,
         "currency": "INR"
       },
-      "aircraft": "Boeing 777-300ER",
+      "aircraft": "Boeing 777",
       "availableSeats": 250,
       "mealOptions": [
         "veg",
@@ -980,13 +980,13 @@
         "airport": "Heathrow Airport"
       },
       "departureTime": "2024-03-21T20:00:00",
-      "arrivalTime": "2024-03-22T08:00:00",
-      "duration": "8h 00m",
+      "arrivalTime": "2024-03-22T02:56:00",
+      "duration": "6h 56m",
       "price": {
-        "amount": 47000,
+        "amount": 13986,
         "currency": "INR"
       },
-      "aircraft": "Boeing 777-300ER",
+      "aircraft": "Boeing 777",
       "availableSeats": 250,
       "mealOptions": [
         "veg",
@@ -1015,13 +1015,13 @@
         "airport": "Charles de Gaulle Airport"
       },
       "departureTime": "2024-03-22T01:30:00",
-      "arrivalTime": "2024-03-22T07:00:00",
-      "duration": "9h 30m",
+      "arrivalTime": "2024-03-22T09:33:00",
+      "duration": "8h 3m",
       "price": {
-        "amount": 70000,
+        "amount": 15917,
         "currency": "INR"
       },
-      "aircraft": "Airbus A350-900",
+      "aircraft": "Boeing 777",
       "availableSeats": 220,
       "mealOptions": [
         "veg",
@@ -1050,13 +1050,13 @@
         "airport": "Dubai International Airport"
       },
       "departureTime": "2024-03-22T22:00:00",
-      "arrivalTime": "2024-03-23T00:45:00",
-      "duration": "4h 15m",
+      "arrivalTime": "2024-03-23T02:11:00",
+      "duration": "4h 11m",
       "price": {
-        "amount": 22000,
+        "amount": 7000.5,
         "currency": "INR"
       },
-      "aircraft": "Boeing 737 MAX",
+      "aircraft": "Airbus A320",
       "availableSeats": 140,
       "mealOptions": [
         "veg",
@@ -1085,13 +1085,13 @@
         "airport": "Sydney Kingsford Smith Airport"
       },
       "departureTime": "2024-03-23T06:00:00",
-      "arrivalTime": "2024-03-24T07:30:00",
-      "duration": "19h 30m",
+      "arrivalTime": "2024-03-23T18:15:00",
+      "duration": "12h 15m",
       "price": {
-        "amount": 95000,
+        "amount": 25637,
         "currency": "INR"
       },
-      "aircraft": "Mixed",
+      "aircraft": "Boeing 777",
       "availableSeats": 100,
       "mealOptions": [
         "veg",
@@ -1157,13 +1157,13 @@
         "airport": "Heathrow Airport"
       },
       "departureTime": "2024-03-24T03:00:00",
-      "arrivalTime": "2024-03-24T14:30:00",
-      "duration": "15h 30m",
+      "arrivalTime": "2024-03-24T12:40:00",
+      "duration": "9h 40m",
       "price": {
-        "amount": 78000,
+        "amount": 20025,
         "currency": "INR"
       },
-      "aircraft": "Mixed",
+      "aircraft": "Boeing 777",
       "availableSeats": 90,
       "mealOptions": [
         "veg",
@@ -1229,13 +1229,13 @@
         "airport": "Rajiv Gandhi International Airport"
       },
       "departureTime": "2024-03-25T11:00:00",
-      "arrivalTime": "2024-03-25T12:20:00",
-      "duration": "1h 20m",
+      "arrivalTime": "2024-03-25T12:39:00",
+      "duration": "1h 39m",
       "price": {
-        "amount": 3200,
+        "amount": 2000,
         "currency": "INR"
       },
-      "aircraft": "ATR 72",
+      "aircraft": "Boeing 737",
       "availableSeats": 70,
       "mealOptions": [
         "veg_snack",
@@ -1263,13 +1263,13 @@
         "airport": "Chennai International Airport"
       },
       "departureTime": "2024-03-25T15:00:00",
-      "arrivalTime": "2024-03-25T16:10:00",
-      "duration": "1h 10m",
+      "arrivalTime": "2024-03-25T16:31:00",
+      "duration": "1h 31m",
       "price": {
-        "amount": 3000,
+        "amount": 2000,
         "currency": "INR"
       },
-      "aircraft": "ATR 72",
+      "aircraft": "Boeing 737",
       "availableSeats": 65,
       "mealOptions": [
         "veg_snack",
@@ -1285,7 +1285,7 @@
     {
       "flightNumber": "TLP-789",
       "airline": "TLP Airways",
-      "aircraft": "Boeing 787-9",
+      "aircraft": "Boeing 777",
       "origin": {
         "iata_code": "LHR",
         "city": "London",
@@ -1297,10 +1297,10 @@
         "country_code": "IN"
       },
       "departureTime": "2024-03-20T14:30:00",
-      "arrivalTime": "2024-03-21T05:45:00",
-      "duration": "9h 15m",
+      "arrivalTime": "2024-03-21T00:10:00",
+      "duration": "9h 40m",
       "price": {
-        "amount": 85000,
+        "amount": 20459,
         "currency": "INR"
       },
       "availableSeats": 45,
@@ -1320,7 +1320,7 @@
     {
       "flightNumber": "TLP-790",
       "airline": "TLP Airways",
-      "aircraft": "Boeing 787-9",
+      "aircraft": "Boeing 777",
       "origin": {
         "iata_code": "LHR",
         "city": "London",
@@ -1332,10 +1332,10 @@
         "country_code": "IN"
       },
       "departureTime": "2024-03-20T16:45:00",
-      "arrivalTime": "2024-03-21T08:00:00",
-      "duration": "9h 15m",
+      "arrivalTime": "2024-03-21T02:25:00",
+      "duration": "9h 40m",
       "price": {
-        "amount": 65000,
+        "amount": 19978,
         "currency": "INR"
       },
       "availableSeats": 60,
@@ -1354,7 +1354,7 @@
     {
       "flightNumber": "TLP-791",
       "airline": "TLP Airways",
-      "aircraft": "Boeing 787-9",
+      "aircraft": "Boeing 777",
       "origin": {
         "iata_code": "LHR",
         "city": "London",
@@ -1366,10 +1366,10 @@
         "country_code": "IN"
       },
       "departureTime": "2024-03-20T19:15:00",
-      "arrivalTime": "2024-03-21T10:30:00",
-      "duration": "9h 15m",
+      "arrivalTime": "2024-03-21T04:55:00",
+      "duration": "9h 40m",
       "price": {
-        "amount": 45000,
+        "amount": 20577,
         "currency": "INR"
       },
       "availableSeats": 120,
@@ -1399,13 +1399,13 @@
         "airport": "Indira Gandhi International Airport"
       },
       "departureTime": "2024-03-22T07:30:00",
-      "arrivalTime": "2024-03-22T14:00:00",
-      "duration": "9h 30m",
+      "arrivalTime": "2024-03-22T15:33:00",
+      "duration": "8h 3m",
       "price": {
-        "amount": 69909,
+        "amount": 16339,
         "currency": "INR"
       },
-      "aircraft": "Airbus A350-900",
+      "aircraft": "Boeing 777",
       "availableSeats": 220,
       "mealOptions": [
         "veg",
@@ -1434,13 +1434,13 @@
         "airport": "Chennai International Airport"
       },
       "departureTime": "2024-03-22T22:15:00",
-      "arrivalTime": "2024-03-23T02:30:00",
-      "duration": "4h 15m",
+      "arrivalTime": "2024-03-23T02:26:00",
+      "duration": "4h 11m",
       "price": {
-        "amount": 22024,
+        "amount": 7440.5,
         "currency": "INR"
       },
-      "aircraft": "Boeing 737 MAX",
+      "aircraft": "Airbus A320",
       "availableSeats": 129,
       "mealOptions": [
         "veg",
@@ -1469,13 +1469,13 @@
         "airport": "Indira Gandhi International Airport"
       },
       "departureTime": "2024-03-24T07:00:00",
-      "arrivalTime": "2024-03-25T00:30:00",
-      "duration": "19h 30m",
+      "arrivalTime": "2024-03-24T19:15:00",
+      "duration": "12h 15m",
       "price": {
-        "amount": 94795,
+        "amount": 26248,
         "currency": "INR"
       },
-      "aircraft": "Mixed",
+      "aircraft": "Boeing 777",
       "availableSeats": 89,
       "mealOptions": [
         "veg",
@@ -1503,13 +1503,13 @@
         "airport": "Chhatrapati Shivaji Maharaj International Airport"
       },
       "departureTime": "2024-03-25T09:50:00",
-      "arrivalTime": "2024-03-25T11:10:00",
-      "duration": "1h 20m",
+      "arrivalTime": "2024-03-25T11:29:00",
+      "duration": "1h 39m",
       "price": {
-        "amount": 3336,
+        "amount": 2036.5,
         "currency": "INR"
       },
-      "aircraft": "ATR 72",
+      "aircraft": "Boeing 737",
       "availableSeats": 67,
       "mealOptions": [
         "veg_snack",
@@ -1537,13 +1537,13 @@
         "airport": "Rajiv Gandhi International Airport"
       },
       "departureTime": "2024-03-25T14:40:00",
-      "arrivalTime": "2024-03-25T14:50:00",
-      "duration": "1h 10m",
+      "arrivalTime": "2024-03-25T16:11:00",
+      "duration": "1h 31m",
       "price": {
-        "amount": 3072,
+        "amount": 2000,
         "currency": "INR"
       },
-      "aircraft": "ATR 72",
+      "aircraft": "Boeing 737",
       "availableSeats": 46,
       "mealOptions": [
         "veg_snack",
@@ -1571,10 +1571,10 @@
         "airport": "Sardar Vallabhbhai Patel International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 57m",
+      "arrivalTime": "2024-03-25T09:48:00",
+      "duration": "1h 48m",
       "price": {
-        "amount": 2700,
+        "amount": 2000,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -1605,10 +1605,10 @@
         "airport": "Indira Gandhi International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 57m",
+      "arrivalTime": "2024-03-25T09:48:00",
+      "duration": "1h 48m",
       "price": {
-        "amount": 2011,
+        "amount": 2000,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -1639,10 +1639,10 @@
         "airport": "Goa International Airport (Dabolim)"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T09:00:00",
-      "duration": "1h 53m",
+      "arrivalTime": "2024-03-25T10:41:00",
+      "duration": "2h 41m",
       "price": {
-        "amount": 4925,
+        "amount": 3292.5,
         "currency": "INR"
       },
       "aircraft": "Airbus A320",
@@ -1673,10 +1673,10 @@
         "airport": "Indira Gandhi International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T09:00:00",
-      "duration": "1h 53m",
+      "arrivalTime": "2024-03-25T10:41:00",
+      "duration": "2h 41m",
       "price": {
-        "amount": 4594,
+        "amount": 4192.5,
         "currency": "INR"
       },
       "aircraft": "Airbus A320",
@@ -1707,10 +1707,10 @@
         "airport": "Pune Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T09:00:00",
-      "duration": "1h 27m",
+      "arrivalTime": "2024-03-25T10:17:00",
+      "duration": "2h 17m",
       "price": {
-        "amount": 3844,
+        "amount": 3177.5,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -1741,10 +1741,10 @@
         "airport": "Indira Gandhi International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T09:00:00",
-      "duration": "1h 27m",
+      "arrivalTime": "2024-03-25T10:17:00",
+      "duration": "2h 17m",
       "price": {
-        "amount": 3863,
+        "amount": 3128.5,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -1775,8 +1775,8 @@
         "airport": "Hamad International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 28m",
+      "arrivalTime": "2024-03-25T09:33:00",
+      "duration": "1h 33m",
       "price": {
         "amount": 2000,
         "currency": "INR"
@@ -1809,8 +1809,8 @@
         "airport": "Dubai International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 28m",
+      "arrivalTime": "2024-03-25T09:33:00",
+      "duration": "1h 33m",
       "price": {
         "amount": 2000,
         "currency": "INR"
@@ -1843,10 +1843,10 @@
         "airport": "Suvarnabhumi Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T09:00:00",
-      "duration": "1h 46m",
+      "arrivalTime": "2024-03-25T10:35:00",
+      "duration": "2h 35m",
       "price": {
-        "amount": 3781,
+        "amount": 3155,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -1877,10 +1877,10 @@
         "airport": "Singapore Changi Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T09:00:00",
-      "duration": "1h 46m",
+      "arrivalTime": "2024-03-25T10:35:00",
+      "duration": "2h 35m",
       "price": {
-        "amount": 4582,
+        "amount": 3967,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -1911,8 +1911,8 @@
         "airport": "Kuala Lumpur International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 22m",
+      "arrivalTime": "2024-03-25T09:25:00",
+      "duration": "1h 25m",
       "price": {
         "amount": 2000,
         "currency": "INR"
@@ -1945,8 +1945,8 @@
         "airport": "Singapore Changi Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 22m",
+      "arrivalTime": "2024-03-25T09:25:00",
+      "duration": "1h 25m",
       "price": {
         "amount": 2000,
         "currency": "INR"
@@ -1979,8 +1979,8 @@
         "airport": "Hong Kong International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 0m",
+      "arrivalTime": "2024-03-25T08:55:00",
+      "duration": "0h 55m",
       "price": {
         "amount": 2000,
         "currency": "INR"
@@ -2013,8 +2013,8 @@
         "airport": "Hong Kong International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 0m",
+      "arrivalTime": "2024-03-25T08:55:00",
+      "duration": "0h 55m",
       "price": {
         "amount": 2000,
         "currency": "INR"
@@ -2047,10 +2047,10 @@
         "airport": "Incheon International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T10:00:00",
-      "duration": "2h 35m",
+      "arrivalTime": "2024-03-25T11:13:00",
+      "duration": "3h 13m",
       "price": {
-        "amount": 6174,
+        "amount": 5560,
         "currency": "INR"
       },
       "aircraft": "Airbus A320",
@@ -2081,10 +2081,10 @@
         "airport": "Hong Kong International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T10:00:00",
-      "duration": "2h 35m",
+      "arrivalTime": "2024-03-25T11:13:00",
+      "duration": "3h 13m",
       "price": {
-        "amount": 6534,
+        "amount": 5060,
         "currency": "INR"
       },
       "aircraft": "Airbus A320",
@@ -2115,8 +2115,8 @@
         "airport": "Narita International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 0m",
+      "arrivalTime": "2024-03-25T08:55:00",
+      "duration": "0h 55m",
       "price": {
         "amount": 2000,
         "currency": "INR"
@@ -2149,8 +2149,8 @@
         "airport": "Narita International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 0m",
+      "arrivalTime": "2024-03-25T08:55:00",
+      "duration": "0h 55m",
       "price": {
         "amount": 2000,
         "currency": "INR"
@@ -2183,8 +2183,8 @@
         "airport": "Amsterdam Airport Schiphol"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 28m",
+      "arrivalTime": "2024-03-25T09:32:00",
+      "duration": "1h 32m",
       "price": {
         "amount": 2000,
         "currency": "INR"
@@ -2217,8 +2217,8 @@
         "airport": "London Heathrow Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 28m",
+      "arrivalTime": "2024-03-25T09:32:00",
+      "duration": "1h 32m",
       "price": {
         "amount": 2000,
         "currency": "INR"
@@ -2251,10 +2251,10 @@
         "airport": "Frankfurt Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 49m",
+      "arrivalTime": "2024-03-25T09:41:00",
+      "duration": "1h 41m",
       "price": {
-        "amount": 2318,
+        "amount": 2000,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -2285,10 +2285,10 @@
         "airport": "London Heathrow Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 49m",
+      "arrivalTime": "2024-03-25T09:41:00",
+      "duration": "1h 41m",
       "price": {
-        "amount": 2452,
+        "amount": 2000,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -2319,10 +2319,10 @@
         "airport": "Josep Tarradellas Barcelona-El Prat Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T09:00:00",
-      "duration": "1h 26m",
+      "arrivalTime": "2024-03-25T10:16:00",
+      "duration": "2h 16m",
       "price": {
-        "amount": 3442,
+        "amount": 2745,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -2353,10 +2353,10 @@
         "airport": "London Heathrow Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T09:00:00",
-      "duration": "1h 26m",
+      "arrivalTime": "2024-03-25T10:16:00",
+      "duration": "2h 16m",
       "price": {
-        "amount": 3689,
+        "amount": 2547,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -2387,10 +2387,10 @@
         "airport": "Leonardo da Vinci-Fiumicino Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T09:00:00",
-      "duration": "1h 48m",
+      "arrivalTime": "2024-03-25T10:37:00",
+      "duration": "2h 37m",
       "price": {
-        "amount": 4409,
+        "amount": 3445.5,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -2421,10 +2421,10 @@
         "airport": "London Heathrow Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T09:00:00",
-      "duration": "1h 48m",
+      "arrivalTime": "2024-03-25T10:37:00",
+      "duration": "2h 37m",
       "price": {
-        "amount": 3948,
+        "amount": 3483.5,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -2455,10 +2455,10 @@
         "airport": "Los Angeles International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T12:00:00",
-      "duration": "4h 58m",
+      "arrivalTime": "2024-03-25T13:20:00",
+      "duration": "5h 20m",
       "price": {
-        "amount": 12078,
+        "amount": 9986,
         "currency": "INR"
       },
       "aircraft": "Boeing 777",
@@ -2489,10 +2489,10 @@
         "airport": "John F. Kennedy International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T12:00:00",
-      "duration": "4h 58m",
+      "arrivalTime": "2024-03-25T13:20:00",
+      "duration": "5h 20m",
       "price": {
-        "amount": 11962,
+        "amount": 10072,
         "currency": "INR"
       },
       "aircraft": "Boeing 777",
@@ -2523,10 +2523,10 @@
         "airport": "San Francisco International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T13:00:00",
-      "duration": "5h 11m",
+      "arrivalTime": "2024-03-25T13:26:00",
+      "duration": "5h 26m",
       "price": {
-        "amount": 12547,
+        "amount": 10687,
         "currency": "INR"
       },
       "aircraft": "Boeing 777",
@@ -2557,10 +2557,10 @@
         "airport": "John F. Kennedy International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T13:00:00",
-      "duration": "5h 11m",
+      "arrivalTime": "2024-03-25T13:26:00",
+      "duration": "5h 26m",
       "price": {
-        "amount": 12371,
+        "amount": 10726,
         "currency": "INR"
       },
       "aircraft": "Boeing 777",
@@ -2591,10 +2591,10 @@
         "airport": "O'Hare International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T09:00:00",
-      "duration": "1h 29m",
+      "arrivalTime": "2024-03-25T10:19:00",
+      "duration": "2h 19m",
       "price": {
-        "amount": 3106,
+        "amount": 2936,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -2625,10 +2625,10 @@
         "airport": "John F. Kennedy International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T09:00:00",
-      "duration": "1h 29m",
+      "arrivalTime": "2024-03-25T10:19:00",
+      "duration": "2h 19m",
       "price": {
-        "amount": 3179,
+        "amount": 3412,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -2659,8 +2659,8 @@
         "airport": "Newark Liberty International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 3m",
+      "arrivalTime": "2024-03-25T08:58:00",
+      "duration": "0h 58m",
       "price": {
         "amount": 2000,
         "currency": "INR"
@@ -2693,8 +2693,8 @@
         "airport": "John F. Kennedy International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 3m",
+      "arrivalTime": "2024-03-25T08:58:00",
+      "duration": "0h 58m",
       "price": {
         "amount": 2000,
         "currency": "INR"
@@ -2727,10 +2727,10 @@
         "airport": "Melbourne Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 53m",
+      "arrivalTime": "2024-03-25T09:45:00",
+      "duration": "1h 45m",
       "price": {
-        "amount": 2260,
+        "amount": 2000,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -2761,10 +2761,10 @@
         "airport": "Sydney Kingsford Smith Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 53m",
+      "arrivalTime": "2024-03-25T09:45:00",
+      "duration": "1h 45m",
       "price": {
-        "amount": 2259,
+        "amount": 2000,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -2795,8 +2795,8 @@
         "airport": "Sri Guru Ram Dass Jee International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 31m",
+      "arrivalTime": "2024-03-25T09:37:00",
+      "duration": "1h 37m",
       "price": {
         "amount": 2000,
         "currency": "INR"
@@ -2829,8 +2829,8 @@
         "airport": "Indira Gandhi International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 31m",
+      "arrivalTime": "2024-03-25T09:37:00",
+      "duration": "1h 37m",
       "price": {
         "amount": 2000,
         "currency": "INR"
@@ -2863,8 +2863,8 @@
         "airport": "Jaipur International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 17m",
+      "arrivalTime": "2024-03-25T09:18:00",
+      "duration": "1h 18m",
       "price": {
         "amount": 2000,
         "currency": "INR"
@@ -2897,8 +2897,8 @@
         "airport": "Indira Gandhi International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 17m",
+      "arrivalTime": "2024-03-25T09:18:00",
+      "duration": "1h 18m",
       "price": {
         "amount": 2000,
         "currency": "INR"
@@ -2931,10 +2931,10 @@
         "airport": "Cochin International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T10:00:00",
-      "duration": "2h 34m",
+      "arrivalTime": "2024-03-25T11:12:00",
+      "duration": "3h 12m",
       "price": {
-        "amount": 6261,
+        "amount": 5546,
         "currency": "INR"
       },
       "aircraft": "Airbus A320",
@@ -2965,10 +2965,10 @@
         "airport": "Indira Gandhi International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T10:00:00",
-      "duration": "2h 34m",
+      "arrivalTime": "2024-03-25T11:12:00",
+      "duration": "3h 12m",
       "price": {
-        "amount": 6545,
+        "amount": 5259,
         "currency": "INR"
       },
       "aircraft": "Airbus A320",
@@ -2999,8 +2999,8 @@
         "airport": "Abu Dhabi International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 9m",
+      "arrivalTime": "2024-03-25T09:07:00",
+      "duration": "1h 7m",
       "price": {
         "amount": 2000,
         "currency": "INR"
@@ -3033,8 +3033,8 @@
         "airport": "Dubai International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 9m",
+      "arrivalTime": "2024-03-25T09:07:00",
+      "duration": "1h 7m",
       "price": {
         "amount": 2000,
         "currency": "INR"
@@ -3067,10 +3067,10 @@
         "airport": "Soekarno-Hatta International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T09:00:00",
-      "duration": "1h 6m",
+      "arrivalTime": "2024-03-25T09:57:00",
+      "duration": "1h 57m",
       "price": {
-        "amount": 3131,
+        "amount": 2263,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -3101,10 +3101,10 @@
         "airport": "Singapore Changi Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T09:00:00",
-      "duration": "1h 6m",
+      "arrivalTime": "2024-03-25T09:57:00",
+      "duration": "1h 57m",
       "price": {
-        "amount": 2404,
+        "amount": 2666,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -3135,10 +3135,10 @@
         "airport": "Ninoy Aquino International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T10:00:00",
-      "duration": "2h 58m",
+      "arrivalTime": "2024-03-25T11:33:00",
+      "duration": "3h 33m",
       "price": {
-        "amount": 6669,
+        "amount": 6183,
         "currency": "INR"
       },
       "aircraft": "Airbus A320",
@@ -3169,10 +3169,10 @@
         "airport": "Singapore Changi Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T10:00:00",
-      "duration": "2h 58m",
+      "arrivalTime": "2024-03-25T11:33:00",
+      "duration": "3h 33m",
       "price": {
-        "amount": 7046,
+        "amount": 5872,
         "currency": "INR"
       },
       "aircraft": "Airbus A320",
@@ -3203,10 +3203,10 @@
         "airport": "Tan Son Nhat International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T09:00:00",
-      "duration": "1h 22m",
+      "arrivalTime": "2024-03-25T10:12:00",
+      "duration": "2h 12m",
       "price": {
-        "amount": 3775,
+        "amount": 2531,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -3237,10 +3237,10 @@
         "airport": "Singapore Changi Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T09:00:00",
-      "duration": "1h 22m",
+      "arrivalTime": "2024-03-25T10:12:00",
+      "duration": "2h 12m",
       "price": {
-        "amount": 3409,
+        "amount": 2526,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -3271,10 +3271,10 @@
         "airport": "Phuket International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T09:00:00",
-      "duration": "1h 13m",
+      "arrivalTime": "2024-03-25T10:04:00",
+      "duration": "2h 4m",
       "price": {
-        "amount": 2598,
+        "amount": 2373.5,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -3305,10 +3305,10 @@
         "airport": "Singapore Changi Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T09:00:00",
-      "duration": "1h 13m",
+      "arrivalTime": "2024-03-25T10:04:00",
+      "duration": "2h 4m",
       "price": {
-        "amount": 3016,
+        "amount": 2761.5,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -3339,10 +3339,10 @@
         "airport": "Munich Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T09:00:00",
-      "duration": "1h 11m",
+      "arrivalTime": "2024-03-25T10:01:00",
+      "duration": "2h 1m",
       "price": {
-        "amount": 2386,
+        "amount": 2399.5,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -3373,10 +3373,10 @@
         "airport": "London Heathrow Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T09:00:00",
-      "duration": "1h 11m",
+      "arrivalTime": "2024-03-25T10:01:00",
+      "duration": "2h 1m",
       "price": {
-        "amount": 3026,
+        "amount": 2524.5,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -3407,10 +3407,10 @@
         "airport": "Adolfo Suárez Madrid-Barajas Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T09:00:00",
-      "duration": "1h 33m",
+      "arrivalTime": "2024-03-25T10:23:00",
+      "duration": "2h 23m",
       "price": {
-        "amount": 3966,
+        "amount": 3345.5,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -3441,10 +3441,10 @@
         "airport": "London Heathrow Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T09:00:00",
-      "duration": "1h 33m",
+      "arrivalTime": "2024-03-25T10:23:00",
+      "duration": "2h 23m",
       "price": {
-        "amount": 3590,
+        "amount": 3233.5,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -3475,10 +3475,10 @@
         "airport": "Milan Malpensa Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T09:00:00",
-      "duration": "1h 10m",
+      "arrivalTime": "2024-03-25T10:01:00",
+      "duration": "2h 1m",
       "price": {
-        "amount": 2882,
+        "amount": 2194,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -3509,10 +3509,10 @@
         "airport": "London Heathrow Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T09:00:00",
-      "duration": "1h 10m",
+      "arrivalTime": "2024-03-25T10:01:00",
+      "duration": "2h 1m",
       "price": {
-        "amount": 3236,
+        "amount": 2017,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -3543,10 +3543,10 @@
         "airport": "Zurich Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 59m",
+      "arrivalTime": "2024-03-25T09:51:00",
+      "duration": "1h 51m",
       "price": {
-        "amount": 2379,
+        "amount": 2000,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -3577,10 +3577,10 @@
         "airport": "London Heathrow Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 59m",
+      "arrivalTime": "2024-03-25T09:51:00",
+      "duration": "1h 51m",
       "price": {
-        "amount": 2860,
+        "amount": 2145,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -3611,8 +3611,8 @@
         "airport": "Boston Logan International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 23m",
+      "arrivalTime": "2024-03-25T09:25:00",
+      "duration": "1h 25m",
       "price": {
         "amount": 2000,
         "currency": "INR"
@@ -3645,8 +3645,8 @@
         "airport": "John F. Kennedy International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 23m",
+      "arrivalTime": "2024-03-25T09:25:00",
+      "duration": "1h 25m",
       "price": {
         "amount": 2000,
         "currency": "INR"
@@ -3679,10 +3679,10 @@
         "airport": "Seattle-Tacoma International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T12:00:00",
-      "duration": "4h 52m",
+      "arrivalTime": "2024-03-25T13:14:00",
+      "duration": "5h 14m",
       "price": {
-        "amount": 11485,
+        "amount": 9365.5,
         "currency": "INR"
       },
       "aircraft": "Boeing 777",
@@ -3713,10 +3713,10 @@
         "airport": "John F. Kennedy International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T12:00:00",
-      "duration": "4h 52m",
+      "arrivalTime": "2024-03-25T13:14:00",
+      "duration": "5h 14m",
       "price": {
-        "amount": 11446,
+        "amount": 9354.5,
         "currency": "INR"
       },
       "aircraft": "Boeing 777",
@@ -3747,10 +3747,10 @@
         "airport": "Perth Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T12:00:00",
-      "duration": "4h 6m",
+      "arrivalTime": "2024-03-25T12:33:00",
+      "duration": "4h 33m",
       "price": {
-        "amount": 9923,
+        "amount": 7922.5,
         "currency": "INR"
       },
       "aircraft": "Boeing 777",
@@ -3781,10 +3781,10 @@
         "airport": "Sydney Kingsford Smith Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T12:00:00",
-      "duration": "4h 6m",
+      "arrivalTime": "2024-03-25T12:33:00",
+      "duration": "4h 33m",
       "price": {
-        "amount": 9643,
+        "amount": 8157.5,
         "currency": "INR"
       },
       "aircraft": "Boeing 777",
@@ -3815,10 +3815,10 @@
         "airport": "Auckland Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T10:00:00",
-      "duration": "2h 42m",
+      "arrivalTime": "2024-03-25T11:19:00",
+      "duration": "3h 19m",
       "price": {
-        "amount": 6165,
+        "amount": 5420.5,
         "currency": "INR"
       },
       "aircraft": "Airbus A320",
@@ -3849,10 +3849,10 @@
         "airport": "Sydney Kingsford Smith Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T10:00:00",
-      "duration": "2h 42m",
+      "arrivalTime": "2024-03-25T11:19:00",
+      "duration": "3h 19m",
       "price": {
-        "amount": 6178,
+        "amount": 5671.5,
         "currency": "INR"
       },
       "aircraft": "Airbus A320",
@@ -3883,10 +3883,10 @@
         "airport": "Bandaranaike International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T10:00:00",
-      "duration": "2h 60m",
+      "arrivalTime": "2024-03-25T11:35:00",
+      "duration": "3h 35m",
       "price": {
-        "amount": 6961,
+        "amount": 6354.5,
         "currency": "INR"
       },
       "aircraft": "Airbus A320",
@@ -3917,10 +3917,10 @@
         "airport": "Indira Gandhi International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T10:00:00",
-      "duration": "2h 60m",
+      "arrivalTime": "2024-03-25T11:35:00",
+      "duration": "3h 35m",
       "price": {
-        "amount": 6854,
+        "amount": 5643.5,
         "currency": "INR"
       },
       "aircraft": "Airbus A320",
@@ -3951,10 +3951,10 @@
         "airport": "Biju Patnaik International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T09:00:00",
-      "duration": "1h 36m",
+      "arrivalTime": "2024-03-25T10:25:00",
+      "duration": "2h 25m",
       "price": {
-        "amount": 4198,
+        "amount": 2950.5,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -3985,10 +3985,10 @@
         "airport": "Indira Gandhi International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T09:00:00",
-      "duration": "1h 36m",
+      "arrivalTime": "2024-03-25T10:25:00",
+      "duration": "2h 25m",
       "price": {
-        "amount": 3740,
+        "amount": 2715.5,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -4019,8 +4019,8 @@
         "airport": "Chaudhary Charan Singh International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 32m",
+      "arrivalTime": "2024-03-25T09:37:00",
+      "duration": "1h 37m",
       "price": {
         "amount": 2000,
         "currency": "INR"
@@ -4053,8 +4053,8 @@
         "airport": "Indira Gandhi International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 32m",
+      "arrivalTime": "2024-03-25T09:37:00",
+      "duration": "1h 37m",
       "price": {
         "amount": 2000,
         "currency": "INR"
@@ -4087,10 +4087,10 @@
         "airport": "Lal Bahadur Shastri International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 50m",
+      "arrivalTime": "2024-03-25T09:42:00",
+      "duration": "1h 42m",
       "price": {
-        "amount": 2000,
+        "amount": 2002.5,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -4121,10 +4121,10 @@
         "airport": "Indira Gandhi International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 50m",
+      "arrivalTime": "2024-03-25T09:42:00",
+      "duration": "1h 42m",
       "price": {
-        "amount": 2477,
+        "amount": 2030.5,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -4155,8 +4155,8 @@
         "airport": "Bahrain International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 37m",
+      "arrivalTime": "2024-03-25T09:44:00",
+      "duration": "1h 44m",
       "price": {
         "amount": 2000,
         "currency": "INR"
@@ -4189,8 +4189,8 @@
         "airport": "Dubai International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T08:00:00",
-      "duration": "0h 37m",
+      "arrivalTime": "2024-03-25T09:44:00",
+      "duration": "1h 44m",
       "price": {
         "amount": 2000,
         "currency": "INR"
@@ -4223,10 +4223,10 @@
         "airport": "King Khalid International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T09:00:00",
-      "duration": "1h 5m",
+      "arrivalTime": "2024-03-25T09:57:00",
+      "duration": "1h 57m",
       "price": {
-        "amount": 2292,
+        "amount": 2000,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -4257,10 +4257,10 @@
         "airport": "Dubai International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T09:00:00",
-      "duration": "1h 5m",
+      "arrivalTime": "2024-03-25T09:57:00",
+      "duration": "1h 57m",
       "price": {
-        "amount": 2336,
+        "amount": 2000,
         "currency": "INR"
       },
       "aircraft": "Boeing 737",
@@ -4291,10 +4291,10 @@
         "airport": "King Abdulaziz International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T10:00:00",
-      "duration": "2h 7m",
+      "arrivalTime": "2024-03-25T10:55:00",
+      "duration": "2h 55m",
       "price": {
-        "amount": 5006,
+        "amount": 4498.5,
         "currency": "INR"
       },
       "aircraft": "Airbus A320",
@@ -4325,10 +4325,10 @@
         "airport": "Dubai International Airport"
       },
       "departureTime": "2024-03-25T08:00:00",
-      "arrivalTime": "2024-03-25T10:00:00",
-      "duration": "2h 7m",
+      "arrivalTime": "2024-03-25T10:55:00",
+      "duration": "2h 55m",
       "price": {
-        "amount": 4769,
+        "amount": 4669.5,
         "currency": "INR"
       },
       "aircraft": "Airbus A320",

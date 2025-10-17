@@ -151,11 +151,34 @@ const calculatePrice = (distance) => {
   return Math.max(2000, basePrice + variation);
 };
 
-// Calculate duration based on distance
+// Calculate realistic duration based on distance with proper flight operations
 const calculateDuration = (distance) => {
-  const avgSpeed = 800; // km/h
-  const hours = Math.floor(distance / avgSpeed);
-  const minutes = Math.round(((distance / avgSpeed) - hours) * 60);
+  // Realistic cruising speeds and operations
+  const TAXI_AND_OPERATIONS = 30; // minutes for taxi, takeoff, landing
+  const CLIMB_DESCENT = 20; // minutes for climb to cruise and descent
+  
+  // Determine aircraft type and speed based on distance
+  let cruiseSpeed;
+  if (distance > 4000) {
+    cruiseSpeed = 920; // Long-haul: Boeing 787, A350
+  } else if (distance > 2000) {
+    cruiseSpeed = 900; // Wide-body: Boeing 777, A330
+  } else if (distance > 500) {
+    cruiseSpeed = 850; // Narrow-body: Boeing 737, A320
+  } else {
+    cruiseSpeed = 600; // Regional: ATR, small jets
+  }
+  
+  // Calculate cruise time
+  const cruiseTimeHours = distance / cruiseSpeed;
+  const cruiseTimeMinutes = cruiseTimeHours * 60;
+  
+  // Total time = cruise + ground operations + contingency
+  const totalMinutes = Math.round(cruiseTimeMinutes + TAXI_AND_OPERATIONS + CLIMB_DESCENT + 5);
+  
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  
   return `${hours}h ${minutes}m`;
 };
 
@@ -165,6 +188,30 @@ const generateFlight = (origin, destination, originDetails, destDetails, index =
   const price = calculatePrice(distance);
   const duration = calculateDuration(distance);
   const flightNumber = generateFlightNumber(origin, destination, index);
+  
+  // Calculate departure time (varying by index)
+  const baseHour = 6 + (index * 3); // 6, 9, 12, 15, 18, 21
+  const departureTime = `2024-03-25T${String(baseHour).padStart(2, '0')}:00:00`;
+  
+  // Calculate arrival time based on duration (properly handling day rollover)
+  const durationMatch = duration.match(/(\d+)h (\d+)m/);
+  const durationHours = durationMatch ? parseInt(durationMatch[1]) : 2;
+  const durationMinutes = durationMatch ? parseInt(durationMatch[2]) : 0;
+  
+  // Create departure date object
+  const departureDate = new Date(departureTime);
+  
+  // Add duration to departure time
+  const arrivalDate = new Date(departureDate.getTime() + (durationHours * 60 + durationMinutes) * 60 * 1000);
+  
+  // Format arrival time in local time (not UTC)
+  const year = arrivalDate.getFullYear();
+  const month = String(arrivalDate.getMonth() + 1).padStart(2, '0');
+  const day = String(arrivalDate.getDate()).padStart(2, '0');
+  const hours = String(arrivalDate.getHours()).padStart(2, '0');
+  const minutes = String(arrivalDate.getMinutes()).padStart(2, '0');
+  const seconds = String(arrivalDate.getSeconds()).padStart(2, '0');
+  const arrivalTime = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
   
   return {
     itineraryId: `${origin}-${destination}-${index}`,
@@ -180,8 +227,8 @@ const generateFlight = (origin, destination, originDetails, destDetails, index =
       city: destDetails.city,
       airport: destDetails.name
     },
-    departureTime: "2024-03-25T08:00:00",
-    arrivalTime: `2024-03-25T${String(8 + Math.floor(distance/800)).padStart(2, '0')}:00:00`,
+    departureTime,
+    arrivalTime,
     duration,
     price: {
       amount: price,

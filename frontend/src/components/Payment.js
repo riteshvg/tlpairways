@@ -110,6 +110,7 @@ const Payment = () => {
   
   // Payment form state
   const [paymentMethod, setPaymentMethod] = useState('credit');
+  const [paymentVendor, setPaymentVendor] = useState('');
   const [cardNumber, setCardNumber] = useState('');
   const [expiryDate, setExpiryDate] = useState('');
   const [cvv, setCvv] = useState('');
@@ -124,6 +125,15 @@ const Payment = () => {
   const [paymentError, setPaymentError] = useState('');
   const [validationErrors, setValidationErrors] = useState({});
   const [loading, setLoading] = useState(false);
+
+  // Payment vendors/networks by type
+  const paymentVendors = {
+    credit: ['Visa', 'Mastercard', 'American Express', 'Diners Club', 'RuPay'],
+    debit: ['Visa Debit', 'Mastercard Debit', 'RuPay Debit', 'Maestro'],
+    netbanking: ['HDFC Bank', 'ICICI Bank', 'State Bank of India', 'Axis Bank', 'Kotak Mahindra Bank', 
+                  'Punjab National Bank', 'Bank of Baroda', 'Canara Bank', 'Union Bank', 'IDBI Bank'],
+    upi: ['UPI']
+  };
 
   // Initialize component and track page view
   useEffect(() => {
@@ -163,8 +173,19 @@ const Payment = () => {
   }, [bookingState, selectedFlights, travellerDetails, contactInfo, selectedServices, 
       flightTotal, ancillaryTotal, totalAmount, paymentType, cabinClass, navigate]);
 
+  // Reset vendor when payment method changes
+  useEffect(() => {
+    setPaymentVendor('');
+  }, [paymentMethod]);
+
   const validateForm = () => {
     const errors = {};
+    
+    // Vendor validation for all payment methods
+    if (!paymentVendor || paymentVendor.trim() === '') {
+      errors.paymentVendor = 'Please select a payment vendor';
+    }
+    
     if (paymentMethod === 'credit' || paymentMethod === 'debit') {
       if (!cardNumber || !/^\d{16}$/.test(cardNumber)) {
         errors.cardNumber = 'Please enter a valid 16-digit card number';
@@ -178,7 +199,13 @@ const Payment = () => {
       if (!cvv || !/^\d{3,4}$/.test(cvv)) {
         errors.cvv = 'Please enter a valid CVV';
       }
+    } else if (paymentMethod === 'upi') {
+      if (!billingName || billingName.trim().length < 3) {
+        errors.billingName = 'Please enter a valid UPI ID';
+      }
     }
+    // Net Banking only requires vendor selection (no billing name needed)
+    
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -195,6 +222,7 @@ const Payment = () => {
       const paymentData = {
         method: paymentMethod,
         paymentMethod: paymentMethod,
+        vendor: paymentVendor,
         cardDetails: {
           cardNumber,
           expiryDate,
@@ -213,8 +241,30 @@ const Payment = () => {
         transactionId: `TXN_${Date.now()}_${Math.random().toString(36).substr(2, 9).toUpperCase()}`
       };
 
-      // Track payment completion
-      // Analytics call removed
+      // Push payment details to Adobe Data Layer
+      if (typeof window !== 'undefined' && window.adobeDataLayer) {
+        const paymentDetails = {
+          paymentMethod: paymentMethod,
+          paymentVendor: paymentVendor,
+          cardNetwork: paymentMethod === 'credit' || paymentMethod === 'debit' ? paymentVendor : null,
+          bankName: paymentMethod === 'netbanking' ? paymentVendor : null,
+          upiId: paymentMethod === 'upi' ? billingName : null,
+          cardLast4: cardNumber ? cardNumber.slice(-4) : null,
+          expiryDate: expiryDate || null,
+          amount: totalAmount,
+          currency: 'INR',
+          transactionId: paymentData.transactionId,
+          paymentDate: paymentData.paymentDate
+        };
+
+        window.adobeDataLayer.push({
+          event: 'paymentSubmitted',
+          paymentDetails: paymentDetails,
+          timestamp: new Date().toISOString()
+        });
+
+        console.log('✅ Payment details pushed to adobeDataLayer:', paymentDetails);
+      }
 
       // Navigate to confirmation
       navigate('/confirmation', {
@@ -527,6 +577,37 @@ const Payment = () => {
                 </FormControl>
               </Box>
 
+              {/* Payment Vendor/Network Selection */}
+              <Box sx={{ mb: 3 }}>
+                <FormControl fullWidth required error={!!validationErrors.paymentVendor}>
+                  <InputLabel>
+                    {paymentMethod === 'credit' ? 'Card Network' :
+                     paymentMethod === 'debit' ? 'Card Network' :
+                     paymentMethod === 'netbanking' ? 'Select Bank' :
+                     'Payment Method'}
+                  </InputLabel>
+                  <Select
+                    value={paymentVendor}
+                    label={
+                      paymentMethod === 'credit' ? 'Card Network' :
+                      paymentMethod === 'debit' ? 'Card Network' :
+                      paymentMethod === 'netbanking' ? 'Select Bank' :
+                      'Payment Method'
+                    }
+                    onChange={(e) => setPaymentVendor(e.target.value)}
+                  >
+                    {paymentVendors[paymentMethod]?.map((vendor) => (
+                      <MenuItem key={vendor} value={vendor}>
+                        {vendor}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {validationErrors.paymentVendor && (
+                    <FormHelperText>{validationErrors.paymentVendor}</FormHelperText>
+                  )}
+                </FormControl>
+              </Box>
+
               {paymentMethod === 'credit' || paymentMethod === 'debit' ? (
                 <Grid container spacing={3}>
                   <Grid item xs={12}>
@@ -582,7 +663,7 @@ const Payment = () => {
               ) : paymentMethod === 'upi' ? (
                 <TextField
                   fullWidth
-                  label="Billing Name"
+                  label="UPI ID"
                   placeholder="example@upi"
                   value={billingName}
                   onChange={(e) => setBillingName(e.target.value)}
@@ -590,21 +671,13 @@ const Payment = () => {
                   helperText={validationErrors.billingName || "Enter your UPI ID (e.g., name@upi)"}
                   required
                 />
-              ) : (
-                <FormControl fullWidth required error={!!validationErrors.billingName}>
-                  <InputLabel>Billing Name</InputLabel>
-                  <Select
-                    value={billingName}
-                    onChange={(e) => setBillingName(e.target.value)}
-                    label="Select Bank"
-                  >
-                    <MenuItem value="sbi">State Bank of India</MenuItem>
-                    <MenuItem value="hdfc">HDFC Bank</MenuItem>
-                    <MenuItem value="icici">ICICI Bank</MenuItem>
-                    <MenuItem value="axis">Axis Bank</MenuItem>
-                  </Select>
-                </FormControl>
-              )}
+              ) : paymentMethod === 'netbanking' ? (
+                <Alert severity="info" sx={{ mt: 2 }}>
+                  <Typography variant="body2">
+                    You will be redirected to your selected bank's secure payment gateway to complete the transaction.
+                  </Typography>
+                </Alert>
+              ) : null}
 
               <Box sx={{ mt: 4, display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
                 <Button
