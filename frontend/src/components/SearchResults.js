@@ -549,8 +549,10 @@ const SearchResults = () => {
         flight: {
           flightNumber: flightWithCorrectPrice.flightNumber,
           airline: flightWithCorrectPrice.airline,
-          origin: flightWithCorrectPrice.origin.iata_code,
-          destination: flightWithCorrectPrice.destination.iata_code,
+          origin: flightWithCorrectPrice.origin,
+          destination: flightWithCorrectPrice.destination,
+          originCity: flightWithCorrectPrice.originCity,
+          destinationCity: flightWithCorrectPrice.destinationCity,
           departureTime: flightWithCorrectPrice.departureTime.toISOString(),
           arrivalTime: flightWithCorrectPrice.arrivalTime.toISOString(),
           duration: flightWithCorrectPrice.duration,
@@ -772,14 +774,10 @@ const SearchResults = () => {
                 </Grid>
             <Grid item xs={12} sm={4}>
               <Typography variant="body1">
-                {flight.origin.iata_code} → {flight.destination.iata_code}
+                {flight.originCity} → {flight.destinationCity}
                     </Typography>
               <Typography variant="body2" color="textSecondary">
-                {(() => {
-                  const originAirport = findAirportByCode(flight.origin.iata_code);
-                  const destAirport = findAirportByCode(flight.destination.iata_code);
-                  return `${originAirport?.name || flight.origin.iata_code} → ${destAirport?.name || flight.destination.iata_code}`;
-                })()}
+                {flight.origin} → {flight.destination}
                     </Typography>
               <Typography variant="body2" color="textSecondary">
                 {isReturn ? format(searchParams.returnDate, 'MMM dd, yyyy') : format(searchParams.date, 'MMM dd, yyyy')}
@@ -974,14 +972,10 @@ const SearchResults = () => {
                   {format(searchParams.date, 'MMM dd')} {format(selectedOnwardFlight.departureTime, 'HH:mm')} - {format(selectedOnwardFlight.arrivalTime, 'HH:mm')}
                 </Typography>
                 <Typography>
-                  {selectedOnwardFlight.origin.iata_code} → {selectedOnwardFlight.destination.iata_code}
+                  {selectedOnwardFlight.originCity} → {selectedOnwardFlight.destinationCity}
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
-                  {(() => {
-                    const originAirport = findAirportByCode(selectedOnwardFlight.origin.iata_code);
-                    const destAirport = findAirportByCode(selectedOnwardFlight.destination.iata_code);
-                    return `${originAirport?.name || selectedOnwardFlight.origin.iata_code} → ${destAirport?.name || selectedOnwardFlight.destination.iata_code}`;
-                  })()}
+                  {selectedOnwardFlight.origin} → {selectedOnwardFlight.destination}
                 </Typography>
                 <Typography>
                   Cabin Class: {searchParams.cabinClass}
@@ -1005,14 +999,10 @@ const SearchResults = () => {
                   {format(searchParams.returnDate, 'MMM dd')} {format(selectedReturnFlight.departureTime, 'HH:mm')} - {format(selectedReturnFlight.arrivalTime, 'HH:mm')}
                 </Typography>
                 <Typography>
-                  {selectedReturnFlight.origin.iata_code} → {selectedReturnFlight.destination.iata_code}
+                  {selectedReturnFlight.originCity} → {selectedReturnFlight.destinationCity}
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
-                  {(() => {
-                    const originAirport = findAirportByCode(selectedReturnFlight.origin.iata_code);
-                    const destAirport = findAirportByCode(selectedReturnFlight.destination.iata_code);
-                    return `${originAirport?.name || selectedReturnFlight.origin.iata_code} → ${destAirport?.name || selectedReturnFlight.destination.iata_code}`;
-                  })()}
+                  {selectedReturnFlight.origin} → {selectedReturnFlight.destination}
                 </Typography>
                 <Typography>
                   Cabin Class: {searchParams.cabinClass}

@@ -1137,7 +1137,7 @@ const BookingConfirmation = () => {
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
             <Typography variant="subtitle1">
-              {flight.origin?.city} → {flight.destination?.city}
+              {flight.originCity || flight.origin} → {flight.destinationCity || flight.destination}
             </Typography>
             <Typography variant="body2" color="text.secondary">
               {formatDate(flight.departureTime)} - {flight.flightNumber}
@@ -1225,11 +1225,11 @@ const BookingConfirmation = () => {
                 Onward Flight
               </Typography>
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                {selectedServices.onward?.seat?.length > 0 && renderServiceChip(
+                {selectedServices.onward?.seat?.filter(Boolean).length > 0 && renderServiceChip(
                   <EventSeatIcon />,
                   'Seats',
-                  selectedServices.onward.seat.reduce((total, seat) => total + calculateSeatPrice(seat), 0),
-                  `Selected seats: ${selectedServices.onward.seat.join(', ')}`
+                  selectedServices.onward.seat.filter(Boolean).reduce((total, seat) => total + calculateSeatPrice(seat), 0),
+                  `Selected seats: ${selectedServices.onward.seat.filter(Boolean).join(', ')}`
                 )}
                 {selectedServices.onward?.baggage?.length > 0 && renderServiceChip(
                   <LuggageIcon />,
@@ -1265,11 +1265,11 @@ const BookingConfirmation = () => {
                   Return Flight
                 </Typography>
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                  {selectedServices.return?.seat?.length > 0 && renderServiceChip(
+                  {selectedServices.return?.seat?.filter(Boolean).length > 0 && renderServiceChip(
                     <EventSeatIcon />,
                     'Seats',
-                    selectedServices.return.seat.reduce((total, seat) => total + calculateSeatPrice(seat), 0),
-                    `Selected seats: ${selectedServices.return.seat.join(', ')}`
+                    selectedServices.return.seat.filter(Boolean).reduce((total, seat) => total + calculateSeatPrice(seat), 0),
+                    `Selected seats: ${selectedServices.return.seat.filter(Boolean).join(', ')}`
                   )}
                   {selectedServices.return?.baggage?.length > 0 && renderServiceChip(
                     <LuggageIcon />,

@@ -689,7 +689,7 @@ const TravellerDetails = () => {
                 {format(departureDateTime, 'HH:mm')}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {flight.origin.iata_code}
+                {flight.originCity || flight.origin}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 {format(departureDateTime, 'MMM dd, yyyy')}
@@ -715,7 +715,7 @@ const TravellerDetails = () => {
                 {format(arrivalDateTime, 'HH:mm')}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {flight.destination.iata_code}
+                {flight.destinationCity || flight.destination}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 {format(arrivalDateTime, 'MMM dd, yyyy')}

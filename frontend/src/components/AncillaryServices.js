@@ -24,9 +24,6 @@ import {
   IconButton,
   Tooltip,
   Snackbar,
-  Stepper,
-  Step,
-  StepLabel,
   Chip,
   Stack
 } from '@mui/material';
@@ -82,7 +79,6 @@ const AncillaryServices = () => {
     }
   });
   const [totalAmount, setTotalAmount] = useState(0);
-  const [activeStep] = useState(0);
   const [seatSelectionOpen, setSeatSelectionOpen] = useState(false);
   const [currentJourney, setCurrentJourney] = useState('onward');
   const [currentAircraft, setCurrentAircraft] = useState(null);
@@ -635,8 +631,8 @@ Price: ₹${seatPrice}`}
 
       const { cabin_baggage, checked_baggage } = baggageRules;
       const isInternational = journey === 'onward' ? 
-        selectedFlights.onward.origin.iata_code !== selectedFlights.onward.destination.iata_code :
-        selectedFlights.return.origin.iata_code !== selectedFlights.return.destination.iata_code;
+        selectedFlights.onward.origin !== selectedFlights.onward.destination :
+        selectedFlights.return.origin !== selectedFlights.return.destination;
 
       const currentBaggage = selectedServices[journey]?.baggage?.[passengerIndex];
       console.log('Current Baggage Selection:', {
@@ -750,7 +746,7 @@ Price: ₹${seatPrice}`}
                           {format(new Date(flight.departureTime), 'HH:mm')}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                          {flight.origin?.city || flight.originCode} ({flight.origin?.iata_code || flight.originCode})
+                          {flight.originCity || flight.origin} ({flight.origin})
                         </Typography>
                       </Box>
                     </Box>
@@ -777,7 +773,7 @@ Price: ₹${seatPrice}`}
                           {format(new Date(flight.arrivalTime), 'HH:mm')}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                          {flight.destination?.city || flight.destinationCode} ({flight.destination?.iata_code || flight.destinationCode})
+                          {flight.destinationCity || flight.destination} ({flight.destination})
                         </Typography>
                       </Box>
                       <FlightLand color="primary" />
@@ -929,8 +925,8 @@ Price: ₹${seatPrice}`}
         services[journey].baggage.forEach((baggage, index) => {
           if (baggage && baggage !== 'included') {
             const isInternational = journey === 'onward' ? 
-              selectedFlights.onward.origin.iata_code !== selectedFlights.onward.destination.iata_code :
-              selectedFlights.return.origin.iata_code !== selectedFlights.return.destination.iata_code;
+              selectedFlights.onward.origin !== selectedFlights.onward.destination :
+              selectedFlights.return.origin !== selectedFlights.return.destination;
 
             let baggagePrice = 0;
             switch (baggage) {
@@ -1141,8 +1137,8 @@ Price: ₹${seatPrice}`}
                         const baggage = selectedServices.onward?.baggage?.[index];
                         if (baggage && baggage !== 'included') {
                           const flight = selectedFlights.onward;
-                          if (flight?.origin?.iata_code && flight?.destination?.iata_code) {
-                            const isInternational = flight.origin.iata_code !== flight.destination.iata_code;
+                          if (flight?.origin && flight?.destination) {
+                            const isInternational = flight.origin !== flight.destination;
                             return isInternational ? 2000 : 1000;
                           }
                           return 1000;
@@ -1180,8 +1176,8 @@ Price: ₹${seatPrice}`}
                       const baggage = selectedServices.onward?.baggage?.[index];
                       if (baggage && baggage !== 'included') {
                         const flight = selectedFlights.onward;
-                        if (flight?.origin?.iata_code && flight?.destination?.iata_code) {
-                          const isInternational = flight.origin.iata_code !== flight.destination.iata_code;
+                        if (flight?.origin && flight?.destination) {
+                          const isInternational = flight.origin !== flight.destination;
                           total += isInternational ? 2000 : 1000;
                         } else {
                           total += 1000;
@@ -1222,8 +1218,8 @@ Price: ₹${seatPrice}`}
                         const baggage = selectedServices.return?.baggage?.[index];
                         if (baggage && baggage !== 'included') {
                           const flight = selectedFlights.return;
-                          if (flight?.origin?.iata_code && flight?.destination?.iata_code) {
-                            const isInternational = flight.origin.iata_code !== flight.destination.iata_code;
+                          if (flight?.origin && flight?.destination) {
+                            const isInternational = flight.origin !== flight.destination;
                             return isInternational ? 2000 : 1000;
                           }
                           return 1000;
@@ -1261,8 +1257,8 @@ Price: ₹${seatPrice}`}
                       const baggage = selectedServices.return?.baggage?.[index];
                       if (baggage && baggage !== 'included') {
                         const flight = selectedFlights.return;
-                        if (flight?.origin?.iata_code && flight?.destination?.iata_code) {
-                          const isInternational = flight.origin.iata_code !== flight.destination.iata_code;
+                        if (flight?.origin && flight?.destination) {
+                          const isInternational = flight.origin !== flight.destination;
                           total += isInternational ? 2000 : 1000;
                         } else {
                           total += 1000;
@@ -1372,8 +1368,6 @@ Price: ₹${seatPrice}`}
     }
   };
 
-  const steps = ['Flight Details', 'Ancillary Services', 'Payment'];
-
   // Find the number of passengers
   const numPassengers = (location.state?.passengers || travellerDetails?.length || 1);
 
@@ -1381,14 +1375,6 @@ Price: ₹${seatPrice}`}
     <>
       <BookingSteps activeStep={1} />
       <Container maxWidth="xl" sx={{ py: 4 }}>
-        <Stepper activeStep={activeStep} sx={{ mb: 4 }}>
-        {steps.map((label) => (
-          <Step key={label}>
-            <StepLabel>{label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
-
       <Grid container spacing={4}>
         {/* Main Content */}
         <Grid item xs={12} md={8}>
