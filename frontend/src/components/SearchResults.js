@@ -29,7 +29,7 @@ import {
 } from '@mui/material';
 import { format, differenceInMinutes, differenceInDays } from 'date-fns';
 import CloseIcon from '@mui/icons-material/Close';
-import flightRoutes from '../data/flight_routes.json';
+import flightsData from '../data/flights.json';
 import FlightDetailsModal from './FlightDetailsModal';
 import CURRENCY_CONFIG from '../config/currencyConfig';
 import airports from '../data/airports.json';
@@ -145,13 +145,8 @@ const SearchResults = () => {
     if (!origin || !destination || !searchDate || !cabinClass) return [];
 
     try {
-      const routeKey = `${origin}-${destination}`;
-      const routeData = flightRoutes.routes[routeKey];
-      
-      if (!routeData) return [];
-
-      // Get all flights for the route
-      const allFlights = [...routeData.onward, ...routeData.return];
+      // Get all flights from the comprehensive flight network
+      const allFlights = flightsData.flights || [];
       
       // Determine currency based on search origin (not individual flight origin)
       // Use searchOrigin if provided (for return flights), otherwise use origin
@@ -163,23 +158,24 @@ const SearchResults = () => {
       return allFlights
         .filter(flight => {
           // Check if the flight matches the origin and destination
-          return flight.origin.iata_code === origin && 
-                 flight.destination.iata_code === destination;
+          return flight.origin === origin && 
+                 flight.destination === destination;
         })
         .map((flight, index) => {
           // Calculate prices for different cabin classes
-          const basePrice = flight.price.amount;
-      let prices = {
-        economy: basePrice,
-        premium_economy: Math.round(basePrice * 1.3),
-        business: Math.round(basePrice * 1.7),
-        first: Math.round(basePrice * 2.2)
-      };
+          const basePrice = flight.price;
+          let prices = {
+            economy: basePrice,
+            premium_economy: Math.round(basePrice * 1.3),
+            business: Math.round(basePrice * 1.7),
+            first: Math.round(basePrice * 2.2)
+          };
 
-          // Filter available classes based on flight's cabinClasses
-          const availableClasses = flight.cabinClasses;
+          // Filter available classes based on flight's cabinClass
+          const availableClasses = flight.cabinClass || ['Economy', 'Business', 'First'];
           Object.keys(prices).forEach(className => {
-            if (!availableClasses.includes(className)) {
+            const classNameCapitalized = className.charAt(0).toUpperCase() + className.slice(1);
+            if (!availableClasses.includes(classNameCapitalized)) {
               delete prices[className];
             }
           });
@@ -196,21 +192,21 @@ const SearchResults = () => {
           // If arrival time is before departure time, it means the flight arrives the next day
           if (arrivalTime < departureTime) {
             arrivalTime.setDate(arrivalTime.getDate() + 1);
-      }
+          }
 
-      // Get country codes for origin and destination
-      const originAirport = findAirportByCode(flight.origin.iata_code);
-      const destAirport = findAirportByCode(flight.destination.iata_code);
-      const originCountry = originAirport?.country || 'India';
-      const destCountry = destAirport?.country || 'India';
-      
-      // Check if this is an international flight
-      const isInternational = CURRENCY_CONFIG.isInternationalFlight(originCountry, destCountry);
-      
-      // Use search origin currency for all flights (both onward and return)
-      const displayCurrency = searchDisplayCurrency;
-      
-      // Convert prices for display (keep original INR prices in backend)
+          // Get country codes for origin and destination
+          const originAirport = findAirportByCode(flight.origin);
+          const destAirport = findAirportByCode(flight.destination);
+          const originCountry = originAirport?.country || 'India';
+          const destCountry = destAirport?.country || 'India';
+          
+          // Check if this is an international flight
+          const isInternational = CURRENCY_CONFIG.isInternationalFlight(originCountry, destCountry);
+          
+          // Use search origin currency for all flights (both onward and return)
+          const displayCurrency = searchDisplayCurrency;
+          
+          // Convert prices for display (keep original INR prices in backend)
           const displayPrices = {};
           Object.keys(prices).forEach(className => {
             if (displayCurrency !== 'INR') {
@@ -222,7 +218,6 @@ const SearchResults = () => {
           });
 
           // Use duration from flight data (already accounts for timezones)
-          // Don't recalculate using differenceInMinutes as it doesn't handle timezone differences
           const duration = flight.duration;
           
           // Parse duration string to minutes for filtering (e.g., "9h 15m" -> 555 minutes)
@@ -248,7 +243,7 @@ const SearchResults = () => {
             durationMinutes, // For filtering purposes
             resultPosition: index + 1
           };
-    });
+        });
     } catch (err) {
       console.error('Error getting matching flights:', err);
       return [];
