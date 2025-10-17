@@ -61,7 +61,7 @@ function calculateDuration(distance) {
 
 // Generate flight number
 function generateFlightNumber() {
-  const airlines = ['AI', '6E', 'SG', 'G8', 'UK'];
+  const airlines = ['TL', 'TP', 'TW', 'TX', 'TY']; // Generic airline codes
   const airline = airlines[Math.floor(Math.random() * airlines.length)];
   const number = Math.floor(Math.random() * 9000) + 1000;
   return `${airline}${number}`;
