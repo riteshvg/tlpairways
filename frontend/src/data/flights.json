@@ -4343,6 +4343,1026 @@
         "business",
         "first"
       ]
+    },
+    {
+      "itineraryId": "BOM-DXB-1",
+      "flightNumber": "TL101",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "BOM",
+        "city": "Mumbai",
+        "airport": "Chhatrapati Shivaji Maharaj International Airport"
+      },
+      "destination": {
+        "iata_code": "DXB",
+        "city": "Dubai",
+        "airport": "Dubai International Airport"
+      },
+      "departureTime": "2024-03-25T09:00:00",
+      "arrivalTime": "2024-03-25T12:11:00",
+      "duration": "3h 11m",
+      "price": {
+        "amount": 4404,
+        "currency": "INR"
+      },
+      "aircraft": "Airbus A320",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "BOM-DXB-2",
+      "flightNumber": "TL102",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "BOM",
+        "city": "Mumbai",
+        "airport": "Chhatrapati Shivaji Maharaj International Airport"
+      },
+      "destination": {
+        "iata_code": "DXB",
+        "city": "Dubai",
+        "airport": "Dubai International Airport"
+      },
+      "departureTime": "2024-03-25T12:00:00",
+      "arrivalTime": "2024-03-25T15:11:00",
+      "duration": "3h 11m",
+      "price": {
+        "amount": 5193,
+        "currency": "INR"
+      },
+      "aircraft": "Airbus A320",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "BOM-DXB-3",
+      "flightNumber": "TL103",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "BOM",
+        "city": "Mumbai",
+        "airport": "Chhatrapati Shivaji Maharaj International Airport"
+      },
+      "destination": {
+        "iata_code": "DXB",
+        "city": "Dubai",
+        "airport": "Dubai International Airport"
+      },
+      "departureTime": "2024-03-25T15:00:00",
+      "arrivalTime": "2024-03-25T18:11:00",
+      "duration": "3h 11m",
+      "price": {
+        "amount": 4548,
+        "currency": "INR"
+      },
+      "aircraft": "Airbus A320",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "BLR-SIN-1",
+      "flightNumber": "TL101",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "BLR",
+        "city": "Bengaluru",
+        "airport": "Kempegowda International Airport"
+      },
+      "destination": {
+        "iata_code": "SIN",
+        "city": "Singapore",
+        "airport": "Singapore Changi Airport"
+      },
+      "departureTime": "2024-03-25T09:00:00",
+      "arrivalTime": "2024-03-25T13:27:00",
+      "duration": "4h 27m",
+      "price": {
+        "amount": 8011.5,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 777",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "BLR-SIN-2",
+      "flightNumber": "TL102",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "BLR",
+        "city": "Bengaluru",
+        "airport": "Kempegowda International Airport"
+      },
+      "destination": {
+        "iata_code": "SIN",
+        "city": "Singapore",
+        "airport": "Singapore Changi Airport"
+      },
+      "departureTime": "2024-03-25T12:00:00",
+      "arrivalTime": "2024-03-25T16:27:00",
+      "duration": "4h 27m",
+      "price": {
+        "amount": 8115.5,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 777",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "BLR-SIN-3",
+      "flightNumber": "TL103",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "BLR",
+        "city": "Bengaluru",
+        "airport": "Kempegowda International Airport"
+      },
+      "destination": {
+        "iata_code": "SIN",
+        "city": "Singapore",
+        "airport": "Singapore Changi Airport"
+      },
+      "departureTime": "2024-03-25T15:00:00",
+      "arrivalTime": "2024-03-25T19:27:00",
+      "duration": "4h 27m",
+      "price": {
+        "amount": 7780.5,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 777",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "MAA-BKK-1",
+      "flightNumber": "TL101",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "MAA",
+        "city": "Chennai",
+        "airport": "Chennai International Airport"
+      },
+      "destination": {
+        "iata_code": "BKK",
+        "city": "Bangkok",
+        "airport": "Suvarnabhumi Airport"
+      },
+      "departureTime": "2024-03-25T09:00:00",
+      "arrivalTime": "2024-03-25T12:23:00",
+      "duration": "3h 23m",
+      "price": {
+        "amount": 5929.5,
+        "currency": "INR"
+      },
+      "aircraft": "Airbus A320",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "MAA-BKK-2",
+      "flightNumber": "TL102",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "MAA",
+        "city": "Chennai",
+        "airport": "Chennai International Airport"
+      },
+      "destination": {
+        "iata_code": "BKK",
+        "city": "Bangkok",
+        "airport": "Suvarnabhumi Airport"
+      },
+      "departureTime": "2024-03-25T12:00:00",
+      "arrivalTime": "2024-03-25T15:23:00",
+      "duration": "3h 23m",
+      "price": {
+        "amount": 5764.5,
+        "currency": "INR"
+      },
+      "aircraft": "Airbus A320",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "MAA-BKK-3",
+      "flightNumber": "TL103",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "MAA",
+        "city": "Chennai",
+        "airport": "Chennai International Airport"
+      },
+      "destination": {
+        "iata_code": "BKK",
+        "city": "Bangkok",
+        "airport": "Suvarnabhumi Airport"
+      },
+      "departureTime": "2024-03-25T15:00:00",
+      "arrivalTime": "2024-03-25T18:23:00",
+      "duration": "3h 23m",
+      "price": {
+        "amount": 6006.5,
+        "currency": "INR"
+      },
+      "aircraft": "Airbus A320",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "BOM-SIN-1",
+      "flightNumber": "TL101",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "BOM",
+        "city": "Mumbai",
+        "airport": "Chhatrapati Shivaji Maharaj International Airport"
+      },
+      "destination": {
+        "iata_code": "SIN",
+        "city": "Singapore",
+        "airport": "Singapore Changi Airport"
+      },
+      "departureTime": "2024-03-25T09:00:00",
+      "arrivalTime": "2024-03-25T14:16:00",
+      "duration": "5h 16m",
+      "price": {
+        "amount": 9395.5,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 777",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "BOM-SIN-2",
+      "flightNumber": "TL102",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "BOM",
+        "city": "Mumbai",
+        "airport": "Chhatrapati Shivaji Maharaj International Airport"
+      },
+      "destination": {
+        "iata_code": "SIN",
+        "city": "Singapore",
+        "airport": "Singapore Changi Airport"
+      },
+      "departureTime": "2024-03-25T12:00:00",
+      "arrivalTime": "2024-03-25T17:16:00",
+      "duration": "5h 16m",
+      "price": {
+        "amount": 9471.5,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 777",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "BOM-SIN-3",
+      "flightNumber": "TL103",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "BOM",
+        "city": "Mumbai",
+        "airport": "Chhatrapati Shivaji Maharaj International Airport"
+      },
+      "destination": {
+        "iata_code": "SIN",
+        "city": "Singapore",
+        "airport": "Singapore Changi Airport"
+      },
+      "departureTime": "2024-03-25T15:00:00",
+      "arrivalTime": "2024-03-25T20:16:00",
+      "duration": "5h 16m",
+      "price": {
+        "amount": 9793.5,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 777",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "DEL-DXB-1",
+      "flightNumber": "TL101",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "DEL",
+        "city": "Delhi",
+        "airport": "Indira Gandhi International Airport"
+      },
+      "destination": {
+        "iata_code": "DXB",
+        "city": "Dubai",
+        "airport": "Dubai International Airport"
+      },
+      "departureTime": "2024-03-25T09:00:00",
+      "arrivalTime": "2024-03-25T12:21:00",
+      "duration": "3h 21m",
+      "price": {
+        "amount": 4958.5,
+        "currency": "INR"
+      },
+      "aircraft": "Airbus A320",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "DEL-DXB-2",
+      "flightNumber": "TL102",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "DEL",
+        "city": "Delhi",
+        "airport": "Indira Gandhi International Airport"
+      },
+      "destination": {
+        "iata_code": "DXB",
+        "city": "Dubai",
+        "airport": "Dubai International Airport"
+      },
+      "departureTime": "2024-03-25T12:00:00",
+      "arrivalTime": "2024-03-25T15:21:00",
+      "duration": "3h 21m",
+      "price": {
+        "amount": 5088.5,
+        "currency": "INR"
+      },
+      "aircraft": "Airbus A320",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "DEL-DXB-3",
+      "flightNumber": "TL103",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "DEL",
+        "city": "Delhi",
+        "airport": "Indira Gandhi International Airport"
+      },
+      "destination": {
+        "iata_code": "DXB",
+        "city": "Dubai",
+        "airport": "Dubai International Airport"
+      },
+      "departureTime": "2024-03-25T15:00:00",
+      "arrivalTime": "2024-03-25T18:21:00",
+      "duration": "3h 21m",
+      "price": {
+        "amount": 5589.5,
+        "currency": "INR"
+      },
+      "aircraft": "Airbus A320",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "DXB-BOM-1",
+      "flightNumber": "TL101R",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "DXB",
+        "city": "Dubai",
+        "airport": "Dubai International Airport"
+      },
+      "destination": {
+        "iata_code": "BOM",
+        "city": "Mumbai",
+        "airport": "Chhatrapati Shivaji Maharaj International Airport"
+      },
+      "departureTime": "2024-03-25T14:00:00",
+      "arrivalTime": "2024-03-25T17:11:00",
+      "duration": "3h 11m",
+      "price": {
+        "amount": 4712,
+        "currency": "INR"
+      },
+      "aircraft": "Airbus A320",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "DXB-BOM-1",
+      "flightNumber": "TL102R",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "DXB",
+        "city": "Dubai",
+        "airport": "Dubai International Airport"
+      },
+      "destination": {
+        "iata_code": "BOM",
+        "city": "Mumbai",
+        "airport": "Chhatrapati Shivaji Maharaj International Airport"
+      },
+      "departureTime": "2024-03-25T17:00:00",
+      "arrivalTime": "2024-03-25T20:11:00",
+      "duration": "3h 11m",
+      "price": {
+        "amount": 5210,
+        "currency": "INR"
+      },
+      "aircraft": "Airbus A320",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "DXB-BOM-1",
+      "flightNumber": "TL103R",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "DXB",
+        "city": "Dubai",
+        "airport": "Dubai International Airport"
+      },
+      "destination": {
+        "iata_code": "BOM",
+        "city": "Mumbai",
+        "airport": "Chhatrapati Shivaji Maharaj International Airport"
+      },
+      "departureTime": "2024-03-25T18:00:00",
+      "arrivalTime": "2024-03-25T21:11:00",
+      "duration": "3h 11m",
+      "price": {
+        "amount": 4827,
+        "currency": "INR"
+      },
+      "aircraft": "Airbus A320",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "SIN-BLR-1",
+      "flightNumber": "TL101R",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "SIN",
+        "city": "Singapore",
+        "airport": "Singapore Changi Airport"
+      },
+      "destination": {
+        "iata_code": "BLR",
+        "city": "Bengaluru",
+        "airport": "Kempegowda International Airport"
+      },
+      "departureTime": "2024-03-25T12:00:00",
+      "arrivalTime": "2024-03-25T16:27:00",
+      "duration": "4h 27m",
+      "price": {
+        "amount": 7799.5,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 777",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "SIN-BLR-1",
+      "flightNumber": "TL102R",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "SIN",
+        "city": "Singapore",
+        "airport": "Singapore Changi Airport"
+      },
+      "destination": {
+        "iata_code": "BLR",
+        "city": "Bengaluru",
+        "airport": "Kempegowda International Airport"
+      },
+      "departureTime": "2024-03-25T17:00:00",
+      "arrivalTime": "2024-03-25T21:27:00",
+      "duration": "4h 27m",
+      "price": {
+        "amount": 8235.5,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 777",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "SIN-BLR-1",
+      "flightNumber": "TL103R",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "SIN",
+        "city": "Singapore",
+        "airport": "Singapore Changi Airport"
+      },
+      "destination": {
+        "iata_code": "BLR",
+        "city": "Bengaluru",
+        "airport": "Kempegowda International Airport"
+      },
+      "departureTime": "2024-03-25T20:00:00",
+      "arrivalTime": "2024-03-26T00:27:00",
+      "duration": "4h 27m",
+      "price": {
+        "amount": 7967.5,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 777",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "BKK-MAA-1",
+      "flightNumber": "TL101R",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "BKK",
+        "city": "Bangkok",
+        "airport": "Suvarnabhumi Airport"
+      },
+      "destination": {
+        "iata_code": "MAA",
+        "city": "Chennai",
+        "airport": "Chennai International Airport"
+      },
+      "departureTime": "2024-03-25T13:00:00",
+      "arrivalTime": "2024-03-25T16:23:00",
+      "duration": "3h 23m",
+      "price": {
+        "amount": 5379.5,
+        "currency": "INR"
+      },
+      "aircraft": "Airbus A320",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "BKK-MAA-1",
+      "flightNumber": "TL102R",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "BKK",
+        "city": "Bangkok",
+        "airport": "Suvarnabhumi Airport"
+      },
+      "destination": {
+        "iata_code": "MAA",
+        "city": "Chennai",
+        "airport": "Chennai International Airport"
+      },
+      "departureTime": "2024-03-25T17:00:00",
+      "arrivalTime": "2024-03-25T20:23:00",
+      "duration": "3h 23m",
+      "price": {
+        "amount": 5250.5,
+        "currency": "INR"
+      },
+      "aircraft": "Airbus A320",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "BKK-MAA-1",
+      "flightNumber": "TL103R",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "BKK",
+        "city": "Bangkok",
+        "airport": "Suvarnabhumi Airport"
+      },
+      "destination": {
+        "iata_code": "MAA",
+        "city": "Chennai",
+        "airport": "Chennai International Airport"
+      },
+      "departureTime": "2024-03-25T20:00:00",
+      "arrivalTime": "2024-03-25T23:23:00",
+      "duration": "3h 23m",
+      "price": {
+        "amount": 5722.5,
+        "currency": "INR"
+      },
+      "aircraft": "Airbus A320",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "SIN-BOM-1",
+      "flightNumber": "TL101R",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "SIN",
+        "city": "Singapore",
+        "airport": "Singapore Changi Airport"
+      },
+      "destination": {
+        "iata_code": "BOM",
+        "city": "Mumbai",
+        "airport": "Chhatrapati Shivaji Maharaj International Airport"
+      },
+      "departureTime": "2024-03-25T15:00:00",
+      "arrivalTime": "2024-03-25T20:16:00",
+      "duration": "5h 16m",
+      "price": {
+        "amount": 9729.5,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 777",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "SIN-BOM-1",
+      "flightNumber": "TL102R",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "SIN",
+        "city": "Singapore",
+        "airport": "Singapore Changi Airport"
+      },
+      "destination": {
+        "iata_code": "BOM",
+        "city": "Mumbai",
+        "airport": "Chhatrapati Shivaji Maharaj International Airport"
+      },
+      "departureTime": "2024-03-25T15:00:00",
+      "arrivalTime": "2024-03-25T20:16:00",
+      "duration": "5h 16m",
+      "price": {
+        "amount": 9629.5,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 777",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "SIN-BOM-1",
+      "flightNumber": "TL103R",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "SIN",
+        "city": "Singapore",
+        "airport": "Singapore Changi Airport"
+      },
+      "destination": {
+        "iata_code": "BOM",
+        "city": "Mumbai",
+        "airport": "Chhatrapati Shivaji Maharaj International Airport"
+      },
+      "departureTime": "2024-03-25T18:00:00",
+      "arrivalTime": "2024-03-25T23:16:00",
+      "duration": "5h 16m",
+      "price": {
+        "amount": 9654.5,
+        "currency": "INR"
+      },
+      "aircraft": "Boeing 777",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "DXB-DEL-1",
+      "flightNumber": "TL101R",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "DXB",
+        "city": "Dubai",
+        "airport": "Dubai International Airport"
+      },
+      "destination": {
+        "iata_code": "DEL",
+        "city": "Delhi",
+        "airport": "Indira Gandhi International Airport"
+      },
+      "departureTime": "2024-03-25T14:00:00",
+      "arrivalTime": "2024-03-25T17:21:00",
+      "duration": "3h 21m",
+      "price": {
+        "amount": 5708.5,
+        "currency": "INR"
+      },
+      "aircraft": "Airbus A320",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "DXB-DEL-1",
+      "flightNumber": "TL102R",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "DXB",
+        "city": "Dubai",
+        "airport": "Dubai International Airport"
+      },
+      "destination": {
+        "iata_code": "DEL",
+        "city": "Delhi",
+        "airport": "Indira Gandhi International Airport"
+      },
+      "departureTime": "2024-03-25T17:00:00",
+      "arrivalTime": "2024-03-25T20:21:00",
+      "duration": "3h 21m",
+      "price": {
+        "amount": 5767.5,
+        "currency": "INR"
+      },
+      "aircraft": "Airbus A320",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
+    },
+    {
+      "itineraryId": "DXB-DEL-1",
+      "flightNumber": "TL103R",
+      "airline": "TL Airways",
+      "origin": {
+        "iata_code": "DXB",
+        "city": "Dubai",
+        "airport": "Dubai International Airport"
+      },
+      "destination": {
+        "iata_code": "DEL",
+        "city": "Delhi",
+        "airport": "Indira Gandhi International Airport"
+      },
+      "departureTime": "2024-03-25T21:00:00",
+      "arrivalTime": "2024-03-26T00:21:00",
+      "duration": "3h 21m",
+      "price": {
+        "amount": 5878.5,
+        "currency": "INR"
+      },
+      "aircraft": "Airbus A320",
+      "availableSeats": 150,
+      "mealOptions": [
+        "veg",
+        "nonveg"
+      ],
+      "cabinClasses": [
+        "economy",
+        "premium_economy",
+        "business",
+        "first"
+      ]
     }
   ]
 }
