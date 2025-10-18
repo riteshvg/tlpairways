@@ -761,6 +761,10 @@ const BookingConfirmation = () => {
           currency: 'INR',
           products: products,
           bookingReference: bookingRef,
+          ticketNumbers: {
+            onward: onwardTicket,
+            return: returnTicket
+          },
           paymentMethod: (paymentDetails?.method || 'credit card').replace(/_/g, ' ').replace(/-/g, ' '),
           paymentStatus: 'completed',
           timestamp: new Date().toISOString()
@@ -768,6 +772,12 @@ const BookingConfirmation = () => {
         paymentDetails: {
           paymentType: (paymentDetails?.method || 'credit card').replace(/_/g, ' ').replace(/-/g, ' '),
           paymentCurrency: 'INR',
+          // Add bank name for net banking
+          bankName: paymentDetails?.method?.toLowerCase() === 'netbanking' ? paymentDetails?.vendor : null,
+          // Add card network for credit/debit cards
+          cardNetwork: (paymentDetails?.method?.toLowerCase() === 'credit' || paymentDetails?.method?.toLowerCase() === 'debit') ? paymentDetails?.vendor : null,
+          // Add payment type from search widget (cash/credit)
+          searchPaymentType: location.state?.paymentType || 'cash',
           paymentCategories: {
             baseFare: feeBreakdown.baseFare,
             ancillaryFare: feeBreakdown.ancillaryTotal,
@@ -1145,8 +1155,11 @@ const BookingConfirmation = () => {
             <Typography variant="body2" color="text.secondary">
               Cabin Class: {flight.cabinClass?.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-              Flight Type: <Chip 
+            <Box sx={{ mt: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography variant="body2" color="text.secondary">
+                Flight Type:
+              </Typography>
+              <Chip 
                 label={(type === 'onward' ? haulTypes.onward : haulTypes.return || 'short haul').toUpperCase()}
                 size="small"
                 color={
@@ -1157,11 +1170,10 @@ const BookingConfirmation = () => {
                 sx={{ 
                   height: 20, 
                   fontSize: '0.7rem',
-                  fontWeight: 600,
-                  ml: 1
+                  fontWeight: 600
                 }}
               />
-            </Typography>
+            </Box>
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="subtitle1">

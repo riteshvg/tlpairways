@@ -75,6 +75,48 @@ function getAircraftType(distance) {
   return 'B777-300ER';
 }
 
+// Calculate price based on distance and booking date
+function calculatePrice(distance, departureTime) {
+  // Determine if it's domestic or international
+  // Domestic flights in India are typically under 2000 km
+  const isDomestic = distance < 2000;
+  
+  // Determine if it's short haul or long haul
+  const isShortHaul = distance < 3000;
+  
+  let basePrice;
+  
+  if (isDomestic) {
+    // Domestic flights: under 10k for short haul, under 20k for long haul
+    if (isShortHaul) {
+      basePrice = 5000 + Math.random() * 5000; // 5000-10000
+    } else {
+      basePrice = 10000 + Math.random() * 10000; // 10000-20000
+    }
+  } else {
+    // International flights: higher range
+    if (isShortHaul) {
+      basePrice = 50000 + Math.random() * 10000; // 50000-60000
+    } else {
+      basePrice = 80000 + Math.random() * 120000; // 80000-200000
+    }
+  }
+  
+  // Check if booking date is next day (within 24 hours)
+  const now = new Date();
+  const departureDate = new Date(departureTime);
+  const hoursUntilDeparture = (departureDate - now) / (1000 * 60 * 60);
+  
+  let finalPrice = basePrice;
+  
+  // Add 5% surcharge for next-day bookings (less than 24 hours away)
+  if (hoursUntilDeparture < 24 && hoursUntilDeparture > 0) {
+    finalPrice = basePrice * 1.05;
+  }
+  
+  return Math.floor(finalPrice);
+}
+
 // Generate a single flight
 function generateFlight(origin, dest, departureTime, isReturn = false) {
   const originCoords = getCityCoordinates(origin);
@@ -134,9 +176,7 @@ function generateFlight(origin, dest, departureTime, isReturn = false) {
     arrivalTime,
     duration: `${Math.floor(duration / 60)}h ${duration % 60}m`,
     durationMinutes: duration,
-    price: Math.floor(
-      5000 + Math.random() * 45000 + distance * (5 + Math.random() * 10)
-    ),
+    price: calculatePrice(distance, departureTime),
     aircraftType,
     stops,
     availableSeats: Math.floor(Math.random() * 50) + 10,

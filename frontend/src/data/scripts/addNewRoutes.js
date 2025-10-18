@@ -203,3 +203,4 @@ if (newFlights.length > 0) {
 
 console.log('\n💾 flights.json updated!');
 
+

@@ -1,0 +1,2324 @@
+//Availability Page
+
+{
+    "events": [
+        {
+            "xdm": {
+                "eventType": "web.webpagedetails.pageViews",
+                "web": {
+                    "webPageDetails": {
+                        "URL": "https://uat.digital.airline.amadeus.com/ai/booking/availability/0",
+                        "pageViews": {
+                            "value": 1
+                        },
+                        "name": "Flex Pricer Premium Outbound Page",
+                        "siteSection": "RefX"
+                    },
+                    "webReferrer": {
+                        "URL": "https://newai-staging.airindia.com/"
+                    }
+                },
+                "device": {
+                    "screenHeight": 1080,
+                    "screenWidth": 1920,
+                    "screenOrientation": "landscape"
+                },
+                "environment": {
+                    "type": "browser",
+                    "browserDetails": {
+                        "viewportWidth": 1085,
+                        "viewportHeight": 968
+                    }
+                },
+                "placeContext": {
+                    "localTimezoneOffset": -330,
+                    "localTime": "2025-10-16T16:13:30.123+05:30"
+                },
+                "timestamp": "2025-10-16T10:43:30.123Z",
+                "implementationDetails": {
+                    "name": "https://ns.adobe.com/experience/alloy/reactor",
+                    "version": "2.26.0+2.29.1",
+                    "environment": "browser"
+                },
+                "_experience": {
+                    "decisioning": {
+                        "propositions": [
+                            {
+                                "id": "AT:eyJhY3Rpdml0eUlkIjoiNzgyODY3IiwiZXhwZXJpZW5jZUlkIjoiMCJ9",
+                                "scope": "__view__",
+                                "scopeDetails": {
+                                    "decisionProvider": "TGT",
+                                    "activity": {
+                                        "id": "782867"
+                                    },
+                                    "experience": {
+                                        "id": "0"
+                                    },
+                                    "strategies": [
+                                        {
+                                            "step": "entry",
+                                            "trafficType": "0"
+                                        },
+                                        {
+                                            "step": "display",
+                                            "trafficType": "0"
+                                        }
+                                    ],
+                                    "characteristics": {
+                                        "eventToken": "JgPzlb+y46+BIdkYPqYcKZ3BNhkKdJh9FdggP2851yfZ9ODJEg5+xiJvnW45OpL4/aczykolnb4dUCw19kHL+w=="
+                                    },
+                                    "correlationID": "782867:0:0"
+                                }
+                            },
+                            {
+                                "id": "AT:eyJhY3Rpdml0eUlkIjoiNzgyMDg4IiwiZXhwZXJpZW5jZUlkIjoiMCJ9",
+                                "scope": "__view__",
+                                "scopeDetails": {
+                                    "decisionProvider": "TGT",
+                                    "activity": {
+                                        "id": "782088"
+                                    },
+                                    "experience": {
+                                        "id": "0"
+                                    },
+                                    "strategies": [
+                                        {
+                                            "step": "entry",
+                                            "trafficType": "0"
+                                        },
+                                        {
+                                            "step": "display",
+                                            "trafficType": "0"
+                                        }
+                                    ],
+                                    "characteristics": {
+                                        "eventToken": "j+9g7GFOhHZ5J6bMHxHCrJ3BNhkKdJh9FdggP2851yfZ9ODJEg5+xiJvnW45OpL4/aczykolnb4dUCw19kHL+w=="
+                                    },
+                                    "correlationID": "782088:0:0"
+                                }
+                            },
+                            {
+                                "id": "AT:eyJhY3Rpdml0eUlkIjoiNzgxNTc2IiwiZXhwZXJpZW5jZUlkIjoiMCJ9",
+                                "scope": "__view__",
+                                "scopeDetails": {
+                                    "decisionProvider": "TGT",
+                                    "activity": {
+                                        "id": "781576"
+                                    },
+                                    "experience": {
+                                        "id": "0"
+                                    },
+                                    "strategies": [
+                                        {
+                                            "step": "entry",
+                                            "trafficType": "0"
+                                        },
+                                        {
+                                            "step": "display",
+                                            "trafficType": "0"
+                                        }
+                                    ],
+                                    "characteristics": {
+                                        "eventToken": "O718BrvedxgDsqyD+xOSQ53BNhkKdJh9FdggP2851yfZ9ODJEg5+xiJvnW45OpL4/aczykolnb4dUCw19kHL+w=="
+                                    },
+                                    "correlationID": "781576:0:0"
+                                }
+                            },
+                            {
+                                "id": "AT:eyJhY3Rpdml0eUlkIjoiNzgwMzU5IiwiZXhwZXJpZW5jZUlkIjoiMCJ9",
+                                "scope": "__view__",
+                                "scopeDetails": {
+                                    "decisionProvider": "TGT",
+                                    "activity": {
+                                        "id": "780359"
+                                    },
+                                    "experience": {
+                                        "id": "0"
+                                    },
+                                    "strategies": [
+                                        {
+                                            "step": "entry",
+                                            "trafficType": "0"
+                                        },
+                                        {
+                                            "step": "display",
+                                            "trafficType": "0"
+                                        }
+                                    ],
+                                    "characteristics": {
+                                        "eventToken": "ByNgC8CTlQ/io9AoZVTooZ3BNhkKdJh9FdggP2851yfZ9ODJEg5+xiJvnW45OpL4/aczykolnb4dUCw19kHL+w=="
+                                    },
+                                    "correlationID": "780359:0:0"
+                                }
+                            },
+                            {
+                                "id": "AT:eyJhY3Rpdml0eUlkIjoiNzY0MjE0IiwiZXhwZXJpZW5jZUlkIjoiMCJ9",
+                                "scope": "__view__",
+                                "scopeDetails": {
+                                    "decisionProvider": "TGT",
+                                    "activity": {
+                                        "id": "764214"
+                                    },
+                                    "experience": {
+                                        "id": "0"
+                                    },
+                                    "strategies": [
+                                        {
+                                            "step": "entry",
+                                            "trafficType": "0"
+                                        },
+                                        {
+                                            "step": "display",
+                                            "trafficType": "0"
+                                        }
+                                    ],
+                                    "characteristics": {
+                                        "eventToken": "ijktoCKla/9zqOBKFYasDZ3BNhkKdJh9FdggP2851yfZ9ODJEg5+xiJvnW45OpL4/aczykolnb4dUCw19kHL+w=="
+                                    },
+                                    "correlationID": "764214:0:0"
+                                }
+                            },
+                            {
+                                "id": "AT:eyJhY3Rpdml0eUlkIjoiNzc3MzU5IiwiZXhwZXJpZW5jZUlkIjoiMCJ9",
+                                "scope": "__view__",
+                                "scopeDetails": {
+                                    "decisionProvider": "TGT",
+                                    "activity": {
+                                        "id": "777359"
+                                    },
+                                    "experience": {
+                                        "id": "0"
+                                    },
+                                    "strategies": [
+                                        {
+                                            "step": "entry",
+                                            "trafficType": "0"
+                                        },
+                                        {
+                                            "step": "display",
+                                            "trafficType": "0"
+                                        },
+                                        {
+                                            "step": "conversion",
+                                            "trafficType": "0"
+                                        }
+                                    ],
+                                    "characteristics": {
+                                        "eventToken": "XZXGEZVIU1LVHHPqNfP73p3BNhkKdJh9FdggP2851yfZ9ODJEg5+xiJvnW45OpL4Pse33DhMsKeqt8fFw79Kf7YG3VM2wujhdRlKSFck1z4="
+                                    },
+                                    "correlationID": "777359:0:0"
+                                }
+                            },
+                            {
+                                "id": "AT:eyJhY3Rpdml0eUlkIjoiNzc0NzkwIiwiZXhwZXJpZW5jZUlkIjoiMCJ9",
+                                "scope": "__view__",
+                                "scopeDetails": {
+                                    "decisionProvider": "TGT",
+                                    "activity": {
+                                        "id": "774790"
+                                    },
+                                    "experience": {
+                                        "id": "0"
+                                    },
+                                    "strategies": [
+                                        {
+                                            "step": "entry",
+                                            "trafficType": "0"
+                                        },
+                                        {
+                                            "step": "display",
+                                            "trafficType": "0"
+                                        }
+                                    ],
+                                    "characteristics": {
+                                        "eventToken": "FomWackXF3MMf3p+dxdRvp3BNhkKdJh9FdggP2851yfZ9ODJEg5+xiJvnW45OpL4/aczykolnb4dUCw19kHL+w=="
+                                    },
+                                    "correlationID": "774790:0:0"
+                                }
+                            },
+                            {
+                                "id": "AT:eyJhY3Rpdml0eUlkIjoiNzQ1Nzg3IiwiZXhwZXJpZW5jZUlkIjoiMCJ9",
+                                "scope": "__view__",
+                                "scopeDetails": {
+                                    "decisionProvider": "TGT",
+                                    "activity": {
+                                        "id": "745787"
+                                    },
+                                    "experience": {
+                                        "id": "0"
+                                    },
+                                    "strategies": [
+                                        {
+                                            "step": "entry",
+                                            "trafficType": "0"
+                                        },
+                                        {
+                                            "step": "display",
+                                            "trafficType": "0"
+                                        }
+                                    ],
+                                    "characteristics": {
+                                        "eventToken": "wa+VclqB9qx5NuuzFJsoa53BNhkKdJh9FdggP2851yfZ9ODJEg5+xiJvnW45OpL4/aczykolnb4dUCw19kHL+w=="
+                                    },
+                                    "correlationID": "745787:0:0"
+                                }
+                            },
+                            {
+                                "id": "AT:eyJhY3Rpdml0eUlkIjoiNzIyMTA1IiwiZXhwZXJpZW5jZUlkIjoiMCJ9",
+                                "scope": "__view__",
+                                "scopeDetails": {
+                                    "decisionProvider": "TGT",
+                                    "activity": {
+                                        "id": "722105"
+                                    },
+                                    "experience": {
+                                        "id": "0"
+                                    },
+                                    "strategies": [
+                                        {
+                                            "step": "entry",
+                                            "trafficType": "0"
+                                        },
+                                        {
+                                            "step": "display",
+                                            "trafficType": "0"
+                                        }
+                                    ],
+                                    "characteristics": {
+                                        "eventToken": "x4+hIb62aNqbUoQ2Db2glJ3BNhkKdJh9FdggP2851yfZ9ODJEg5+xiJvnW45OpL4/aczykolnb4dUCw19kHL+w=="
+                                    },
+                                    "correlationID": "722105:0:0"
+                                }
+                            },
+                            {
+                                "id": "AT:eyJhY3Rpdml0eUlkIjoiNzgxNTM1IiwiZXhwZXJpZW5jZUlkIjoiMCJ9",
+                                "scope": "__view__",
+                                "scopeDetails": {
+                                    "decisionProvider": "TGT",
+                                    "activity": {
+                                        "id": "781535"
+                                    },
+                                    "experience": {
+                                        "id": "0"
+                                    },
+                                    "strategies": [
+                                        {
+                                            "step": "entry",
+                                            "trafficType": "0"
+                                        },
+                                        {
+                                            "step": "display",
+                                            "trafficType": "0"
+                                        }
+                                    ],
+                                    "characteristics": {
+                                        "eventToken": "p/npVH0BgTL1psl2496eH53BNhkKdJh9FdggP2851yfZ9ODJEg5+xiJvnW45OpL4/aczykolnb4dUCw19kHL+w=="
+                                    },
+                                    "correlationID": "781535:0:0"
+                                }
+                            },
+                            {
+                                "id": "AT:eyJhY3Rpdml0eUlkIjoiNzgzMjM2IiwiZXhwZXJpZW5jZUlkIjoiMCJ9",
+                                "scope": "__view__",
+                                "scopeDetails": {
+                                    "decisionProvider": "TGT",
+                                    "activity": {
+                                        "id": "783236"
+                                    },
+                                    "experience": {
+                                        "id": "0"
+                                    },
+                                    "strategies": [
+                                        {
+                                            "step": "entry",
+                                            "trafficType": "0"
+                                        },
+                                        {
+                                            "step": "display",
+                                            "trafficType": "0"
+                                        }
+                                    ],
+                                    "characteristics": {
+                                        "eventToken": "cDrZZR7RjNzQ8DyiEHg0dJ3BNhkKdJh9FdggP2851yfZ9ODJEg5+xiJvnW45OpL4/aczykolnb4dUCw19kHL+w=="
+                                    },
+                                    "correlationID": "783236:0:0"
+                                }
+                            },
+                            {
+                                "id": "AT:eyJhY3Rpdml0eUlkIjoiNzgzMDg2IiwiZXhwZXJpZW5jZUlkIjoiMCJ9",
+                                "scope": "__view__",
+                                "scopeDetails": {
+                                    "decisionProvider": "TGT",
+                                    "activity": {
+                                        "id": "783086"
+                                    },
+                                    "experience": {
+                                        "id": "0"
+                                    },
+                                    "strategies": [
+                                        {
+                                            "step": "entry",
+                                            "algorithmID": "2",
+                                            "trafficType": "0"
+                                        },
+                                        {
+                                            "step": "display",
+                                            "algorithmID": "2",
+                                            "trafficType": "0"
+                                        },
+                                        {
+                                            "step": "conversion",
+                                            "algorithmID": "2",
+                                            "trafficType": "0"
+                                        }
+                                    ],
+                                    "characteristics": {
+                                        "eventToken": "tX84lUwIGPpkFTtvpZl+K8GGdUYAqRIFx37mxA2xQC2Y2fdt4GSXLU1kFLNalXjs0BleBfc+HdFpJo2bPS8ceAM2JlzKl6OGR8ZLdlsQOA4="
+                                    },
+                                    "correlationID": "783086:0:0:2"
+                                }
+                            },
+                            {
+                                "id": "AT:eyJhY3Rpdml0eUlkIjoiNzc0NDk1IiwiZXhwZXJpZW5jZUlkIjoiMSJ9",
+                                "scope": "__view__",
+                                "scopeDetails": {
+                                    "decisionProvider": "TGT",
+                                    "activity": {
+                                        "id": "774495"
+                                    },
+                                    "experience": {
+                                        "id": "1"
+                                    },
+                                    "strategies": [
+                                        {
+                                            "step": "entry",
+                                            "trafficType": "0"
+                                        },
+                                        {
+                                            "step": "display",
+                                            "trafficType": "0"
+                                        }
+                                    ],
+                                    "characteristics": {
+                                        "eventToken": "Sou/7NYGPw6t6MeUEs2rZbHIOKMJSfhZpJ/Iaj88vWvZ9ODJEg5+xiJvnW45OpL4/aczykolnb4dUCw19kHL+w=="
+                                    },
+                                    "correlationID": "774495:1:0"
+                                }
+                            },
+                            {
+                                "id": "AT:eyJhY3Rpdml0eUlkIjoiNzY2ODEzIiwiZXhwZXJpZW5jZUlkIjoiMCJ9",
+                                "scope": "__view__",
+                                "scopeDetails": {
+                                    "decisionProvider": "TGT",
+                                    "activity": {
+                                        "id": "766813"
+                                    },
+                                    "experience": {
+                                        "id": "0"
+                                    },
+                                    "strategies": [
+                                        {
+                                            "step": "entry",
+                                            "trafficType": "0"
+                                        },
+                                        {
+                                            "step": "display",
+                                            "trafficType": "0"
+                                        }
+                                    ],
+                                    "characteristics": {
+                                        "eventToken": "ByGIQz/VMaw7pnW9NvWVvZ3BNhkKdJh9FdggP2851yfZ9ODJEg5+xiJvnW45OpL4/aczykolnb4dUCw19kHL+w=="
+                                    },
+                                    "correlationID": "766813:0:0"
+                                }
+                            },
+                            {
+                                "id": "AT:eyJhY3Rpdml0eUlkIjoiNzU3MDg2IiwiZXhwZXJpZW5jZUlkIjoiMCJ9",
+                                "scope": "__view__",
+                                "scopeDetails": {
+                                    "decisionProvider": "TGT",
+                                    "activity": {
+                                        "id": "757086"
+                                    },
+                                    "experience": {
+                                        "id": "0"
+                                    },
+                                    "strategies": [
+                                        {
+                                            "step": "entry",
+                                            "trafficType": "0"
+                                        },
+                                        {
+                                            "step": "display",
+                                            "trafficType": "0"
+                                        }
+                                    ],
+                                    "characteristics": {
+                                        "eventToken": "pSTpKQrpzhIZhRpPVot/yJ3BNhkKdJh9FdggP2851yfZ9ODJEg5+xiJvnW45OpL4/aczykolnb4dUCw19kHL+w=="
+                                    },
+                                    "correlationID": "757086:0:0"
+                                }
+                            },
+                            {
+                                "id": "AT:eyJhY3Rpdml0eUlkIjoiNzU2ODc2IiwiZXhwZXJpZW5jZUlkIjoiMCJ9",
+                                "scope": "__view__",
+                                "scopeDetails": {
+                                    "decisionProvider": "TGT",
+                                    "activity": {
+                                        "id": "756876"
+                                    },
+                                    "experience": {
+                                        "id": "0"
+                                    },
+                                    "strategies": [
+                                        {
+                                            "step": "entry",
+                                            "trafficType": "0"
+                                        },
+                                        {
+                                            "step": "display",
+                                            "trafficType": "0"
+                                        }
+                                    ],
+                                    "characteristics": {
+                                        "eventToken": "7ZvpnmM/XONnrxlVRrASLp3BNhkKdJh9FdggP2851yfZ9ODJEg5+xiJvnW45OpL4/aczykolnb4dUCw19kHL+w=="
+                                    },
+                                    "correlationID": "756876:0:0"
+                                }
+                            },
+                            {
+                                "id": "AT:eyJhY3Rpdml0eUlkIjoiNzY2NDU4IiwiZXhwZXJpZW5jZUlkIjoiMCJ9",
+                                "scope": "__view__",
+                                "scopeDetails": {
+                                    "decisionProvider": "TGT",
+                                    "activity": {
+                                        "id": "766458"
+                                    },
+                                    "experience": {
+                                        "id": "0"
+                                    },
+                                    "strategies": [
+                                        {
+                                            "step": "entry",
+                                            "trafficType": "0"
+                                        },
+                                        {
+                                            "step": "display",
+                                            "trafficType": "0"
+                                        }
+                                    ],
+                                    "characteristics": {
+                                        "eventToken": "U15lRKUlUlwwT4nY8fbzEJ3BNhkKdJh9FdggP2851yfZ9ODJEg5+xiJvnW45OpL4/aczykolnb4dUCw19kHL+w=="
+                                    },
+                                    "correlationID": "766458:0:0"
+                                }
+                            },
+                            {
+                                "scope": "FPPOUTBOUND",
+                                "scopeDetails": {
+                                    "characteristics": {
+                                        "scopeType": "view"
+                                    }
+                                }
+                            }
+                        ],
+                        "propositionEventType": {
+                            "display": 1
+                        }
+                    },
+                    "analytics": {
+                        "event1to100": {
+                            "event1": {
+                                "value": 1
+                            },
+                            "event2": {
+                                "value": 1
+                            }
+                        },
+                        "customDimensions": {
+                            "eVars": {
+                                "eVar5": "https://uat.digital.airline.amadeus.com/ai/booking/availability/0",
+                                "eVar6": "FPPOUTBOUND",
+                                "eVar7": "Flex Pricer Premium Outbound Page",
+                                "eVar8": "Repeat",
+                                "eVar10": "RefX",
+                                "eVar24": "Booking",
+                                "eVar29": "Not Set",
+                                "eVar31": "fccc8d13-0416-4a43-b98d-84860ee0de95",
+                                "eVar49": "macOS",
+                                "eVar50": "Desktop",
+                                "eVar51": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+                                "eVar65": "undefined",
+                                "eVar77": "R",
+                                "eVar82": "unauthenticated",
+                                "eVar96": "Flight selection",
+                                "eVar109": "in",
+                                "eVar114": "Cash",
+                                "eVar117": "R|BLR-DEL~DEL-BLR|2025-10-30~2025-10-31|ADT=1|CLS=ECONOMY|PROMOCODE=|MRKT=IN|Bengaluru-Delhi~Delhi-Bengaluru",
+                                "eVar120": "total:1|ADT:1|",
+                                "eVar125": "R|BLR-DEL~DEL-BLR|2025-10-30~2025-10-31|ADT=1|CLS=ECONOMY|PROMOCODE=|MRKT=IN|Bengaluru-Delhi~Delhi-Bengaluru",
+                                "eVar139": "Web",
+                                "eVar150": "domestic",
+                                "eVar151": "fccc8d13-0416-4a43-b98d-84860ee0de95",
+                                "eVar169": "13 days",
+                                "eVar140": "web.webpagedetails.pageViews",
+                                "eVar155": "EN88f820d544994d8b892bc1ed3899375d"
+                            },
+                            "lists": {
+                                "list3": {
+                                    "list": [
+                                        {
+                                            "value": "Bengaluru-Delhi"
+                                        },
+                                        {
+                                            "value": "Delhi-Bengaluru"
+                                        }
+                                    ]
+                                }
+                            },
+                            "props": {
+                                "prop2": "Flex Pricer Premium Outbound Page",
+                                "prop3": "https://uat.digital.airline.amadeus.com/ai/booking/availability/0",
+                                "prop4": "FPPOUTBOUND",
+                                "prop5": "RefX",
+                                "prop6": "Booking",
+                                "prop17": "Flight selection",
+                                "prop25": "fccc8d13-0416-4a43-b98d-84860ee0de95",
+                                "prop26": "BLR-DEL",
+                                "prop32": "[Analytics] [Amadeus-Refx-Booking] Availability Page",
+                                "prop33": "Web (Adobe)|EN88f820d544994d8b892bc1ed3899375d|staging",
+                                "prop37": "13 days",
+                                "prop19": "1920 x 1080 | landscape"
+                            },
+                            "listProps": {
+                                "prop1": {
+                                    "values": [
+                                        "Bengaluru-Delhi|2025-10-30|R|ADT=1",
+                                        "Delhi-Bengaluru|2025-10-31|R|ADT=1"
+                                    ]
+                                },
+                                "prop8": {
+                                    "values": [
+                                        "Bengaluru-Delhi",
+                                        "Delhi-Bengaluru"
+                                    ]
+                                }
+                            }
+                        },
+                        "event101to200": {
+                            "event185": {
+                                "value": 1
+                            },
+                            "event198": {
+                                "value": 1
+                            },
+                            "event160": {
+                                "value": 1
+                            }
+                        }
+                    }
+                },
+                "_airindia": {
+                    "WebSDKEventDetails": {
+                        "eVar169": 13
+                    }
+                }
+            },
+            "data": {
+                "appsflyer_id": "",
+                "app_id": "",
+                "os": "",
+                "eventValue": "",
+                "eventName": "",
+                "custom_data": ""
+            }
+        }
+    ],
+    "query": {
+        "identity": {
+            "fetch": [
+                "ECID"
+            ]
+        }
+    },
+    "xdm": {
+        "identityMap": {
+            "ECID": [
+                {
+                    "id": "23370034336084329393027017453485839020"
+                }
+            ]
+        }
+    },
+    "meta": {
+        "state": {
+            "domain": "amadeus.com",
+            "cookiesEnabled": true,
+            "entries": [
+                {
+                    "key": "kndctr_56C628E563E65FE60A495FBA_AdobeOrg_consent",
+                    "value": "general=in"
+                },
+                {
+                    "key": "kndctr_56C628E563E65FE60A495FBA_AdobeOrg_cluster",
+                    "value": "ind1"
+                }
+            ]
+        }
+    }
+}
+
+//Traveler Page
+
+[
+    {
+        "xdm": {
+            "eventType": "web.webpagedetails.pageViews",
+            "web": {
+                "webPageDetails": {
+                    "URL": "https://uat.digital.airline.amadeus.com/ai/booking/traveler/0",
+                    "pageViews": {
+                        "value": 1
+                    },
+                    "name": "Traveler page",
+                    "siteSection": "RefX"
+                },
+                "webReferrer": {
+                    "URL": "https://newai-staging.airindia.com/"
+                }
+            },
+            "device": {
+                "screenHeight": 1080,
+                "screenWidth": 1920,
+                "screenOrientation": "landscape"
+            },
+            "environment": {
+                "type": "browser",
+                "browserDetails": {
+                    "viewportWidth": 1070,
+                    "viewportHeight": 968
+                }
+            },
+            "placeContext": {
+                "localTimezoneOffset": -330,
+                "localTime": "2025-10-16T16:14:25.420+05:30"
+            },
+            "timestamp": "2025-10-16T10:44:25.420Z",
+            "implementationDetails": {
+                "name": "https://ns.adobe.com/experience/alloy/reactor",
+                "version": "2.26.0+2.29.1",
+                "environment": "browser"
+            },
+            "_experience": {
+                "decisioning": {
+                    "propositions": [
+                        {
+                            "id": "AT:eyJhY3Rpdml0eUlkIjoiNzgxNTM1IiwiZXhwZXJpZW5jZUlkIjoiMCJ9",
+                            "scope": "__view__",
+                            "scopeDetails": {
+                                "decisionProvider": "TGT",
+                                "activity": {
+                                    "id": "781535"
+                                },
+                                "experience": {
+                                    "id": "0"
+                                },
+                                "strategies": [
+                                    {
+                                        "step": "entry",
+                                        "trafficType": "0"
+                                    },
+                                    {
+                                        "step": "display",
+                                        "trafficType": "0"
+                                    }
+                                ],
+                                "characteristics": {
+                                    "eventToken": "p/npVH0BgTL1psl2496eH53BNhkKdJh9FdggP2851yfZ9ODJEg5+xiJvnW45OpL4/aczykolnb4dUCw19kHL+w=="
+                                },
+                                "correlationID": "781535:0:0"
+                            }
+                        },
+                        {
+                            "id": "AT:eyJhY3Rpdml0eUlkIjoiNzgzMDg2IiwiZXhwZXJpZW5jZUlkIjoiMCJ9",
+                            "scope": "__view__",
+                            "scopeDetails": {
+                                "decisionProvider": "TGT",
+                                "activity": {
+                                    "id": "783086"
+                                },
+                                "experience": {
+                                    "id": "0"
+                                },
+                                "strategies": [
+                                    {
+                                        "step": "entry",
+                                        "algorithmID": "2",
+                                        "trafficType": "0"
+                                    },
+                                    {
+                                        "step": "display",
+                                        "algorithmID": "2",
+                                        "trafficType": "0"
+                                    },
+                                    {
+                                        "step": "conversion",
+                                        "algorithmID": "2",
+                                        "trafficType": "0"
+                                    }
+                                ],
+                                "characteristics": {
+                                    "eventToken": "tX84lUwIGPpkFTtvpZl+K8GGdUYAqRIFx37mxA2xQC2Y2fdt4GSXLU1kFLNalXjs0BleBfc+HdFpJo2bPS8ceAM2JlzKl6OGR8ZLdlsQOA4="
+                                },
+                                "correlationID": "783086:0:0:2"
+                            }
+                        },
+                        {
+                            "scope": "TRAVELER",
+                            "scopeDetails": {
+                                "characteristics": {
+                                    "scopeType": "view"
+                                }
+                            }
+                        }
+                    ],
+                    "propositionEventType": {
+                        "display": 1
+                    }
+                },
+                "analytics": {
+                    "event1to100": {
+                        "event1": {
+                            "value": 1
+                        },
+                        "event3": {
+                            "value": 1
+                        },
+                        "event99": {
+                            "value": 9.916
+                        }
+                    },
+                    "customDimensions": {
+                        "eVars": {
+                            "eVar5": "https://uat.digital.airline.amadeus.com/ai/booking/traveler/0",
+                            "eVar6": "TRAVELER",
+                            "eVar7": "Traveler page",
+                            "eVar8": "Repeat",
+                            "eVar10": "RefX",
+                            "eVar24": "Booking",
+                            "eVar28": "DELAI08AA",
+                            "eVar29": "Not Set",
+                            "eVar31": "fccc8d13-0416-4a43-b98d-84860ee0de95",
+                            "eVar40": "1WSVVZ2UGS2PYJ2X",
+                            "eVar41": "16/10/2025",
+                            "eVar49": "Mac",
+                            "eVar50": "desktop",
+                            "eVar51": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+                            "eVar65": "undefined",
+                            "eVar77": "R",
+                            "eVar80": "AI2406|AI2819",
+                            "eVar82": "unauthenticated",
+                            "eVar87": "20%",
+                            "eVar96": "Traveler",
+                            "eVar109": "in",
+                            "eVar115": "Direct",
+                            "eVar120": "Total:1|ADT:1",
+                            "eVar143": "Traveler Page",
+                            "eVar150": "domestic",
+                            "eVar151": "fccc8d13-0416-4a43-b98d-84860ee0de95",
+                            "eVar178": "BLR-DEL|DEL-BLR",
+                            "eVar86": "below 3 seconds",
+                            "eVar94": "FPPINBOUND-TRAVELER",
+                            "eVar139": "Web",
+                            "eVar140": "web.webpagedetails.pageViews",
+                            "eVar155": "EN88f820d544994d8b892bc1ed3899375d"
+                        },
+                        "lists": {
+                            "list3": {
+                                "list": [
+                                    {
+                                        "value": "Bengaluru-Delhi"
+                                    },
+                                    {
+                                        "value": "Delhi-Bengaluru"
+                                    }
+                                ]
+                            }
+                        },
+                        "props": {
+                            "prop2": "Traveler page",
+                            "prop3": "https://uat.digital.airline.amadeus.com/ai/booking/traveler/0",
+                            "prop4": "TRAVELER",
+                            "prop5": "RefX",
+                            "prop6": "Booking",
+                            "prop17": "Traveler",
+                            "prop25": "fccc8d13-0416-4a43-b98d-84860ee0de95",
+                            "prop26": "BLR-DEL",
+                            "prop32": "[Analytics][Amadeus-Refx-Booking] Traveler Page",
+                            "prop33": "Web (Adobe)|EN88f820d544994d8b892bc1ed3899375d|staging",
+                            "prop19": "1920 x 1080 | landscape"
+                        },
+                        "listProps": {
+                            "prop1": {
+                                "values": [
+                                    "Bengaluru-Delhi|2025-10-30|R|ADT=1",
+                                    "Delhi-Bengaluru|2025-10-31|R|ADT=1"
+                                ]
+                            },
+                            "prop8": {
+                                "values": [
+                                    "Bengaluru-Delhi",
+                                    "Delhi-Bengaluru"
+                                ]
+                            }
+                        }
+                    },
+                    "event101to200": {
+                        "event198": {
+                            "value": 1
+                        },
+                        "event160": {
+                            "value": 1
+                        }
+                    }
+                }
+            }
+        },
+        "data": {
+            "appsflyer_id": "",
+            "app_id": "",
+            "os": "",
+            "eventValue": "",
+            "eventName": "",
+            "custom_data": ""
+        }
+    }
+]
+
+//Shopping Cart
+[
+    {
+        "xdm": {
+            "eventType": "web.webpagedetails.pageViews",
+            "web": {
+                "webPageDetails": {
+                    "URL": "https://uat.digital.airline.amadeus.com/ai/booking/shopping-cart",
+                    "name": "Shopping cart page",
+                    "pageViews": {
+                        "value": 1
+                    },
+                    "siteSection": "RefX"
+                },
+                "webReferrer": {
+                    "URL": "https://newai-staging.airindia.com/"
+                }
+            },
+            "device": {
+                "screenHeight": 1080,
+                "screenWidth": 1920,
+                "screenOrientation": "landscape"
+            },
+            "environment": {
+                "type": "browser",
+                "browserDetails": {
+                    "viewportWidth": 1070,
+                    "viewportHeight": 968
+                }
+            },
+            "placeContext": {
+                "localTimezoneOffset": -330,
+                "localTime": "2025-10-16T16:19:47.244+05:30"
+            },
+            "timestamp": "2025-10-16T10:49:47.244Z",
+            "implementationDetails": {
+                "name": "https://ns.adobe.com/experience/alloy/reactor",
+                "version": "2.26.0+2.29.1",
+                "environment": "browser"
+            },
+            "_experience": {
+                "decisioning": {
+                    "propositions": [
+                        {
+                            "id": "AT:eyJhY3Rpdml0eUlkIjoiNzgxNTM1IiwiZXhwZXJpZW5jZUlkIjoiMCJ9",
+                            "scope": "__view__",
+                            "scopeDetails": {
+                                "decisionProvider": "TGT",
+                                "activity": {
+                                    "id": "781535"
+                                },
+                                "experience": {
+                                    "id": "0"
+                                },
+                                "strategies": [
+                                    {
+                                        "step": "entry",
+                                        "trafficType": "0"
+                                    },
+                                    {
+                                        "step": "display",
+                                        "trafficType": "0"
+                                    }
+                                ],
+                                "characteristics": {
+                                    "eventToken": "p/npVH0BgTL1psl2496eH53BNhkKdJh9FdggP2851yfZ9ODJEg5+xiJvnW45OpL4/aczykolnb4dUCw19kHL+w=="
+                                },
+                                "correlationID": "781535:0:0"
+                            }
+                        },
+                        {
+                            "id": "AT:eyJhY3Rpdml0eUlkIjoiNzgzMDg2IiwiZXhwZXJpZW5jZUlkIjoiMCJ9",
+                            "scope": "__view__",
+                            "scopeDetails": {
+                                "decisionProvider": "TGT",
+                                "activity": {
+                                    "id": "783086"
+                                },
+                                "experience": {
+                                    "id": "0"
+                                },
+                                "strategies": [
+                                    {
+                                        "step": "entry",
+                                        "algorithmID": "2",
+                                        "trafficType": "0"
+                                    },
+                                    {
+                                        "step": "display",
+                                        "algorithmID": "2",
+                                        "trafficType": "0"
+                                    },
+                                    {
+                                        "step": "conversion",
+                                        "algorithmID": "2",
+                                        "trafficType": "0"
+                                    }
+                                ],
+                                "characteristics": {
+                                    "eventToken": "tX84lUwIGPpkFTtvpZl+K8GGdUYAqRIFx37mxA2xQC2Y2fdt4GSXLU1kFLNalXjs0BleBfc+HdFpJo2bPS8ceAM2JlzKl6OGR8ZLdlsQOA4="
+                                },
+                                "correlationID": "783086:0:0:2"
+                            }
+                        },
+                        {
+                            "scope": "PRIO",
+                            "scopeDetails": {
+                                "characteristics": {
+                                    "scopeType": "view"
+                                }
+                            }
+                        },
+                        {
+                            "id": "AT:eyJhY3Rpdml0eUlkIjoiNzUzNTM4IiwiZXhwZXJpZW5jZUlkIjoiMSJ9",
+                            "scope": "__view__",
+                            "scopeDetails": {
+                                "decisionProvider": "TGT",
+                                "activity": {
+                                    "id": "753538"
+                                },
+                                "experience": {
+                                    "id": "1"
+                                },
+                                "strategies": [
+                                    {
+                                        "step": "entry",
+                                        "trafficType": "0"
+                                    },
+                                    {
+                                        "step": "display",
+                                        "trafficType": "0"
+                                    }
+                                ],
+                                "characteristics": {
+                                    "eventToken": "6ezd3D+X3hyV4kHElDAcAbHIOKMJSfhZpJ/Iaj88vWvZ9ODJEg5+xiJvnW45OpL4/aczykolnb4dUCw19kHL+w=="
+                                },
+                                "correlationID": "753538:1:0"
+                            }
+                        },
+                        {
+                            "id": "AT:eyJhY3Rpdml0eUlkIjoiNzIzNjc4IiwiZXhwZXJpZW5jZUlkIjoiMSJ9",
+                            "scope": "__view__",
+                            "scopeDetails": {
+                                "decisionProvider": "TGT",
+                                "activity": {
+                                    "id": "723678"
+                                },
+                                "experience": {
+                                    "id": "1"
+                                },
+                                "strategies": [
+                                    {
+                                        "step": "entry",
+                                        "trafficType": "0"
+                                    },
+                                    {
+                                        "step": "display",
+                                        "trafficType": "0"
+                                    }
+                                ],
+                                "characteristics": {
+                                    "eventToken": "lShzxAqTJ4CnJQQjxKJ+oLHIOKMJSfhZpJ/Iaj88vWuuymNPLcsei1nC7oVyi16G/aczykolnb4dUCw19kHL+w=="
+                                },
+                                "correlationID": "723678:1:0"
+                            }
+                        },
+                        {
+                            "scope": "SHOPPINGCART",
+                            "scopeDetails": {
+                                "characteristics": {
+                                    "scopeType": "view"
+                                }
+                            }
+                        }
+                    ],
+                    "propositionEventType": {
+                        "display": 1
+                    }
+                },
+                "analytics": {
+                    "event1to100": {
+                        "event4": {
+                            "value": 1
+                        },
+                        "event1": {
+                            "value": 1
+                        },
+                        "event99": {
+                            "value": 13.387
+                        }
+                    },
+                    "customDimensions": {
+                        "eVars": {
+                            "eVar5": "https://uat.digital.airline.amadeus.com/ai/booking/shopping-cart",
+                            "eVar6": "SHOPPINGCART",
+                            "eVar7": "Shopping cart page",
+                            "eVar8": "Repeat",
+                            "eVar10": "RefX",
+                            "eVar24": "Booking",
+                            "eVar28": "DELAI08AA",
+                            "eVar29": "7XKOJ2",
+                            "eVar31": "fccc8d13-0416-4a43-b98d-84860ee0de95",
+                            "eVar40": "1WSVVZ2UGS2PYJ2X",
+                            "eVar41": "16/10/2025",
+                            "eVar42": "16/10/2025",
+                            "eVar49": "Mac",
+                            "eVar50": "desktop",
+                            "eVar51": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+                            "eVar65": "undefined",
+                            "eVar77": "R",
+                            "eVar80": "AI2406|AI2819",
+                            "eVar82": "unauthenticated",
+                            "eVar87": "0%",
+                            "eVar96": "Shopping cart",
+                            "eVar109": "in",
+                            "eVar143": "Shopping Cart",
+                            "eVar150": "domestic",
+                            "eVar151": "fccc8d13-0416-4a43-b98d-84860ee0de95",
+                            "eVar139": "Web",
+                            "eVar140": "web.webpagedetails.pageViews",
+                            "eVar155": "EN88f820d544994d8b892bc1ed3899375d"
+                        },
+                        "lists": {
+                            "list3": {
+                                "list": [
+                                    {
+                                        "value": "Bengaluru-Delhi"
+                                    },
+                                    {
+                                        "value": "Delhi-Bengaluru"
+                                    }
+                                ]
+                            }
+                        },
+                        "props": {
+                            "prop27": "72189a826f390a13b5285bf90cc5a81d1a99c255f2bca097374565c4adb99f09",
+                            "prop28": "114bd151f8fb0c58642d2170da4ae7d7c57977260ac2cc8905306cab6b2acabc",
+                            "prop2": "Shopping cart page",
+                            "prop3": "https://uat.digital.airline.amadeus.com/ai/booking/shopping-cart",
+                            "prop4": "SHOPPINGCART",
+                            "prop5": "RefX",
+                            "prop6": "Booking",
+                            "prop17": "Shopping cart",
+                            "prop25": "fccc8d13-0416-4a43-b98d-84860ee0de95",
+                            "prop26": "BLR-DEL",
+                            "prop32": "[Analytics][Amadeus-Refx-Booking] Shopping Cart Page",
+                            "prop33": "Web (Adobe)|EN88f820d544994d8b892bc1ed3899375d|staging",
+                            "prop19": "1920 x 1080 | landscape"
+                        },
+                        "listProps": {
+                            "prop1": {
+                                "values": [
+                                    "Bengaluru-Delhi|2025-10-30|R|ADT=1",
+                                    "Delhi-Bengaluru|2025-10-31|R|ADT=1"
+                                ]
+                            },
+                            "prop8": {
+                                "values": [
+                                    "Bengaluru-Delhi",
+                                    "Delhi-Bengaluru"
+                                ]
+                            }
+                        }
+                    },
+                    "event101to200": {
+                        "event106": {
+                            "value": 71814
+                        },
+                        "event198": {
+                            "value": 1
+                        },
+                        "event160": {
+                            "value": 1
+                        }
+                    }
+                }
+            },
+            "_airindia": {
+                "WebSDKEventDetails": {
+                    "cartCreationDate": "2025-10-16",
+                    "PNRCreationDate": "2025-10-16"
+                }
+            },
+            "productListItems": [
+                {
+                    "lineItemId": "Base Fare",
+                    "SKU": "BLR-DEL:2406:Value",
+                    "quantity": 1,
+                    "priceTotal": 0,
+                    "_experience": {
+                        "analytics": {
+                            "customDimensions": {
+                                "eVars": {
+                                    "eVar9": "domestic",
+                                    "eVar33": "eco",
+                                    "eVar35": "Non-Ancillary Item",
+                                    "eVar93": "value",
+                                    "eVar97": "BLR-DEL"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "lineItemId": "Base Fare",
+                    "SKU": "DEL-BLR:2819:Classic",
+                    "quantity": 1,
+                    "priceTotal": 0,
+                    "_experience": {
+                        "analytics": {
+                            "customDimensions": {
+                                "eVars": {
+                                    "eVar9": "domestic",
+                                    "eVar33": "business",
+                                    "eVar35": "Non-Ancillary Item",
+                                    "eVar93": "classic",
+                                    "eVar97": "DEL-BLR"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "lineItemId": "Total Taxes",
+                    "SKU": "Taxes",
+                    "quantity": 1,
+                    "priceTotal": 0,
+                    "_experience": {
+                        "analytics": {
+                            "customDimensions": {
+                                "eVars": {
+                                    "eVar35": "Non-Ancillary Item",
+                                    "eVar33": "business",
+                                    "eVar97": "BLR-DEL:DEL-BLR",
+                                    "eVar9": "domestic"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "lineItemId": "Convenience Fee",
+                    "SKU": "Convenience Fee",
+                    "quantity": 1,
+                    "priceTotal": 0,
+                    "_experience": {
+                        "analytics": {
+                            "customDimensions": {
+                                "eVars": {
+                                    "eVar35": "Non-Ancillary Item",
+                                    "eVar33": "business",
+                                    "eVar97": "BLR-DEL:DEL-BLR",
+                                    "eVar9": "domestic"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "lineItemId": "Surcharge",
+                    "SKU": "Surcharge",
+                    "quantity": 1,
+                    "priceTotal": 0,
+                    "_experience": {
+                        "analytics": {
+                            "customDimensions": {
+                                "eVars": {
+                                    "eVar35": "Non-Ancillary Item",
+                                    "eVar33": "business",
+                                    "eVar97": "BLR-DEL:DEL-BLR",
+                                    "eVar9": "domestic"
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        "data": {
+            "appsflyer_id": "",
+            "app_id": "",
+            "os": "",
+            "eventValue": "",
+            "eventName": "",
+            "custom_data": ""
+        }
+    }
+]
+
+//Payment page
+{
+    "events": [
+        {
+            "xdm": {
+                "eventType": "web.webpagedetails.pageViews",
+                "web": {
+                    "webPageDetails": {
+                        "URL": "https://uat.digital.airline.amadeus.com/ai/booking/payment",
+                        "pageViews": {
+                            "value": 1
+                        },
+                        "name": "Payment page",
+                        "siteSection": "RefX"
+                    },
+                    "webReferrer": {
+                        "URL": "https://newai-staging.airindia.com/"
+                    }
+                },
+                "device": {
+                    "screenHeight": 1080,
+                    "screenWidth": 1920,
+                    "screenOrientation": "landscape"
+                },
+                "environment": {
+                    "type": "browser",
+                    "browserDetails": {
+                        "viewportWidth": 1085,
+                        "viewportHeight": 968
+                    }
+                },
+                "placeContext": {
+                    "localTimezoneOffset": -330,
+                    "localTime": "2025-10-16T16:20:14.110+05:30"
+                },
+                "timestamp": "2025-10-16T10:50:14.110Z",
+                "implementationDetails": {
+                    "name": "https://ns.adobe.com/experience/alloy/reactor",
+                    "version": "2.26.0+2.29.1",
+                    "environment": "browser"
+                },
+                "_experience": {
+                    "analytics": {
+                        "event1to100": {
+                            "event1": {
+                                "value": 1
+                            },
+                            "event6": {
+                                "value": 1
+                            },
+                            "event99": {
+                                "value": 26.866
+                            }
+                        },
+                        "customDimensions": {
+                            "eVars": {
+                                "eVar5": "https://uat.digital.airline.amadeus.com/ai/booking/payment",
+                                "eVar6": "PAYMENT",
+                                "eVar7": "Payment page",
+                                "eVar8": "Repeat",
+                                "eVar10": "RefX",
+                                "eVar24": "Booking",
+                                "eVar28": "DELAI08AA",
+                                "eVar29": "7XKOJ2",
+                                "eVar31": "fccc8d13-0416-4a43-b98d-84860ee0de95",
+                                "eVar40": "1WSVVZ2UGS2PYJ2X",
+                                "eVar41": "16/10/2025",
+                                "eVar42": "16/10/2025",
+                                "eVar49": "Mac",
+                                "eVar50": "desktop",
+                                "eVar51": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+                                "eVar65": "undefined",
+                                "eVar77": "R",
+                                "eVar80": "AI2406|AI2819",
+                                "eVar82": "unauthenticated",
+                                "eVar87": "100%",
+                                "eVar96": "Shopping cart",
+                                "eVar109": "in",
+                                "eVar143": "Payment",
+                                "eVar150": "domestic",
+                                "eVar151": "fccc8d13-0416-4a43-b98d-84860ee0de95",
+                                "eVar94": "SHOPPINGCART-PAYMENT",
+                                "eVar139": "Web",
+                                "eVar140": "web.webpagedetails.pageViews",
+                                "eVar155": "EN88f820d544994d8b892bc1ed3899375d"
+                            },
+                            "lists": {
+                                "list3": {
+                                    "list": [
+                                        {
+                                            "value": "Bengaluru-Delhi"
+                                        },
+                                        {
+                                            "value": "Delhi-Bengaluru"
+                                        }
+                                    ]
+                                }
+                            },
+                            "props": {
+                                "prop2": "Payment page",
+                                "prop3": "https://uat.digital.airline.amadeus.com/ai/booking/payment",
+                                "prop4": "PAYMENT",
+                                "prop5": "RefX",
+                                "prop6": "Booking",
+                                "prop17": "Shopping cart",
+                                "prop25": "fccc8d13-0416-4a43-b98d-84860ee0de95",
+                                "prop26": "BLR-DEL",
+                                "prop27": "72189a826f390a13b5285bf90cc5a81d1a99c255f2bca097374565c4adb99f09",
+                                "prop28": "114bd151f8fb0c58642d2170da4ae7d7c57977260ac2cc8905306cab6b2acabc",
+                                "prop32": "[Analytics][Amadeus-Refx-Booking] Payment Page",
+                                "prop33": "Web (Adobe)|EN88f820d544994d8b892bc1ed3899375d|staging",
+                                "prop19": "1920 x 1080 | landscape"
+                            },
+                            "listProps": {
+                                "prop1": {
+                                    "values": [
+                                        "Bengaluru-Delhi|2025-10-30|R|ADT=1",
+                                        "Delhi-Bengaluru|2025-10-31|R|ADT=1"
+                                    ]
+                                },
+                                "prop8": {
+                                    "values": [
+                                        "Bengaluru-Delhi",
+                                        "Delhi-Bengaluru"
+                                    ]
+                                }
+                            }
+                        },
+                        "event101to200": {
+                            "event198": {
+                                "value": 1
+                            },
+                            "event160": {
+                                "value": 1
+                            }
+                        }
+                    }
+                },
+                "productListItems": [
+                    {
+                        "lineItemId": "Base Fare",
+                        "SKU": "BLR-DEL:2406:Value",
+                        "quantity": 1,
+                        "priceTotal": 0,
+                        "_experience": {
+                            "analytics": {
+                                "customDimensions": {
+                                    "eVars": {
+                                        "eVar9": "domestic",
+                                        "eVar33": "eco",
+                                        "eVar35": "Non-Ancillary Item",
+                                        "eVar93": "value",
+                                        "eVar97": "BLR-DEL"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "lineItemId": "Base Fare",
+                        "SKU": "DEL-BLR:2819:Classic",
+                        "quantity": 1,
+                        "priceTotal": 0,
+                        "_experience": {
+                            "analytics": {
+                                "customDimensions": {
+                                    "eVars": {
+                                        "eVar9": "domestic",
+                                        "eVar33": "business",
+                                        "eVar35": "Non-Ancillary Item",
+                                        "eVar93": "classic",
+                                        "eVar97": "DEL-BLR"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "lineItemId": "Total Taxes",
+                        "SKU": "Taxes",
+                        "quantity": 1,
+                        "priceTotal": 0,
+                        "_experience": {
+                            "analytics": {
+                                "customDimensions": {
+                                    "eVars": {
+                                        "eVar35": "Non-Ancillary Item",
+                                        "eVar33": "business",
+                                        "eVar97": "BLR-DEL:DEL-BLR",
+                                        "eVar9": "domestic"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "lineItemId": "Convenience Fee",
+                        "SKU": "Convenience Fee",
+                        "quantity": 1,
+                        "priceTotal": 0,
+                        "_experience": {
+                            "analytics": {
+                                "customDimensions": {
+                                    "eVars": {
+                                        "eVar35": "Non-Ancillary Item",
+                                        "eVar33": "business",
+                                        "eVar97": "BLR-DEL:DEL-BLR",
+                                        "eVar9": "domestic"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "lineItemId": "Surcharge",
+                        "SKU": "Surcharge",
+                        "quantity": 1,
+                        "priceTotal": 0,
+                        "_experience": {
+                            "analytics": {
+                                "customDimensions": {
+                                    "eVars": {
+                                        "eVar35": "Non-Ancillary Item",
+                                        "eVar33": "business",
+                                        "eVar97": "BLR-DEL:DEL-BLR",
+                                        "eVar9": "domestic"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ],
+                "_airindia": {
+                    "WebSDKEventDetails": {
+                        "cartCreationDate": "2025-10-16",
+                        "PNRCreationDate": "2025-10-16"
+                    }
+                }
+            },
+            "data": {
+                "appsflyer_id": "",
+                "app_id": "",
+                "os": "",
+                "eventValue": "",
+                "eventName": "",
+                "custom_data": ""
+            }
+        }
+    ],
+    "query": {
+        "identity": {
+            "fetch": [
+                "ECID"
+            ]
+        }
+    },
+    "meta": {
+        "state": {
+            "domain": "amadeus.com",
+            "cookiesEnabled": true,
+            "entries": [
+                {
+                    "key": "kndctr_56C628E563E65FE60A495FBA_AdobeOrg_consent",
+                    "value": "general=in"
+                },
+                {
+                    "key": "kndctr_56C628E563E65FE60A495FBA_AdobeOrg_cluster",
+                    "value": "ind1"
+                }
+            ]
+        }
+    }
+}
+
+//Confirmation page
+{
+    "events": [
+        {
+            "xdm": {
+                "eventType": "commerce.purchases",
+                "web": {
+                    "webPageDetails": {
+                        "URL": "https://uat.digital.airline.amadeus.com/ai/booking/confirmation",
+                        "name": "Confirmation page",
+                        "pageViews": {
+                            "value": 1
+                        },
+                        "siteSection": "RefX"
+                    },
+                    "webReferrer": {
+                        "URL": "https://uat.billdesk.com/"
+                    }
+                },
+                "device": {
+                    "screenHeight": 1080,
+                    "screenWidth": 1920,
+                    "screenOrientation": "landscape"
+                },
+                "environment": {
+                    "type": "browser",
+                    "browserDetails": {
+                        "viewportWidth": 1070,
+                        "viewportHeight": 968
+                    }
+                },
+                "placeContext": {
+                    "localTimezoneOffset": -330,
+                    "localTime": "2025-10-16T16:22:28.129+05:30"
+                },
+                "timestamp": "2025-10-16T10:52:28.129Z",
+                "implementationDetails": {
+                    "name": "https://ns.adobe.com/experience/alloy/reactor",
+                    "version": "2.26.0+2.29.1",
+                    "environment": "browser"
+                },
+                "_experience": {
+                    "decisioning": {
+                        "propositions": [
+                            {
+                                "id": "AT:eyJhY3Rpdml0eUlkIjoiNzgyOTk1IiwiZXhwZXJpZW5jZUlkIjoiMCJ9",
+                                "scope": "__view__",
+                                "scopeDetails": {
+                                    "decisionProvider": "TGT",
+                                    "activity": {
+                                        "id": "782995"
+                                    },
+                                    "experience": {
+                                        "id": "0"
+                                    },
+                                    "strategies": [
+                                        {
+                                            "step": "entry",
+                                            "trafficType": "0"
+                                        },
+                                        {
+                                            "step": "display",
+                                            "trafficType": "0"
+                                        }
+                                    ],
+                                    "characteristics": {
+                                        "eventToken": "L/flB1hsXCtD7Q8ciUYkMp3BNhkKdJh9FdggP2851yfZ9ODJEg5+xiJvnW45OpL4/aczykolnb4dUCw19kHL+w=="
+                                    },
+                                    "correlationID": "782995:0:0"
+                                }
+                            },
+                            {
+                                "id": "AT:eyJhY3Rpdml0eUlkIjoiNzUwMjU4IiwiZXhwZXJpZW5jZUlkIjoiMCJ9",
+                                "scope": "__view__",
+                                "scopeDetails": {
+                                    "decisionProvider": "TGT",
+                                    "activity": {
+                                        "id": "750258"
+                                    },
+                                    "experience": {
+                                        "id": "0"
+                                    },
+                                    "strategies": [
+                                        {
+                                            "step": "entry",
+                                            "trafficType": "0"
+                                        },
+                                        {
+                                            "step": "display",
+                                            "trafficType": "0"
+                                        }
+                                    ],
+                                    "characteristics": {
+                                        "eventToken": "uzw0fd454qpop27T1Eo4Np3BNhkKdJh9FdggP2851yfZ9ODJEg5+xiJvnW45OpL4/aczykolnb4dUCw19kHL+w=="
+                                    },
+                                    "correlationID": "750258:0:0"
+                                }
+                            },
+                            {
+                                "id": "AT:eyJhY3Rpdml0eUlkIjoiNzgxNTM1IiwiZXhwZXJpZW5jZUlkIjoiMCJ9",
+                                "scope": "__view__",
+                                "scopeDetails": {
+                                    "decisionProvider": "TGT",
+                                    "activity": {
+                                        "id": "781535"
+                                    },
+                                    "experience": {
+                                        "id": "0"
+                                    },
+                                    "strategies": [
+                                        {
+                                            "step": "entry",
+                                            "trafficType": "0"
+                                        },
+                                        {
+                                            "step": "display",
+                                            "trafficType": "0"
+                                        }
+                                    ],
+                                    "characteristics": {
+                                        "eventToken": "p/npVH0BgTL1psl2496eH53BNhkKdJh9FdggP2851yfZ9ODJEg5+xiJvnW45OpL4/aczykolnb4dUCw19kHL+w=="
+                                    },
+                                    "correlationID": "781535:0:0"
+                                }
+                            },
+                            {
+                                "id": "AT:eyJhY3Rpdml0eUlkIjoiNzgzMDg2IiwiZXhwZXJpZW5jZUlkIjoiMCJ9",
+                                "scope": "__view__",
+                                "scopeDetails": {
+                                    "decisionProvider": "TGT",
+                                    "activity": {
+                                        "id": "783086"
+                                    },
+                                    "experience": {
+                                        "id": "0"
+                                    },
+                                    "strategies": [
+                                        {
+                                            "step": "entry",
+                                            "algorithmID": "2",
+                                            "trafficType": "0"
+                                        },
+                                        {
+                                            "step": "display",
+                                            "algorithmID": "2",
+                                            "trafficType": "0"
+                                        },
+                                        {
+                                            "step": "conversion",
+                                            "algorithmID": "2",
+                                            "trafficType": "0"
+                                        }
+                                    ],
+                                    "characteristics": {
+                                        "eventToken": "tX84lUwIGPpkFTtvpZl+K8GGdUYAqRIFx37mxA2xQC2Y2fdt4GSXLU1kFLNalXjs0BleBfc+HdFpJo2bPS8ceAM2JlzKl6OGR8ZLdlsQOA4="
+                                    },
+                                    "correlationID": "783086:0:0:2"
+                                }
+                            },
+                            {
+                                "id": "AT:eyJhY3Rpdml0eUlkIjoiNzc4MTkwIiwiZXhwZXJpZW5jZUlkIjoiMCJ9",
+                                "scope": "__view__",
+                                "scopeDetails": {
+                                    "decisionProvider": "TGT",
+                                    "activity": {
+                                        "id": "778190"
+                                    },
+                                    "experience": {
+                                        "id": "0"
+                                    },
+                                    "strategies": [
+                                        {
+                                            "step": "entry",
+                                            "trafficType": "0"
+                                        },
+                                        {
+                                            "step": "display",
+                                            "trafficType": "0"
+                                        }
+                                    ],
+                                    "characteristics": {
+                                        "eventToken": "xn8p5dmkZyiP1AxilHLKp53BNhkKdJh9FdggP2851yfZ9ODJEg5+xiJvnW45OpL4/aczykolnb4dUCw19kHL+w=="
+                                    },
+                                    "correlationID": "778190:0:0"
+                                }
+                            },
+                            {
+                                "id": "AT:eyJhY3Rpdml0eUlkIjoiNzUzNTM4IiwiZXhwZXJpZW5jZUlkIjoiMSJ9",
+                                "scope": "__view__",
+                                "scopeDetails": {
+                                    "decisionProvider": "TGT",
+                                    "activity": {
+                                        "id": "753538"
+                                    },
+                                    "experience": {
+                                        "id": "1"
+                                    },
+                                    "strategies": [
+                                        {
+                                            "step": "entry",
+                                            "trafficType": "0"
+                                        },
+                                        {
+                                            "step": "display",
+                                            "trafficType": "0"
+                                        }
+                                    ],
+                                    "characteristics": {
+                                        "eventToken": "6ezd3D+X3hyV4kHElDAcAbHIOKMJSfhZpJ/Iaj88vWuuymNPLcsei1nC7oVyi16G/aczykolnb4dUCw19kHL+w=="
+                                    },
+                                    "correlationID": "753538:1:0"
+                                }
+                            },
+                            {
+                                "scope": "PAYMENT",
+                                "scopeDetails": {
+                                    "characteristics": {
+                                        "scopeType": "view"
+                                    }
+                                }
+                            },
+                            {
+                                "id": "AT:eyJhY3Rpdml0eUlkIjoiNzU2MjA4IiwiZXhwZXJpZW5jZUlkIjoiMCJ9",
+                                "scope": "__view__",
+                                "scopeDetails": {
+                                    "decisionProvider": "TGT",
+                                    "activity": {
+                                        "id": "756208"
+                                    },
+                                    "experience": {
+                                        "id": "0"
+                                    },
+                                    "strategies": [
+                                        {
+                                            "step": "entry",
+                                            "trafficType": "0"
+                                        },
+                                        {
+                                            "step": "display",
+                                            "trafficType": "0"
+                                        }
+                                    ],
+                                    "characteristics": {
+                                        "eventToken": "RLtD0Kyhnrh4Rs27d+RKX53BNhkKdJh9FdggP2851yfZ9ODJEg5+xiJvnW45OpL4/aczykolnb4dUCw19kHL+w=="
+                                    },
+                                    "correlationID": "756208:0:0"
+                                }
+                            },
+                            {
+                                "id": "AT:eyJhY3Rpdml0eUlkIjoiNzIxNjcxIiwiZXhwZXJpZW5jZUlkIjoiMCJ9",
+                                "scope": "__view__",
+                                "scopeDetails": {
+                                    "decisionProvider": "TGT",
+                                    "activity": {
+                                        "id": "721671"
+                                    },
+                                    "experience": {
+                                        "id": "0"
+                                    },
+                                    "strategies": [
+                                        {
+                                            "step": "entry",
+                                            "trafficType": "0"
+                                        },
+                                        {
+                                            "step": "display",
+                                            "trafficType": "0"
+                                        },
+                                        {
+                                            "step": "conversion",
+                                            "trafficType": "0"
+                                        }
+                                    ],
+                                    "characteristics": {
+                                        "eventToken": "W/lLeL4fjq6chUuHNzLDTp3BNhkKdJh9FdggP2851yfZ9ODJEg5+xiJvnW45OpL4Pse33DhMsKeqt8fFw79Kf7YG3VM2wujhdRlKSFck1z4="
+                                    },
+                                    "correlationID": "721671:0:0"
+                                }
+                            },
+                            {
+                                "id": "AT:eyJhY3Rpdml0eUlkIjoiNzgyMzY2IiwiZXhwZXJpZW5jZUlkIjoiMSJ9",
+                                "scope": "__view__",
+                                "scopeDetails": {
+                                    "decisionProvider": "TGT",
+                                    "activity": {
+                                        "id": "782366"
+                                    },
+                                    "experience": {
+                                        "id": "1"
+                                    },
+                                    "strategies": [
+                                        {
+                                            "step": "entry",
+                                            "trafficType": "0"
+                                        },
+                                        {
+                                            "step": "display",
+                                            "trafficType": "0"
+                                        }
+                                    ],
+                                    "characteristics": {
+                                        "eventToken": "I/1+UL0YiLAlw5ZP4eJpCLHIOKMJSfhZpJ/Iaj88vWuuymNPLcsei1nC7oVyi16G/aczykolnb4dUCw19kHL+w=="
+                                    },
+                                    "correlationID": "782366:1:0"
+                                }
+                            },
+                            {
+                                "scope": "CONFIRMATION",
+                                "scopeDetails": {
+                                    "characteristics": {
+                                        "scopeType": "view"
+                                    }
+                                }
+                            }
+                        ],
+                        "propositionEventType": {
+                            "display": 1
+                        }
+                    },
+                    "analytics": {
+                        "event1to100": {
+                            "event1": {
+                                "value": 1
+                            },
+                            "event7": {
+                                "value": 1
+                            },
+                            "event10": {
+                                "id": "7XKOJ2",
+                                "value": 1
+                            },
+                            "event90": {
+                                "value": 13
+                            },
+                            "event91": {
+                                "value": 9
+                            },
+                            "event94": {
+                                "id": "341d5ff4-c8ae-4a62-a55f-8badfd75793c",
+                                "value": 71814
+                            },
+                            "event97": {
+                                "value": 1
+                            },
+                            "event98": {
+                                "value": 492.624
+                            },
+                            "event99": {
+                                "value": 13.702
+                            }
+                        },
+                        "event101to200": {
+                            "event161": {
+                                "value": 1
+                            },
+                            "event180": {
+                                "id": "341d5ff4-c8ae-4a62-a55f-8badfd75793c",
+                                "value": 0
+                            },
+                            "event181": {
+                                "id": "341d5ff4-c8ae-4a62-a55f-8badfd75793c",
+                                "value": 0
+                            },
+                            "event185": {
+                                "value": 1
+                            },
+                            "event198": {
+                                "value": 1
+                            },
+                            "event200": {
+                                "value": 4
+                            },
+                            "event160": {
+                                "value": 1
+                            }
+                        },
+                        "customDimensions": {
+                            "eVars": {
+                                "eVar5": "https://uat.digital.airline.amadeus.com/ai/booking/confirmation",
+                                "eVar6": "CONFIRMATION",
+                                "eVar7": "Confirmation page",
+                                "eVar8": "Repeat",
+                                "eVar10": "RefX",
+                                "eVar24": "Booking",
+                                "eVar28": "DELAI08AA",
+                                "eVar29": "7XKOJ2",
+                                "eVar30": "341d5ff4-c8ae-4a62-a55f-8badfd75793c",
+                                "eVar31": "fccc8d13-0416-4a43-b98d-84860ee0de95",
+                                "eVar40": "7XKOJ2",
+                                "eVar41": "16/10/2025",
+                                "eVar42": "16/10/2025",
+                                "eVar43": "NETBANKING",
+                                "eVar44": "Netbanking",
+                                "eVar45": "ADT",
+                                "eVar49": "Mac",
+                                "eVar50": "desktop",
+                                "eVar51": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+                                "eVar65": "undefined",
+                                "eVar77": "R",
+                                "eVar82": "unauthenticated",
+                                "eVar87": "0%",
+                                "eVar96": "Confirmation",
+                                "eVar100": "AI|IN|en|Booking|RefX|CONFIRMATION|NA|DELAI08AA",
+                                "eVar108": "10 days and above",
+                                "eVar109": "in",
+                                "eVar110": "October",
+                                "eVar111": "7XKOJ2_BOUND-BLR-DEL_BOUND-DEL-BLR",
+                                "eVar113": "30/10/2025",
+                                "eVar114": "Cash",
+                                "eVar118": "flight|14|R|Bengaluru-Delhi,Delhi-Bengaluru|20251030-20251031",
+                                "eVar119": "Bengaluru-Delhi,Delhi-Bengaluru-R",
+                                "eVar120": "total:1|ADT:1|",
+                                "eVar121": "flight|Bengaluru-Delhi,Delhi-Bengaluru|AI2406_Thu|20251030-20251031|business|1 stop|",
+                                "eVar133": "1",
+                                "eVar141": "31-10-2025",
+                                "eVar142": "BLR~DEL|341d5ff4-c8ae-4a62-a55f-8badfd75793c",
+                                "eVar143": "Order Confirmation",
+                                "eVar150": "domestic",
+                                "eVar151": "fccc8d13-0416-4a43-b98d-84860ee0de95",
+                                "eVar154": "Not set",
+                                "eVar155": "EN88f820d544994d8b892bc1ed3899375d",
+                                "eVar139": "Web",
+                                "eVar140": "commerce.purchases"
+                            },
+                            "props": {
+                                "prop2": "Confirmation page",
+                                "prop3": "https://uat.digital.airline.amadeus.com/ai/booking/confirmation",
+                                "prop4": "CONFIRMATION",
+                                "prop5": "RefX",
+                                "prop6": "Booking",
+                                "prop17": "Confirmation",
+                                "prop25": "fccc8d13-0416-4a43-b98d-84860ee0de95",
+                                "prop26": "BLR-DEL",
+                                "prop27": "72189a826f390a13b5285bf90cc5a81d1a99c255f2bca097374565c4adb99f09",
+                                "prop28": "114bd151f8fb0c58642d2170da4ae7d7c57977260ac2cc8905306cab6b2acabc",
+                                "prop30": "INR",
+                                "prop32": "[Analytics][Amadeus-Refx-Booking] Order Confirmation (Revenue)",
+                                "prop33": "Web (Adobe)|EN88f820d544994d8b892bc1ed3899375d|staging",
+                                "prop19": "1920 x 1080 | landscape"
+                            },
+                            "listProps": {
+                                "prop1": {
+                                    "values": [
+                                        "Bengaluru-Delhi|2025-10-30|R|ADT=1",
+                                        "Delhi-Bengaluru|2025-10-31|R|ADT=1"
+                                    ]
+                                },
+                                "prop8": {
+                                    "values": [
+                                        "Bengaluru-Delhi",
+                                        "Delhi-Bengaluru"
+                                    ]
+                                }
+                            },
+                            "lists": {
+                                "list3": {
+                                    "list": [
+                                        {
+                                            "value": "Bengaluru-Delhi"
+                                        },
+                                        {
+                                            "value": "Delhi-Bengaluru"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "commerce": {
+                    "order": {
+                        "priceTotal": 71814,
+                        "purchaseID": "341d5ff4-c8ae-4a62-a55f-8badfd75793c",
+                        "currencyCode": "INR"
+                    },
+                    "purchases": {
+                        "id": "341d5ff4-c8ae-4a62-a55f-8badfd75793c",
+                        "value": 1
+                    }
+                },
+                "_airindia": {
+                    "WebSDKEventDetails": {
+                        "eVar133": 1,
+                        "eVar141": "2025-10-31",
+                        "advancePurchaseDays": 14,
+                        "cartCreationDate": "2025-10-16",
+                        "PNRCreationDate": "2025-10-16",
+                        "travelDate": "2025-10-30"
+                    }
+                },
+                "productListItems": [
+                    {
+                        "lineItemId": "AncillaryService",
+                        "SKU": "BAGGAGE",
+                        "quantity": 1,
+                        "priceTotal": 2730,
+                        "_experience": {
+                            "analytics": {
+                                "customDimensions": {
+                                    "eVars": {
+                                        "eVar35": "Pre Paid Baggage",
+                                        "eVar97": "BLR-DEL",
+                                        "eVar122": "Bag up to 5KG",
+                                        "eVar9": "domestic"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "lineItemId": "AncillaryService",
+                        "SKU": "BAGGAGE",
+                        "quantity": 1,
+                        "priceTotal": 18120,
+                        "_experience": {
+                            "analytics": {
+                                "customDimensions": {
+                                    "eVars": {
+                                        "eVar35": "Pre Paid Baggage",
+                                        "eVar97": "DEL-BLR",
+                                        "eVar122": "Bag up to 25Kg",
+                                        "eVar9": "domestic"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "lineItemId": "AncillaryService",
+                        "SKU": "SPEQ",
+                        "quantity": 1,
+                        "priceTotal": 1575,
+                        "_experience": {
+                            "analytics": {
+                                "customDimensions": {
+                                    "eVars": {
+                                        "eVar35": "Sports Equipment",
+                                        "eVar97": "BLR-DEL",
+                                        "eVar9": "domestic",
+                                        "eVar90": "INR|Sports Equipment"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "lineItemId": "AncillaryService",
+                        "SKU": "SPEQ",
+                        "quantity": 1,
+                        "priceTotal": 1770,
+                        "_experience": {
+                            "analytics": {
+                                "customDimensions": {
+                                    "eVars": {
+                                        "eVar35": "Sports Equipment",
+                                        "eVar97": "DEL-BLR",
+                                        "eVar9": "domestic",
+                                        "eVar90": "INR|Sports Equipment"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "lineItemId": "AncillaryService",
+                        "SKU": "MEAL",
+                        "quantity": 1,
+                        "priceTotal": 0,
+                        "_experience": {
+                            "analytics": {
+                                "customDimensions": {
+                                    "eVars": {
+                                        "eVar35": "Meals",
+                                        "eVar97": "BLR-DEL",
+                                        "eVar62": "Jain Meal",
+                                        "eVar9": "domestic"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "lineItemId": "AncillaryService",
+                        "SKU": "MEAL",
+                        "quantity": 1,
+                        "priceTotal": 0,
+                        "_experience": {
+                            "analytics": {
+                                "customDimensions": {
+                                    "eVars": {
+                                        "eVar35": "Meals",
+                                        "eVar97": "DEL-BLR",
+                                        "eVar62": "Hindu Non Vegetarian Meal",
+                                        "eVar9": "domestic"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "lineItemId": "AncillaryService",
+                        "SKU": "PRIO",
+                        "quantity": 1,
+                        "priceTotal": 499,
+                        "_experience": {
+                            "analytics": {
+                                "customDimensions": {
+                                    "eVars": {
+                                        "evar35": "PRIO",
+                                        "eVar97": "BLR-DEL",
+                                        "eVar9": "domestic",
+                                        "eVar90": "INR|PRIO",
+                                        "evar172": "PRIORITY HANDLING SERVICES"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "lineItemId": "AncillaryService",
+                        "SKU": "SEAT",
+                        "quantity": 1,
+                        "priceTotal": 250,
+                        "_experience": {
+                            "analytics": {
+                                "customDimensions": {
+                                    "eVars": {
+                                        "eVar35": "Preferred Seat",
+                                        "eVar97": "BLR-DEL",
+                                        "eVar63": "12D",
+                                        "eVar9": "domestic"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "lineItemId": "Base Fare",
+                        "SKU": "BLR-DEL:2406:Value",
+                        "quantity": 1,
+                        "priceTotal": 21352.5,
+                        "_experience": {
+                            "analytics": {
+                                "customDimensions": {
+                                    "eVars": {
+                                        "eVar9": "domestic",
+                                        "eVar33": "eco",
+                                        "eVar35": "Non-Ancillary Item",
+                                        "eVar93": "value",
+                                        "eVar97": "BLR-DEL"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "lineItemId": "Base Fare",
+                        "SKU": "DEL-BLR:2819:Classic",
+                        "quantity": 1,
+                        "priceTotal": 21352.5,
+                        "_experience": {
+                            "analytics": {
+                                "customDimensions": {
+                                    "eVars": {
+                                        "eVar9": "domestic",
+                                        "eVar33": "business",
+                                        "eVar35": "Non-Ancillary Item",
+                                        "eVar93": "classic",
+                                        "eVar97": "DEL-BLR"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "lineItemId": "Total Taxes",
+                        "SKU": "Taxes",
+                        "quantity": 1,
+                        "priceTotal": 3426,
+                        "_experience": {
+                            "analytics": {
+                                "customDimensions": {
+                                    "eVars": {
+                                        "eVar35": "Non-Ancillary Item",
+                                        "eVar33": "business",
+                                        "eVar97": "BLR-DEL:DEL-BLR",
+                                        "eVar9": "domestic"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "lineItemId": "Convenience Fee",
+                        "SKU": "Convenience Fee",
+                        "quantity": 1,
+                        "priceTotal": 399,
+                        "_experience": {
+                            "analytics": {
+                                "customDimensions": {
+                                    "eVars": {
+                                        "eVar35": "Non-Ancillary Item",
+                                        "eVar33": "business",
+                                        "eVar97": "BLR-DEL:DEL-BLR",
+                                        "eVar9": "domestic"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "lineItemId": "Surcharge",
+                        "SKU": "Surcharge",
+                        "quantity": 1,
+                        "priceTotal": 340,
+                        "_experience": {
+                            "analytics": {
+                                "customDimensions": {
+                                    "eVars": {
+                                        "eVar35": "Non-Ancillary Item",
+                                        "eVar33": "business",
+                                        "eVar97": "BLR-DEL:DEL-BLR",
+                                        "eVar9": "domestic"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            "data": {
+                "appsflyer_id": "",
+                "app_id": "",
+                "os": "",
+                "eventValue": "",
+                "eventName": "",
+                "custom_data": ""
+            }
+        }
+    ],
+    "query": {
+        "identity": {
+            "fetch": [
+                "ECID"
+            ]
+        }
+    },
+    "meta": {
+        "state": {
+            "domain": "amadeus.com",
+            "cookiesEnabled": true,
+            "entries": [
+                {
+                    "key": "kndctr_56C628E563E65FE60A495FBA_AdobeOrg_consent",
+                    "value": "general=in"
+                },
+                {
+                    "key": "kndctr_56C628E563E65FE60A495FBA_AdobeOrg_cluster",
+                    "value": "ind1"
+                }
+            ]
+        }
+    }
+}
