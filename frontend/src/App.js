@@ -6,6 +6,7 @@ import { Auth0Provider } from '@auth0/auth0-react';
 import theme from './theme/theme';
 import { auth0Config } from './config/auth0Config';
 import { AuthProvider } from './context/AuthContext';
+import { BookingTimerProvider } from './context/BookingTimerContext';
 import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
@@ -41,9 +42,10 @@ function App() {
   return (
     <Auth0Provider {...auth0Config}>
       <AuthProvider>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <Router>
+        <BookingTimerProvider>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Router>
             <Navbar />
             <Routes>
               <Route path="/" element={<HomePage />} />
@@ -109,6 +111,7 @@ function App() {
             </Routes>
           </Router>
         </ThemeProvider>
+        </BookingTimerProvider>
       </AuthProvider>
     </Auth0Provider>
   );

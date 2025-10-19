@@ -951,11 +951,6 @@ const TravellerDetails = () => {
               <Typography variant="h6" gutterBottom>
                 Price Summary
               </Typography>
-              {(selectedFlights?.onward?.isInternational || selectedFlights?.return?.isInternational) && (
-                <Alert severity="info" sx={{ mb: 2 }}>
-                  International flights will be charged in INR during payment.
-                </Alert>
-              )}
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                 <Box>
                 <Typography>Onward Flight</Typography>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import usePageView from '../hooks/usePageView';
+import { useBookingTimer } from '../context/BookingTimerContext';
 import airlinesDataLayer from '../services/AirlinesDataLayer';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -51,9 +52,17 @@ const findAirportByCode = (code) => {
   return null;
 };
 
+// Helper function to format duration
+const formatDuration = (milliseconds) => {
+  const minutes = Math.floor(milliseconds / 60000);
+  const seconds = Math.floor((milliseconds % 60000) / 1000);
+  return `${minutes}m ${seconds}s`;
+};
+
 const BookingConfirmation = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { bookingStartTime, bookingEndTime, bookingDuration, endBookingTimer } = useBookingTimer();
   
   // Track page view with confirmation-specific context
   usePageView({
@@ -413,6 +422,16 @@ const BookingConfirmation = () => {
     }
   }, [selectedFlights, tripType, passengers, selectedServices, navigate, pnr, onwardTicket, returnTicket, paymentDetails, location.state]);
 
+  // End booking timer when confirmation page loads
+  useEffect(() => {
+    if (bookingStartTime && !bookingEndTime) {
+      const endTime = new Date();
+      const duration = endTime - bookingStartTime;
+      endBookingTimer();
+      console.log('⏱️ Booking timer ended. Duration:', duration, 'ms');
+    }
+  }, [bookingStartTime, bookingEndTime, endBookingTimer]);
+
   // Comprehensive data layer implementation for confirmation page
   useEffect(() => {
     if (!selectedFlights?.onward || !travellerDetails) return;
@@ -583,7 +602,14 @@ const BookingConfirmation = () => {
           bookingStepNumber: 4,
           totalSteps: 4,
           bookingSteps: ['passenger-details', 'ancillary-services', 'payment', 'confirmation'],
-          bookingStartTime: new Date().toISOString(),
+          bookingStartTime: bookingStartTime ? bookingStartTime.toISOString() : new Date().toISOString(),
+          bookingEndTime: bookingEndTime ? bookingEndTime.toISOString() : new Date().toISOString(),
+          bookingDuration: bookingDuration ? {
+            milliseconds: bookingDuration,
+            seconds: Math.floor(bookingDuration / 1000),
+            minutes: Math.floor(bookingDuration / 60000),
+            formatted: formatDuration(bookingDuration)
+          } : null,
           selectedFlights: {
             outbound: {
               flightNumber: selectedFlights.onward?.flightNumber,
@@ -765,6 +791,12 @@ const BookingConfirmation = () => {
             onward: onwardTicket,
             return: returnTicket
           },
+          bookingDuration: bookingDuration ? {
+            milliseconds: bookingDuration,
+            seconds: Math.floor(bookingDuration / 1000),
+            minutes: Math.floor(bookingDuration / 60000),
+            formatted: formatDuration(bookingDuration)
+          } : null,
           paymentMethod: (paymentDetails?.method || 'credit card').replace(/_/g, ' ').replace(/-/g, ' '),
           paymentStatus: 'completed',
           timestamp: new Date().toISOString()
@@ -952,7 +984,13 @@ const BookingConfirmation = () => {
             overall: returnHaulType ? 
               (onwardHaulType === 'long haul' || returnHaulType === 'long haul' ? 'long haul' : 'short haul') : 
               onwardHaulType
-          }
+          },
+          bookingDuration: bookingDuration ? {
+            milliseconds: bookingDuration,
+            seconds: Math.floor(bookingDuration / 1000),
+            minutes: Math.floor(bookingDuration / 60000),
+            formatted: formatDuration(bookingDuration)
+          } : null
         },
         sustainabilityImpact: {
           carbonFootprint: calculatedDistance > 0 ? Math.round(calculatedDistance * 0.255) : 0, // kg CO₂
@@ -984,7 +1022,7 @@ const BookingConfirmation = () => {
 
 
 
-  }, [selectedFlights, travellerDetails, tripType, numPassengers, selectedServices, paymentDetails]);
+  }, [selectedFlights, travellerDetails, tripType, numPassengers, selectedServices, paymentDetails, bookingDuration, bookingStartTime, bookingEndTime]);
 
   // Helper function to calculate seat price
   const calculateSeatPrice = (seat) => {
@@ -1566,6 +1604,14 @@ const BookingConfirmation = () => {
                     <Typography variant="caption" color="text.secondary">PNR Number</Typography>
                     <Typography variant="h5" fontWeight="bold" color="primary">{pnr}</Typography>
                   </Box>
+                  {bookingDuration && (
+                    <Box>
+                      <Typography variant="caption" color="text.secondary">Booking Completed In</Typography>
+                      <Typography variant="body1" fontWeight="medium" color="success.main">
+                        {formatDuration(bookingDuration)}
+                      </Typography>
+                    </Box>
+                  )}
                   <Box>
                     <Typography variant="caption" color="text.secondary">Onward Ticket Number</Typography>
                     <Typography variant="body1" fontWeight="medium">{onwardTicket}</Typography>

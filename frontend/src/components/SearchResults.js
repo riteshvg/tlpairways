@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 // usePageView removed - now using merged pageView event
 import { useAuth } from '../context/AuthContext';
+import { useBookingTimer } from '../context/BookingTimerContext';
 import airlinesDataLayer from '../services/AirlinesDataLayer';
 import { 
   calculateDistance, 
@@ -53,6 +54,7 @@ const SearchResults = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
+  const { startBookingTimer } = useBookingTimer();
   
   // Page view is now handled in the merged event below
   
@@ -518,6 +520,12 @@ const SearchResults = () => {
       searchParams
     });
 
+    // Start booking timer when first flight is selected
+    if (type === 'onward' && !selectedOnwardFlight) {
+      startBookingTimer();
+      console.log('⏱️ Booking timer started');
+    }
+
     // Get the correct price for the selected cabin class
     const selectedPrice = flight.prices[searchParams.cabinClass];
     const flightWithCorrectPrice = {
@@ -790,11 +798,6 @@ const SearchResults = () => {
               <Typography variant="h6" color="primary">
                 {CURRENCY_CONFIG.formatPrice(totalPrice, flight.displayCurrency)} <Typography component="span" variant="body2" color="textSecondary">({CURRENCY_CONFIG.formatPrice(pricePerPassenger, flight.displayCurrency)} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})</Typography>
               </Typography>
-              {flight.isInternational && (
-                <Typography variant="body2" color="textSecondary">
-                  *Price will be converted to INR during payment
-                </Typography>
-              )}
               <Typography variant="body2" color="textSecondary">
                 {searchParams.cabinClass.charAt(0).toUpperCase() + searchParams.cabinClass.slice(1)}
               </Typography>
@@ -1033,11 +1036,6 @@ const SearchResults = () => {
                     return CURRENCY_CONFIG.formatPrice(totalPrice, currency);
                   })()}
                 </Typography>
-                {(selectedOnwardFlight?.isInternational || selectedReturnFlight?.isInternational) && (
-                  <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
-                    *Prices will be converted to INR during payment
-                  </Typography>
-                )}
               </Box>
             )}
 
