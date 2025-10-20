@@ -91,7 +91,7 @@ import {
   Cancel as CancelIcon,
 } from '@mui/icons-material';
 import { format, differenceInMinutes } from 'date-fns';
-import flightRoutes from '../data/flight_routes.json';
+import flightsData from '../data/flights.json';
 import FlightDetailsModal from './FlightDetailsModal';
 import CURRENCY_CONFIG from '../config/currencyConfig';
 import airports from '../data/airports.json';
@@ -291,10 +291,12 @@ const MobileSearchResults = () => {
     if (!origin || !destination || !searchDate || !cabinClass) return [];
 
     try {
-      const routeKey = `${origin}-${destination}`;
-      const routeData = flightRoutes.routes[routeKey];
+      // Filter flights from flights.json
+      const allFlights = flightsData.flights.filter(flight => 
+        flight.origin === origin && flight.destination === destination
+      );
       
-      if (!routeData) {
+      if (allFlights.length === 0) {
         enhancedAirlinesDataLayer.trackNoResults({
           origin,
           destination,
@@ -307,8 +309,6 @@ const MobileSearchResults = () => {
         });
         return [];
       }
-
-      const allFlights = [...routeData.onward, ...routeData.return];
       
       // Determine currency based on search origin (not individual flight origin)
       // Use searchOrigin if provided (for return flights), otherwise use origin

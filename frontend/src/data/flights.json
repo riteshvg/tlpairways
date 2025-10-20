@@ -19127,6 +19127,223 @@
         "cabin": "7 kg"
       },
       "distance": 12501
+    },
+    {
+      "id": "flight-1760939777463-sqa9nw6z4",
+      "flightNumber": "TX5072",
+      "origin": "BLR",
+      "originCity": "Bengaluru",
+      "destination": "LHR",
+      "destinationCity": "London",
+      "departureTime": "03:00",
+      "arrivalTime": "13:06",
+      "duration": "10h 6m",
+      "durationMinutes": 606,
+      "price": 88002,
+      "aircraftType": "B777-300ER",
+      "stops": [],
+      "availableSeats": 18,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 8058
+    },
+    {
+      "id": "flight-1760939777463-e1v5akquf",
+      "flightNumber": "TX6560",
+      "origin": "BLR",
+      "originCity": "Bengaluru",
+      "destination": "LHR",
+      "destinationCity": "London",
+      "departureTime": "09:00",
+      "arrivalTime": "19:04",
+      "duration": "10h 4m",
+      "durationMinutes": 604,
+      "price": 189528,
+      "aircraftType": "B777-300ER",
+      "stops": [],
+      "availableSeats": 10,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 8058
+    },
+    {
+      "id": "flight-1760939777463-durw1h2cc",
+      "flightNumber": "TY4734",
+      "origin": "BLR",
+      "originCity": "Bengaluru",
+      "destination": "LHR",
+      "destinationCity": "London",
+      "departureTime": "15:00",
+      "arrivalTime": "01:08",
+      "duration": "10h 8m",
+      "durationMinutes": 608,
+      "price": 114331,
+      "aircraftType": "B777-300ER",
+      "stops": [],
+      "availableSeats": 24,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 8058
+    },
+    {
+      "id": "flight-1760939777463-fsswtkoih",
+      "flightNumber": "TW9309",
+      "origin": "BLR",
+      "originCity": "Bengaluru",
+      "destination": "LHR",
+      "destinationCity": "London",
+      "departureTime": "21:00",
+      "arrivalTime": "07:10",
+      "duration": "10h 10m",
+      "durationMinutes": 610,
+      "price": 126635,
+      "aircraftType": "B777-300ER",
+      "stops": [],
+      "availableSeats": 53,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 8058
+    },
+    {
+      "id": "flight-1760939777463-wkeqinhio",
+      "flightNumber": "TW3467",
+      "origin": "LHR",
+      "originCity": "London",
+      "destination": "BLR",
+      "destinationCity": "Bengaluru",
+      "departureTime": "08:00",
+      "arrivalTime": "18:07",
+      "duration": "10h 7m",
+      "durationMinutes": 607,
+      "price": 137193,
+      "aircraftType": "B777-300ER",
+      "stops": [],
+      "availableSeats": 57,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 8058
+    },
+    {
+      "id": "flight-1760939777464-zwtlnodl8",
+      "flightNumber": "TL4401",
+      "origin": "LHR",
+      "originCity": "London",
+      "destination": "BLR",
+      "destinationCity": "Bengaluru",
+      "departureTime": "14:00",
+      "arrivalTime": "00:08",
+      "duration": "10h 8m",
+      "durationMinutes": 608,
+      "price": 117555,
+      "aircraftType": "B777-300ER",
+      "stops": [],
+      "availableSeats": 40,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 8058
+    },
+    {
+      "id": "flight-1760939777464-6l04ze6cc",
+      "flightNumber": "TL6049",
+      "origin": "LHR",
+      "originCity": "London",
+      "destination": "BLR",
+      "destinationCity": "Bengaluru",
+      "departureTime": "20:00",
+      "arrivalTime": "06:11",
+      "duration": "10h 11m",
+      "durationMinutes": 611,
+      "price": 142021,
+      "aircraftType": "B777-300ER",
+      "stops": [],
+      "availableSeats": 52,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 8058
     }
   ],
   "metadata": {

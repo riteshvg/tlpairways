@@ -184,7 +184,6 @@ const FlightSearch = () => {
   // Get available routes on component mount
   React.useEffect(() => {
     const routes = new Set();
-    // Extract routes from flights.json
     flightsData.flights.forEach(flight => {
       routes.add(`${flight.origin}-${flight.destination}`);
     });
@@ -217,8 +216,7 @@ const FlightSearch = () => {
     }
 
     // Check if the selected route exists
-    const routeExists = availableRoutes.includes(`${origin.iata_code}-${destination.iata_code}`) || 
-                        availableRoutes.includes(`${destination.iata_code}-${origin.iata_code}`);
+    const routeExists = availableRoutes.includes(`${origin.iata_code}-${destination.iata_code}`);
     
     // Allow search even if route doesn't exist (will show "no flights found" on results page)
     if (!routeExists) {
