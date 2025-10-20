@@ -161,8 +161,8 @@ const BookingConfirmation = () => {
           selectedServices[journey].baggage.forEach(baggage => {
             if (baggage && baggage !== 'included') {
               const isInternational = journey === 'onward' ? 
-                selectedFlights.onward.origin.iata_code !== selectedFlights.onward.destination.iata_code :
-                selectedFlights.return.origin.iata_code !== selectedFlights.return.destination.iata_code;
+                selectedFlights.onward.origin !== selectedFlights.onward.destination :
+                selectedFlights.return.origin !== selectedFlights.return.destination;
               const baggagePrice = isInternational ? 2000 : 1000;
               console.log(`Baggage price calculation for ${journey}:`, {
                 baggage,
@@ -475,14 +475,14 @@ const BookingConfirmation = () => {
         return null;
       };
 
-      const onwardOriginCoords = getCoordinates(selectedFlights.onward?.origin?.iata_code);
-      const onwardDestCoords = getCoordinates(selectedFlights.onward?.destination?.iata_code);
+      const onwardOriginCoords = getCoordinates(selectedFlights.onward?.origin);
+      const onwardDestCoords = getCoordinates(selectedFlights.onward?.destination);
       const onwardDistance = onwardOriginCoords && onwardDestCoords 
         ? calculateFlightDistance(onwardOriginCoords, onwardDestCoords) 
         : 0;
 
-      const returnOriginCoords = getCoordinates(selectedFlights.return?.origin?.iata_code);
-      const returnDestCoords = getCoordinates(selectedFlights.return?.destination?.iata_code);
+      const returnOriginCoords = getCoordinates(selectedFlights.return?.origin);
+      const returnDestCoords = getCoordinates(selectedFlights.return?.destination);
       const returnDistance = tripType === 'roundtrip' && returnOriginCoords && returnDestCoords
         ? calculateFlightDistance(returnOriginCoords, returnDestCoords)
         : 0;
@@ -614,8 +614,8 @@ const BookingConfirmation = () => {
             outbound: {
               flightNumber: selectedFlights.onward?.flightNumber,
               airline: selectedFlights.onward?.airline,
-              origin: selectedFlights.onward?.origin?.iata_code,
-              destination: selectedFlights.onward?.destination?.iata_code,
+              origin: selectedFlights.onward?.origin,
+              destination: selectedFlights.onward?.destination,
               departureTime: selectedFlights.onward?.departureTime,
               departureDate: selectedFlights.onward?.departureTime ? new Date(selectedFlights.onward.departureTime).toISOString().split('T')[0] : null,
               arrivalTime: selectedFlights.onward?.arrivalTime,
@@ -626,8 +626,8 @@ const BookingConfirmation = () => {
             return: selectedFlights.return ? {
               flightNumber: selectedFlights.return?.flightNumber,
               airline: selectedFlights.return?.airline,
-              origin: selectedFlights.return?.origin?.iata_code,
-              destination: selectedFlights.return?.destination?.iata_code,
+              origin: selectedFlights.return?.origin,
+              destination: selectedFlights.return?.destination,
               departureTime: selectedFlights.return?.departureTime,
               departureDate: selectedFlights.return?.departureTime ? new Date(selectedFlights.return.departureTime).toISOString().split('T')[0] : null,
               arrivalTime: selectedFlights.return?.arrivalTime,
@@ -673,8 +673,8 @@ const BookingConfirmation = () => {
         price: (selectedFlights.onward.price?.amount || 0) * numPassengers,
         quantity: numPassengers,
         currency: 'INR',
-        origin: selectedFlights.onward.origin?.iata_code,
-        destination: selectedFlights.onward.destination?.iata_code,
+        origin: selectedFlights.onward.origin,
+        destination: selectedFlights.onward.destination,
         departureDate: selectedFlights.onward.departureTime ? new Date(selectedFlights.onward.departureTime).toISOString().split('T')[0] : null,
         cabinClass: selectedFlights.onward.cabinClass || 'economy'
       });
@@ -689,8 +689,8 @@ const BookingConfirmation = () => {
         price: (selectedFlights.return.price?.amount || 0) * numPassengers,
         quantity: numPassengers,
         currency: 'INR',
-        origin: selectedFlights.return.origin?.iata_code,
-        destination: selectedFlights.return.destination?.iata_code,
+        origin: selectedFlights.return.origin,
+        destination: selectedFlights.return.destination,
         departureDate: selectedFlights.return.departureTime ? new Date(selectedFlights.return.departureTime).toISOString().split('T')[0] : null,
         cabinClass: selectedFlights.return.cabinClass || 'economy'
       });
@@ -832,10 +832,10 @@ const BookingConfirmation = () => {
         },
         searchContext: {
           searchId: `search_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-          origin: selectedFlights.onward?.origin?.iata_code || null,
-          destination: selectedFlights.onward?.destination?.iata_code || null,
-          originDestination: (selectedFlights.onward?.origin?.iata_code && selectedFlights.onward?.destination?.iata_code) 
-            ? `${selectedFlights.onward.origin.iata_code}-${selectedFlights.onward.destination.iata_code}`
+          origin: selectedFlights.onward?.origin || null,
+          destination: selectedFlights.onward?.destination || null,
+          originDestination: (selectedFlights.onward?.origin && selectedFlights.onward?.destination) 
+            ? `${selectedFlights.onward.origin}-${selectedFlights.onward.destination}`
             : null,
           departureDate: selectedFlights.onward?.departureTime ? new Date(selectedFlights.onward.departureTime).toISOString().split('T')[0] : null,
           returnDate: selectedFlights.return?.departureTime ? new Date(selectedFlights.return.departureTime).toISOString().split('T')[0] : null,
@@ -874,40 +874,40 @@ const BookingConfirmation = () => {
           travelPurpose: 'personal',
           searchDateTime: new Date().toISOString().split('T')[0],
           searchCriteria: {
-            originAirport: selectedFlights.onward?.origin?.iata_code || null,
+            originAirport: selectedFlights.onward?.origin || null,
             originAirportName: (() => {
-              const originAirport = findAirportByCode(selectedFlights.onward?.origin?.iata_code);
+              const originAirport = findAirportByCode(selectedFlights.onward?.origin);
               console.log('Origin airport lookup:', {
-                code: selectedFlights.onward?.origin?.iata_code,
+                code: selectedFlights.onward?.origin,
                 foundAirport: originAirport,
-                existingName: selectedFlights.onward?.origin?.name
+                existingName: selectedFlights.onward?.originCity
               });
-              return originAirport?.name || selectedFlights.onward?.origin?.name || null;
+              return originAirport?.name || selectedFlights.onward?.originCity || null;
             })(),
-            originCity: selectedFlights.onward?.origin?.city || (() => {
-              const originAirport = findAirportByCode(selectedFlights.onward?.origin?.iata_code);
+            originCity: selectedFlights.onward?.originCity || (() => {
+              const originAirport = findAirportByCode(selectedFlights.onward?.origin);
               return originAirport?.city || null;
             })(),
-            originCountry: selectedFlights.onward?.origin?.country || (() => {
-              const originAirport = findAirportByCode(selectedFlights.onward?.origin?.iata_code);
+            originCountry: (() => {
+              const originAirport = findAirportByCode(selectedFlights.onward?.origin);
               return originAirport?.country || null;
             })(),
-            destinationAirport: selectedFlights.onward?.destination?.iata_code || null,
+            destinationAirport: selectedFlights.onward?.destination || null,
             destinationAirportName: (() => {
-              const destAirport = findAirportByCode(selectedFlights.onward?.destination?.iata_code);
+              const destAirport = findAirportByCode(selectedFlights.onward?.destination);
               console.log('Destination airport lookup:', {
-                code: selectedFlights.onward?.destination?.iata_code,
+                code: selectedFlights.onward?.destination,
                 foundAirport: destAirport,
-                existingName: selectedFlights.onward?.destination?.name
+                existingName: selectedFlights.onward?.destinationCity
               });
-              return destAirport?.name || selectedFlights.onward?.destination?.name || null;
+              return destAirport?.name || selectedFlights.onward?.destinationCity || null;
             })(),
-            destinationCity: selectedFlights.onward?.destination?.city || (() => {
-              const destAirport = findAirportByCode(selectedFlights.onward?.destination?.iata_code);
+            destinationCity: selectedFlights.onward?.destinationCity || (() => {
+              const destAirport = findAirportByCode(selectedFlights.onward?.destination);
               return destAirport?.city || null;
             })(),
-            destinationCountry: selectedFlights.onward?.destination?.country || (() => {
-              const destAirport = findAirportByCode(selectedFlights.onward?.destination?.iata_code);
+            destinationCountry: (() => {
+              const destAirport = findAirportByCode(selectedFlights.onward?.destination);
               return destAirport?.country || null;
             })(),
             departureDate: selectedFlights.onward?.departureTime ? new Date(selectedFlights.onward.departureTime).toISOString().split('T')[0] : null,
@@ -974,8 +974,8 @@ const BookingConfirmation = () => {
           tripType: tripType || 'oneWay',
           cabinClass: selectedFlights.onward?.cabinClass || 'economy',
           passengers: numPassengers,
-          origin: selectedFlights.onward?.origin?.iata_code,
-          destination: selectedFlights.onward?.destination?.iata_code,
+          origin: selectedFlights.onward?.origin,
+          destination: selectedFlights.onward?.destination,
           departureDate: selectedFlights.onward?.departureTime ? new Date(selectedFlights.onward.departureTime).toISOString().split('T')[0] : null,
           returnDate: selectedFlights.return?.departureTime ? new Date(selectedFlights.return.departureTime).toISOString().split('T')[0] : null,
           haulType: {
@@ -1044,8 +1044,8 @@ const BookingConfirmation = () => {
     if (!baggage || baggage === 'included') return 0;
     try {
       const flight = journey === 'onward' ? selectedFlights?.onward : selectedFlights?.return;
-      if (flight?.origin?.iata_code && flight?.destination?.iata_code) {
-        const isInternational = flight.origin.iata_code !== flight.destination.iata_code;
+      if (flight?.origin && flight?.destination) {
+        const isInternational = flight.origin !== flight.destination;
         return isInternational ? 2000 : 1000;
       }
       return 1000; // Default domestic price
@@ -1286,7 +1286,7 @@ const BookingConfirmation = () => {
                   'Baggage',
                   selectedServices.onward.baggage.reduce((total, baggage) => {
                     if (baggage && baggage !== 'included') {
-                      const isInternational = selectedFlights?.onward?.origin?.iata_code !== selectedFlights?.onward?.destination?.iata_code;
+                      const isInternational = selectedFlights?.onward?.origin !== selectedFlights?.onward?.destination;
                       return total + (isInternational ? 2000 : 1000);
                     }
                     return total;
@@ -1326,7 +1326,7 @@ const BookingConfirmation = () => {
                     'Baggage',
                     selectedServices.return.baggage.reduce((total, baggage) => {
                       if (baggage && baggage !== 'included') {
-                        const isInternational = selectedFlights?.return?.origin?.iata_code !== selectedFlights?.return?.destination?.iata_code;
+                        const isInternational = selectedFlights?.return?.origin !== selectedFlights?.return?.destination;
                         return total + (isInternational ? 2000 : 1000);
                       }
                       return total;
