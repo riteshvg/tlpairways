@@ -71,7 +71,7 @@ import {
   LocalAirport as LocalAirportIcon,
 } from '@mui/icons-material';
 import { format, isWithinInterval, addDays, differenceInMinutes, parseISO } from 'date-fns';
-import flightRoutes from '../data/flight_routes.json';
+import flightsData from '../data/flights.json';
 import FlightDetailsModal from './FlightDetailsModal';
 import CURRENCY_CONFIG from '../config/currencyConfig';
 import airports from '../data/airports.json';
@@ -205,10 +205,12 @@ const EnhancedSearchResults = () => {
     try {
       apiStartTime.current = Date.now();
       
-      const routeKey = `${origin}-${destination}`;
-      const routeData = flightRoutes.routes[routeKey];
+      // Filter flights from flights.json
+      const allFlights = flightsData.flights.filter(flight => 
+        flight.origin === origin && flight.destination === destination
+      );
       
-      if (!routeData) {
+      if (allFlights.length === 0) {
         enhancedAirlinesDataLayer.trackNoResults({
           origin,
           destination,
@@ -220,9 +222,6 @@ const EnhancedSearchResults = () => {
         });
         return [];
       }
-
-      // Get all flights for the route
-      const allFlights = [...routeData.onward, ...routeData.return];
       
       // Determine currency based on search origin (not individual flight origin)
       // Use searchOrigin if provided (for return flights), otherwise use origin
@@ -232,13 +231,9 @@ const EnhancedSearchResults = () => {
       const searchDisplayCurrency = CURRENCY_CONFIG.getCurrencyForCountry(searchOriginCountry);
       
       const processedFlights = allFlights
-        .filter(flight => {
-          return flight.origin.iata_code === origin && 
-                 flight.destination.iata_code === destination;
-        })
         .map((flight, index) => {
           // Calculate prices for different cabin classes
-          const basePrice = flight.price.amount;
+          const basePrice = flight.price;
           let prices = {
             economy: basePrice,
             premium_economy: Math.round(basePrice * 1.3),
