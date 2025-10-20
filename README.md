@@ -10,6 +10,12 @@ A modern flight booking application built with React, Node.js, and Express, feat
 - **Ancillary Services**: Seat selection, baggage, meals, priority boarding, lounge access
 - **Authentication**: Auth0 integration with state persistence across redirects
 - **Responsive Design**: Modern Material-UI based interface that works on all devices
+- **Booking Duration Tracking**: Real-time booking timer that tracks user journey from flight selection to confirmation
+  - Timer starts when user selects first flight
+  - Timer ends when user reaches confirmation page
+  - Duration displayed in confirmation page
+  - Booking duration added to Adobe Data Layer in multiple objects
+  - SessionStorage persistence across page refreshes
 - **Adobe Launch Script Manager**: Dynamic Adobe DTM script switching directly from Settings page
   - Switch between Development, Staging, and Production environments
   - Support for custom Adobe Launch script URLs
@@ -21,6 +27,7 @@ A modern flight booking application built with React, Node.js, and Express, feat
   - Complete booking flow analytics
   - Revenue and product tracking
   - Haul type classification (short/long haul)
+  - Booking duration tracking with millisecond precision
 
 ## 🛠️ Tech Stack
 
@@ -205,8 +212,15 @@ The application features a comprehensive Adobe Data Layer implementation with op
    - Ancillary services selection (passenger-wise)
    - Payment details
    - Booking confirmation with revenue tracking
+   - Booking duration tracking (start time, end time, duration in milliseconds, seconds, minutes, and formatted)
 
-3. **Data Layer Structure**
+3. **Booking Duration Analytics**
+   - Tracks time from flight selection to confirmation
+   - Available in multiple data layer objects: bookingContext, revenue, and booking
+   - Includes millisecond precision for detailed analysis
+   - Formatted display (e.g., "5m 23s") for easy reading
+
+4. **Data Layer Structure**
    ```javascript
    window.adobeDataLayer = [
      {
@@ -218,10 +232,26 @@ The application features a comprehensive Adobe Data Layer implementation with op
      {
        event: 'purchase',
        eventData: {
-         revenue: { /* transaction details */ },
+         revenue: { 
+           /* transaction details */
+           bookingDuration: {
+             milliseconds: 323000,
+             seconds: 323,
+             minutes: 5,
+             formatted: "5m 23s"
+           }
+         },
          paymentDetails: { /* payment info */ },
          customer: { /* customer data */ },
-         booking: { /* booking details */ }
+         booking: { 
+           /* booking details */
+           bookingDuration: {
+             milliseconds: 323000,
+             seconds: 323,
+             minutes: 5,
+             formatted: "5m 23s"
+           }
+         }
        }
      }
    ];
@@ -230,6 +260,7 @@ The application features a comprehensive Adobe Data Layer implementation with op
 ### Key Components
 
 - **AirlinesDataLayer.js** - Core data layer service
+- **BookingTimerContext.js** - Booking duration tracking context
 - **usePageView.js** - Global page view tracking hook with duplicate prevention
 - **useHomepageDataLayer.js** - Homepage-specific tracking
 - **useAncillaryServicesDataLayer.js** - Ancillary services tracking
@@ -489,6 +520,30 @@ MIT License - see LICENSE file for details
 
 ---
 
+## 🎯 Recent Updates (October 2025)
+
+### Booking Duration Feature
+- ✅ Real-time booking timer implementation
+- ✅ SessionStorage persistence for timer state
+- ✅ Adobe Data Layer integration with booking duration
+- ✅ UI display on confirmation page
+- ✅ Millisecond precision tracking
+
+### Data Structure Improvements
+- ✅ Consolidated flight data to single source (flights.json)
+- ✅ Fixed distanceKm null issue in confirmation page
+- ✅ Updated all components to use correct flight data structure
+- ✅ Removed duplicate flight_routes.json file
+- ✅ Added BLR-LHR routes for comprehensive coverage
+
+### Payment Page Enhancements
+- ✅ Multiple payment method support (Credit, Debit, Net Banking, UPI)
+- ✅ Dynamic payment vendor selection
+- ✅ Enhanced Adobe Data Layer tracking for payment details
+- ✅ Bank name and card network tracking
+
+---
+
 **Happy Flying with TLAirways! ✈️**
 
-*Last Updated: January 2025*
+*Last Updated: October 2025*
