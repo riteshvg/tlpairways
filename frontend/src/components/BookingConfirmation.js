@@ -30,7 +30,12 @@ import EmailIcon from '@mui/icons-material/Email';
 import SmsIcon from '@mui/icons-material/Sms';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import EventSeatIcon from '@mui/icons-material/EventSeat';
+import EventSeat from '@mui/icons-material/EventSeat';
 import LuggageIcon from '@mui/icons-material/Luggage';
+import Luggage from '@mui/icons-material/Luggage';
+import Restaurant from '@mui/icons-material/Restaurant';
+import FlightTakeoff from '@mui/icons-material/FlightTakeoff';
+import Deck from '@mui/icons-material/Deck';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import LocalAirportIcon from '@mui/icons-material/LocalAirport';
 import ForestIcon from '@mui/icons-material/Forest';
@@ -1559,6 +1564,155 @@ const BookingConfirmation = () => {
 
             {/* Price Breakdown */}
             {renderFeeBreakdown()}
+
+            {/* Additional Services Card */}
+            {selectedServices && (selectedServices.onward || selectedServices.return) && (
+              <Card elevation={2} sx={{ mt: 3 }}>
+                <CardContent>
+                  <Typography variant="h6" gutterBottom color="primary">
+                    Additional Services
+                  </Typography>
+                  <Divider sx={{ mb: 2 }} />
+                  <Stack spacing={2}>
+                    {/* Onward Services */}
+                    {selectedServices.onward && (
+                      <Box>
+                        <Typography variant="subtitle2" gutterBottom fontWeight="bold">
+                          Onward Flight
+                        </Typography>
+                        <Stack spacing={1}>
+                          {selectedServices.onward.seat && selectedServices.onward.seat.filter(Boolean).length > 0 && (
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <EventSeat fontSize="small" color="action" />
+                                <Typography variant="body2">
+                                  Seats: {selectedServices.onward.seat.filter(Boolean).join(', ')}
+                                </Typography>
+                              </Box>
+                              <Typography variant="body2" color="text.secondary">
+                                ₹{(selectedServices.onward.seat.filter(Boolean).length * 500).toLocaleString()}
+                              </Typography>
+                            </Box>
+                          )}
+                          {selectedServices.onward.meal && selectedServices.onward.meal.filter(m => m && m !== 'none').length > 0 && (
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Restaurant fontSize="small" color="action" />
+                                <Typography variant="body2">
+                                  Meals: {selectedServices.onward.meal.filter(m => m && m !== 'none').length} selected
+                                </Typography>
+                              </Box>
+                              <Typography variant="body2" color="text.secondary">
+                                ₹{(selectedServices.onward.meal.filter(m => m && m !== 'none').length * 300).toLocaleString()}
+                              </Typography>
+                            </Box>
+                          )}
+                          {selectedServices.onward.baggage && selectedServices.onward.baggage.filter(b => b && b !== 'included').length > 0 && (
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Luggage fontSize="small" color="action" />
+                                <Typography variant="body2">
+                                  Extra Baggage: {selectedServices.onward.baggage.filter(b => b && b !== 'included').length} items
+                                </Typography>
+                              </Box>
+                              <Typography variant="body2" color="text.secondary">
+                                ₹{(selectedServices.onward.baggage.filter(b => b && b !== 'included').length * 1000).toLocaleString()}
+                              </Typography>
+                            </Box>
+                          )}
+                          {selectedServices.onward.priorityBoarding && (
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <FlightTakeoff fontSize="small" color="action" />
+                                <Typography variant="body2">Priority Boarding</Typography>
+                              </Box>
+                              <Typography variant="body2" color="text.secondary">₹500</Typography>
+                            </Box>
+                          )}
+                          {selectedServices.onward.loungeAccess && (
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Deck fontSize="small" color="action" />
+                                <Typography variant="body2">Lounge Access</Typography>
+                              </Box>
+                              <Typography variant="body2" color="text.secondary">₹1,500</Typography>
+                            </Box>
+                          )}
+                        </Stack>
+                      </Box>
+                    )}
+                    
+                    {/* Return Services */}
+                    {selectedServices.return && (
+                      <Box>
+                        <Typography variant="subtitle2" gutterBottom fontWeight="bold">
+                          Return Flight
+                        </Typography>
+                        <Stack spacing={1}>
+                          {selectedServices.return.seat && selectedServices.return.seat.filter(Boolean).length > 0 && (
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <EventSeat fontSize="small" color="action" />
+                                <Typography variant="body2">
+                                  Seats: {selectedServices.return.seat.filter(Boolean).join(', ')}
+                                </Typography>
+                              </Box>
+                              <Typography variant="body2" color="text.secondary">
+                                ₹{(selectedServices.return.seat.filter(Boolean).length * 500).toLocaleString()}
+                              </Typography>
+                            </Box>
+                          )}
+                          {selectedServices.return.meal && selectedServices.return.meal.filter(m => m && m !== 'none').length > 0 && (
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Restaurant fontSize="small" color="action" />
+                                <Typography variant="body2">
+                                  Meals: {selectedServices.return.meal.filter(m => m && m !== 'none').length} selected
+                                </Typography>
+                              </Box>
+                              <Typography variant="body2" color="text.secondary">
+                                ₹{(selectedServices.return.meal.filter(m => m && m !== 'none').length * 300).toLocaleString()}
+                              </Typography>
+                            </Box>
+                          )}
+                          {selectedServices.return.baggage && selectedServices.return.baggage.filter(b => b && b !== 'included').length > 0 && (
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Luggage fontSize="small" color="action" />
+                                <Typography variant="body2">
+                                  Extra Baggage: {selectedServices.return.baggage.filter(b => b && b !== 'included').length} items
+                                </Typography>
+                              </Box>
+                              <Typography variant="body2" color="text.secondary">
+                                ₹{(selectedServices.return.baggage.filter(b => b && b !== 'included').length * 1000).toLocaleString()}
+                              </Typography>
+                            </Box>
+                          )}
+                          {selectedServices.return.priorityBoarding && (
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <FlightTakeoff fontSize="small" color="action" />
+                                <Typography variant="body2">Priority Boarding</Typography>
+                              </Box>
+                              <Typography variant="body2" color="text.secondary">₹500</Typography>
+                            </Box>
+                          )}
+                          {selectedServices.return.loungeAccess && (
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Deck fontSize="small" color="action" />
+                                <Typography variant="body2">Lounge Access</Typography>
+                              </Box>
+                              <Typography variant="body2" color="text.secondary">₹1,500</Typography>
+                            </Box>
+                          )}
+                        </Stack>
+                      </Box>
+                    )}
+                  </Stack>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Sustainability Impact Card - Compact */}
             {totalDistance > 0 && (
