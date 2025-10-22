@@ -818,7 +818,9 @@ const SearchResults = () => {
                 {flight.origin} → {flight.destination}
                     </Typography>
               <Typography variant="body2" color="textSecondary">
-                {isReturn ? format(searchParams.returnDate, 'MMM dd, yyyy') : format(searchParams.date, 'MMM dd, yyyy')}
+                {isReturn 
+                  ? (searchParams.returnDate ? format(new Date(searchParams.returnDate), 'MMM dd, yyyy') : 'N/A')
+                  : (searchParams.date ? format(new Date(searchParams.date), 'MMM dd, yyyy') : 'N/A')}
                     </Typography>
               <Typography variant="body2">
                 {flight.aircraft}
@@ -934,8 +936,8 @@ const SearchResults = () => {
               })()}
             </Typography>
             <Typography variant="body2" color="textSecondary">
-              {format(searchParams.date, 'MMM dd, yyyy')}
-              {searchParams.returnDate && ` - ${format(searchParams.returnDate, 'MMM dd, yyyy')}`}
+              {searchParams.date ? format(new Date(searchParams.date), 'MMM dd, yyyy') : 'N/A'}
+              {searchParams.returnDate && ` - ${format(new Date(searchParams.returnDate), 'MMM dd, yyyy')}`}
             </Typography>
             <Typography variant="body2" color="textSecondary">
               {searchParams.tripType === 'roundtrip' ? 'Round Trip' : 'One Way'} • {searchParams.passengers} {searchParams.passengers === 1 ? 'Passenger' : 'Passengers'}
@@ -1021,7 +1023,7 @@ const SearchResults = () => {
                   </Grid>
                   <Grid item xs={6}>
                     <Typography variant="caption" color="text.secondary">Date</Typography>
-                    <Typography variant="body2">{format(searchParams.date, 'MMM dd, yyyy')}</Typography>
+                    <Typography variant="body2">{searchParams.date ? format(new Date(searchParams.date), 'MMM dd, yyyy') : 'N/A'}</Typography>
                   </Grid>
                   <Grid item xs={6}>
                     <Typography variant="caption" color="text.secondary">Time</Typography>
@@ -1066,7 +1068,7 @@ const SearchResults = () => {
                   </Grid>
                   <Grid item xs={6}>
                     <Typography variant="caption" color="text.secondary">Date</Typography>
-                    <Typography variant="body2">{format(searchParams.returnDate, 'MMM dd, yyyy')}</Typography>
+                    <Typography variant="body2">{searchParams.returnDate ? format(new Date(searchParams.returnDate), 'MMM dd, yyyy') : 'N/A'}</Typography>
                   </Grid>
                   <Grid item xs={6}>
                     <Typography variant="caption" color="text.secondary">Time</Typography>
