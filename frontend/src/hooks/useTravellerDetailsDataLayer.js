@@ -65,6 +65,17 @@ const useTravellerDetailsDataLayer = (pageViewOptions = {}) => {
   const formatFlightData = useCallback((flight, type, userDepartureDate, userReturnDate) => {
     if (!flight) return null;
 
+    console.log('formatFlightData called with:', {
+      flightNumber: flight.flightNumber,
+      type,
+      departureTime: flight.departureTime,
+      arrivalTime: flight.arrivalTime,
+      departureTimeType: typeof flight.departureTime,
+      arrivalTimeType: typeof flight.arrivalTime,
+      userDepartureDate,
+      userReturnDate
+    });
+
     // Get the user-selected date (passed from location.state)
     const bookingState = location.state || {};
     const selectedDate = type === 'outbound' 
@@ -75,12 +86,21 @@ const useTravellerDetailsDataLayer = (pageViewOptions = {}) => {
     const getDateTime = (timeString, dateString) => {
       if (!dateString || !timeString) return null;
       try {
+        // Ensure timeString is actually a string
+        if (typeof timeString !== 'string') {
+          console.warn('timeString is not a string:', timeString);
+          return null;
+        }
         const date = new Date(dateString);
+        if (isNaN(date.getTime())) {
+          console.warn('Invalid dateString:', dateString);
+          return null;
+        }
         const [hours, minutes] = timeString.split(':');
-        date.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+        date.setHours(parseInt(hours) || 0, parseInt(minutes) || 0, 0, 0);
         return date;
       } catch (error) {
-        console.error('Error parsing date/time:', error);
+        console.error('Error parsing date/time:', error, { timeString, dateString });
         return null;
       }
     };
@@ -393,13 +413,14 @@ const useTravellerDetailsDataLayer = (pageViewOptions = {}) => {
       console.error('❌ Error initializing Traveller Details Data Layer:', error);
       enhancedAirlinesDataLayer.trackError('traveller-details-initialization', error);
     }
-  }, [generateBookingId, generateSearchId, generatePNR, formatFlightData, calculatePricing, calculateRouteInfo, location.state, pageViewOptions]);
+  }, [generateBookingId, generateSearchId, generatePNR, formatFlightData, calculatePricing, calculateRouteInfo]);
 
 
-  // Initialize data layer on component mount
+  // Initialize data layer on component mount (only once)
   useEffect(() => {
     initializeTravellerDetailsDataLayer();
-  }, [initializeTravellerDetailsDataLayer]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return {
     formContext
