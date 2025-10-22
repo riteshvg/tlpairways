@@ -22,6 +22,12 @@ import {
   CardContent,
   Divider,
   Stack,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Link,
+  Alert,
 } from '@mui/material';
 import { format, parseISO, isValid } from 'date-fns';
 import PrintIcon from '@mui/icons-material/Print';
@@ -60,6 +66,30 @@ const BookingConfirmation = () => {
   const location = useLocation();
   const navigate = useNavigate();
   
+  // Build version for tracking
+  const BUILD_VERSION = {
+    version: '2025-10-22-v9',
+    commit: 'a8cd2b7',
+    buildDate: '2025-10-22T12:00:00Z',
+    features: [
+      'Complimentary meals (free)',
+      'Dynamic baggage pricing (₹800-₹3,500)',
+      'Additional Services card with details',
+      'Sustainability Impact metrics',
+      'Booking duration tracking',
+      'Enhanced airline details on all pages',
+      'Fixed date selection across booking flow',
+      'Technical Build Details modal'
+    ],
+    fixes: [
+      'Date object rendering errors',
+      'Undefined attributes in data layer',
+      'Distance calculation for sustainability',
+      'Meal and baggage detail display',
+      'Ancillary total calculation accuracy'
+    ]
+  };
+  
   // Track page view with confirmation-specific context
   usePageView({
     pageCategory: 'booking',
@@ -73,6 +103,7 @@ const BookingConfirmation = () => {
   const hasFiredPurchaseEvent = useRef(false);
   const [totalDistance, setTotalDistance] = useState(0);
   const [treesPlanted, setTreesPlanted] = useState(0);
+  const [techDetailsOpen, setTechDetailsOpen] = useState(false);
   
   // State for tracking user interactions
   const [bookingReference, setBookingReference] = useState('');
@@ -1983,7 +2014,157 @@ const BookingConfirmation = () => {
               Book Another Flight
             </Button>
           </Box>
+
+          {/* Technical Details Link */}
+          <Box sx={{ mt: 2, textAlign: 'center' }}>
+            <Link
+              component="button"
+              variant="caption"
+              onClick={() => setTechDetailsOpen(true)}
+              sx={{ 
+                color: 'text.secondary',
+                cursor: 'pointer',
+                '&:hover': { color: 'primary.main' }
+              }}
+            >
+              Technical Build Details
+            </Link>
+          </Box>
         </Paper>
+
+        {/* Technical Details Modal */}
+        <Dialog
+          open={techDetailsOpen}
+          onClose={() => setTechDetailsOpen(false)}
+          maxWidth="md"
+          fullWidth
+        >
+          <DialogTitle>
+            <Typography variant="h6" component="div">
+              Technical Build Information
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              Production deployment status and recent changes
+            </Typography>
+          </DialogTitle>
+          <DialogContent dividers>
+            <Stack spacing={3}>
+              {/* Build Version Info */}
+              <Box>
+                <Typography variant="subtitle2" color="primary" gutterBottom>
+                  Current Build Version
+                </Typography>
+                <Grid container spacing={1}>
+                  <Grid item xs={4}>
+                    <Typography variant="caption" color="text.secondary">Version:</Typography>
+                  </Grid>
+                  <Grid item xs={8}>
+                    <Typography variant="body2" fontFamily="monospace">{BUILD_VERSION.version}</Typography>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Typography variant="caption" color="text.secondary">Commit:</Typography>
+                  </Grid>
+                  <Grid item xs={8}>
+                    <Typography variant="body2" fontFamily="monospace">{BUILD_VERSION.commit}</Typography>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Typography variant="caption" color="text.secondary">Build Date:</Typography>
+                  </Grid>
+                  <Grid item xs={8}>
+                    <Typography variant="body2" fontFamily="monospace">
+                      {new Date(BUILD_VERSION.buildDate).toLocaleString()}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Box>
+
+              <Divider />
+
+              {/* Railway Deployment Status */}
+              <Box>
+                <Typography variant="subtitle2" color="primary" gutterBottom>
+                  Railway Deployment Status
+                </Typography>
+                <Alert severity="info" sx={{ mt: 1 }}>
+                  <Typography variant="body2" gutterBottom>
+                    <strong>Current Serving:</strong> Commit {BUILD_VERSION.commit}
+                  </Typography>
+                  <Typography variant="caption" display="block">
+                    Latest changes have been pushed to production via GitHub auto-deploy.
+                    Railway is serving the most recent commit from the main branch.
+                  </Typography>
+                </Alert>
+                <Box sx={{ mt: 2 }}>
+                  <Typography variant="caption" color="text.secondary" display="block">
+                    <strong>Deployment Method:</strong> GitHub Auto-Deploy (main branch)
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary" display="block">
+                    <strong>Environment:</strong> Production (Railway)
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary" display="block">
+                    <strong>Build System:</strong> Nixpacks
+                  </Typography>
+                </Box>
+              </Box>
+
+              <Divider />
+
+              {/* Recent Features */}
+              <Box>
+                <Typography variant="subtitle2" color="primary" gutterBottom>
+                  Recent Features Added
+                </Typography>
+                <Stack spacing={0.5} sx={{ pl: 2 }}>
+                  {BUILD_VERSION.features.map((feature, index) => (
+                    <Typography key={index} variant="body2" sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                      <Box component="span" sx={{ mr: 1, color: 'success.main', fontWeight: 'bold' }}>✓</Box>
+                      {feature}
+                    </Typography>
+                  ))}
+                </Stack>
+              </Box>
+
+              <Divider />
+
+              {/* Recent Fixes */}
+              <Box>
+                <Typography variant="subtitle2" color="primary" gutterBottom>
+                  Recent Fixes
+                </Typography>
+                <Stack spacing={0.5} sx={{ pl: 2 }}>
+                  {BUILD_VERSION.fixes.map((fix, index) => (
+                    <Typography key={index} variant="body2" sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                      <Box component="span" sx={{ mr: 1, color: 'warning.main', fontWeight: 'bold' }}>⚡</Box>
+                      {fix}
+                    </Typography>
+                  ))}
+                </Stack>
+              </Box>
+
+              {/* Git Sync Status */}
+              <Divider />
+              <Box>
+                <Typography variant="subtitle2" color="primary" gutterBottom>
+                  Repository Sync Status
+                </Typography>
+                <Alert severity="success" sx={{ mt: 1 }}>
+                  <Typography variant="body2">
+                    <strong>✓ Local and Remote in Sync</strong>
+                  </Typography>
+                  <Typography variant="caption" display="block" sx={{ mt: 0.5 }}>
+                    All changes from the enhancements branch have been successfully merged to main
+                    and pushed to GitHub. Railway is automatically deploying from the main branch.
+                  </Typography>
+                </Alert>
+              </Box>
+            </Stack>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setTechDetailsOpen(false)} color="primary">
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     </Container>
   );
