@@ -62,27 +62,47 @@ const useTravellerDetailsDataLayer = (pageViewOptions = {}) => {
   }, []);
 
   // Format flight data for data layer
-  const formatFlightData = useCallback((flight, type) => {
+  const formatFlightData = useCallback((flight, type, userDepartureDate, userReturnDate) => {
     if (!flight) return null;
 
-    const departureTime = flight.departureTime ? new Date(flight.departureTime) : null;
-    const arrivalTime = flight.arrivalTime ? new Date(flight.arrivalTime) : null;
+    // Get the user-selected date (passed from location.state)
+    const bookingState = location.state || {};
+    const selectedDate = type === 'outbound' 
+      ? (userDepartureDate || bookingState.departureDate)
+      : (userReturnDate || bookingState.returnDate);
+
+    // Parse flight time and combine with user-selected date
+    const getDateTime = (timeString, dateString) => {
+      if (!dateString || !timeString) return null;
+      try {
+        const date = new Date(dateString);
+        const [hours, minutes] = timeString.split(':');
+        date.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+        return date;
+      } catch (error) {
+        console.error('Error parsing date/time:', error);
+        return null;
+      }
+    };
+
+    const departureDateTime = getDateTime(flight.departureTime, selectedDate);
+    const arrivalDateTime = getDateTime(flight.arrivalTime, selectedDate);
 
     return {
-      flightId: `${flight.airlineCode || 'TL'}_${flight.origin?.iata_code || flight.originCode}_${flight.destination?.iata_code || flight.destinationCode}_${departureTime ? format(departureTime, 'yyyyMMdd') : 'unknown'}_${departureTime ? format(departureTime, 'HHmm') : 'unknown'}`,
+      flightId: `${flight.airlineCode || 'TL'}_${flight.origin}_${flight.destination}_${departureDateTime ? format(departureDateTime, 'yyyyMMdd') : 'unknown'}_${departureDateTime ? format(departureDateTime, 'HHmm') : 'unknown'}`,
       flightNumber: flight.flightNumber || `${flight.airlineCode || 'TL'} ${flight.flightNumber || '000'}`,
       airline: flight.airline || 'TLP Airways',
       airlineCode: flight.airlineCode || 'TL',
-      origin: flight.origin?.iata_code || flight.originCode,
-      originAirport: flight.origin?.airport || flight.origin?.name || 'Unknown Airport',
-      originCity: flight.origin?.city || 'Unknown City',
-      destination: flight.destination?.iata_code || flight.destinationCode,
-      destinationAirport: flight.destination?.airport || flight.destination?.name || 'Unknown Airport',
-      destinationCity: flight.destination?.city || 'Unknown City',
-      departureDate: departureTime ? format(departureTime, 'yyyy-MM-dd') : 'unknown',
-      departureTime: departureTime ? format(departureTime, 'HH:mm') : 'unknown',
-      arrivalDate: arrivalTime ? format(arrivalTime, 'yyyy-MM-dd') : 'unknown',
-      arrivalTime: arrivalTime ? format(arrivalTime, 'HH:mm') : 'unknown',
+      origin: flight.origin,
+      originAirport: flight.originAirport || 'Unknown Airport',
+      originCity: flight.originCity || 'Unknown City',
+      destination: flight.destination,
+      destinationAirport: flight.destinationAirport || 'Unknown Airport',
+      destinationCity: flight.destinationCity || 'Unknown City',
+      departureDate: departureDateTime ? format(departureDateTime, 'yyyy-MM-dd') : 'unknown',
+      departureTime: flight.departureTime || 'unknown',
+      arrivalDate: arrivalDateTime ? format(arrivalDateTime, 'yyyy-MM-dd') : 'unknown',
+      arrivalTime: flight.arrivalTime || 'unknown',
       duration: flight.duration || 'unknown',
       stops: flight.stops || 0,
       aircraft: flight.aircraft || 'Unknown',
@@ -90,7 +110,7 @@ const useTravellerDetailsDataLayer = (pageViewOptions = {}) => {
       fareType: flight.fareType || 'Standard',
       fareClass: flight.fareClass || 'S',
       bookingClass: flight.bookingClass || 'S',
-      price: flight.price?.amount || flight.displayPrices?.[flight.cabinClass] || 0,
+      price: flight.price?.amount || flight.price || flight.displayPrices?.[flight.cabinClass] || 0,
       currency: flight.displayCurrency || flight.price?.currency || 'INR',
       availability: flight.availableSeats || 0,
       baggage: {
@@ -137,26 +157,26 @@ const useTravellerDetailsDataLayer = (pageViewOptions = {}) => {
   }, []);
 
   // Calculate route information
-  const calculateRouteInfo = useCallback((selectedFlights) => {
+  const calculateRouteInfo = useCallback((selectedFlights, userDepartureDate, userReturnDate) => {
     const onwardFlight = selectedFlights?.onward;
     const returnFlight = selectedFlights?.return;
 
     if (!onwardFlight) return null;
 
-    const origin = onwardFlight.origin?.iata_code || onwardFlight.originCode;
-    const destination = onwardFlight.destination?.iata_code || onwardFlight.destinationCode;
+    const origin = onwardFlight.origin;
+    const destination = onwardFlight.destination;
     
-    const departureTime = onwardFlight.departureTime ? new Date(onwardFlight.departureTime) : null;
-    const returnTime = returnFlight?.departureTime ? new Date(returnFlight.departureTime) : null;
+    // Calculate distance if flight has distance property
+    const distanceKm = onwardFlight.distance || 0;
 
     return {
       origin,
       destination,
       route: `${origin}-${destination}`,
-      departureDate: departureTime ? format(departureTime, 'yyyy-MM-dd') : 'unknown',
-      returnDate: returnTime ? format(returnTime, 'yyyy-MM-dd') : null,
-      totalDuration: 'unknown', // Would need to calculate from flight durations
-      distanceKm: 0 // Would need to calculate from airport coordinates
+      departureDate: userDepartureDate ? format(new Date(userDepartureDate), 'yyyy-MM-dd') : 'unknown',
+      returnDate: userReturnDate ? format(new Date(userReturnDate), 'yyyy-MM-dd') : null,
+      totalDuration: onwardFlight.duration + (returnFlight?.duration ? ` / ${returnFlight.duration}` : ''),
+      distanceKm: distanceKm
     };
   }, []);
 
@@ -179,12 +199,14 @@ const useTravellerDetailsDataLayer = (pageViewOptions = {}) => {
       };
       
       const bookingState = getBookingState();
-      const { onwardFlight, returnFlight, tripType, passengers, travellerDetails } = bookingState || {};
+      const { onwardFlight, returnFlight, tripType, passengers, travellerDetails, departureDate, returnDate } = bookingState || {};
       
       console.log('🔍 useTravellerDetailsDataLayer - Debug:', {
         bookingState,
         passengers,
-        passengerCount: pageViewOptions.passengerCount
+        passengerCount: pageViewOptions.passengerCount,
+        departureDate,
+        returnDate
       });
       
       if (!onwardFlight) {
@@ -198,13 +220,13 @@ const useTravellerDetailsDataLayer = (pageViewOptions = {}) => {
       const pnr = generatePNR();
       const bookingStartTime = new Date().toISOString();
 
-      // Format flight data
-      const outboundFlight = formatFlightData(onwardFlight, 'outbound');
-      const returnFlightData = returnFlight ? formatFlightData(returnFlight, 'return') : null;
+      // Format flight data with user-selected dates
+      const outboundFlight = formatFlightData(onwardFlight, 'outbound', departureDate, returnDate);
+      const returnFlightData = returnFlight ? formatFlightData(returnFlight, 'return', departureDate, returnDate) : null;
 
       // Calculate pricing and route info
       const pricing = calculatePricing({ onward: onwardFlight, return: returnFlight }, passengers);
-      const routeInfo = calculateRouteInfo({ onward: onwardFlight, return: returnFlight });
+      const routeInfo = calculateRouteInfo({ onward: onwardFlight, return: returnFlight }, departureDate, returnDate);
 
       // Calculate passenger breakdown
       const passengerBreakdown = {
@@ -371,7 +393,7 @@ const useTravellerDetailsDataLayer = (pageViewOptions = {}) => {
       console.error('❌ Error initializing Traveller Details Data Layer:', error);
       enhancedAirlinesDataLayer.trackError('traveller-details-initialization', error);
     }
-  }, [generateBookingId, generateSearchId, formatFlightData, calculatePricing, calculateRouteInfo]);
+  }, [generateBookingId, generateSearchId, generatePNR, formatFlightData, calculatePricing, calculateRouteInfo, location.state, pageViewOptions]);
 
 
   // Initialize data layer on component mount

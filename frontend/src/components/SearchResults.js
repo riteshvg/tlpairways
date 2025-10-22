@@ -706,10 +706,10 @@ const SearchResults = () => {
         },
         totalPrice: (() => {
           const onwardPrice = selectedOnwardFlight ? 
-            selectedOnwardFlight.displayPrices?.[searchParams.cabinClass] * searchParams.passengers : 0;
+            (selectedOnwardFlight.price?.amount || selectedOnwardFlight.price || 0) : 0;
           const returnPrice = selectedReturnFlight ? 
-            selectedReturnFlight.displayPrices?.[searchParams.cabinClass] * searchParams.passengers : 0;
-          return onwardPrice + returnPrice;
+            (selectedReturnFlight.price?.amount || selectedReturnFlight.price || 0) : 0;
+          return (onwardPrice + returnPrice) * searchParams.passengers;
         })(),
         tripType: searchParams.tripType,
         passengers: searchParams.passengers,
