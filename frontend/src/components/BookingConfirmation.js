@@ -1606,9 +1606,25 @@ const BookingConfirmation = () => {
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                 <Restaurant fontSize="small" color="action" />
-                                <Typography variant="body2">
-                                  Meals: {selectedServices.onward.meal.filter(m => m && m !== 'none').length} selected
-                                </Typography>
+                                <Box>
+                                  <Typography variant="body2" fontWeight="medium">
+                                    Meals ({selectedServices.onward.meal.filter(m => m && m !== 'none').length})
+                                  </Typography>
+                                  <Typography variant="caption" color="text.secondary">
+                                    {selectedServices.onward.meal.filter(m => m && m !== 'none').map(m => {
+                                      const mealMap = {
+                                        'veg': 'Vegetarian',
+                                        'non-veg': 'Non-Vegetarian',
+                                        'nonveg': 'Non-Vegetarian',
+                                        'vegan': 'Vegan',
+                                        'jain': 'Jain',
+                                        'diabetic': 'Diabetic',
+                                        'gluten-free': 'Gluten Free'
+                                      };
+                                      return mealMap[m.toLowerCase()] || m;
+                                    }).join(', ')}
+                                  </Typography>
+                                </Box>
                               </Box>
                               <Typography variant="body2" color="text.secondary">
                                 ₹{(selectedServices.onward.meal.filter(m => m && m !== 'none').length * 300).toLocaleString()}
@@ -1619,9 +1635,25 @@ const BookingConfirmation = () => {
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                 <Luggage fontSize="small" color="action" />
-                                <Typography variant="body2">
-                                  Extra Baggage: {selectedServices.onward.baggage.filter(b => b && b !== 'included').length} items
-                                </Typography>
+                                <Box>
+                                  <Typography variant="body2" fontWeight="medium">
+                                    Extra Baggage ({selectedServices.onward.baggage.filter(b => b && b !== 'included').length})
+                                  </Typography>
+                                  <Typography variant="caption" color="text.secondary">
+                                    {selectedServices.onward.baggage.filter(b => b && b !== 'included').map(b => {
+                                      const baggageMap = {
+                                        '15kg': '15 kg',
+                                        '20kg': '20 kg',
+                                        '25kg': '25 kg',
+                                        '30kg': '30 kg',
+                                        'sports-equipment': 'Sports Equipment',
+                                        'musical-instrument': 'Musical Instrument',
+                                        'fragile': 'Fragile Items'
+                                      };
+                                      return baggageMap[b] || b;
+                                    }).join(', ')}
+                                  </Typography>
+                                </Box>
                               </Box>
                               <Typography variant="body2" color="text.secondary">
                                 ₹{(selectedServices.onward.baggage.filter(b => b && b !== 'included').length * 1000).toLocaleString()}
@@ -1674,9 +1706,25 @@ const BookingConfirmation = () => {
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                 <Restaurant fontSize="small" color="action" />
-                                <Typography variant="body2">
-                                  Meals: {selectedServices.return.meal.filter(m => m && m !== 'none').length} selected
-                                </Typography>
+                                <Box>
+                                  <Typography variant="body2" fontWeight="medium">
+                                    Meals ({selectedServices.return.meal.filter(m => m && m !== 'none').length})
+                                  </Typography>
+                                  <Typography variant="caption" color="text.secondary">
+                                    {selectedServices.return.meal.filter(m => m && m !== 'none').map(m => {
+                                      const mealMap = {
+                                        'veg': 'Vegetarian',
+                                        'non-veg': 'Non-Vegetarian',
+                                        'nonveg': 'Non-Vegetarian',
+                                        'vegan': 'Vegan',
+                                        'jain': 'Jain',
+                                        'diabetic': 'Diabetic',
+                                        'gluten-free': 'Gluten Free'
+                                      };
+                                      return mealMap[m.toLowerCase()] || m;
+                                    }).join(', ')}
+                                  </Typography>
+                                </Box>
                               </Box>
                               <Typography variant="body2" color="text.secondary">
                                 ₹{(selectedServices.return.meal.filter(m => m && m !== 'none').length * 300).toLocaleString()}
@@ -1687,9 +1735,25 @@ const BookingConfirmation = () => {
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                 <Luggage fontSize="small" color="action" />
-                                <Typography variant="body2">
-                                  Extra Baggage: {selectedServices.return.baggage.filter(b => b && b !== 'included').length} items
-                                </Typography>
+                                <Box>
+                                  <Typography variant="body2" fontWeight="medium">
+                                    Extra Baggage ({selectedServices.return.baggage.filter(b => b && b !== 'included').length})
+                                  </Typography>
+                                  <Typography variant="caption" color="text.secondary">
+                                    {selectedServices.return.baggage.filter(b => b && b !== 'included').map(b => {
+                                      const baggageMap = {
+                                        '15kg': '15 kg',
+                                        '20kg': '20 kg',
+                                        '25kg': '25 kg',
+                                        '30kg': '30 kg',
+                                        'sports-equipment': 'Sports Equipment',
+                                        'musical-instrument': 'Musical Instrument',
+                                        'fragile': 'Fragile Items'
+                                      };
+                                      return baggageMap[b] || b;
+                                    }).join(', ')}
+                                  </Typography>
+                                </Box>
                               </Box>
                               <Typography variant="body2" color="text.secondary">
                                 ₹{(selectedServices.return.baggage.filter(b => b && b !== 'included').length * 1000).toLocaleString()}
