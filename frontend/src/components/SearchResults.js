@@ -807,7 +807,7 @@ const SearchResults = () => {
                     {flight.flightNumber}
                   </Typography>
               <Typography variant="body2">
-                {format(flight.departureTime, 'HH:mm')} - {format(flight.arrivalTime, 'HH:mm')}
+                {typeof flight.departureTime === 'string' ? flight.departureTime : format(new Date(flight.departureTime), 'HH:mm')} - {typeof flight.arrivalTime === 'string' ? flight.arrivalTime : format(new Date(flight.arrivalTime), 'HH:mm')}
                     </Typography>
                 </Grid>
             <Grid item xs={12} sm={4}>
