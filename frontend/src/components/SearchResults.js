@@ -689,28 +689,46 @@ const SearchResults = () => {
 
     // Track proceed to traveller details
     try {
+      const onwardPrice = selectedOnwardFlight ? 
+        (selectedOnwardFlight.price?.amount || selectedOnwardFlight.price || 0) : 0;
+      const returnPrice = selectedReturnFlight ? 
+        (selectedReturnFlight.price?.amount || selectedReturnFlight.price || 0) : 0;
+      const totalPrice = (onwardPrice + returnPrice) * searchParams.passengers;
+
       airlinesDataLayer.trackEvent('searchProceedToTravellerDetails', {
         searchId,
-        pnr: pnr, // Include PNR in the data layer event
+        pnr: pnr,
         selectedFlights: {
           onward: selectedOnwardFlight ? {
             flightNumber: selectedOnwardFlight.flightNumber,
-            airline: selectedOnwardFlight.airline,
-            price: selectedOnwardFlight.price.amount
+            airline: selectedOnwardFlight.airline || 'TL Airways',
+            origin: selectedOnwardFlight.origin,
+            originCity: selectedOnwardFlight.originCity,
+            destination: selectedOnwardFlight.destination,
+            destinationCity: selectedOnwardFlight.destinationCity,
+            departureTime: selectedOnwardFlight.departureTime,
+            arrivalTime: selectedOnwardFlight.arrivalTime,
+            duration: selectedOnwardFlight.duration,
+            departureDate: searchParams.date ? format(new Date(searchParams.date), 'yyyy-MM-dd') : null,
+            cabinClass: searchParams.cabinClass,
+            price: onwardPrice
           } : null,
           return: selectedReturnFlight ? {
             flightNumber: selectedReturnFlight.flightNumber,
-            airline: selectedReturnFlight.airline,
-            price: selectedReturnFlight.price.amount
+            airline: selectedReturnFlight.airline || 'TL Airways',
+            origin: selectedReturnFlight.origin,
+            originCity: selectedReturnFlight.originCity,
+            destination: selectedReturnFlight.destination,
+            destinationCity: selectedReturnFlight.destinationCity,
+            departureTime: selectedReturnFlight.departureTime,
+            arrivalTime: selectedReturnFlight.arrivalTime,
+            duration: selectedReturnFlight.duration,
+            departureDate: searchParams.returnDate ? format(new Date(searchParams.returnDate), 'yyyy-MM-dd') : null,
+            cabinClass: searchParams.cabinClass,
+            price: returnPrice
           } : null
         },
-        totalPrice: (() => {
-          const onwardPrice = selectedOnwardFlight ? 
-            (selectedOnwardFlight.price?.amount || selectedOnwardFlight.price || 0) : 0;
-          const returnPrice = selectedReturnFlight ? 
-            (selectedReturnFlight.price?.amount || selectedReturnFlight.price || 0) : 0;
-          return (onwardPrice + returnPrice) * searchParams.passengers;
-        })(),
+        totalPrice: totalPrice,
         tripType: searchParams.tripType,
         passengers: searchParams.passengers,
         cabinClass: searchParams.cabinClass,
