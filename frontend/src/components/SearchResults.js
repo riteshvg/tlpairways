@@ -1027,7 +1027,15 @@ const SearchResults = () => {
                   </Grid>
                   <Grid item xs={6}>
                     <Typography variant="caption" color="text.secondary">Time</Typography>
-                    <Typography variant="body2">{selectedOnwardFlight.departureTime} - {selectedOnwardFlight.arrivalTime}</Typography>
+                    <Typography variant="body2">
+                      {typeof selectedOnwardFlight.departureTime === 'string' 
+                        ? selectedOnwardFlight.departureTime 
+                        : (selectedOnwardFlight.departureTime ? format(new Date(selectedOnwardFlight.departureTime), 'HH:mm') : 'N/A')} 
+                      {' - '}
+                      {typeof selectedOnwardFlight.arrivalTime === 'string' 
+                        ? selectedOnwardFlight.arrivalTime 
+                        : (selectedOnwardFlight.arrivalTime ? format(new Date(selectedOnwardFlight.arrivalTime), 'HH:mm') : 'N/A')}
+                    </Typography>
                   </Grid>
                   <Grid item xs={6}>
                     <Typography variant="caption" color="text.secondary">Duration</Typography>
@@ -1072,7 +1080,15 @@ const SearchResults = () => {
                   </Grid>
                   <Grid item xs={6}>
                     <Typography variant="caption" color="text.secondary">Time</Typography>
-                    <Typography variant="body2">{selectedReturnFlight.departureTime} - {selectedReturnFlight.arrivalTime}</Typography>
+                    <Typography variant="body2">
+                      {typeof selectedReturnFlight.departureTime === 'string' 
+                        ? selectedReturnFlight.departureTime 
+                        : (selectedReturnFlight.departureTime ? format(new Date(selectedReturnFlight.departureTime), 'HH:mm') : 'N/A')} 
+                      {' - '}
+                      {typeof selectedReturnFlight.arrivalTime === 'string' 
+                        ? selectedReturnFlight.arrivalTime 
+                        : (selectedReturnFlight.arrivalTime ? format(new Date(selectedReturnFlight.arrivalTime), 'HH:mm') : 'N/A')}
+                    </Typography>
                   </Grid>
                   <Grid item xs={6}>
                     <Typography variant="caption" color="text.secondary">Duration</Typography>
