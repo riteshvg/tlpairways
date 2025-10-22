@@ -302,31 +302,52 @@ const Payment = () => {
     const totalDisplayPrice = displayPrice * numPassengers;
     const totalOriginalPrice = originalPrice * numPassengers;
 
+    // Get user-selected date
+    const userDate = type === 'onward' ? initialDepartureDate : initialReturnDate;
+
     return (
-      <Box sx={{ mb: 2 }}>
-        <Typography variant="subtitle1" gutterBottom>
+      <Box sx={{ mb: 2, p: 2, bgcolor: 'action.hover', borderRadius: 1 }}>
+        <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
           {type === 'onward' ? 'Onward Flight' : 'Return Flight'}
         </Typography>
-        <Typography>
-          {flight.airline} {flight.flightNumber}
-        </Typography>
-        <Typography>
-          {(() => {
-            let dateToShow = flight.departureTime;
-            if (type === 'onward' && initialDepartureDate) {
-              dateToShow = initialDepartureDate;
-            } else if (type === 'return' && initialReturnDate) {
-              dateToShow = initialReturnDate;
-            }
-            return `${format(new Date(dateToShow), 'MMM dd, yyyy')} ${format(new Date(flight.departureTime), 'HH:mm')} - ${format(new Date(flight.arrivalTime), 'HH:mm')}`;
-          })()}
-        </Typography>
-        <Typography>
-          {flight.origin?.iata_code || 'N/A'} → {flight.destination?.iata_code || 'N/A'}
-        </Typography>
-        <Typography>
-          Cabin Class: {flight.cabinClass || cabinClass}
-        </Typography>
+        <Divider sx={{ mb: 1.5 }} />
+        <Grid container spacing={1}>
+          <Grid item xs={6}>
+            <Typography variant="caption" color="text.secondary">Airline</Typography>
+            <Typography variant="body2" fontWeight="medium">{flight.airline || 'TL Airways'}</Typography>
+          </Grid>
+          <Grid item xs={6}>
+            <Typography variant="caption" color="text.secondary">Flight</Typography>
+            <Typography variant="body2" fontWeight="medium">{flight.flightNumber}</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="caption" color="text.secondary">Route</Typography>
+            <Typography variant="body2" fontWeight="medium">
+              {flight.originCity || flight.origin} ({flight.origin}) → {flight.destinationCity || flight.destination} ({flight.destination})
+            </Typography>
+          </Grid>
+          <Grid item xs={6}>
+            <Typography variant="caption" color="text.secondary">Date</Typography>
+            <Typography variant="body2">{userDate ? format(new Date(userDate), 'MMM dd, yyyy') : 'N/A'}</Typography>
+          </Grid>
+          <Grid item xs={6}>
+            <Typography variant="caption" color="text.secondary">Time</Typography>
+            <Typography variant="body2">{flight.departureTime} - {flight.arrivalTime}</Typography>
+          </Grid>
+          <Grid item xs={6}>
+            <Typography variant="caption" color="text.secondary">Duration</Typography>
+            <Typography variant="body2">{flight.duration}</Typography>
+          </Grid>
+          <Grid item xs={6}>
+            <Typography variant="caption" color="text.secondary">Cabin</Typography>
+            <Typography variant="body2">{(flight.cabinClass || cabinClass)?.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</Typography>
+          </Grid>
+          <Grid item xs={6}>
+            <Typography variant="caption" color="text.secondary">Aircraft</Typography>
+            <Typography variant="body2">{flight.aircraftType || flight.aircraft || 'Aircraft'}</Typography>
+          </Grid>
+        </Grid>
+        <Divider sx={{ my: 1.5 }} />
         <Typography>
           {isInternational ? (
             <>

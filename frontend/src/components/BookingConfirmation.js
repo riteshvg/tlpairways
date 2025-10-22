@@ -1171,44 +1171,60 @@ const BookingConfirmation = () => {
         <Typography variant="h6" gutterBottom>
           {type === 'onward' ? 'Onward Flight' : 'Return Flight'}
         </Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={6}>
-            <Typography variant="subtitle1">
-              {flight.originCity || flight.origin} → {flight.destinationCity || flight.destination}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {getFlightDateTime(flight.departureTime, userSelectedDate)} - {flight.flightNumber}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Cabin Class: {flight.cabinClass?.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-              Flight Type: <Chip 
-                label={(type === 'onward' ? haulTypes.onward : haulTypes.return || 'short haul').toUpperCase()}
-                size="small"
-                color={
-                  (type === 'onward' ? haulTypes.onward : haulTypes.return) === 'long haul' 
-                    ? 'primary' 
-                    : 'success'
-                }
-                sx={{ 
-                  height: 20, 
-                  fontSize: '0.7rem',
-                  fontWeight: 600,
-                  ml: 1
-                }}
-              />
-            </Typography>
+        <Paper elevation={2} sx={{ p: 2, bgcolor: 'action.hover' }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Typography variant="subtitle1" fontWeight="bold">
+                {flight.originCity || flight.origin} → {flight.destinationCity || flight.destination}
+              </Typography>
+            </Grid>
+            <Grid item xs={6} md={3}>
+              <Typography variant="caption" color="text.secondary">Airline</Typography>
+              <Typography variant="body2" fontWeight="medium">{flight.airline || 'TL Airways'}</Typography>
+            </Grid>
+            <Grid item xs={6} md={3}>
+              <Typography variant="caption" color="text.secondary">Flight</Typography>
+              <Typography variant="body2" fontWeight="medium">{flight.flightNumber}</Typography>
+            </Grid>
+            <Grid item xs={6} md={3}>
+              <Typography variant="caption" color="text.secondary">Aircraft</Typography>
+              <Typography variant="body2">{flight.aircraftType || flight.aircraft || 'Aircraft'}</Typography>
+            </Grid>
+            <Grid item xs={6} md={3}>
+              <Typography variant="caption" color="text.secondary">Cabin</Typography>
+              <Typography variant="body2">{flight.cabinClass?.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="caption" color="text.secondary">Departure</Typography>
+              <Typography variant="body2">{getFlightDateTime(flight.departureTime, userSelectedDate)}</Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography variant="caption" color="text.secondary">Flight Type</Typography>
+              <Typography variant="body2">
+                <Chip 
+                  label={(type === 'onward' ? haulTypes.onward : haulTypes.return || 'short haul').toUpperCase()}
+                  size="small"
+                  color={
+                    (type === 'onward' ? haulTypes.onward : haulTypes.return) === 'long haul' 
+                      ? 'primary' 
+                      : 'success'
+                  }
+                  sx={{ 
+                    height: 20, 
+                    fontSize: '0.7rem',
+                    fontWeight: 600
+                  }}
+                />
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography variant="caption" color="text.secondary">Selected Seats</Typography>
+              <Typography variant="body2">
+                {seats.length > 0 ? seats.join(', ') : 'No seats selected'}
+              </Typography>
+            </Grid>
           </Grid>
-          <Grid item xs={12} md={6}>
-            <Typography variant="subtitle1">
-              Selected Seats
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {seats.length > 0 ? seats.join(', ') : 'No seats selected'}
-            </Typography>
-          </Grid>
-        </Grid>
+        </Paper>
       </Box>
     );
   };
