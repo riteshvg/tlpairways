@@ -1816,9 +1816,6 @@ const BookingConfirmation = () => {
                 </Stack>
               </CardContent>
             </Card>
-
-            {/* Ancillary Services */}
-            {renderAncillaryServices()}
           </Grid>
         </Grid>
 
