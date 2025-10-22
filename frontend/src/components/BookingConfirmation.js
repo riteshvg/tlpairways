@@ -326,15 +326,23 @@ const BookingConfirmation = () => {
       console.log('Onward flight destination:', selectedFlights.onward.destination);
 
       // Inject coordinates from airports.json if missing
-      const addCoordinatesIfMissing = (airportObj) => {
-        if (airportObj.coordinates && airportObj.coordinates.latitude && airportObj.coordinates.longitude) {
-          return airportObj;
+      const addCoordinatesIfMissing = (airportCode) => {
+        if (!airportCode) return null;
+        
+        // If it's already an object with coordinates, return it
+        if (typeof airportCode === 'object' && airportCode.coordinates) {
+          return airportCode;
         }
-        const coords = getAirportWithCoordinates(airportObj.iata_code);
-        if (coords) {
-          return { ...airportObj, coordinates: coords };
+        
+        // If it's a string (airport code like "BOM"), get coordinates
+        if (typeof airportCode === 'string') {
+          const coords = getAirportWithCoordinates(airportCode);
+          if (coords) {
+            return { iata_code: airportCode, coordinates: coords };
+          }
         }
-        return airportObj;
+        
+        return null;
       };
 
       const flightsWithCoordinates = {
@@ -463,14 +471,14 @@ const BookingConfirmation = () => {
         return null;
       };
 
-      const onwardOriginCoords = getCoordinates(selectedFlights.onward?.origin?.iata_code);
-      const onwardDestCoords = getCoordinates(selectedFlights.onward?.destination?.iata_code);
+      const onwardOriginCoords = getCoordinates(selectedFlights.onward?.origin);
+      const onwardDestCoords = getCoordinates(selectedFlights.onward?.destination);
       const onwardDistance = onwardOriginCoords && onwardDestCoords 
         ? calculateFlightDistance(onwardOriginCoords, onwardDestCoords) 
         : 0;
 
-      const returnOriginCoords = getCoordinates(selectedFlights.return?.origin?.iata_code);
-      const returnDestCoords = getCoordinates(selectedFlights.return?.destination?.iata_code);
+      const returnOriginCoords = getCoordinates(selectedFlights.return?.origin);
+      const returnDestCoords = getCoordinates(selectedFlights.return?.destination);
       const returnDistance = tripType === 'roundtrip' && returnOriginCoords && returnDestCoords
         ? calculateFlightDistance(returnOriginCoords, returnDestCoords)
         : 0;
