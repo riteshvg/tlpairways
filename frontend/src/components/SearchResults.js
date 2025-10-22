@@ -695,6 +695,25 @@ const SearchResults = () => {
         (selectedReturnFlight.price?.amount || selectedReturnFlight.price || 0) : 0;
       const totalPrice = (onwardPrice + returnPrice) * searchParams.passengers;
 
+      // Helper function to ensure time is in HH:mm format only
+      const formatTimeOnly = (timeString) => {
+        if (!timeString) return null;
+        try {
+          // If it's already in HH:mm format, return as is
+          if (typeof timeString === 'string' && /^\d{2}:\d{2}$/.test(timeString)) {
+            return timeString;
+          }
+          // If it's a date object or ISO string, extract time
+          const date = new Date(timeString);
+          if (!isNaN(date.getTime())) {
+            return format(date, 'HH:mm');
+          }
+          return timeString;
+        } catch (error) {
+          return timeString;
+        }
+      };
+
       airlinesDataLayer.trackEvent('searchProceedToTravellerDetails', {
         searchId,
         pnr: pnr,
@@ -706,8 +725,8 @@ const SearchResults = () => {
             originCity: selectedOnwardFlight.originCity,
             destination: selectedOnwardFlight.destination,
             destinationCity: selectedOnwardFlight.destinationCity,
-            departureTime: selectedOnwardFlight.departureTime,
-            arrivalTime: selectedOnwardFlight.arrivalTime,
+            departureTime: formatTimeOnly(selectedOnwardFlight.departureTime),
+            arrivalTime: formatTimeOnly(selectedOnwardFlight.arrivalTime),
             duration: selectedOnwardFlight.duration,
             departureDate: searchParams.date ? format(new Date(searchParams.date), 'yyyy-MM-dd') : null,
             cabinClass: searchParams.cabinClass,
@@ -720,8 +739,8 @@ const SearchResults = () => {
             originCity: selectedReturnFlight.originCity,
             destination: selectedReturnFlight.destination,
             destinationCity: selectedReturnFlight.destinationCity,
-            departureTime: selectedReturnFlight.departureTime,
-            arrivalTime: selectedReturnFlight.arrivalTime,
+            departureTime: formatTimeOnly(selectedReturnFlight.departureTime),
+            arrivalTime: formatTimeOnly(selectedReturnFlight.arrivalTime),
             duration: selectedReturnFlight.duration,
             departureDate: searchParams.returnDate ? format(new Date(searchParams.returnDate), 'yyyy-MM-dd') : null,
             cabinClass: searchParams.cabinClass,
