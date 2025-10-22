@@ -332,7 +332,15 @@ const Payment = () => {
           </Grid>
           <Grid item xs={6}>
             <Typography variant="caption" color="text.secondary">Time</Typography>
-            <Typography variant="body2">{flight.departureTime} - {flight.arrivalTime}</Typography>
+            <Typography variant="body2">
+              {typeof flight.departureTime === 'string' 
+                ? flight.departureTime 
+                : (flight.departureTime ? format(new Date(flight.departureTime), 'HH:mm') : 'N/A')}
+              {' - '}
+              {typeof flight.arrivalTime === 'string' 
+                ? flight.arrivalTime 
+                : (flight.arrivalTime ? format(new Date(flight.arrivalTime), 'HH:mm') : 'N/A')}
+            </Typography>
           </Grid>
           <Grid item xs={6}>
             <Typography variant="caption" color="text.secondary">Duration</Typography>
