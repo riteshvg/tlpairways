@@ -1129,30 +1129,51 @@ const BookingConfirmation = () => {
     
     // Combine user-selected date with flight time
     const getFlightDateTime = (flightTime, userDate) => {
-      if (!userDate || !flightTime) return '';
+      console.log('getFlightDateTime called:', { flightTime, userDate, flightTimeType: typeof flightTime });
+      
+      if (!userDate || !flightTime) {
+        console.warn('Missing userDate or flightTime:', { userDate, flightTime });
+        return 'Date unavailable';
+      }
+      
       try {
         // Ensure flightTime is a string
         if (typeof flightTime !== 'string') {
           console.warn('flightTime is not a string:', flightTime, 'Type:', typeof flightTime);
-          return '';
+          // Try to convert to string if it's a Date object
+          if (flightTime instanceof Date) {
+            const formattedTime = format(flightTime, 'HH:mm');
+            flightTime = formattedTime;
+          } else {
+            return 'Time unavailable';
+          }
         }
         
         const selectedDate = new Date(userDate);
         if (isNaN(selectedDate.getTime())) {
           console.warn('Invalid userDate:', userDate);
-          return '';
+          return 'Invalid date';
         }
         
-        const [hours, minutes] = flightTime.split(':');
+        // Split time and validate
+        const timeParts = flightTime.split(':');
+        if (timeParts.length !== 2) {
+          console.warn('Invalid time format:', flightTime);
+          return flightTime;
+        }
+        
+        const [hours, minutes] = timeParts;
         selectedDate.setHours(parseInt(hours) || 0, parseInt(minutes) || 0, 0, 0);
-        return format(selectedDate, 'MMM dd, yyyy hh:mm a');
+        const result = format(selectedDate, 'MMM dd, yyyy hh:mm a');
+        console.log('Formatted result:', result);
+        return result;
       } catch (error) {
         console.error('Error formatting flight date time:', error, {
           flightTime,
           userDate,
           flightTimeType: typeof flightTime
         });
-        return '';
+        return 'Error formatting date';
       }
     };
     
