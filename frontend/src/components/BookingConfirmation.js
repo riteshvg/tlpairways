@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import usePageView from '../hooks/usePageView';
-import { useBookingTimer } from '../context/BookingTimerContext';
 import airlinesDataLayer from '../services/AirlinesDataLayer';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -31,7 +30,12 @@ import EmailIcon from '@mui/icons-material/Email';
 import SmsIcon from '@mui/icons-material/Sms';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import EventSeatIcon from '@mui/icons-material/EventSeat';
+import EventSeat from '@mui/icons-material/EventSeat';
 import LuggageIcon from '@mui/icons-material/Luggage';
+import Luggage from '@mui/icons-material/Luggage';
+import Restaurant from '@mui/icons-material/Restaurant';
+import FlightTakeoff from '@mui/icons-material/FlightTakeoff';
+import Deck from '@mui/icons-material/Deck';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import LocalAirportIcon from '@mui/icons-material/LocalAirport';
 import ForestIcon from '@mui/icons-material/Forest';
@@ -52,17 +56,9 @@ const findAirportByCode = (code) => {
   return null;
 };
 
-// Helper function to format duration
-const formatDuration = (milliseconds) => {
-  const minutes = Math.floor(milliseconds / 60000);
-  const seconds = Math.floor((milliseconds % 60000) / 1000);
-  return `${minutes}m ${seconds}s`;
-};
-
 const BookingConfirmation = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { bookingStartTime, bookingEndTime, bookingDuration, endBookingTimer } = useBookingTimer();
   
   // Track page view with confirmation-specific context
   usePageView({
@@ -99,7 +95,9 @@ const BookingConfirmation = () => {
     selectedServices,
     paymentDetails,
     contactInfo,
-    pnr: passedPNR // Get PNR from location state (generated in SearchResults)
+    pnr: passedPNR, // Get PNR from location state (generated in SearchResults)
+    departureDate: userDepartureDate, // User-selected departure date
+    returnDate: userReturnDate // User-selected return date
   } = location.state || {};
 
   // Find the number of passengers
@@ -161,8 +159,8 @@ const BookingConfirmation = () => {
           selectedServices[journey].baggage.forEach(baggage => {
             if (baggage && baggage !== 'included') {
               const isInternational = journey === 'onward' ? 
-                selectedFlights.onward.origin !== selectedFlights.onward.destination :
-                selectedFlights.return.origin !== selectedFlights.return.destination;
+                selectedFlights.onward.origin.iata_code !== selectedFlights.onward.destination.iata_code :
+                selectedFlights.return.origin.iata_code !== selectedFlights.return.destination.iata_code;
               const baggagePrice = isInternational ? 2000 : 1000;
               console.log(`Baggage price calculation for ${journey}:`, {
                 baggage,
@@ -328,15 +326,23 @@ const BookingConfirmation = () => {
       console.log('Onward flight destination:', selectedFlights.onward.destination);
 
       // Inject coordinates from airports.json if missing
-      const addCoordinatesIfMissing = (airportObj) => {
-        if (airportObj.coordinates && airportObj.coordinates.latitude && airportObj.coordinates.longitude) {
-          return airportObj;
+      const addCoordinatesIfMissing = (airportCode) => {
+        if (!airportCode) return null;
+        
+        // If it's already an object with coordinates, return it
+        if (typeof airportCode === 'object' && airportCode.coordinates) {
+          return airportCode;
         }
-        const coords = getAirportWithCoordinates(airportObj.iata_code);
-        if (coords) {
-          return { ...airportObj, coordinates: coords };
+        
+        // If it's a string (airport code like "BOM"), get coordinates
+        if (typeof airportCode === 'string') {
+          const coords = getAirportWithCoordinates(airportCode);
+          if (coords) {
+            return { iata_code: airportCode, coordinates: coords };
+          }
         }
-        return airportObj;
+        
+        return null;
       };
 
       const flightsWithCoordinates = {
@@ -421,16 +427,6 @@ const BookingConfirmation = () => {
       console.error('Error tracking booking confirmation:', error);
     }
   }, [selectedFlights, tripType, passengers, selectedServices, navigate, pnr, onwardTicket, returnTicket, paymentDetails, location.state]);
-
-  // End booking timer when confirmation page loads
-  useEffect(() => {
-    if (bookingStartTime && !bookingEndTime) {
-      const endTime = new Date();
-      const duration = endTime - bookingStartTime;
-      endBookingTimer();
-      console.log('⏱️ Booking timer ended. Duration:', duration, 'ms');
-    }
-  }, [bookingStartTime, bookingEndTime, endBookingTimer]);
 
   // Comprehensive data layer implementation for confirmation page
   useEffect(() => {
@@ -602,36 +598,29 @@ const BookingConfirmation = () => {
           bookingStepNumber: 4,
           totalSteps: 4,
           bookingSteps: ['passenger-details', 'ancillary-services', 'payment', 'confirmation'],
-          bookingStartTime: bookingStartTime ? bookingStartTime.toISOString() : new Date().toISOString(),
-          bookingEndTime: bookingEndTime ? bookingEndTime.toISOString() : new Date().toISOString(),
-          bookingDuration: bookingDuration ? {
-            milliseconds: bookingDuration,
-            seconds: Math.floor(bookingDuration / 1000),
-            minutes: Math.floor(bookingDuration / 60000),
-            formatted: formatDuration(bookingDuration)
-          } : null,
+          bookingStartTime: new Date().toISOString(),
           selectedFlights: {
             outbound: {
               flightNumber: selectedFlights.onward?.flightNumber,
               airline: selectedFlights.onward?.airline,
-              origin: selectedFlights.onward?.origin,
-              destination: selectedFlights.onward?.destination,
+              origin: selectedFlights.onward?.origin?.iata_code,
+              destination: selectedFlights.onward?.destination?.iata_code,
               departureTime: selectedFlights.onward?.departureTime,
-              departureDate: selectedFlights.onward?.departureTime ? new Date(selectedFlights.onward.departureTime).toISOString().split('T')[0] : null,
+              departureDate: userDepartureDate ? new Date(userDepartureDate).toISOString().split('T')[0] : null,
               arrivalTime: selectedFlights.onward?.arrivalTime,
-              arrivalDate: selectedFlights.onward?.arrivalTime ? new Date(selectedFlights.onward.arrivalTime).toISOString().split('T')[0] : null,
+              arrivalDate: userDepartureDate ? new Date(userDepartureDate).toISOString().split('T')[0] : null,
               cabinClass: selectedFlights.onward?.cabinClass || 'economy',
               price: selectedFlights.onward?.price?.amount || 0
             },
             return: selectedFlights.return ? {
               flightNumber: selectedFlights.return?.flightNumber,
               airline: selectedFlights.return?.airline,
-              origin: selectedFlights.return?.origin,
-              destination: selectedFlights.return?.destination,
+              origin: selectedFlights.return?.origin?.iata_code,
+              destination: selectedFlights.return?.destination?.iata_code,
               departureTime: selectedFlights.return?.departureTime,
-              departureDate: selectedFlights.return?.departureTime ? new Date(selectedFlights.return.departureTime).toISOString().split('T')[0] : null,
+              departureDate: userReturnDate ? new Date(userReturnDate).toISOString().split('T')[0] : null,
               arrivalTime: selectedFlights.return?.arrivalTime,
-              arrivalDate: selectedFlights.return?.arrivalTime ? new Date(selectedFlights.return.arrivalTime).toISOString().split('T')[0] : null,
+              arrivalDate: userReturnDate ? new Date(userReturnDate).toISOString().split('T')[0] : null,
               cabinClass: selectedFlights.return?.cabinClass || 'economy',
               price: selectedFlights.return?.price?.amount || 0
             } : null
@@ -673,9 +662,9 @@ const BookingConfirmation = () => {
         price: (selectedFlights.onward.price?.amount || 0) * numPassengers,
         quantity: numPassengers,
         currency: 'INR',
-        origin: selectedFlights.onward.origin,
-        destination: selectedFlights.onward.destination,
-        departureDate: selectedFlights.onward.departureTime ? new Date(selectedFlights.onward.departureTime).toISOString().split('T')[0] : null,
+        origin: selectedFlights.onward.origin?.iata_code,
+        destination: selectedFlights.onward.destination?.iata_code,
+        departureDate: userDepartureDate ? new Date(userDepartureDate).toISOString().split('T')[0] : null,
         cabinClass: selectedFlights.onward.cabinClass || 'economy'
       });
     }
@@ -689,9 +678,9 @@ const BookingConfirmation = () => {
         price: (selectedFlights.return.price?.amount || 0) * numPassengers,
         quantity: numPassengers,
         currency: 'INR',
-        origin: selectedFlights.return.origin,
-        destination: selectedFlights.return.destination,
-        departureDate: selectedFlights.return.departureTime ? new Date(selectedFlights.return.departureTime).toISOString().split('T')[0] : null,
+        origin: selectedFlights.return.origin?.iata_code,
+        destination: selectedFlights.return.destination?.iata_code,
+        departureDate: userReturnDate ? new Date(userReturnDate).toISOString().split('T')[0] : null,
         cabinClass: selectedFlights.return.cabinClass || 'economy'
       });
     }
@@ -787,16 +776,6 @@ const BookingConfirmation = () => {
           currency: 'INR',
           products: products,
           bookingReference: bookingRef,
-          ticketNumbers: {
-            onward: onwardTicket,
-            return: returnTicket
-          },
-          bookingDuration: bookingDuration ? {
-            milliseconds: bookingDuration,
-            seconds: Math.floor(bookingDuration / 1000),
-            minutes: Math.floor(bookingDuration / 60000),
-            formatted: formatDuration(bookingDuration)
-          } : null,
           paymentMethod: (paymentDetails?.method || 'credit card').replace(/_/g, ' ').replace(/-/g, ' '),
           paymentStatus: 'completed',
           timestamp: new Date().toISOString()
@@ -804,12 +783,6 @@ const BookingConfirmation = () => {
         paymentDetails: {
           paymentType: (paymentDetails?.method || 'credit card').replace(/_/g, ' ').replace(/-/g, ' '),
           paymentCurrency: 'INR',
-          // Add bank name for net banking
-          bankName: paymentDetails?.method?.toLowerCase() === 'netbanking' ? paymentDetails?.vendor : null,
-          // Add card network for credit/debit cards
-          cardNetwork: (paymentDetails?.method?.toLowerCase() === 'credit' || paymentDetails?.method?.toLowerCase() === 'debit') ? paymentDetails?.vendor : null,
-          // Add payment type from search widget (cash/credit)
-          searchPaymentType: location.state?.paymentType || 'cash',
           paymentCategories: {
             baseFare: feeBreakdown.baseFare,
             ancillaryFare: feeBreakdown.ancillaryTotal,
@@ -832,17 +805,17 @@ const BookingConfirmation = () => {
         },
         searchContext: {
           searchId: `search_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-          origin: selectedFlights.onward?.origin || null,
-          destination: selectedFlights.onward?.destination || null,
-          originDestination: (selectedFlights.onward?.origin && selectedFlights.onward?.destination) 
-            ? `${selectedFlights.onward.origin}-${selectedFlights.onward.destination}`
+          origin: selectedFlights.onward?.origin?.iata_code || null,
+          destination: selectedFlights.onward?.destination?.iata_code || null,
+          originDestination: (selectedFlights.onward?.origin?.iata_code && selectedFlights.onward?.destination?.iata_code) 
+            ? `${selectedFlights.onward.origin.iata_code}-${selectedFlights.onward.destination.iata_code}`
             : null,
-          departureDate: selectedFlights.onward?.departureTime ? new Date(selectedFlights.onward.departureTime).toISOString().split('T')[0] : null,
-          returnDate: selectedFlights.return?.departureTime ? new Date(selectedFlights.return.departureTime).toISOString().split('T')[0] : null,
-          travelDay: selectedFlights.onward?.departureTime ? format(new Date(selectedFlights.onward.departureTime), 'EEEE') : null,
-          numberOfDays: selectedFlights.onward?.departureTime && selectedFlights.return?.departureTime 
-            ? Math.ceil((new Date(selectedFlights.return.departureTime) - new Date(selectedFlights.onward.departureTime)) / (1000 * 60 * 60 * 24))
-            : (selectedFlights.onward?.departureTime ? Math.ceil((new Date(selectedFlights.onward.departureTime) - new Date()) / (1000 * 60 * 60 * 24)) : 0),
+          departureDate: userDepartureDate ? new Date(userDepartureDate).toISOString().split('T')[0] : null,
+          returnDate: userReturnDate ? new Date(userReturnDate).toISOString().split('T')[0] : null,
+          travelDay: userDepartureDate ? format(new Date(userDepartureDate), 'EEEE') : null,
+          numberOfDays: userDepartureDate && userReturnDate 
+            ? Math.ceil((new Date(userReturnDate) - new Date(userDepartureDate)) / (1000 * 60 * 60 * 24))
+            : (userDepartureDate ? Math.ceil((new Date(userDepartureDate) - new Date()) / (1000 * 60 * 60 * 24)) : 0),
           passengers: {
             total: numPassengers,
             breakdown: {
@@ -874,44 +847,44 @@ const BookingConfirmation = () => {
           travelPurpose: 'personal',
           searchDateTime: new Date().toISOString().split('T')[0],
           searchCriteria: {
-            originAirport: selectedFlights.onward?.origin || null,
+            originAirport: selectedFlights.onward?.origin?.iata_code || null,
             originAirportName: (() => {
-              const originAirport = findAirportByCode(selectedFlights.onward?.origin);
+              const originAirport = findAirportByCode(selectedFlights.onward?.origin?.iata_code);
               console.log('Origin airport lookup:', {
-                code: selectedFlights.onward?.origin,
+                code: selectedFlights.onward?.origin?.iata_code,
                 foundAirport: originAirport,
-                existingName: selectedFlights.onward?.originCity
+                existingName: selectedFlights.onward?.origin?.name
               });
-              return originAirport?.name || selectedFlights.onward?.originCity || null;
+              return originAirport?.name || selectedFlights.onward?.origin?.name || null;
             })(),
-            originCity: selectedFlights.onward?.originCity || (() => {
-              const originAirport = findAirportByCode(selectedFlights.onward?.origin);
+            originCity: selectedFlights.onward?.origin?.city || (() => {
+              const originAirport = findAirportByCode(selectedFlights.onward?.origin?.iata_code);
               return originAirport?.city || null;
             })(),
-            originCountry: (() => {
-              const originAirport = findAirportByCode(selectedFlights.onward?.origin);
+            originCountry: selectedFlights.onward?.origin?.country || (() => {
+              const originAirport = findAirportByCode(selectedFlights.onward?.origin?.iata_code);
               return originAirport?.country || null;
             })(),
-            destinationAirport: selectedFlights.onward?.destination || null,
+            destinationAirport: selectedFlights.onward?.destination?.iata_code || null,
             destinationAirportName: (() => {
-              const destAirport = findAirportByCode(selectedFlights.onward?.destination);
+              const destAirport = findAirportByCode(selectedFlights.onward?.destination?.iata_code);
               console.log('Destination airport lookup:', {
-                code: selectedFlights.onward?.destination,
+                code: selectedFlights.onward?.destination?.iata_code,
                 foundAirport: destAirport,
-                existingName: selectedFlights.onward?.destinationCity
+                existingName: selectedFlights.onward?.destination?.name
               });
-              return destAirport?.name || selectedFlights.onward?.destinationCity || null;
+              return destAirport?.name || selectedFlights.onward?.destination?.name || null;
             })(),
-            destinationCity: selectedFlights.onward?.destinationCity || (() => {
-              const destAirport = findAirportByCode(selectedFlights.onward?.destination);
+            destinationCity: selectedFlights.onward?.destination?.city || (() => {
+              const destAirport = findAirportByCode(selectedFlights.onward?.destination?.iata_code);
               return destAirport?.city || null;
             })(),
-            destinationCountry: (() => {
-              const destAirport = findAirportByCode(selectedFlights.onward?.destination);
+            destinationCountry: selectedFlights.onward?.destination?.country || (() => {
+              const destAirport = findAirportByCode(selectedFlights.onward?.destination?.iata_code);
               return destAirport?.country || null;
             })(),
-            departureDate: selectedFlights.onward?.departureTime ? new Date(selectedFlights.onward.departureTime).toISOString().split('T')[0] : null,
-            returnDate: selectedFlights.return?.departureTime ? new Date(selectedFlights.return.departureTime).toISOString().split('T')[0] : null,
+            departureDate: userDepartureDate ? new Date(userDepartureDate).toISOString().split('T')[0] : null,
+            returnDate: userReturnDate ? new Date(userReturnDate).toISOString().split('T')[0] : null,
             tripType: tripType || 'oneWay',
             passengers: {
               adults: passengers?.adult || numPassengers,
@@ -974,27 +947,21 @@ const BookingConfirmation = () => {
           tripType: tripType || 'oneWay',
           cabinClass: selectedFlights.onward?.cabinClass || 'economy',
           passengers: numPassengers,
-          origin: selectedFlights.onward?.origin,
-          destination: selectedFlights.onward?.destination,
-          departureDate: selectedFlights.onward?.departureTime ? new Date(selectedFlights.onward.departureTime).toISOString().split('T')[0] : null,
-          returnDate: selectedFlights.return?.departureTime ? new Date(selectedFlights.return.departureTime).toISOString().split('T')[0] : null,
+          origin: selectedFlights.onward?.origin?.iata_code,
+          destination: selectedFlights.onward?.destination?.iata_code,
+          departureDate: userDepartureDate ? new Date(userDepartureDate).toISOString().split('T')[0] : null,
+          returnDate: userReturnDate ? new Date(userReturnDate).toISOString().split('T')[0] : null,
           haulType: {
             onward: onwardHaulType,
             ...(returnHaulType && { return: returnHaulType }),
             overall: returnHaulType ? 
               (onwardHaulType === 'long haul' || returnHaulType === 'long haul' ? 'long haul' : 'short haul') : 
               onwardHaulType
-          },
-          bookingDuration: bookingDuration ? {
-            milliseconds: bookingDuration,
-            seconds: Math.floor(bookingDuration / 1000),
-            minutes: Math.floor(bookingDuration / 60000),
-            formatted: formatDuration(bookingDuration)
-          } : null
+          }
         },
         sustainabilityImpact: {
           carbonFootprint: calculatedDistance > 0 ? Math.round(calculatedDistance * 0.255) : 0, // kg CO₂
-          distance: calculatedDistance, // km
+          distance: Math.round(calculatedDistance), // km - rounded to nearest whole number
           treesPlanted: calculatedTrees,
           carbonOffset: calculatedDistance > 0 ? Math.round(calculatedDistance * 0.255) : 0,
           sustainabilityContribution: calculatedTrees > 0 ? calculatedTrees * 50 : 0, // INR contribution
@@ -1022,7 +989,7 @@ const BookingConfirmation = () => {
 
 
 
-  }, [selectedFlights, travellerDetails, tripType, numPassengers, selectedServices, paymentDetails, bookingDuration, bookingStartTime, bookingEndTime]);
+  }, [selectedFlights, travellerDetails, tripType, numPassengers, selectedServices, paymentDetails]);
 
   // Helper function to calculate seat price
   const calculateSeatPrice = (seat) => {
@@ -1044,8 +1011,8 @@ const BookingConfirmation = () => {
     if (!baggage || baggage === 'included') return 0;
     try {
       const flight = journey === 'onward' ? selectedFlights?.onward : selectedFlights?.return;
-      if (flight?.origin && flight?.destination) {
-        const isInternational = flight.origin !== flight.destination;
+      if (flight?.origin?.iata_code && flight?.destination?.iata_code) {
+        const isInternational = flight.origin.iata_code !== flight.destination.iata_code;
         return isInternational ? 2000 : 1000;
       }
       return 1000; // Default domestic price
@@ -1170,11 +1137,67 @@ const BookingConfirmation = () => {
       ? selectedServices?.onward?.seat?.filter(Boolean) || []
       : selectedServices?.return?.seat?.filter(Boolean) || [];
     
+    // Get the user-selected date for this flight
+    const userSelectedDate = type === 'onward' ? userDepartureDate : userReturnDate;
+    
+    // Combine user-selected date with flight time
+    const getFlightDateTime = (flightTime, userDate) => {
+      console.log('getFlightDateTime called:', { flightTime, userDate, flightTimeType: typeof flightTime });
+      
+      if (!userDate || !flightTime) {
+        console.warn('Missing userDate or flightTime:', { userDate, flightTime });
+        return 'Date unavailable';
+      }
+      
+      try {
+        // Ensure flightTime is a string
+        if (typeof flightTime !== 'string') {
+          console.warn('flightTime is not a string:', flightTime, 'Type:', typeof flightTime);
+          // Try to convert to string if it's a Date object
+          if (flightTime instanceof Date) {
+            const formattedTime = format(flightTime, 'HH:mm');
+            flightTime = formattedTime;
+          } else {
+            return 'Time unavailable';
+          }
+        }
+        
+        const selectedDate = new Date(userDate);
+        if (isNaN(selectedDate.getTime())) {
+          console.warn('Invalid userDate:', userDate);
+          return 'Invalid date';
+        }
+        
+        // Split time and validate
+        const timeParts = flightTime.split(':');
+        if (timeParts.length !== 2) {
+          console.warn('Invalid time format:', flightTime);
+          return flightTime;
+        }
+        
+        const [hours, minutes] = timeParts;
+        selectedDate.setHours(parseInt(hours) || 0, parseInt(minutes) || 0, 0, 0);
+        const result = format(selectedDate, 'MMM dd, yyyy hh:mm a');
+        console.log('Formatted result:', result);
+        return result;
+      } catch (error) {
+        console.error('Error formatting flight date time:', error, {
+          flightTime,
+          userDate,
+          flightTimeType: typeof flightTime
+        });
+        return 'Error formatting date';
+      }
+    };
+    
     console.log('Rendering flight details:', {
       type,
       flight,
       seats,
-      selectedServices
+      selectedServices,
+      userSelectedDate: userSelectedDate ? format(new Date(userSelectedDate), 'yyyy-MM-dd') : null,
+      departureTime: flight.departureTime,
+      departureTimeType: typeof flight.departureTime
     });
     
     return (
@@ -1182,46 +1205,60 @@ const BookingConfirmation = () => {
         <Typography variant="h6" gutterBottom>
           {type === 'onward' ? 'Onward Flight' : 'Return Flight'}
         </Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={6}>
-            <Typography variant="subtitle1">
-              {flight.originCity || flight.origin} → {flight.destinationCity || flight.destination}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {formatDate(flight.departureTime)} - {flight.flightNumber}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Cabin Class: {flight.cabinClass?.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
-            </Typography>
-            <Box sx={{ mt: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Typography variant="body2" color="text.secondary">
-                Flight Type:
+        <Paper elevation={2} sx={{ p: 2, bgcolor: 'action.hover' }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Typography variant="subtitle1" fontWeight="bold">
+                {flight.originCity || flight.origin} → {flight.destinationCity || flight.destination}
               </Typography>
-              <Chip 
-                label={(type === 'onward' ? haulTypes.onward : haulTypes.return || 'short haul').toUpperCase()}
-                size="small"
-                color={
-                  (type === 'onward' ? haulTypes.onward : haulTypes.return) === 'long haul' 
-                    ? 'primary' 
-                    : 'success'
-                }
-                sx={{ 
-                  height: 20, 
-                  fontSize: '0.7rem',
-                  fontWeight: 600
-                }}
-              />
-            </Box>
+            </Grid>
+            <Grid item xs={6} md={3}>
+              <Typography variant="caption" color="text.secondary">Airline</Typography>
+              <Typography variant="body2" fontWeight="medium">{flight.airline || 'TL Airways'}</Typography>
+            </Grid>
+            <Grid item xs={6} md={3}>
+              <Typography variant="caption" color="text.secondary">Flight</Typography>
+              <Typography variant="body2" fontWeight="medium">{flight.flightNumber}</Typography>
+            </Grid>
+            <Grid item xs={6} md={3}>
+              <Typography variant="caption" color="text.secondary">Aircraft</Typography>
+              <Typography variant="body2">{flight.aircraftType || flight.aircraft || 'Aircraft'}</Typography>
+            </Grid>
+            <Grid item xs={6} md={3}>
+              <Typography variant="caption" color="text.secondary">Cabin</Typography>
+              <Typography variant="body2">{flight.cabinClass?.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="caption" color="text.secondary">Departure</Typography>
+              <Typography variant="body2">{getFlightDateTime(flight.departureTime, userSelectedDate)}</Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography variant="caption" color="text.secondary">Flight Type</Typography>
+              <Typography variant="body2">
+                <Chip 
+                  label={(type === 'onward' ? haulTypes.onward : haulTypes.return || 'short haul').toUpperCase()}
+                  size="small"
+                  color={
+                    (type === 'onward' ? haulTypes.onward : haulTypes.return) === 'long haul' 
+                      ? 'primary' 
+                      : 'success'
+                  }
+                  sx={{ 
+                    height: 20, 
+                    fontSize: '0.7rem',
+                    fontWeight: 600
+                  }}
+                />
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography variant="caption" color="text.secondary">Selected Seats</Typography>
+              <Typography variant="body2">
+                {seats.length > 0 ? seats.join(', ') : 'No seats selected'}
+              </Typography>
+            </Grid>
           </Grid>
-          <Grid item xs={12} md={6}>
-            <Typography variant="subtitle1">
-              Selected Seats
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {seats.length > 0 ? seats.join(', ') : 'No seats selected'}
-            </Typography>
-          </Grid>
-        </Grid>
+        </Paper>
       </Box>
     );
   };
@@ -1286,7 +1323,7 @@ const BookingConfirmation = () => {
                   'Baggage',
                   selectedServices.onward.baggage.reduce((total, baggage) => {
                     if (baggage && baggage !== 'included') {
-                      const isInternational = selectedFlights?.onward?.origin !== selectedFlights?.onward?.destination;
+                      const isInternational = selectedFlights?.onward?.origin?.iata_code !== selectedFlights?.onward?.destination?.iata_code;
                       return total + (isInternational ? 2000 : 1000);
                     }
                     return total;
@@ -1326,7 +1363,7 @@ const BookingConfirmation = () => {
                     'Baggage',
                     selectedServices.return.baggage.reduce((total, baggage) => {
                       if (baggage && baggage !== 'included') {
-                        const isInternational = selectedFlights?.return?.origin !== selectedFlights?.return?.destination;
+                        const isInternational = selectedFlights?.return?.origin?.iata_code !== selectedFlights?.return?.destination?.iata_code;
                         return total + (isInternational ? 2000 : 1000);
                       }
                       return total;
@@ -1518,16 +1555,14 @@ const BookingConfirmation = () => {
                   <Box>
                     <Typography variant="caption" color="text.secondary">Departure</Typography>
                     <Typography variant="body1" fontWeight="medium">
-                      {location.state?.departureDate ? format(new Date(location.state.departureDate), 'EEEE, MMM dd, yyyy') : 
-                       selectedFlights.onward?.departureTime ? format(new Date(selectedFlights.onward.departureTime), 'EEEE, MMM dd, yyyy') : 'N/A'}
+                      {userDepartureDate ? format(new Date(userDepartureDate), 'EEEE, MMM dd, yyyy') : 'N/A'}
                     </Typography>
                   </Box>
                   {(tripType === 'roundtrip' || selectedFlights.return) && (
                     <Box>
                       <Typography variant="caption" color="text.secondary">Return</Typography>
                       <Typography variant="body1" fontWeight="medium">
-                        {location.state?.returnDate ? format(new Date(location.state.returnDate), 'EEEE, MMM dd, yyyy') :
-                         selectedFlights.return?.departureTime ? format(new Date(selectedFlights.return.departureTime), 'EEEE, MMM dd, yyyy') : 'N/A'}
+                        {userReturnDate ? format(new Date(userReturnDate), 'EEEE, MMM dd, yyyy') : 'N/A'}
                       </Typography>
                     </Box>
                   )}
@@ -1538,19 +1573,168 @@ const BookingConfirmation = () => {
             {/* Price Breakdown */}
             {renderFeeBreakdown()}
 
-            {/* Sustainability Impact Card - Compact */}
-            {totalDistance > 0 && (
-              <Card elevation={2} sx={{ mt: 3, bgcolor: 'success.50', border: '1px solid', borderColor: 'success.main' }}>
+            {/* Additional Services Card */}
+            {selectedServices && (selectedServices.onward || selectedServices.return) && (
+              <Card elevation={2} sx={{ mt: 3 }}>
                 <CardContent>
-                  <Typography variant="h6" gutterBottom color="success.dark">
-                    <ForestIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
-                    Sustainability Impact
+                  <Typography variant="h6" gutterBottom color="primary">
+                    Additional Services
                   </Typography>
                   <Divider sx={{ mb: 2 }} />
+                  <Stack spacing={2}>
+                    {/* Onward Services */}
+                    {selectedServices.onward && (
+                      <Box>
+                        <Typography variant="subtitle2" gutterBottom fontWeight="bold">
+                          Onward Flight
+                        </Typography>
+                        <Stack spacing={1}>
+                          {selectedServices.onward.seat && selectedServices.onward.seat.filter(Boolean).length > 0 && (
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <EventSeat fontSize="small" color="action" />
+                                <Typography variant="body2">
+                                  Seats: {selectedServices.onward.seat.filter(Boolean).join(', ')}
+                                </Typography>
+                              </Box>
+                              <Typography variant="body2" color="text.secondary">
+                                ₹{(selectedServices.onward.seat.filter(Boolean).length * 500).toLocaleString()}
+                              </Typography>
+                            </Box>
+                          )}
+                          {selectedServices.onward.meal && selectedServices.onward.meal.filter(m => m && m !== 'none').length > 0 && (
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Restaurant fontSize="small" color="action" />
+                                <Typography variant="body2">
+                                  Meals: {selectedServices.onward.meal.filter(m => m && m !== 'none').length} selected
+                                </Typography>
+                              </Box>
+                              <Typography variant="body2" color="text.secondary">
+                                ₹{(selectedServices.onward.meal.filter(m => m && m !== 'none').length * 300).toLocaleString()}
+                              </Typography>
+                            </Box>
+                          )}
+                          {selectedServices.onward.baggage && selectedServices.onward.baggage.filter(b => b && b !== 'included').length > 0 && (
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Luggage fontSize="small" color="action" />
+                                <Typography variant="body2">
+                                  Extra Baggage: {selectedServices.onward.baggage.filter(b => b && b !== 'included').length} items
+                                </Typography>
+                              </Box>
+                              <Typography variant="body2" color="text.secondary">
+                                ₹{(selectedServices.onward.baggage.filter(b => b && b !== 'included').length * 1000).toLocaleString()}
+                              </Typography>
+                            </Box>
+                          )}
+                          {selectedServices.onward.priorityBoarding && (
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <FlightTakeoff fontSize="small" color="action" />
+                                <Typography variant="body2">Priority Boarding</Typography>
+                              </Box>
+                              <Typography variant="body2" color="text.secondary">₹500</Typography>
+                            </Box>
+                          )}
+                          {selectedServices.onward.loungeAccess && (
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Deck fontSize="small" color="action" />
+                                <Typography variant="body2">Lounge Access</Typography>
+                              </Box>
+                              <Typography variant="body2" color="text.secondary">₹1,500</Typography>
+                            </Box>
+                          )}
+                        </Stack>
+                      </Box>
+                    )}
+                    
+                    {/* Return Services */}
+                    {selectedServices.return && (
+                      <Box>
+                        <Typography variant="subtitle2" gutterBottom fontWeight="bold">
+                          Return Flight
+                        </Typography>
+                        <Stack spacing={1}>
+                          {selectedServices.return.seat && selectedServices.return.seat.filter(Boolean).length > 0 && (
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <EventSeat fontSize="small" color="action" />
+                                <Typography variant="body2">
+                                  Seats: {selectedServices.return.seat.filter(Boolean).join(', ')}
+                                </Typography>
+                              </Box>
+                              <Typography variant="body2" color="text.secondary">
+                                ₹{(selectedServices.return.seat.filter(Boolean).length * 500).toLocaleString()}
+                              </Typography>
+                            </Box>
+                          )}
+                          {selectedServices.return.meal && selectedServices.return.meal.filter(m => m && m !== 'none').length > 0 && (
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Restaurant fontSize="small" color="action" />
+                                <Typography variant="body2">
+                                  Meals: {selectedServices.return.meal.filter(m => m && m !== 'none').length} selected
+                                </Typography>
+                              </Box>
+                              <Typography variant="body2" color="text.secondary">
+                                ₹{(selectedServices.return.meal.filter(m => m && m !== 'none').length * 300).toLocaleString()}
+                              </Typography>
+                            </Box>
+                          )}
+                          {selectedServices.return.baggage && selectedServices.return.baggage.filter(b => b && b !== 'included').length > 0 && (
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Luggage fontSize="small" color="action" />
+                                <Typography variant="body2">
+                                  Extra Baggage: {selectedServices.return.baggage.filter(b => b && b !== 'included').length} items
+                                </Typography>
+                              </Box>
+                              <Typography variant="body2" color="text.secondary">
+                                ₹{(selectedServices.return.baggage.filter(b => b && b !== 'included').length * 1000).toLocaleString()}
+                              </Typography>
+                            </Box>
+                          )}
+                          {selectedServices.return.priorityBoarding && (
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <FlightTakeoff fontSize="small" color="action" />
+                                <Typography variant="body2">Priority Boarding</Typography>
+                              </Box>
+                              <Typography variant="body2" color="text.secondary">₹500</Typography>
+                            </Box>
+                          )}
+                          {selectedServices.return.loungeAccess && (
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Deck fontSize="small" color="action" />
+                                <Typography variant="body2">Lounge Access</Typography>
+                              </Box>
+                              <Typography variant="body2" color="text.secondary">₹1,500</Typography>
+                            </Box>
+                          )}
+                        </Stack>
+                      </Box>
+                    )}
+                  </Stack>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Sustainability Impact Card - Compact */}
+            <Card elevation={2} sx={{ mt: 3, bgcolor: 'success.50', border: '1px solid', borderColor: 'success.main' }}>
+              <CardContent>
+                <Typography variant="h6" gutterBottom color="success.dark">
+                  <ForestIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
+                  Sustainability Impact
+                </Typography>
+                <Divider sx={{ mb: 2 }} />
+                {totalDistance > 0 ? (
                   <Grid container spacing={2}>
                     <Grid item xs={4} textAlign="center">
                       <Typography variant="h6" fontWeight="bold" color="success.dark">
-                        {totalDistance.toLocaleString()}
+                        {Math.round(totalDistance).toLocaleString()}
                       </Typography>
                       <Typography variant="caption" color="text.secondary">
                         km
@@ -1573,9 +1757,15 @@ const BookingConfirmation = () => {
                       </Typography>
                     </Grid>
                   </Grid>
-                </CardContent>
-              </Card>
-            )}
+                ) : (
+                  <Box sx={{ textAlign: 'center', py: 2 }}>
+                    <Typography variant="body2" color="text.secondary">
+                      We're committed to reducing our carbon footprint. Your journey contributes to our sustainability efforts.
+                    </Typography>
+                  </Box>
+                )}
+              </CardContent>
+            </Card>
           </Grid>
 
           {/* Right Column - Flight & Booking Details */}
@@ -1604,14 +1794,6 @@ const BookingConfirmation = () => {
                     <Typography variant="caption" color="text.secondary">PNR Number</Typography>
                     <Typography variant="h5" fontWeight="bold" color="primary">{pnr}</Typography>
                   </Box>
-                  {bookingDuration && (
-                    <Box>
-                      <Typography variant="caption" color="text.secondary">Booking Completed In</Typography>
-                      <Typography variant="body1" fontWeight="medium" color="success.main">
-                        {formatDuration(bookingDuration)}
-                      </Typography>
-                    </Box>
-                  )}
                   <Box>
                     <Typography variant="caption" color="text.secondary">Onward Ticket Number</Typography>
                     <Typography variant="body1" fontWeight="medium">{onwardTicket}</Typography>
@@ -1648,9 +1830,6 @@ const BookingConfirmation = () => {
                 </Stack>
               </CardContent>
             </Card>
-
-            {/* Ancillary Services */}
-            {renderAncillaryServices()}
           </Grid>
         </Grid>
 

@@ -27,6 +27,7 @@ import {
   IconButton,
   Alert,
   Snackbar,
+  Divider,
 } from '@mui/material';
 import { format, differenceInMinutes, differenceInDays } from 'date-fns';
 import CloseIcon from '@mui/icons-material/Close';
@@ -697,28 +698,65 @@ const SearchResults = () => {
 
     // Track proceed to traveller details
     try {
+      const onwardPrice = selectedOnwardFlight ? 
+        (selectedOnwardFlight.price?.amount || selectedOnwardFlight.price || 0) : 0;
+      const returnPrice = selectedReturnFlight ? 
+        (selectedReturnFlight.price?.amount || selectedReturnFlight.price || 0) : 0;
+      const totalPrice = (onwardPrice + returnPrice) * searchParams.passengers;
+
+      // Helper function to ensure time is in HH:mm format only
+      const formatTimeOnly = (timeString) => {
+        if (!timeString) return null;
+        try {
+          // If it's already in HH:mm format, return as is
+          if (typeof timeString === 'string' && /^\d{2}:\d{2}$/.test(timeString)) {
+            return timeString;
+          }
+          // If it's a date object or ISO string, extract time
+          const date = new Date(timeString);
+          if (!isNaN(date.getTime())) {
+            return format(date, 'HH:mm');
+          }
+          return timeString;
+        } catch (error) {
+          return timeString;
+        }
+      };
+
       airlinesDataLayer.trackEvent('searchProceedToTravellerDetails', {
         searchId,
-        pnr: pnr, // Include PNR in the data layer event
+        pnr: pnr,
         selectedFlights: {
           onward: selectedOnwardFlight ? {
             flightNumber: selectedOnwardFlight.flightNumber,
-            airline: selectedOnwardFlight.airline,
-            price: selectedOnwardFlight.price.amount
+            airline: selectedOnwardFlight.airline || 'TL Airways',
+            origin: selectedOnwardFlight.origin,
+            originCity: selectedOnwardFlight.originCity,
+            destination: selectedOnwardFlight.destination,
+            destinationCity: selectedOnwardFlight.destinationCity,
+            departureTime: formatTimeOnly(selectedOnwardFlight.departureTime),
+            arrivalTime: formatTimeOnly(selectedOnwardFlight.arrivalTime),
+            duration: selectedOnwardFlight.duration,
+            departureDate: searchParams.date ? format(new Date(searchParams.date), 'yyyy-MM-dd') : null,
+            cabinClass: searchParams.cabinClass,
+            price: onwardPrice
           } : null,
           return: selectedReturnFlight ? {
             flightNumber: selectedReturnFlight.flightNumber,
-            airline: selectedReturnFlight.airline,
-            price: selectedReturnFlight.price.amount
+            airline: selectedReturnFlight.airline || 'TL Airways',
+            origin: selectedReturnFlight.origin,
+            originCity: selectedReturnFlight.originCity,
+            destination: selectedReturnFlight.destination,
+            destinationCity: selectedReturnFlight.destinationCity,
+            departureTime: formatTimeOnly(selectedReturnFlight.departureTime),
+            arrivalTime: formatTimeOnly(selectedReturnFlight.arrivalTime),
+            duration: selectedReturnFlight.duration,
+            departureDate: searchParams.returnDate ? format(new Date(searchParams.returnDate), 'yyyy-MM-dd') : null,
+            cabinClass: searchParams.cabinClass,
+            price: returnPrice
           } : null
         },
-        totalPrice: (() => {
-          const onwardPrice = selectedOnwardFlight ? 
-            selectedOnwardFlight.displayPrices?.[searchParams.cabinClass] * searchParams.passengers : 0;
-          const returnPrice = selectedReturnFlight ? 
-            selectedReturnFlight.displayPrices?.[searchParams.cabinClass] * searchParams.passengers : 0;
-          return onwardPrice + returnPrice;
-        })(),
+        totalPrice: totalPrice,
         tripType: searchParams.tripType,
         passengers: searchParams.passengers,
         cabinClass: searchParams.cabinClass,
@@ -777,7 +815,7 @@ const SearchResults = () => {
                     {flight.flightNumber}
                   </Typography>
               <Typography variant="body2">
-                {format(flight.departureTime, 'HH:mm')} - {format(flight.arrivalTime, 'HH:mm')}
+                {typeof flight.departureTime === 'string' ? flight.departureTime : format(new Date(flight.departureTime), 'HH:mm')} - {typeof flight.arrivalTime === 'string' ? flight.arrivalTime : format(new Date(flight.arrivalTime), 'HH:mm')}
                     </Typography>
                 </Grid>
             <Grid item xs={12} sm={4}>
@@ -788,7 +826,9 @@ const SearchResults = () => {
                 {flight.origin} → {flight.destination}
                     </Typography>
               <Typography variant="body2" color="textSecondary">
-                {isReturn ? format(searchParams.returnDate, 'MMM dd, yyyy') : format(searchParams.date, 'MMM dd, yyyy')}
+                {isReturn 
+                  ? (searchParams.returnDate ? format(new Date(searchParams.returnDate), 'MMM dd, yyyy') : 'N/A')
+                  : (searchParams.date ? format(new Date(searchParams.date), 'MMM dd, yyyy') : 'N/A')}
                     </Typography>
               <Typography variant="body2">
                 {flight.aircraft}
@@ -899,8 +939,8 @@ const SearchResults = () => {
               })()}
             </Typography>
             <Typography variant="body2" color="textSecondary">
-              {format(searchParams.date, 'MMM dd, yyyy')}
-              {searchParams.returnDate && ` - ${format(searchParams.returnDate, 'MMM dd, yyyy')}`}
+              {searchParams.date ? format(new Date(searchParams.date), 'MMM dd, yyyy') : 'N/A'}
+              {searchParams.returnDate && ` - ${format(new Date(searchParams.returnDate), 'MMM dd, yyyy')}`}
             </Typography>
             <Typography variant="body2" color="textSecondary">
               {searchParams.tripType === 'roundtrip' ? 'Round Trip' : 'One Way'} • {searchParams.passengers} {searchParams.passengers === 1 ? 'Passenger' : 'Passengers'}
@@ -966,23 +1006,49 @@ const SearchResults = () => {
               Selected Flights
             </Typography>
             {selectedOnwardFlight && (
-              <Box sx={{ mb: 2 }}>
-                <Typography variant="subtitle1">Onward Flight</Typography>
-                <Typography>
-                  {selectedOnwardFlight.airline} {selectedOnwardFlight.flightNumber}
-                </Typography>
-                <Typography>
-                  {format(searchParams.date, 'MMM dd')} {format(selectedOnwardFlight.departureTime, 'HH:mm')} - {format(selectedOnwardFlight.arrivalTime, 'HH:mm')}
-                </Typography>
-                <Typography>
-                  {selectedOnwardFlight.originCity} → {selectedOnwardFlight.destinationCity}
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  {selectedOnwardFlight.origin} → {selectedOnwardFlight.destination}
-                </Typography>
-                <Typography>
-                  Cabin Class: {searchParams.cabinClass}
-                </Typography>
+              <Box sx={{ mb: 2, p: 2, bgcolor: 'action.hover', borderRadius: 1 }}>
+                <Typography variant="subtitle1" fontWeight="bold" gutterBottom>Onward Flight</Typography>
+                <Divider sx={{ mb: 1.5 }} />
+                <Grid container spacing={1}>
+                  <Grid item xs={6}>
+                    <Typography variant="caption" color="text.secondary">Airline</Typography>
+                    <Typography variant="body2" fontWeight="medium">{selectedOnwardFlight.airline || 'TL Airways'}</Typography>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography variant="caption" color="text.secondary">Flight</Typography>
+                    <Typography variant="body2" fontWeight="medium">{selectedOnwardFlight.flightNumber}</Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography variant="caption" color="text.secondary">Route</Typography>
+                    <Typography variant="body2" fontWeight="medium">
+                      {selectedOnwardFlight.originCity} ({selectedOnwardFlight.origin}) → {selectedOnwardFlight.destinationCity} ({selectedOnwardFlight.destination})
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography variant="caption" color="text.secondary">Date</Typography>
+                    <Typography variant="body2">{searchParams.date ? format(new Date(searchParams.date), 'MMM dd, yyyy') : 'N/A'}</Typography>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography variant="caption" color="text.secondary">Time</Typography>
+                    <Typography variant="body2">
+                      {typeof selectedOnwardFlight.departureTime === 'string' 
+                        ? selectedOnwardFlight.departureTime 
+                        : (selectedOnwardFlight.departureTime ? format(new Date(selectedOnwardFlight.departureTime), 'HH:mm') : 'N/A')} 
+                      {' - '}
+                      {typeof selectedOnwardFlight.arrivalTime === 'string' 
+                        ? selectedOnwardFlight.arrivalTime 
+                        : (selectedOnwardFlight.arrivalTime ? format(new Date(selectedOnwardFlight.arrivalTime), 'HH:mm') : 'N/A')}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography variant="caption" color="text.secondary">Duration</Typography>
+                    <Typography variant="body2">{selectedOnwardFlight.duration}</Typography>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography variant="caption" color="text.secondary">Cabin</Typography>
+                    <Typography variant="body2">{searchParams.cabinClass?.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</Typography>
+                  </Grid>
+                </Grid>
                 <Typography variant="h6" color="primary" sx={{ mt: 1 }}>
                   {CURRENCY_CONFIG.formatPrice(
                     (selectedOnwardFlight.displayPrices?.[searchParams.cabinClass] || selectedOnwardFlight.displayPrices?.economy) * searchParams.passengers,
@@ -993,23 +1059,49 @@ const SearchResults = () => {
             )}
 
             {selectedReturnFlight && (
-              <Box sx={{ mb: 2 }}>
-                <Typography variant="subtitle1">Return Flight</Typography>
-                <Typography>
-                  {selectedReturnFlight.airline} {selectedReturnFlight.flightNumber}
-                </Typography>
-                <Typography>
-                  {format(searchParams.returnDate, 'MMM dd')} {format(selectedReturnFlight.departureTime, 'HH:mm')} - {format(selectedReturnFlight.arrivalTime, 'HH:mm')}
-                </Typography>
-                <Typography>
-                  {selectedReturnFlight.originCity} → {selectedReturnFlight.destinationCity}
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  {selectedReturnFlight.origin} → {selectedReturnFlight.destination}
-                </Typography>
-                <Typography>
-                  Cabin Class: {searchParams.cabinClass}
-                </Typography>
+              <Box sx={{ mb: 2, p: 2, bgcolor: 'action.hover', borderRadius: 1 }}>
+                <Typography variant="subtitle1" fontWeight="bold" gutterBottom>Return Flight</Typography>
+                <Divider sx={{ mb: 1.5 }} />
+                <Grid container spacing={1}>
+                  <Grid item xs={6}>
+                    <Typography variant="caption" color="text.secondary">Airline</Typography>
+                    <Typography variant="body2" fontWeight="medium">{selectedReturnFlight.airline || 'TL Airways'}</Typography>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography variant="caption" color="text.secondary">Flight</Typography>
+                    <Typography variant="body2" fontWeight="medium">{selectedReturnFlight.flightNumber}</Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography variant="caption" color="text.secondary">Route</Typography>
+                    <Typography variant="body2" fontWeight="medium">
+                      {selectedReturnFlight.originCity} ({selectedReturnFlight.origin}) → {selectedReturnFlight.destinationCity} ({selectedReturnFlight.destination})
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography variant="caption" color="text.secondary">Date</Typography>
+                    <Typography variant="body2">{searchParams.returnDate ? format(new Date(searchParams.returnDate), 'MMM dd, yyyy') : 'N/A'}</Typography>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography variant="caption" color="text.secondary">Time</Typography>
+                    <Typography variant="body2">
+                      {typeof selectedReturnFlight.departureTime === 'string' 
+                        ? selectedReturnFlight.departureTime 
+                        : (selectedReturnFlight.departureTime ? format(new Date(selectedReturnFlight.departureTime), 'HH:mm') : 'N/A')} 
+                      {' - '}
+                      {typeof selectedReturnFlight.arrivalTime === 'string' 
+                        ? selectedReturnFlight.arrivalTime 
+                        : (selectedReturnFlight.arrivalTime ? format(new Date(selectedReturnFlight.arrivalTime), 'HH:mm') : 'N/A')}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography variant="caption" color="text.secondary">Duration</Typography>
+                    <Typography variant="body2">{selectedReturnFlight.duration}</Typography>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography variant="caption" color="text.secondary">Cabin</Typography>
+                    <Typography variant="body2">{searchParams.cabinClass?.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</Typography>
+                  </Grid>
+                </Grid>
                 <Typography variant="h6" color="primary" sx={{ mt: 1 }}>
                   {CURRENCY_CONFIG.formatPrice(
                     (selectedReturnFlight.displayPrices?.[searchParams.cabinClass] || selectedReturnFlight.displayPrices?.economy) * searchParams.passengers,

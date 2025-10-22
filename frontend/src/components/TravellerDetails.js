@@ -722,14 +722,41 @@ const TravellerDetails = () => {
               </Typography>
             </Grid>
           </Grid>
-          <Box sx={{ mt: 2 }}>
-            <Typography variant="body2" color="text.secondary">
-              Flight: {flight.flightNumber} | {flight.airline}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Aircraft: {flight.aircraft}
-            </Typography>
-          </Box>
+          <Divider sx={{ my: 2 }} />
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <Typography variant="body2" color="text.secondary" fontWeight="medium">
+                Airline
+              </Typography>
+              <Typography variant="body1">
+                {flight.airline || 'TL Airways'}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography variant="body2" color="text.secondary" fontWeight="medium">
+                Flight Number
+              </Typography>
+              <Typography variant="body1">
+                {flight.flightNumber}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography variant="body2" color="text.secondary" fontWeight="medium">
+                Aircraft
+              </Typography>
+              <Typography variant="body1">
+                {flight.aircraftType || flight.aircraft || 'Aircraft'}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography variant="body2" color="text.secondary" fontWeight="medium">
+                Cabin Class
+              </Typography>
+              <Typography variant="body1">
+                {flight.cabinClass?.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') || 'Economy'}
+              </Typography>
+            </Grid>
+          </Grid>
         </CardContent>
       </Card>
     );
@@ -953,7 +980,10 @@ const TravellerDetails = () => {
               </Typography>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                 <Box>
-                <Typography>Onward Flight</Typography>
+                <Typography fontWeight="medium">Onward Flight</Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {selectedFlights?.onward?.airline || 'TL Airways'} {selectedFlights?.onward?.flightNumber}
+                  </Typography>
                   <Typography variant="body2" color="text.secondary">
                     {selectedFlights?.onward?.cabinClass ? 
                       selectedFlights.onward.cabinClass.charAt(0).toUpperCase() + 
@@ -982,7 +1012,10 @@ const TravellerDetails = () => {
               {tripType === 'roundtrip' && selectedFlights?.return && (
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                   <Box>
-                  <Typography>Return Flight</Typography>
+                  <Typography fontWeight="medium">Return Flight</Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {selectedFlights?.return?.airline || 'TL Airways'} {selectedFlights?.return?.flightNumber}
+                  </Typography>
                     <Typography variant="body2" color="text.secondary">
                       {selectedFlights.return.cabinClass ? 
                         selectedFlights.return.cabinClass.charAt(0).toUpperCase() + 

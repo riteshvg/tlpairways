@@ -761,8 +761,14 @@ Price: ₹${seatPrice}`}
                           →
                         </Typography>
                       </Divider>
+                      <Typography variant="body2" fontWeight="medium">
+                        {flight.airline || 'TL Airways'}
+                      </Typography>
                       <Typography variant="body2" color="text.secondary">
                         {flight.flightNumber}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        {flight.aircraftType || 'Aircraft'}
                       </Typography>
                     </Box>
                   </Grid>
