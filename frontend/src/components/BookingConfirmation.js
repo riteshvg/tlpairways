@@ -741,14 +741,15 @@ const BookingConfirmation = () => {
               const seatPrice = calculateSeatPrice(seat);
               products.push({
                 productId: 'seat',
-                productName: `Seat ${seat} - ${journey}`,
+                productName: `Seat ${seat} - Passenger ${index + 1} - ${journey}`,
                 category: 'ancillary',
                 subcategory: 'seat',
                 price: seatPrice,
                 quantity: 1,
                 currency: 'INR',
+                passengerIndex: index + 1,
                 seatNumber: seat,
-                journey: journey
+                journeyType: journey
               });
             }
           });
@@ -1358,11 +1359,13 @@ const BookingConfirmation = () => {
                 Onward Flight
               </Typography>
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                {selectedServices.onward?.seat?.filter(Boolean).length > 0 && renderServiceChip(
+                {selectedServices.onward?.seat?.some(seat => seat !== null) && renderServiceChip(
                   <EventSeatIcon />,
                   'Seats',
-                  selectedServices.onward.seat.filter(Boolean).reduce((total, seat) => total + calculateSeatPrice(seat), 0),
-                  `Selected seats: ${selectedServices.onward.seat.filter(Boolean).join(', ')}`
+                  selectedServices.onward.seat.filter(seat => seat !== null).reduce((total, seat) => total + calculateSeatPrice(seat), 0),
+                  `Selected seats: ${selectedServices.onward.seat.map((seat, index) => 
+                    seat ? `P${index + 1}: ${seat}` : null
+                  ).filter(Boolean).join(', ')}`
                 )}
                 {selectedServices.onward?.baggage?.length > 0 && renderServiceChip(
                   <LuggageIcon />,
@@ -1398,11 +1401,13 @@ const BookingConfirmation = () => {
                   Return Flight
                 </Typography>
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                  {selectedServices.return?.seat?.filter(Boolean).length > 0 && renderServiceChip(
+                  {selectedServices.return?.seat?.some(seat => seat !== null) && renderServiceChip(
                     <EventSeatIcon />,
                     'Seats',
-                    selectedServices.return.seat.filter(Boolean).reduce((total, seat) => total + calculateSeatPrice(seat), 0),
-                    `Selected seats: ${selectedServices.return.seat.filter(Boolean).join(', ')}`
+                    selectedServices.return.seat.filter(seat => seat !== null).reduce((total, seat) => total + calculateSeatPrice(seat), 0),
+                    `Selected seats: ${selectedServices.return.seat.map((seat, index) => 
+                      seat ? `P${index + 1}: ${seat}` : null
+                    ).filter(Boolean).join(', ')}`
                   )}
                   {selectedServices.return?.baggage?.length > 0 && renderServiceChip(
                     <LuggageIcon />,
@@ -1635,16 +1640,24 @@ const BookingConfirmation = () => {
                           Onward Flight
                         </Typography>
                         <Stack spacing={1}>
-                          {selectedServices.onward.seat && selectedServices.onward.seat.filter(Boolean).length > 0 && (
+                          {selectedServices.onward.seat && selectedServices.onward.seat.some(seat => seat !== null) && (
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                 <EventSeat fontSize="small" color="action" />
-                                <Typography variant="body2">
-                                  Seats: {selectedServices.onward.seat.filter(Boolean).join(', ')}
-                                </Typography>
+                                <Box>
+                                  <Typography variant="body2" fontWeight="medium">
+                                    Seats ({selectedServices.onward.seat.filter(seat => seat !== null).length})
+                                  </Typography>
+                                  <Typography variant="caption" color="text.secondary">
+                                    {selectedServices.onward.seat.map((seat, index) => 
+                                      seat ? `P${index + 1}: ${seat}` : null
+                                    ).filter(Boolean).join(', ')}
+                                  </Typography>
+                                </Box>
                               </Box>
                               <Typography variant="body2" color="text.secondary">
-                                ₹{(selectedServices.onward.seat.filter(Boolean).length * 500).toLocaleString()}
+                                ₹{selectedServices.onward.seat.filter(seat => seat !== null)
+                                  .reduce((total, seat) => total + calculateSeatPrice(seat), 0).toLocaleString()}
                               </Typography>
                             </Box>
                           )}
@@ -1739,16 +1752,24 @@ const BookingConfirmation = () => {
                           Return Flight
                         </Typography>
                         <Stack spacing={1}>
-                          {selectedServices.return.seat && selectedServices.return.seat.filter(Boolean).length > 0 && (
+                          {selectedServices.return.seat && selectedServices.return.seat.some(seat => seat !== null) && (
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                 <EventSeat fontSize="small" color="action" />
-                                <Typography variant="body2">
-                                  Seats: {selectedServices.return.seat.filter(Boolean).join(', ')}
-                                </Typography>
+                                <Box>
+                                  <Typography variant="body2" fontWeight="medium">
+                                    Seats ({selectedServices.return.seat.filter(seat => seat !== null).length})
+                                  </Typography>
+                                  <Typography variant="caption" color="text.secondary">
+                                    {selectedServices.return.seat.map((seat, index) => 
+                                      seat ? `P${index + 1}: ${seat}` : null
+                                    ).filter(Boolean).join(', ')}
+                                  </Typography>
+                                </Box>
                               </Box>
                               <Typography variant="body2" color="text.secondary">
-                                ₹{(selectedServices.return.seat.filter(Boolean).length * 500).toLocaleString()}
+                                ₹{selectedServices.return.seat.filter(seat => seat !== null)
+                                  .reduce((total, seat) => total + calculateSeatPrice(seat), 0).toLocaleString()}
                               </Typography>
                             </Box>
                           )}
