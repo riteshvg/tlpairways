@@ -159,11 +159,12 @@ const BookingConfirmation = () => {
           selectedServices[journey].baggage.forEach(baggage => {
             if (baggage && baggage !== 'included') {
               const isInternational = journey === 'onward' ? 
-                selectedFlights.onward.origin.iata_code !== selectedFlights.onward.destination.iata_code :
-                selectedFlights.return.origin.iata_code !== selectedFlights.return.destination.iata_code;
-              const baggagePrice = isInternational ? 2000 : 1000;
+                selectedFlights.onward.origin !== selectedFlights.onward.destination :
+                selectedFlights.return.origin !== selectedFlights.return.destination;
+              const baggagePrice = getBaggagePrice(baggage, isInternational);
               console.log(`Baggage price calculation for ${journey}:`, {
                 baggage,
+                baggageType: baggage,
                 isInternational,
                 baggagePrice
               });
@@ -199,6 +200,20 @@ const BookingConfirmation = () => {
   };
 
   // Calculate fee breakdown
+  // Helper function to get baggage price
+  const getBaggagePrice = (baggageType, isInternational) => {
+    const baggagePricing = {
+      '15kg': isInternational ? 1500 : 800,
+      '20kg': isInternational ? 2000 : 1000,
+      '25kg': isInternational ? 2500 : 1200,
+      '30kg': isInternational ? 3000 : 1500,
+      'sports-equipment': isInternational ? 3000 : 2000,
+      'musical-instrument': isInternational ? 3500 : 2500,
+      'fragile': isInternational ? 2500 : 1500
+    };
+    return baggagePricing[baggageType] || (isInternational ? 2000 : 1000);
+  };
+
   const calculateFeeBreakdown = () => {
     const baseFare = (selectedFlights.onward.price.amount * numPassengers) + (selectedFlights.return?.price.amount ? selectedFlights.return.price.amount * numPassengers : 0);
     const taxes = Math.round(baseFare * 0.05); // 5% tax
@@ -1602,16 +1617,16 @@ const BookingConfirmation = () => {
                               </Typography>
                             </Box>
                           )}
-                          {selectedServices.onward.meal && selectedServices.onward.meal.filter(m => m && m !== 'none').length > 0 && (
+                          {selectedServices.onward.meals && selectedServices.onward.meals.filter(m => m && m !== 'none' && m !== '').length > 0 && (
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                 <Restaurant fontSize="small" color="action" />
                                 <Box>
                                   <Typography variant="body2" fontWeight="medium">
-                                    Meals ({selectedServices.onward.meal.filter(m => m && m !== 'none').length})
+                                    Meals ({selectedServices.onward.meals.filter(m => m && m !== 'none' && m !== '').length})
                                   </Typography>
                                   <Typography variant="caption" color="text.secondary">
-                                    {selectedServices.onward.meal.filter(m => m && m !== 'none').map(m => {
+                                    {selectedServices.onward.meals.filter(m => m && m !== 'none' && m !== '').map(m => {
                                       const mealMap = {
                                         'veg': 'Vegetarian',
                                         'non-veg': 'Non-Vegetarian',
@@ -1627,7 +1642,7 @@ const BookingConfirmation = () => {
                                 </Box>
                               </Box>
                               <Typography variant="body2" color="text.secondary">
-                                ₹{(selectedServices.onward.meal.filter(m => m && m !== 'none').length * 300).toLocaleString()}
+                                ₹{(selectedServices.onward.meals.filter(m => m && m !== 'none' && m !== '').length * 300).toLocaleString()}
                               </Typography>
                             </Box>
                           )}
@@ -1656,7 +1671,11 @@ const BookingConfirmation = () => {
                                 </Box>
                               </Box>
                               <Typography variant="body2" color="text.secondary">
-                                ₹{(selectedServices.onward.baggage.filter(b => b && b !== 'included').length * 1000).toLocaleString()}
+                                ₹{selectedServices.onward.baggage.filter(b => b && b !== 'included')
+                                  .reduce((sum, b) => {
+                                    const isInternational = selectedFlights.onward?.origin !== selectedFlights.onward?.destination;
+                                    return sum + getBaggagePrice(b, isInternational);
+                                  }, 0).toLocaleString()}
                               </Typography>
                             </Box>
                           )}
@@ -1702,16 +1721,16 @@ const BookingConfirmation = () => {
                               </Typography>
                             </Box>
                           )}
-                          {selectedServices.return.meal && selectedServices.return.meal.filter(m => m && m !== 'none').length > 0 && (
+                          {selectedServices.return.meals && selectedServices.return.meals.filter(m => m && m !== 'none' && m !== '').length > 0 && (
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                 <Restaurant fontSize="small" color="action" />
                                 <Box>
                                   <Typography variant="body2" fontWeight="medium">
-                                    Meals ({selectedServices.return.meal.filter(m => m && m !== 'none').length})
+                                    Meals ({selectedServices.return.meals.filter(m => m && m !== 'none' && m !== '').length})
                                   </Typography>
                                   <Typography variant="caption" color="text.secondary">
-                                    {selectedServices.return.meal.filter(m => m && m !== 'none').map(m => {
+                                    {selectedServices.return.meals.filter(m => m && m !== 'none' && m !== '').map(m => {
                                       const mealMap = {
                                         'veg': 'Vegetarian',
                                         'non-veg': 'Non-Vegetarian',
@@ -1727,7 +1746,7 @@ const BookingConfirmation = () => {
                                 </Box>
                               </Box>
                               <Typography variant="body2" color="text.secondary">
-                                ₹{(selectedServices.return.meal.filter(m => m && m !== 'none').length * 300).toLocaleString()}
+                                ₹{(selectedServices.return.meals.filter(m => m && m !== 'none' && m !== '').length * 300).toLocaleString()}
                               </Typography>
                             </Box>
                           )}
@@ -1756,7 +1775,11 @@ const BookingConfirmation = () => {
                                 </Box>
                               </Box>
                               <Typography variant="body2" color="text.secondary">
-                                ₹{(selectedServices.return.baggage.filter(b => b && b !== 'included').length * 1000).toLocaleString()}
+                                ₹{selectedServices.return.baggage.filter(b => b && b !== 'included')
+                                  .reduce((sum, b) => {
+                                    const isInternational = selectedFlights.return?.origin !== selectedFlights.return?.destination;
+                                    return sum + getBaggagePrice(b, isInternational);
+                                  }, 0).toLocaleString()}
                               </Typography>
                             </Box>
                           )}
