@@ -1715,14 +1715,14 @@ const BookingConfirmation = () => {
             )}
 
             {/* Sustainability Impact Card - Compact */}
-            {totalDistance > 0 && (
-              <Card elevation={2} sx={{ mt: 3, bgcolor: 'success.50', border: '1px solid', borderColor: 'success.main' }}>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom color="success.dark">
-                    <ForestIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
-                    Sustainability Impact
-                  </Typography>
-                  <Divider sx={{ mb: 2 }} />
+            <Card elevation={2} sx={{ mt: 3, bgcolor: 'success.50', border: '1px solid', borderColor: 'success.main' }}>
+              <CardContent>
+                <Typography variant="h6" gutterBottom color="success.dark">
+                  <ForestIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
+                  Sustainability Impact
+                </Typography>
+                <Divider sx={{ mb: 2 }} />
+                {totalDistance > 0 ? (
                   <Grid container spacing={2}>
                     <Grid item xs={4} textAlign="center">
                       <Typography variant="h6" fontWeight="bold" color="success.dark">
@@ -1749,9 +1749,15 @@ const BookingConfirmation = () => {
                       </Typography>
                     </Grid>
                   </Grid>
-                </CardContent>
-              </Card>
-            )}
+                ) : (
+                  <Box sx={{ textAlign: 'center', py: 2 }}>
+                    <Typography variant="body2" color="text.secondary">
+                      We're committed to reducing our carbon footprint. Your journey contributes to our sustainability efforts.
+                    </Typography>
+                  </Box>
+                )}
+              </CardContent>
+            </Card>
           </Grid>
 
           {/* Right Column - Flight & Booking Details */}
