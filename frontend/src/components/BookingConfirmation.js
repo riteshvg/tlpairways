@@ -1131,13 +1131,28 @@ const BookingConfirmation = () => {
     const getFlightDateTime = (flightTime, userDate) => {
       if (!userDate || !flightTime) return '';
       try {
+        // Ensure flightTime is a string
+        if (typeof flightTime !== 'string') {
+          console.warn('flightTime is not a string:', flightTime, 'Type:', typeof flightTime);
+          return '';
+        }
+        
         const selectedDate = new Date(userDate);
+        if (isNaN(selectedDate.getTime())) {
+          console.warn('Invalid userDate:', userDate);
+          return '';
+        }
+        
         const [hours, minutes] = flightTime.split(':');
-        selectedDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+        selectedDate.setHours(parseInt(hours) || 0, parseInt(minutes) || 0, 0, 0);
         return format(selectedDate, 'MMM dd, yyyy hh:mm a');
       } catch (error) {
-        console.error('Error formatting flight date time:', error);
-        return flightTime;
+        console.error('Error formatting flight date time:', error, {
+          flightTime,
+          userDate,
+          flightTimeType: typeof flightTime
+        });
+        return '';
       }
     };
     
@@ -1146,8 +1161,9 @@ const BookingConfirmation = () => {
       flight,
       seats,
       selectedServices,
-      userSelectedDate,
-      departureTime: flight.departureTime
+      userSelectedDate: userSelectedDate ? format(new Date(userSelectedDate), 'yyyy-MM-dd') : null,
+      departureTime: flight.departureTime,
+      departureTimeType: typeof flight.departureTime
     });
     
     return (
@@ -1489,16 +1505,14 @@ const BookingConfirmation = () => {
                   <Box>
                     <Typography variant="caption" color="text.secondary">Departure</Typography>
                     <Typography variant="body1" fontWeight="medium">
-                      {location.state?.departureDate ? format(new Date(location.state.departureDate), 'EEEE, MMM dd, yyyy') : 
-                       selectedFlights.onward?.departureTime ? format(new Date(selectedFlights.onward.departureTime), 'EEEE, MMM dd, yyyy') : 'N/A'}
+                      {userDepartureDate ? format(new Date(userDepartureDate), 'EEEE, MMM dd, yyyy') : 'N/A'}
                     </Typography>
                   </Box>
                   {(tripType === 'roundtrip' || selectedFlights.return) && (
                     <Box>
                       <Typography variant="caption" color="text.secondary">Return</Typography>
                       <Typography variant="body1" fontWeight="medium">
-                        {location.state?.returnDate ? format(new Date(location.state.returnDate), 'EEEE, MMM dd, yyyy') :
-                         selectedFlights.return?.departureTime ? format(new Date(selectedFlights.return.departureTime), 'EEEE, MMM dd, yyyy') : 'N/A'}
+                        {userReturnDate ? format(new Date(userReturnDate), 'EEEE, MMM dd, yyyy') : 'N/A'}
                       </Typography>
                     </Box>
                   )}
