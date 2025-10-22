@@ -90,7 +90,9 @@ const BookingConfirmation = () => {
     selectedServices,
     paymentDetails,
     contactInfo,
-    pnr: passedPNR // Get PNR from location state (generated in SearchResults)
+    pnr: passedPNR, // Get PNR from location state (generated in SearchResults)
+    departureDate: userDepartureDate, // User-selected departure date
+    returnDate: userReturnDate // User-selected return date
   } = location.state || {};
 
   // Find the number of passengers
@@ -591,9 +593,9 @@ const BookingConfirmation = () => {
               origin: selectedFlights.onward?.origin?.iata_code,
               destination: selectedFlights.onward?.destination?.iata_code,
               departureTime: selectedFlights.onward?.departureTime,
-              departureDate: selectedFlights.onward?.departureTime ? new Date(selectedFlights.onward.departureTime).toISOString().split('T')[0] : null,
+              departureDate: userDepartureDate ? new Date(userDepartureDate).toISOString().split('T')[0] : null,
               arrivalTime: selectedFlights.onward?.arrivalTime,
-              arrivalDate: selectedFlights.onward?.arrivalTime ? new Date(selectedFlights.onward.arrivalTime).toISOString().split('T')[0] : null,
+              arrivalDate: userDepartureDate ? new Date(userDepartureDate).toISOString().split('T')[0] : null,
               cabinClass: selectedFlights.onward?.cabinClass || 'economy',
               price: selectedFlights.onward?.price?.amount || 0
             },
@@ -603,9 +605,9 @@ const BookingConfirmation = () => {
               origin: selectedFlights.return?.origin?.iata_code,
               destination: selectedFlights.return?.destination?.iata_code,
               departureTime: selectedFlights.return?.departureTime,
-              departureDate: selectedFlights.return?.departureTime ? new Date(selectedFlights.return.departureTime).toISOString().split('T')[0] : null,
+              departureDate: userReturnDate ? new Date(userReturnDate).toISOString().split('T')[0] : null,
               arrivalTime: selectedFlights.return?.arrivalTime,
-              arrivalDate: selectedFlights.return?.arrivalTime ? new Date(selectedFlights.return.arrivalTime).toISOString().split('T')[0] : null,
+              arrivalDate: userReturnDate ? new Date(userReturnDate).toISOString().split('T')[0] : null,
               cabinClass: selectedFlights.return?.cabinClass || 'economy',
               price: selectedFlights.return?.price?.amount || 0
             } : null
@@ -649,7 +651,7 @@ const BookingConfirmation = () => {
         currency: 'INR',
         origin: selectedFlights.onward.origin?.iata_code,
         destination: selectedFlights.onward.destination?.iata_code,
-        departureDate: selectedFlights.onward.departureTime ? new Date(selectedFlights.onward.departureTime).toISOString().split('T')[0] : null,
+        departureDate: userDepartureDate ? new Date(userDepartureDate).toISOString().split('T')[0] : null,
         cabinClass: selectedFlights.onward.cabinClass || 'economy'
       });
     }
@@ -665,7 +667,7 @@ const BookingConfirmation = () => {
         currency: 'INR',
         origin: selectedFlights.return.origin?.iata_code,
         destination: selectedFlights.return.destination?.iata_code,
-        departureDate: selectedFlights.return.departureTime ? new Date(selectedFlights.return.departureTime).toISOString().split('T')[0] : null,
+        departureDate: userReturnDate ? new Date(userReturnDate).toISOString().split('T')[0] : null,
         cabinClass: selectedFlights.return.cabinClass || 'economy'
       });
     }
@@ -795,12 +797,12 @@ const BookingConfirmation = () => {
           originDestination: (selectedFlights.onward?.origin?.iata_code && selectedFlights.onward?.destination?.iata_code) 
             ? `${selectedFlights.onward.origin.iata_code}-${selectedFlights.onward.destination.iata_code}`
             : null,
-          departureDate: selectedFlights.onward?.departureTime ? new Date(selectedFlights.onward.departureTime).toISOString().split('T')[0] : null,
-          returnDate: selectedFlights.return?.departureTime ? new Date(selectedFlights.return.departureTime).toISOString().split('T')[0] : null,
-          travelDay: selectedFlights.onward?.departureTime ? format(new Date(selectedFlights.onward.departureTime), 'EEEE') : null,
-          numberOfDays: selectedFlights.onward?.departureTime && selectedFlights.return?.departureTime 
-            ? Math.ceil((new Date(selectedFlights.return.departureTime) - new Date(selectedFlights.onward.departureTime)) / (1000 * 60 * 60 * 24))
-            : (selectedFlights.onward?.departureTime ? Math.ceil((new Date(selectedFlights.onward.departureTime) - new Date()) / (1000 * 60 * 60 * 24)) : 0),
+          departureDate: userDepartureDate ? new Date(userDepartureDate).toISOString().split('T')[0] : null,
+          returnDate: userReturnDate ? new Date(userReturnDate).toISOString().split('T')[0] : null,
+          travelDay: userDepartureDate ? format(new Date(userDepartureDate), 'EEEE') : null,
+          numberOfDays: userDepartureDate && userReturnDate 
+            ? Math.ceil((new Date(userReturnDate) - new Date(userDepartureDate)) / (1000 * 60 * 60 * 24))
+            : (userDepartureDate ? Math.ceil((new Date(userDepartureDate) - new Date()) / (1000 * 60 * 60 * 24)) : 0),
           passengers: {
             total: numPassengers,
             breakdown: {
@@ -868,8 +870,8 @@ const BookingConfirmation = () => {
               const destAirport = findAirportByCode(selectedFlights.onward?.destination?.iata_code);
               return destAirport?.country || null;
             })(),
-            departureDate: selectedFlights.onward?.departureTime ? new Date(selectedFlights.onward.departureTime).toISOString().split('T')[0] : null,
-            returnDate: selectedFlights.return?.departureTime ? new Date(selectedFlights.return.departureTime).toISOString().split('T')[0] : null,
+            departureDate: userDepartureDate ? new Date(userDepartureDate).toISOString().split('T')[0] : null,
+            returnDate: userReturnDate ? new Date(userReturnDate).toISOString().split('T')[0] : null,
             tripType: tripType || 'oneWay',
             passengers: {
               adults: passengers?.adult || numPassengers,
@@ -934,8 +936,8 @@ const BookingConfirmation = () => {
           passengers: numPassengers,
           origin: selectedFlights.onward?.origin?.iata_code,
           destination: selectedFlights.onward?.destination?.iata_code,
-          departureDate: selectedFlights.onward?.departureTime ? new Date(selectedFlights.onward.departureTime).toISOString().split('T')[0] : null,
-          returnDate: selectedFlights.return?.departureTime ? new Date(selectedFlights.return.departureTime).toISOString().split('T')[0] : null,
+          departureDate: userDepartureDate ? new Date(userDepartureDate).toISOString().split('T')[0] : null,
+          returnDate: userReturnDate ? new Date(userReturnDate).toISOString().split('T')[0] : null,
           haulType: {
             onward: onwardHaulType,
             ...(returnHaulType && { return: returnHaulType }),
@@ -1122,11 +1124,30 @@ const BookingConfirmation = () => {
       ? selectedServices?.onward?.seat?.filter(Boolean) || []
       : selectedServices?.return?.seat?.filter(Boolean) || [];
     
+    // Get the user-selected date for this flight
+    const userSelectedDate = type === 'onward' ? userDepartureDate : userReturnDate;
+    
+    // Combine user-selected date with flight time
+    const getFlightDateTime = (flightTime, userDate) => {
+      if (!userDate || !flightTime) return '';
+      try {
+        const selectedDate = new Date(userDate);
+        const [hours, minutes] = flightTime.split(':');
+        selectedDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+        return format(selectedDate, 'MMM dd, yyyy hh:mm a');
+      } catch (error) {
+        console.error('Error formatting flight date time:', error);
+        return flightTime;
+      }
+    };
+    
     console.log('Rendering flight details:', {
       type,
       flight,
       seats,
-      selectedServices
+      selectedServices,
+      userSelectedDate,
+      departureTime: flight.departureTime
     });
     
     return (
@@ -1140,7 +1161,7 @@ const BookingConfirmation = () => {
               {flight.originCity || flight.origin} → {flight.destinationCity || flight.destination}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {formatDate(flight.departureTime)} - {flight.flightNumber}
+              {getFlightDateTime(flight.departureTime, userSelectedDate)} - {flight.flightNumber}
             </Typography>
             <Typography variant="body2" color="text.secondary">
               Cabin Class: {flight.cabinClass?.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
