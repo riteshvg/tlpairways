@@ -1641,8 +1641,8 @@ const BookingConfirmation = () => {
                                   </Typography>
                                 </Box>
                               </Box>
-                              <Typography variant="body2" color="text.secondary">
-                                ₹{(selectedServices.onward.meals.filter(m => m && m !== 'none' && m !== '').length * 300).toLocaleString()}
+                              <Typography variant="body2" color="success.main" fontWeight="medium">
+                                Free
                               </Typography>
                             </Box>
                           )}
@@ -1745,8 +1745,8 @@ const BookingConfirmation = () => {
                                   </Typography>
                                 </Box>
                               </Box>
-                              <Typography variant="body2" color="text.secondary">
-                                ₹{(selectedServices.return.meals.filter(m => m && m !== 'none' && m !== '').length * 300).toLocaleString()}
+                              <Typography variant="body2" color="success.main" fontWeight="medium">
+                                Free
                               </Typography>
                             </Box>
                           )}
