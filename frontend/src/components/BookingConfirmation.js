@@ -69,8 +69,8 @@ const BookingConfirmation = () => {
   // Build version for tracking
   const BUILD_VERSION = {
     version: '2025-10-22-v9',
-    commit: 'a8cd2b7',
-    buildDate: '2025-10-22T12:00:00Z',
+    commit: '38595d7',
+    buildDate: '2025-10-22T13:15:38+05:30',
     features: [
       'Complimentary meals (free)',
       'Dynamic baggage pricing (₹800-₹3,500)',
