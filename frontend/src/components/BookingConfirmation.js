@@ -961,7 +961,7 @@ const BookingConfirmation = () => {
         },
         sustainabilityImpact: {
           carbonFootprint: calculatedDistance > 0 ? Math.round(calculatedDistance * 0.255) : 0, // kg CO₂
-          distance: calculatedDistance, // km
+          distance: Math.round(calculatedDistance), // km - rounded to nearest whole number
           treesPlanted: calculatedTrees,
           carbonOffset: calculatedDistance > 0 ? Math.round(calculatedDistance * 0.255) : 0,
           sustainabilityContribution: calculatedTrees > 0 ? calculatedTrees * 50 : 0, // INR contribution
@@ -1734,7 +1734,7 @@ const BookingConfirmation = () => {
                   <Grid container spacing={2}>
                     <Grid item xs={4} textAlign="center">
                       <Typography variant="h6" fontWeight="bold" color="success.dark">
-                        {totalDistance.toLocaleString()}
+                        {Math.round(totalDistance).toLocaleString()}
                       </Typography>
                       <Typography variant="caption" color="text.secondary">
                         km
