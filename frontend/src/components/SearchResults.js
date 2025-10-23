@@ -109,7 +109,7 @@ const SearchResults = () => {
           returnDate: returnDate ? new Date(returnDate) : null,
           passengers: passengers || 1,
           passengerCounts: passengerCounts || { adult: 1, child: 0, infant: 0 },
-          paymentType: paymentType || 'oneway',
+          paymentType: paymentType || 'cash', // Payment mode: cash, points, cash_points
           tripType: tripType || 'oneway',
           cabinClass: cabinClass || 'economy',
           travelPurpose: travelPurpose || 'personal',
