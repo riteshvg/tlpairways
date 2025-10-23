@@ -678,6 +678,7 @@ const SearchResults = () => {
         prices: selectedReturnFlight.prices
       } : null,
       tripType: searchParams.tripType,
+      paymentType: searchParams.paymentType, // Payment mode: cash, points, cash_points
       passengers: searchParams.passengerCounts,
       cabinClass: searchParams.cabinClass,
       departureDate: searchParams.date,

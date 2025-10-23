@@ -126,6 +126,7 @@ const BookingConfirmation = () => {
     selectedServices,
     paymentDetails,
     contactInfo,
+    paymentType, // Payment mode: cash, points, cash_points
     pnr: passedPNR, // Get PNR from location state (generated in SearchResults)
     departureDate: userDepartureDate, // User-selected departure date
     returnDate: userReturnDate // User-selected return date
@@ -824,11 +825,13 @@ const BookingConfirmation = () => {
           products: products,
           bookingReference: bookingRef,
           paymentMethod: (paymentDetails?.method || 'credit card').replace(/_/g, ' ').replace(/-/g, ' '),
+          paymentMode: paymentType || 'cash', // Payment mode: cash, points, cash_points
           paymentStatus: 'completed',
           timestamp: new Date().toISOString()
         },
         paymentDetails: {
           paymentType: (paymentDetails?.method || 'credit card').replace(/_/g, ' ').replace(/-/g, ' '),
+          paymentMode: paymentType || 'cash', // Payment mode: cash, points, cash_points
           paymentCurrency: 'INR',
           paymentCategories: {
             baseFare: feeBreakdown.baseFare,
