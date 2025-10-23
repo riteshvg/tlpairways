@@ -88,7 +88,8 @@ const Payment = () => {
     flightTotal: initialFlightTotal = 0,
     ancillaryTotal: initialAncillaryTotal = 0,
     totalAmount: initialTotalAmount = 0,
-    paymentType: initialPaymentType = 'oneway',
+    paymentType: initialPaymentType = 'cash', // Payment mode: cash, points, cash_points
+    tripType: initialTripType = 'oneway', // Trip type: oneway, roundtrip
     cabinClass: initialCabinClass = 'economy',
     departureDate: initialDepartureDate = null,
     returnDate: initialReturnDate = null
@@ -106,6 +107,7 @@ const Payment = () => {
   const [ancillaryTotal, setAncillaryTotal] = useState(initialAncillaryTotal);
   const [totalAmount, setTotalAmount] = useState(initialTotalAmount);
   const [paymentType, setPaymentType] = useState(initialPaymentType);
+  const [tripType, setTripType] = useState(initialTripType);
   const [cabinClass, setCabinClass] = useState(initialCabinClass);
   
   // Payment form state
@@ -171,7 +173,7 @@ const Payment = () => {
       navigate('/search');
     }
   }, [bookingState, selectedFlights, travellerDetails, contactInfo, selectedServices, 
-      flightTotal, ancillaryTotal, totalAmount, paymentType, cabinClass, navigate]);
+      flightTotal, ancillaryTotal, totalAmount, paymentType, tripType, cabinClass, navigate]);
 
   // Reset vendor when payment method changes
   useEffect(() => {
@@ -274,11 +276,12 @@ const Payment = () => {
           contactInfo,
           selectedServices,
           paymentDetails: paymentData,
+          paymentType: initialPaymentType, // Payment mode: cash, points, cash_points
           totalAmount,
           cabinClass,
           departureDate: initialDepartureDate,
           returnDate: initialReturnDate,
-          tripType: paymentType,
+          tripType: tripType, // Trip type: oneway, roundtrip
           passengers: bookingState?.passengers,
           previousPage: 'Payment',
           pnr: bookingState?.pnr // Pass the PNR to confirmation page
@@ -518,7 +521,7 @@ const Payment = () => {
               Payment Summary
             </Typography>
             {selectedFlights.onward && renderFlightDetails(selectedFlights.onward, 'onward')}
-            {paymentType === 'roundtrip' && selectedFlights.return && renderFlightDetails(selectedFlights.return, 'return')}
+            {tripType === 'roundtrip' && selectedFlights.return && renderFlightDetails(selectedFlights.return, 'return')}
 
             <Box sx={{ mt: 3 }}>
               <Typography variant="h6" gutterBottom>
