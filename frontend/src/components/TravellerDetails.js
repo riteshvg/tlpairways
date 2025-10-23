@@ -51,12 +51,12 @@ const TravellerDetails = () => {
   const bookingState = getBookingState();
   const { onwardFlight, returnFlight, tripType, passengers } = bookingState || {};
   
-  // Debug: Log the dates we received
-  console.log('TravellerDetails - Received dates:', {
-    departureDate: bookingState?.departureDate,
-    returnDate: bookingState?.returnDate,
-    fromOnwardFlight: onwardFlight?.departureTime,
-    fromReturnFlight: returnFlight?.departureTime
+  // Debug: Log the payment type we received
+  console.log('TravellerDetails - Payment Type Debug:', {
+    paymentTypeFromState: bookingState?.paymentType,
+    tripType: tripType,
+    onwardFlight: onwardFlight?.flightNumber,
+    returnFlight: returnFlight?.flightNumber
   });
   
   // Initialize data layer tracking (includes pageView)
@@ -612,7 +612,7 @@ const TravellerDetails = () => {
           email,
           phone
         },
-        paymentType: selectedFlights.return ? 'roundtrip' : 'oneway',
+        paymentType: bookingState?.paymentType || 'cash', // Payment mode: cash, points, cash_points
         departureDate: bookingState.departureDate || selectedFlights.onward?.departureTime,
         returnDate: bookingState.returnDate || selectedFlights.return?.departureTime,
         previousPage: 'Traveller Details',

@@ -61,7 +61,7 @@ const AncillaryServices = () => {
   });
   const [travellerDetails, setTravellerDetails] = useState([]);
   const [contactInfo, setContactInfo] = useState(null);
-  const [paymentType, setPaymentType] = useState('oneway');
+  const [paymentType, setPaymentType] = useState('cash'); // Payment mode: cash, points, cash_points
   const [selectedServices, setSelectedServices] = useState({
     onward: {
       seat: [],
@@ -163,8 +163,11 @@ const AncillaryServices = () => {
             loungeAccess: new Array(initialTravellerDetails.length).fill(false)
           }
         };
-        console.log('Initializing services:', newServices);
-        setSelectedServices(newServices);
+        console.log('AncillaryServices - Payment Type Debug:', {
+          paymentTypeFromState: location.state?.paymentType,
+          paymentTypeInState: paymentType,
+          tripType: location.state?.tripType
+        });
 
         // Set contact info and payment type
         if (initialContactInfo) {

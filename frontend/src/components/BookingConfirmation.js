@@ -118,6 +118,14 @@ const BookingConfirmation = () => {
     overall: 'short haul'
   });
 
+  // Debug: Log the complete location.state to see what's being passed
+  console.log('🔍 BookingConfirmation - Complete State Debug:', {
+    locationState: location.state,
+    paymentTypeFromState: location.state?.paymentType,
+    tripTypeFromState: location.state?.tripType,
+    paymentDetailsFromState: location.state?.paymentDetails
+  });
+
   const {
     selectedFlights,
     tripType,
@@ -608,6 +616,10 @@ const BookingConfirmation = () => {
       paymentMethod: paymentDetails?.method,
       tripType: tripType
     });
+
+    // Calculate revenue data
+    const feeBreakdown = calculateFeeBreakdown();
+    const ancillaryTotal = calculateAncillaryTotal();
 
     // Set page data with confirmation page type
     airlinesDataLayer.setPageDataWithView({

@@ -268,6 +268,14 @@ const Payment = () => {
         console.log('✅ Payment details pushed to adobeDataLayer:', paymentDetails);
       }
 
+      // Debug: Log what we're passing to confirmation
+      console.log('🔍 Payment - Navigation State Debug:', {
+        paymentTypeBeingPassed: initialPaymentType,
+        tripTypeBeingPassed: tripType,
+        paymentMethod: paymentData.method,
+        bookingStatePaymentType: bookingState?.paymentType
+      });
+
       // Navigate to confirmation
       navigate('/confirmation', {
         state: {
