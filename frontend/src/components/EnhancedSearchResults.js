@@ -180,7 +180,7 @@ const EnhancedSearchResults = () => {
           date: new Date(date),
           returnDate: returnDate ? new Date(returnDate) : null,
           passengers: passengers || 1,
-          paymentType: paymentType || 'oneway',
+          paymentType: paymentType || 'cash', // Payment mode: cash, points, cash_points
           tripType: tripType || 'oneway',
           cabinClass: cabinClass || 'economy'
         };
