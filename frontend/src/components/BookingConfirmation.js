@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import usePageView from '../hooks/usePageView';
 import airlinesDataLayer from '../services/AirlinesDataLayer';
+import { createHashedCustomerObject } from '../utils/hashingUtils';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import {
@@ -880,12 +881,12 @@ const BookingConfirmation = () => {
           passengers: numPassengers,
           tripType: tripType || 'oneWay'
         },
-        customer: {
+        customer: createHashedCustomerObject({
           userId: travellerDetails[0]?.email || null,
           email: travellerDetails[0]?.email || null,
           phone: travellerDetails[0]?.phone || null,
           loyaltyTier: 'standard'
-        },
+        }),
         searchContext: {
           searchId: `search_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
           origin: selectedFlights.onward?.origin || null, // Origin is a string (airport code)

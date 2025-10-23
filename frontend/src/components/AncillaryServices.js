@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useAncillaryServicesDataLayer from '../hooks/useAncillaryServicesDataLayer';
+import { createHashedCustomerObject } from '../utils/hashingUtils';
 import {
   Container,
   Typography,
@@ -1365,6 +1366,12 @@ Price: ₹${seatPrice}`}
               phone: traveller.phone
             }))
           },
+          customer: createHashedCustomerObject({
+            userId: travellerDetails[0]?.email || null,
+            email: travellerDetails[0]?.email || null,
+            phone: travellerDetails[0]?.phone || null,
+            loyaltyTier: 'standard'
+          }),
           tripType: selectedFlights.return ? 'roundtrip' : 'oneway',
           timestamp: new Date().toISOString()
         });

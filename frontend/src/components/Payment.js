@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import usePageView from '../hooks/usePageView';
+import { createHashedCustomerObject } from '../utils/hashingUtils';
 import {
   Container,
   Paper,
@@ -262,6 +263,12 @@ const Payment = () => {
         window.adobeDataLayer.push({
           event: 'paymentSubmitted',
           paymentDetails: paymentDetails,
+          customer: createHashedCustomerObject({
+            userId: travellerDetails[0]?.email || null,
+            email: travellerDetails[0]?.email || null,
+            phone: travellerDetails[0]?.phone || null,
+            loyaltyTier: 'standard'
+          }),
           timestamp: new Date().toISOString()
         });
 
