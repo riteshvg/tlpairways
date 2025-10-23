@@ -601,9 +601,13 @@ const BookingConfirmation = () => {
       overall: overallHaulType
     });
 
-    // Calculate revenue data
-    const feeBreakdown = calculateFeeBreakdown();
-    const ancillaryTotal = calculateAncillaryTotal();
+    // Log payment mode for debugging
+    console.log('🔍 Payment Mode Debug:', {
+      paymentTypeFromState: paymentType,
+      paymentModeInDataLayer: paymentType || 'cash',
+      paymentMethod: paymentDetails?.method,
+      tripType: tripType
+    });
 
     // Set page data with confirmation page type
     airlinesDataLayer.setPageDataWithView({
@@ -1035,6 +1039,12 @@ const BookingConfirmation = () => {
       window.adobeDataLayer.push(purchaseEvent);
       console.log('✅ Purchase event pushed to adobeDataLayer:', purchaseEvent);
       console.log('📋 Booking object in data layer:', JSON.stringify(purchaseEvent.eventData.booking, null, 2));
+      console.log('🎯 Payment Mode Verification:', {
+        revenuePaymentMode: purchaseEvent.eventData.revenue.paymentMode,
+        paymentDetailsPaymentMode: purchaseEvent.eventData.paymentDetails.paymentMode,
+        expectedPaymentMode: paymentType || 'cash',
+        paymentTypeFromState: paymentType
+      });
     }
 
 
