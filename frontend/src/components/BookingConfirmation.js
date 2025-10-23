@@ -609,12 +609,29 @@ const BookingConfirmation = () => {
       overall: overallHaulType
     });
 
-    // Log payment mode for debugging
-    console.log('🔍 Payment Mode Debug:', {
-      paymentTypeFromState: paymentType,
-      paymentModeInDataLayer: paymentType || 'cash',
-      paymentMethod: paymentDetails?.method,
-      tripType: tripType
+    // Log sector type calculation for debugging
+    console.log('🔍 Sector Type Debug:', {
+      origin: selectedFlights.onward?.origin,
+      destination: selectedFlights.onward?.destination,
+      originAirport: findAirportByCode(selectedFlights.onward?.origin),
+      destAirport: findAirportByCode(selectedFlights.onward?.destination),
+      sectorType: (() => {
+        const originAirport = findAirportByCode(selectedFlights.onward?.origin);
+        const destAirport = findAirportByCode(selectedFlights.onward?.destination);
+        
+        if (!originAirport || !destAirport) {
+          return 'unknown';
+        }
+        
+        const isOriginDomestic = originAirport.country === 'India';
+        const isDestDomestic = destAirport.country === 'India';
+        
+        if (isOriginDomestic && isDestDomestic) {
+          return 'domestic';
+        } else {
+          return 'international';
+        }
+      })()
     });
 
     // Calculate revenue data
@@ -871,10 +888,10 @@ const BookingConfirmation = () => {
         },
         searchContext: {
           searchId: `search_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-          origin: selectedFlights.onward?.origin?.iata_code || null,
-          destination: selectedFlights.onward?.destination?.iata_code || null,
-          originDestination: (selectedFlights.onward?.origin?.iata_code && selectedFlights.onward?.destination?.iata_code) 
-            ? `${selectedFlights.onward.origin.iata_code}-${selectedFlights.onward.destination.iata_code}`
+          origin: selectedFlights.onward?.origin || null, // Origin is a string (airport code)
+          destination: selectedFlights.onward?.destination || null, // Destination is a string (airport code)
+          originDestination: (selectedFlights.onward?.origin && selectedFlights.onward?.destination) 
+            ? `${selectedFlights.onward.origin}-${selectedFlights.onward.destination}`
             : null,
           departureDate: userDepartureDate ? new Date(userDepartureDate).toISOString().split('T')[0] : null,
           returnDate: userReturnDate ? new Date(userReturnDate).toISOString().split('T')[0] : null,
@@ -913,40 +930,40 @@ const BookingConfirmation = () => {
           travelPurpose: 'personal',
           searchDateTime: new Date().toISOString().split('T')[0],
           searchCriteria: {
-            originAirport: selectedFlights.onward?.origin?.iata_code || null,
+            originAirport: selectedFlights.onward?.origin || null, // Origin is a string (airport code)
             originAirportName: (() => {
-              const originAirport = findAirportByCode(selectedFlights.onward?.origin?.iata_code);
+              const originAirport = findAirportByCode(selectedFlights.onward?.origin);
               console.log('Origin airport lookup:', {
-                code: selectedFlights.onward?.origin?.iata_code,
+                code: selectedFlights.onward?.origin,
                 foundAirport: originAirport,
                 existingName: selectedFlights.onward?.origin?.name
               });
               return originAirport?.name || selectedFlights.onward?.origin?.name || null;
             })(),
             originCity: selectedFlights.onward?.origin?.city || (() => {
-              const originAirport = findAirportByCode(selectedFlights.onward?.origin?.iata_code);
+              const originAirport = findAirportByCode(selectedFlights.onward?.origin);
               return originAirport?.city || null;
             })(),
             originCountry: selectedFlights.onward?.origin?.country || (() => {
-              const originAirport = findAirportByCode(selectedFlights.onward?.origin?.iata_code);
+              const originAirport = findAirportByCode(selectedFlights.onward?.origin);
               return originAirport?.country || null;
             })(),
-            destinationAirport: selectedFlights.onward?.destination?.iata_code || null,
+            destinationAirport: selectedFlights.onward?.destination || null, // Destination is a string (airport code)
             destinationAirportName: (() => {
-              const destAirport = findAirportByCode(selectedFlights.onward?.destination?.iata_code);
+              const destAirport = findAirportByCode(selectedFlights.onward?.destination);
               console.log('Destination airport lookup:', {
-                code: selectedFlights.onward?.destination?.iata_code,
+                code: selectedFlights.onward?.destination,
                 foundAirport: destAirport,
                 existingName: selectedFlights.onward?.destination?.name
               });
               return destAirport?.name || selectedFlights.onward?.destination?.name || null;
             })(),
             destinationCity: selectedFlights.onward?.destination?.city || (() => {
-              const destAirport = findAirportByCode(selectedFlights.onward?.destination?.iata_code);
+              const destAirport = findAirportByCode(selectedFlights.onward?.destination);
               return destAirport?.city || null;
             })(),
             destinationCountry: selectedFlights.onward?.destination?.country || (() => {
-              const destAirport = findAirportByCode(selectedFlights.onward?.destination?.iata_code);
+              const destAirport = findAirportByCode(selectedFlights.onward?.destination);
               return destAirport?.country || null;
             })(),
             departureDate: userDepartureDate ? new Date(userDepartureDate).toISOString().split('T')[0] : null,
@@ -1013,10 +1030,31 @@ const BookingConfirmation = () => {
           tripType: tripType || 'oneWay',
           cabinClass: selectedFlights.onward?.cabinClass || 'economy',
           passengers: numPassengers,
-          origin: selectedFlights.onward?.origin?.iata_code,
-          destination: selectedFlights.onward?.destination?.iata_code,
+          origin: selectedFlights.onward?.origin || null, // Origin is a string (airport code)
+          destination: selectedFlights.onward?.destination || null, // Destination is a string (airport code)
           departureDate: userDepartureDate ? new Date(userDepartureDate).toISOString().split('T')[0] : null,
           returnDate: userReturnDate ? new Date(userReturnDate).toISOString().split('T')[0] : null,
+          sectorType: (() => {
+            // Determine sector type based on origin and destination countries
+            const originAirport = findAirportByCode(selectedFlights.onward?.origin);
+            const destAirport = findAirportByCode(selectedFlights.onward?.destination);
+            
+            if (!originAirport || !destAirport) {
+              console.warn('Could not determine sector type - missing airport data');
+              return 'unknown';
+            }
+            
+            const isOriginDomestic = originAirport.country === 'India';
+            const isDestDomestic = destAirport.country === 'India';
+            
+            // If both origin and destination are domestic (India) - domestic
+            // If one of origin or destination is international - international
+            if (isOriginDomestic && isDestDomestic) {
+              return 'domestic';
+            } else {
+              return 'international';
+            }
+          })(),
           haulType: {
             onward: onwardHaulType,
             ...(returnHaulType && { return: returnHaulType }),
