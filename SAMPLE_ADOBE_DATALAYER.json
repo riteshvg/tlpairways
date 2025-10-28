@@ -26,8 +26,8 @@
       "_comment": "Event 1: Flight Search Initiated",
       "event": "flightSearchInitiated",
       "eventData": {
-        "origin": "AIRPORT_A",
-        "destination": "AIRPORT_B",
+        "origin": "BLR",
+        "destination": "DEL",
         "departureDate": "2025-12-01",
         "returnDate": "2025-12-08",
         "passengers": {
@@ -67,10 +67,10 @@
         "flight": {
           "flightNumber": "TL-234",
           "airline": "TLAirways",
-          "origin": "AIRPORT_A",
-          "destination": "AIRPORT_B",
-          "originCity": "City A",
-          "destinationCity": "City B",
+          "origin": "BLR",
+          "destination": "DEL",
+          "originCity": "Bangalore",
+          "destinationCity": "New Delhi",
           "departureTime": "2025-12-01T08:00:00Z",
           "arrivalTime": "2025-12-01T10:30:00Z",
           "duration": "2h 30m",
@@ -108,8 +108,8 @@
           "onward": {
             "flightNumber": "TL-234",
             "airline": "TLAirways",
-            "origin": "AIRPORT_A",
-            "destination": "AIRPORT_B",
+            "origin": "BLR",
+            "destination": "DEL",
             "departureTime": "2025-12-01T08:00:00Z",
             "price": 10000,
             "cabinClass": "economy"
@@ -117,8 +117,8 @@
           "return": {
             "flightNumber": "TL-789",
             "airline": "TLAirways",
-            "origin": "AIRPORT_B",
-            "destination": "AIRPORT_A",
+          "origin": "DEL",
+          "destination": "BLR",
             "departureTime": "2025-12-08T14:00:00Z",
             "price": 9500,
             "cabinClass": "economy"
@@ -149,8 +149,8 @@
           "onward": {
             "flightNumber": "TL-234",
             "airline": "TLAirways",
-            "origin": "AIRPORT_A",
-            "destination": "AIRPORT_B",
+            "origin": "BLR",
+            "destination": "DEL",
             "departureTime": "2025-12-01T08:00:00Z",
             "price": 10000,
             "cabinClass": "economy",
@@ -159,8 +159,8 @@
           "return": {
             "flightNumber": "TL-789",
             "airline": "TLAirways",
-            "origin": "AIRPORT_B",
-            "destination": "AIRPORT_A",
+          "origin": "DEL",
+          "destination": "BLR",
             "departureTime": "2025-12-08T14:00:00Z",
             "price": 9500,
             "cabinClass": "economy",
@@ -227,9 +227,9 @@
           "paymentDate": "2025-10-23"
         },
         "customer": {
-          "userId": "user@example.com",
-          "email": "user@example.com",
-          "phone": "1234567890",
+          "userId": "deepak.patel0@rediffmail.com",
+          "email": "deepak.patel0@rediffmail.com",
+          "phone": "650666803",
           "loyaltyTier": "standard",
           "userIdHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
           "phoneHash": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
@@ -258,8 +258,8 @@
               "price": 10000,
               "quantity": 2,
               "currency": "INR",
-              "origin": "AIRPORT_A",
-              "destination": "AIRPORT_B",
+              "origin": "BLR",
+              "destination": "DEL",
               "departureDate": "2025-12-01",
               "cabinClass": "economy"
             },
@@ -271,8 +271,8 @@
               "price": 9500,
               "quantity": 2,
               "currency": "INR",
-              "origin": "AIRPORT_B",
-              "destination": "AIRPORT_A",
+          "origin": "DEL",
+          "destination": "BLR",
               "departureDate": "2025-12-08",
               "cabinClass": "economy"
             },
@@ -333,9 +333,9 @@
           "tripType": "roundtrip"
         },
         "customer": {
-          "userId": "user@example.com",
-          "email": "user@example.com",
-          "phone": "1234567890",
+          "userId": "deepak.patel0@rediffmail.com",
+          "email": "deepak.patel0@rediffmail.com",
+          "phone": "650666803",
           "loyaltyTier": "standard",
           "userIdHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
           "phoneHash": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
@@ -344,9 +344,9 @@
         },
         "searchContext": {
           "searchId": "search_1735123456789_abc123",
-          "origin": "AIRPORT_A",
-          "destination": "AIRPORT_B",
-          "originDestination": "AIRPORT_A-AIRPORT_B",
+          "origin": "BLR",
+          "destination": "DEL",
+          "originDestination": "BLR-DEL",
           "departureDate": "2025-12-01",
           "returnDate": "2025-12-08",
           "travelDay": "Monday",
@@ -379,8 +379,8 @@
           "tripType": "roundtrip",
           "cabinClass": "economy",
           "passengers": 2,
-          "origin": "AIRPORT_A",
-          "destination": "AIRPORT_B",
+          "origin": "BLR",
+          "destination": "DEL",
           "departureDate": "2025-12-01",
           "returnDate": "2025-12-08",
           "sectorType": "domestic",
