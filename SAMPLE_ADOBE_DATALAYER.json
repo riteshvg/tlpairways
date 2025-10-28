@@ -1,299 +1,411 @@
 /**
  * TLAirways - Adobe Experience Platform (AEP) Data Layer
- * Sample Purchase Event - Complete Booking Confirmation
+ * Complete Booking Flow - All Events
  * 
  * @copyright 2025 TLAirways. All Rights Reserved.
  * @author Ritesh V G
  * @github https://github.com/riteshvg/tlpairways
  * 
- * This sample demonstrates the complete Adobe Data Layer structure for a flight booking
- * purchase event, including:
- * - Revenue tracking with detailed pricing breakdown
- * - Customer information with SHA256 hashed identifiers
- * - Comprehensive booking context
- * - Search criteria and performance metrics
- * - Flight details for onward and return journeys
- * - Ancillary services tracking
- * - Bureau of Civil Aviation Security (BCAS) compliance
- * - Sustainability impact calculations
+ * This JSON contains sample Adobe Data Layer events for the complete flight booking flow:
+ * 1. flightSearchInitiated - User starts searching for flights
+ * 2. searchResultsDisplayed - Search results are shown
+ * 3. flightSelected - User selects onward/return flights
+ * 4. proceedToAncillaryServices - User proceeds to traveller details page
+ * 5. proceedToPayment - User selects ancillary services and proceeds to payment
+ * 6. paymentSubmitted - User submits payment information
+ * 7. purchase - Complete booking confirmation with final details
  * 
- * Note: This is a sample object. Real data layer events are pushed dynamically
- * based on user interactions during the booking flow.
+ * Note: All airline names, flight numbers, airports, and user data are placeholders.
  */
 
 {
-  "event": "purchase",
-  "eventData": {
-    "revenue": {
-      "transactionId": "TXN20251023456789ABC",
-      "totalRevenue": 85230,
-      "currency": "INR",
-      "products": [
-        {
-          "productId": "flight",
-          "productName": "Flight 6E-234",
-          "category": "flight",
-          "subcategory": "onward",
-          "price": 45000,
-          "quantity": 2,
-          "currency": "INR",
-          "origin": "BLR",
-          "destination": "DEL",
-          "departureDate": "2025-11-15",
-          "cabinClass": "economy"
-        },
-        {
-          "productId": "flight",
-          "productName": "Flight 6E-789",
-          "category": "flight",
-          "subcategory": "return",
-          "price": 42000,
-          "quantity": 2,
-          "currency": "INR",
-          "origin": "DEL",
-          "destination": "BLR",
-          "departureDate": "2025-11-20",
-          "cabinClass": "economy"
-        },
-        {
-          "productId": "seat_selection",
-          "productName": "Seat Selection - onward",
-          "category": "ancillary",
-          "subcategory": "seatSelection",
-          "price": 2000,
-          "quantity": 2,
-          "currency": "INR",
-          "journey": "onward"
-        },
-        {
-          "productId": "meal",
-          "productName": "Meal - onward",
-          "category": "ancillary",
-          "subcategory": "meal",
-          "price": 0,
-          "quantity": 2,
-          "currency": "INR",
-          "mealType": "Vegetarian",
-          "journey": "onward"
-        },
-        {
-          "productId": "baggage",
-          "productName": "Baggage 20 kg - onward",
-          "category": "ancillary",
-          "subcategory": "baggage",
-          "price": 1500,
-          "quantity": 2,
-          "currency": "INR",
-          "baggageType": "20 kg",
-          "journey": "onward"
-        },
-        {
-          "productId": "priorityBoarding",
-          "productName": "Priority Boarding - onward",
-          "category": "ancillary",
-          "subcategory": "priorityBoarding",
-          "price": 1000,
-          "quantity": 2,
-          "currency": "INR",
-          "journey": "onward"
-        }
-      ],
-      "bookingReference": "PNR2025102345ABCD",
-      "paymentMethod": "credit card",
-      "paymentMode": "cash",
-      "paymentStatus": "completed",
-      "timestamp": "2025-10-23T15:54:44.123Z"
-    },
-    "paymentDetails": {
-      "paymentType": "credit card",
-      "paymentMode": "cash",
-      "paymentCurrency": "INR",
-      "paymentCategories": {
-        "baseFare": 87000,
-        "ancillaryFare": 4500,
-        "taxes": 2800,
-        "convenienceFee": 350,
-        "surcharge": 180,
-        "totalFees": 3330,
-        "totalAmount": 85230
-      },
-      "pnr": "PNR2025102345ABCD",
-      "bookingId": "TXN20251023456789ABC",
-      "passengers": 2,
-      "tripType": "roundtrip"
-    },
-    "customer": {
-      "userId": "deepak.patel0@rediffmail.com",
-      "email": "deepak.patel0@rediffmail.com",
-      "phone": "650666803",
-      "loyaltyTier": "standard",
-      "userIdHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "phoneHash": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
-      "hashingTimestamp": "2025-10-23T15:54:44.123Z",
-      "hashingAlgorithm": "SHA256"
-    },
-    "searchContext": {
-      "searchId": "search_1698096884_k9x7y2z3",
-      "origin": "BLR",
-      "destination": "DEL",
-      "originDestination": "BLR-DEL",
-      "departureDate": "2025-11-15",
-      "returnDate": "2025-11-20",
-      "travelDay": "Saturday",
-      "numberOfDays": 5,
-      "passengers": {
-        "total": 2,
-        "breakdown": {
-          "adults": {
-            "count": 2,
-            "type": "adult",
-            "description": "12+ years"
-          },
-          "children": {
-            "count": 0,
-            "type": "child",
-            "description": "2-11 years"
-          },
-          "infants": {
-            "count": 0,
-            "type": "infant",
-            "description": "Under 2 years"
-          }
-        },
-        "summary": "adult: 2"
-      },
-      "cabinClass": "economy",
-      "tripType": "roundtrip",
-      "travelPurpose": "personal",
-      "searchDateTime": "2025-10-23",
-      "searchCriteria": {
-        "originAirport": "BLR",
-        "originAirportName": "Kempegowda International Airport",
-        "originCity": "Bangalore",
-        "originCountry": "India",
-        "destinationAirport": "DEL",
-        "destinationAirportName": "Indira Gandhi International Airport",
-        "destinationCity": "New Delhi",
-        "destinationCountry": "India",
-        "departureDate": "2025-11-15",
-        "returnDate": "2025-11-20",
-        "tripType": "roundtrip",
+  "Developer Notes": "This file shows all Data Layer events in sequential order",
+  "Flight Booking Flow Events": [
+    
+    {
+      "_comment": "Event 1: Flight Search Initiated",
+      "event": "flightSearchInitiated",
+      "eventData": {
+        "origin": "AIRPORT_A",
+        "destination": "AIRPORT_B",
+        "departureDate": "2025-12-01",
+        "returnDate": "2025-12-08",
         "passengers": {
-          "adults": 2,
-          "children": 0,
-          "infants": 0,
+          "adult": 2,
+          "child": 0,
+          "infant": 0,
           "total": 2
         },
         "cabinClass": "economy",
-        "travelPurpose": "personal",
-        "searchDateTime": "2025-10-23",
-        "flexibleDates": false,
-        "directFlightsOnly": false
+        "tripType": "roundtrip",
+        "sessionId": "session_1735123456789",
+        "timestamp": "2025-10-23T10:00:00.000Z"
       },
-      "distanceKm": 1740,
-      "specialDays": {
-        "onward": {
-          "is_special": false,
-          "special_day": null,
-          "special_type": null,
-          "country": null
+      "timestamp": "2025-10-23T10:00:00.000Z"
+    },
+
+    {
+      "_comment": "Event 2: Search Results Displayed",
+      "event": "searchResultsDisplayed",
+      "eventData": {
+        "searchId": "search_1735123456789_abc123",
+        "totalResults": 12,
+        "onwardResults": 6,
+        "returnResults": 6,
+        "searchDuration": 450,
+        "filters": [],
+        "sortBy": "price",
+        "timestamp": "2025-10-23T10:00:15.000Z"
+      },
+      "timestamp": "2025-10-23T10:00:15.000Z"
+    },
+
+    {
+      "_comment": "Event 3: Flight Selected",
+      "event": "flightSelected",
+      "eventData": {
+        "flight": {
+          "flightNumber": "TL-234",
+          "airline": "TLAirways",
+          "origin": "AIRPORT_A",
+          "destination": "AIRPORT_B",
+          "originCity": "City A",
+          "destinationCity": "City B",
+          "departureTime": "2025-12-01T08:00:00Z",
+          "arrivalTime": "2025-12-01T10:30:00Z",
+          "duration": "2h 30m",
+          "stops": 0,
+          "price": {
+            "amount": 5000,
+            "currency": "INR"
+          },
+          "cabinClass": "economy",
+          "aircraft": "Boeing 737",
+          "resultPosition": 2
         },
-        "return": {
-          "is_special": false,
-          "special_day": null,
-          "special_type": null,
-          "country": null
+        "journeyType": "onward",
+        "searchContext": {
+          "searchId": "search_1735123456789_abc123",
+          "timestamp": "2025-10-23T10:00:15.000Z"
         },
-        "hasSpecialDays": false
+        "timestamp": "2025-10-23T10:01:30.000Z"
       },
-      "revenueData": {
-        "potential_revenue": 85230,
-        "avg_revenue_per_user": 42615,
-        "booking_probability_score": 1.0,
-        "estimated_conversion_value": 85230,
-        "revenue_bucket": "high_value",
-        "currency": {
-          "code": "INR",
-          "symbol": "₹",
-          "name": "Indian Rupee"
-        }
+      "timestamp": "2025-10-23T10:01:30.000Z"
+    },
+
+    {
+      "_comment": "Event 4: Proceed to Traveller Details (Ancillary Services)",
+      "event": "proceedToAncillaryServices",
+      "eventData": {
+        "bookingContext": {
+          "bookingId": "booking_1735123456789_XYZ789",
+          "bookingStep": "traveller-details",
+          "nextStep": "ancillary-services",
+          "bookingStepNumber": 1,
+          "totalSteps": 4
+        },
+        "selectedFlights": {
+          "onward": {
+            "flightNumber": "TL-234",
+            "airline": "TLAirways",
+            "origin": "AIRPORT_A",
+            "destination": "AIRPORT_B",
+            "departureTime": "2025-12-01T08:00:00Z",
+            "price": 10000,
+            "cabinClass": "economy"
+          },
+          "return": {
+            "flightNumber": "TL-789",
+            "airline": "TLAirways",
+            "origin": "AIRPORT_B",
+            "destination": "AIRPORT_A",
+            "departureTime": "2025-12-08T14:00:00Z",
+            "price": 9500,
+            "cabinClass": "economy"
+          }
+        },
+        "passengersBreakdown": {
+          "adults": 2,
+          "children": 0,
+          "infants": 0
+        },
+        "timestamp": "2025-10-23T10:05:00.000Z"
       },
-      "geography": {
-        "userLocation": {
-          "country": "India",
-          "state": "Karnataka",
-          "city": "Bangalore",
-          "timezone": "Asia/Kolkata",
-          "ipCountry": "India",
+      "timestamp": "2025-10-23T10:05:00.000Z"
+    },
+
+    {
+      "_comment": "Event 5: Proceed to Payment (Ancillary Services Selected)",
+      "event": "proceedToPayment",
+      "eventData": {
+        "bookingContext": {
+          "bookingId": "booking_1735123456789_XYZ789",
+          "bookingStep": "ancillary-services",
+          "nextStep": "payment",
+          "bookingStepNumber": 2,
+          "totalSteps": 4
+        },
+        "selectedFlights": {
+          "onward": {
+            "flightNumber": "TL-234",
+            "airline": "TLAirways",
+            "origin": "AIRPORT_A",
+            "destination": "AIRPORT_B",
+            "departureTime": "2025-12-01T08:00:00Z",
+            "price": 10000,
+            "cabinClass": "economy",
+            "perPassengerPrice": 5000
+          },
+          "return": {
+            "flightNumber": "TL-789",
+            "airline": "TLAirways",
+            "origin": "AIRPORT_B",
+            "destination": "AIRPORT_A",
+            "departureTime": "2025-12-08T14:00:00Z",
+            "price": 9500,
+            "cabinClass": "economy",
+            "perPassengerPrice": 4750
+          }
+        },
+        "ancillaryServices": {
+          "totalAncillaryCost": 6000,
           "currency": "INR",
-          "language": "en-US"
-        }
+          "servicesSelected": {
+            "passenger1": {
+              "onward": {
+                "seats": { "details": "12A", "cost": 500, "type": "paid" },
+                "meals": { "details": "Vegetarian", "cost": 0, "type": "free" },
+                "baggage": { "details": "20 kg", "cost": 1000, "type": "paid" },
+                "priorityBoarding": { "details": true, "cost": 500, "type": "paid" },
+                "loungeAccess": { "details": true, "cost": 0, "type": "free" }
+              },
+              "return": {
+                "seats": { "details": "15C", "cost": 500, "type": "paid" },
+                "meals": { "details": "Non-Vegetarian", "cost": 0, "type": "free" },
+                "baggage": { "details": "20 kg", "cost": 1000, "type": "paid" },
+                "priorityBoarding": { "details": false, "cost": 0, "type": "not_selected" },
+                "loungeAccess": { "details": false, "cost": 0, "type": "not_selected" }
+              }
+            },
+            "passenger2": {
+              "onward": {
+                "seats": { "details": "12B", "cost": 500, "type": "paid" },
+                "meals": { "details": "Vegetarian", "cost": 0, "type": "free" },
+                "baggage": { "details": "15 kg", "cost": 0, "type": "free" },
+                "priorityBoarding": { "details": true, "cost": 500, "type": "paid" },
+                "loungeAccess": { "details": true, "cost": 0, "type": "free" }
+              },
+              "return": {
+                "seats": { "details": "15D", "cost": 500, "type": "paid" },
+                "meals": { "details": "Non-Vegetarian", "cost": 0, "type": "free" },
+                "baggage": { "details": "15 kg", "cost": 0, "type": "free" },
+                "priorityBoarding": { "details": false, "cost": 0, "type": "not_selected" },
+                "loungeAccess": { "details": false, "cost": 0, "type": "not_selected" }
+              }
+            }
+          }
+        },
+        "tripType": "roundtrip",
+        "timestamp": "2025-10-23T10:08:00.000Z"
       },
-      "searchPerformance": {
-        "searchDurationMs": 450,
-        "resultsLoadedAt": "2025-10-23T15:52:30.000Z",
-        "searchAbandoned": false
-      }
+      "timestamp": "2025-10-23T10:08:00.000Z"
     },
-    "booking": {
-      "tripType": "roundtrip",
-      "cabinClass": "economy",
-      "passengers": 2,
-      "origin": "BLR",
-      "destination": "DEL",
-      "departureDate": "2025-11-15",
-      "returnDate": "2025-11-20",
-      "sectorType": "domestic",
-      "haulType": {
-        "onward": "short haul",
-        "return": "short haul",
-        "overall": "short haul"
-      }
+
+    {
+      "_comment": "Event 6: Payment Submitted",
+      "event": "paymentSubmitted",
+      "eventData": {
+        "paymentDetails": {
+          "paymentMethod": "credit card",
+          "paymentVendor": "Visa",
+          "cardNetwork": "Visa",
+          "cardLast4": "1234",
+          "expiryDate": "12/26",
+          "amount": 28000,
+          "currency": "INR",
+          "transactionId": "TXN20251023456789",
+          "paymentDate": "2025-10-23"
+        },
+        "customer": {
+          "userId": "user@example.com",
+          "email": "user@example.com",
+          "phone": "1234567890",
+          "loyaltyTier": "standard",
+          "userIdHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "phoneHash": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+          "hashingTimestamp": "202 similar to: 03Z",
+          "hashingAlgorithm": "SHA256"
+        },
+        "timestamp": "2025-10-23T10:10:00.000Z"
+      },
+      "timestamp": "2025-10-23T10:10:00.000Z"
     },
-    "sustainabilityImpact": {
-      "carbonFootprint": 444,
-      "distance": 1740,
-      "treesPlanted": 1,
-      "carbonOffset": 444,
-      "sustainabilityContribution": 50,
-      "impactType": "carbonFootprint",
-      "contributionType": "treesPlanted",
-      "timestamp": "2025-10-23T15:54:44.123Z"
+
+    {
+      "_comment": "Event 7: Purchase Complete - Booking Confirmation",
+      "event": "purchase",
+      "eventData": {
+        "revenue": {
+          "transactionId": "TXN20251023456789ABC",
+          "totalRevenue": 28000,
+          "currency": "INR",
+          "products": [
+            {
+              "productId": "flight",
+              "productName": "Flight TL-234",
+              "category": "flight",
+              "subcategory": "onward",
+              "price": 10000,
+              "quantity": 2,
+              "currency": "INR",
+              "origin": "AIRPORT_A",
+              "destination": "AIRPORT_B",
+              "departureDate": "2025-12-01",
+              "cabinClass": "economy"
+            },
+            {
+              "productId": "flight",
+              "productName": "Flight TL-789",
+              "category": "flight",
+              "subcategory": "return",
+              "price": 9500,
+              "quantity": 2,
+              "currency": "INR",
+              "origin": "AIRPORT_B",
+              "destination": "AIRPORT_A",
+              "departureDate": "2025-12-08",
+              "cabinClass": "economy"
+            },
+            {
+              "productId": "seat_selection",
+              "productName": "Seat Selection",
+              "category": "ancillary",
+              "subcategory": "seatSelection",
+              "price": 2000,
+              "quantity": 4,
+              "currency": "INR",
+              "journey": "both"
+            },
+            {
+              "productId": "baggage",
+              "productName": "Baggage",
+              "category": "ancillary",
+              "subcategory": "baggage",
+              "price": 2000,
+              "quantity": 2,
+              "currency": "INR",
+              "baggageType": "20 kg",
+              "journey": "both"
+            },
+            {
+              "productId": "priorityBoarding",
+              "productName": "Priority Boarding",
+              "category": "ancillary",
+              "subcategory": "priorityBoarding",
+              "price": 1000,
+              "quantity": 2,
+              "currency": "INR",
+              "journey": "onward"
+            }
+          ],
+          "bookingReference": "PNR2025102345ABCD",
+          "paymentMethod": "credit card",
+          "paymentMode": "cash",
+          "paymentStatus": "completed",
+          "timestamp": "2025-10-23T10:12:00.000Z"
+        },
+        "paymentDetails": {
+          "paymentType": "credit card",
+          "paymentMode": "cash",
+          "paymentCurrency": "INR",
+          "paymentCategories": {
+            "baseFare": 22000,
+            "ancillaryFare": 5000,
+            "taxes": 700,
+            "convenienceFee": 200,
+            "surcharge": 100,
+            "totalFees": 1000,
+            "totalAmount": 28000
+          },
+          "pnr": "PNR2025102345ABCD",
+          "bookingId": "TXN20251023456789ABC",
+          "passengers": 2,
+          "tripType": "roundtrip"
+        },
+        "customer": {
+          "userId": "user@example.com",
+          "email": "user@example.com",
+          "phone": "1234567890",
+          "loyaltyTier": "standard",
+          "userIdHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "phoneHash": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+          "hashingTimestamp": "2025-10-23T10:12:00.000Z",
+          "hashingAlgorithm": "SHA256"
+        },
+        "searchContext": {
+          "searchId": "search_1735123456789_abc123",
+          "origin": "AIRPORT_A",
+          "destination": "AIRPORT_B",
+          "originDestination": "AIRPORT_A-AIRPORT_B",
+          "departureDate": "2025-12-01",
+          "returnDate": "2025-12-08",
+          "travelDay": "Monday",
+          "numberOfDays": 7,
+          "passengers": {
+            "total": 2,
+            "breakdown": {
+              "adults": { "count": 2, "type": "adult", "description": "12+ years" },
+              "children": { "count": 0, "type": "child", "description": "2-11 years" },
+              "infants": { "count": 0, "type": "infant", "description": "Under 2 years" }
+            },
+            "summary": "adult: 2"
+          },
+          "cabinClass": "economy",
+          "tripType": "roundtrip",
+          "travelPurpose": "personal",
+          "searchDateTime": "2025-10-23",
+          "distanceKm": 1500,
+          "sustainabilityImpact": {
+            "carbonFootprint": 382,
+            "distance": 1500,
+            "treesPlanted": 1,
+            "carbonOffset": 382,
+            "sustainabilityContribution": 50,
+            "impactType": "carbonFootprint",
+            "contributionType": "treesPlanted"
+          }
+        },
+        "booking": {
+          "tripType": "roundtrip",
+          "cabinClass": "economy",
+          "passengers": 2,
+          "origin": "AIRPORT_A",
+          "destination": "AIRPORT_B",
+          "departureDate": "2025-12-01",
+          "returnDate": "2025-12-08",
+          "sectorType": "domestic",
+          "haulType": {
+            "onward": "short haul",
+            "return": "short haul",
+            "overall": "short haul"
+          }
+        },
+        "timestamp": "2025-10-23T10:12:00.000Z"
+      },
+      "timestamp": "2025-10-23T10:12:00.000Z"
     }
+  ],
+  
+  "Additional Events": {
+    "pageView": "Tracked on every page load",
+    "searchFieldInteraction": "Tracked on search form field interactions",
+    "specialDays": "Tracked when special days are detected in search criteria"
   },
-  "timestamp": "2025-10-23T15:54:44.123Z"
+  
+  "Implementation Details": {
+    "Data Layer Service": "frontend/src/services/AirlinesDataLayer.js",
+    "Hashing Algorithm": "SHA256 (crypto-js)",
+    "Framework": "React with React Router",
+    "Deployment": "Railway.app with auto-deploy from GitHub"
+  }
 }
-
-/**
- * Additional Events in the Booking Flow:
- * 
- * 1. Flight Search Event:
- *    - event: "searchInitiated"
- *    - Tracks search parameters and user intent
- * 
- * 2. Flight Selection Event:
- *    - event: "flightSelected"
- *    - Tracks which flight was selected and position in results
- * 
- * 3. Proceed to Traveller Details:
- *    - event: "proceedToAncillaryServices"
- *    - Tracks transition to passenger information step
- * 
- * 4. Ancillary Services Selection:
- *    - event: "proceedToPayment"
- *    - Tracks selected seats, meals, baggage, and other services
- * 
- * 5. Payment Submission:
- *    - event: "paymentSubmitted"
- *    - Tracks payment method and transaction details
- * 
- * 6. Booking Confirmation:
- *    - event: "purchase" (shown above)
- *    - Complete purchase event with all booking details
- * 
- * For more information on the implementation:
- * - Repository: https://github.com/riteshvg/tlpairways
- * - Documentation: /documentation folder
- * - Data Layer Service: frontend/src/services/AirlinesDataLayer.js
- */
-
