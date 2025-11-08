@@ -860,6 +860,14 @@ const BookingConfirmation = () => {
       }
     });
 
+    // Prepare ticket numbers payload (ensure onward and return mapped explicitly)
+    const ticketNumbers = {
+      onward: onwardTicket
+    };
+    if (returnTicket) {
+      ticketNumbers.return = returnTicket;
+    }
+
     // Set comprehensive Purchase event with all purchase parameters
     const purchaseEvent = {
       event: 'purchase',
@@ -889,10 +897,7 @@ const BookingConfirmation = () => {
             totalAmount: feeBreakdown.total
           },
           pnr: bookingRef,
-          ticketNumber: {
-            onward: onwardTicket,
-            ...(returnTicket ? { return: returnTicket } : {})
-          },
+          ticketNumber: ticketNumbers,
           bookingId: txnId,
           passengers: numPassengers,
           tripType: tripType || 'oneWay'
