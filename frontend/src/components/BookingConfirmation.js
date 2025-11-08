@@ -730,39 +730,51 @@ const BookingConfirmation = () => {
       console.log('✅ Confirmation PageView event pushed to adobeDataLayer');
     }
     
+    // Helper to normalize airport codes for data layer
+    const getAirportCode = (airport) => {
+      if (!airport) return null;
+      if (typeof airport === 'string') return airport;
+      if (typeof airport === 'object') {
+        return airport.iata_code || airport.code || null;
+      }
+      return null;
+    };
+
     // Build products array for revenue tracking
     const products = [];
     
     // Add flight products
     if (selectedFlights.onward) {
       products.push({
-        productId: 'flight',
+        productId: 'base fare',
         productName: `Flight ${selectedFlights.onward.flightNumber}`,
         category: 'flight',
-        subcategory: 'onward',
+        subCategory: 'onward',
         price: (selectedFlights.onward.price?.amount || 0) * numPassengers,
         quantity: numPassengers,
         currency: 'INR',
-        origin: selectedFlights.onward.origin?.iata_code,
-        destination: selectedFlights.onward.destination?.iata_code,
+        origin: getAirportCode(selectedFlights.onward.origin),
+        destination: getAirportCode(selectedFlights.onward.destination),
         departureDate: userDepartureDate ? new Date(userDepartureDate).toISOString().split('T')[0] : null,
-        cabinClass: selectedFlights.onward.cabinClass || 'economy'
+        cabinClass: selectedFlights.onward.cabinClass || 'economy',
+        journeyType: 'onward'
       });
     }
     
     if (selectedFlights.return) {
       products.push({
-        productId: 'flight',
+        productId: 'base fare',
         productName: `Flight ${selectedFlights.return.flightNumber}`,
         category: 'flight',
-        subcategory: 'return',
+        subCategory: 'return',
         price: (selectedFlights.return.price?.amount || 0) * numPassengers,
         quantity: numPassengers,
         currency: 'INR',
-        origin: selectedFlights.return.origin?.iata_code,
-        destination: selectedFlights.return.destination?.iata_code,
+        origin: getAirportCode(selectedFlights.return.origin),
+        destination: getAirportCode(selectedFlights.return.destination),
         departureDate: userReturnDate ? new Date(userReturnDate).toISOString().split('T')[0] : null,
-        cabinClass: selectedFlights.return.cabinClass || 'economy'
+        cabinClass: selectedFlights.return.cabinClass || 'economy',
+        journeyType: 'return'
       });
     }
 
@@ -778,7 +790,7 @@ const BookingConfirmation = () => {
                 productId: 'seat',
                 productName: `Seat ${seat} - Passenger ${index + 1} - ${journey}`,
                 category: 'ancillary',
-                subcategory: 'seat',
+                subCategory: 'seat',
                 price: seatPrice,
                 quantity: 1,
                 currency: 'INR',
@@ -799,7 +811,7 @@ const BookingConfirmation = () => {
                 productId: 'baggage',
                 productName: `Baggage ${baggage} - ${journey}`,
                 category: 'ancillary',
-                subcategory: 'baggage',
+                subCategory: 'baggage',
                 price: baggagePrice,
                 quantity: 1,
                 currency: 'INR',
@@ -818,7 +830,7 @@ const BookingConfirmation = () => {
                 productId: 'priorityBoarding',
                 productName: `Priority Boarding - ${journey}`,
                 category: 'ancillary',
-                subcategory: 'priorityBoarding',
+                subCategory: 'priorityBoarding',
                 price: 500,
                 quantity: 1,
                 currency: 'INR',
@@ -836,7 +848,7 @@ const BookingConfirmation = () => {
                 productId: 'loungeAccess',
                 productName: `Lounge Access - ${journey}`,
                 category: 'ancillary',
-                subcategory: 'loungeAccess',
+                subCategory: 'loungeAccess',
                 price: 1500,
                 quantity: 1,
                 currency: 'INR',
@@ -877,6 +889,10 @@ const BookingConfirmation = () => {
             totalAmount: feeBreakdown.total
           },
           pnr: bookingRef,
+          ticketNumber: {
+            onward: onwardTicket,
+            ...(returnTicket ? { return: returnTicket } : {})
+          },
           bookingId: txnId,
           passengers: numPassengers,
           tripType: tripType || 'oneWay'
