@@ -462,6 +462,7 @@ class AirlinesDataLayer {
       if (data.bookingContext) stateUpdate.bookingContext = data.bookingContext;
       if (data.userContext) stateUpdate.userContext = data.userContext;
       if (data.eventData) stateUpdate.eventData = data.eventData;
+      if (data.paymentDetails) stateUpdate.paymentDetails = data.paymentDetails;
       if (data.pricing) stateUpdate.pricing = data.pricing;
       if (data.ancillaryServices) stateUpdate.ancillaryServices = data.ancillaryServices;
       

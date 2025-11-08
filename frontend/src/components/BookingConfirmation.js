@@ -863,6 +863,27 @@ const BookingConfirmation = () => {
     // Prepare ticket numbers payload (ensure onward and return mapped explicitly)
     const ticketNumbers = [onwardTicket, returnTicket].filter(Boolean);
 
+    // Build payment details once so we can surface them at the top level
+    const paymentDetailsData = {
+      paymentType: (paymentDetails?.method || 'credit card').replace(/_/g, ' ').replace(/-/g, ' '),
+      paymentMode: paymentType || 'cash', // Payment mode: cash, points, cash_points
+      paymentCurrency: 'INR',
+      paymentCategories: {
+        baseFare: feeBreakdown.baseFare,
+        ancillaryFare: feeBreakdown.ancillaryTotal,
+        taxes: feeBreakdown.taxes,
+        convenienceFee: feeBreakdown.convenienceFee,
+        surcharge: feeBreakdown.surcharge,
+        totalFees: feeBreakdown.taxes + feeBreakdown.convenienceFee + feeBreakdown.surcharge,
+        totalAmount: feeBreakdown.total
+      },
+      pnr: bookingRef,
+      ticketNumber: ticketNumbers.length > 1 ? ticketNumbers : ticketNumbers[0],
+      bookingId: txnId,
+      passengers: numPassengers,
+      tripType: tripType || 'oneWay'
+    };
+
     // Set comprehensive Purchase event with all purchase parameters
     const purchaseEvent = {
       event: 'purchase',
@@ -878,25 +899,7 @@ const BookingConfirmation = () => {
           paymentStatus: 'completed',
           timestamp: new Date().toISOString()
         },
-        paymentDetails: {
-          paymentType: (paymentDetails?.method || 'credit card').replace(/_/g, ' ').replace(/-/g, ' '),
-          paymentMode: paymentType || 'cash', // Payment mode: cash, points, cash_points
-          paymentCurrency: 'INR',
-          paymentCategories: {
-            baseFare: feeBreakdown.baseFare,
-            ancillaryFare: feeBreakdown.ancillaryTotal,
-            taxes: feeBreakdown.taxes,
-            convenienceFee: feeBreakdown.convenienceFee,
-            surcharge: feeBreakdown.surcharge,
-            totalFees: feeBreakdown.taxes + feeBreakdown.convenienceFee + feeBreakdown.surcharge,
-            totalAmount: feeBreakdown.total
-          },
-          pnr: bookingRef,
-          ticketNumber: ticketNumbers.length > 1 ? ticketNumbers : ticketNumbers[0],
-          bookingId: txnId,
-          passengers: numPassengers,
-          tripType: tripType || 'oneWay'
-        },
+        paymentDetails: paymentDetailsData,
         customer: createHashedCustomerObject({
           userId: travellerDetails[0]?.email || null,
           email: travellerDetails[0]?.email || null,
@@ -1091,6 +1094,7 @@ const BookingConfirmation = () => {
           timestamp: new Date().toISOString()
         }
       },
+      paymentDetails: paymentDetailsData,
       timestamp: new Date().toISOString()
     };
 
