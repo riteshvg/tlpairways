@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import usePageView from '../hooks/usePageView';
 import { createHashedCustomerObject } from '../utils/hashingUtils';
-import { pushToAdobeDataLayer } from '../utils/adobeDataLayerReady';
 import {
   Container,
   Paper,
@@ -37,7 +36,6 @@ import BookingSteps from './BookingSteps';
 const Payment = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const hasInitialized = useRef(false); // Track if pageView already sent
 
   // Track page view with payment-specific context
   usePageView({
@@ -45,48 +43,6 @@ const Payment = () => {
     bookingStep: 'payment',
     sections: ['payment-form', 'price-breakdown', 'security-info']
   });
-
-  // Add pageView event to data layer (only once on mount)
-  useEffect(() => {
-    // Prevent duplicate initialization
-    if (hasInitialized.current) {
-      console.log('⚠️ Payment pageView already initialized, skipping...');
-      return;
-    }
-    
-    console.log('📍 Payment useEffect FIRED (ONCE)', {
-      hasLocationState: !!location.state,
-      hasSessionStorage: !!sessionStorage.getItem('restored_booking_state')
-    });
-    
-    const initializePageView = async () => {
-      // Wait for location.state or sessionStorage to be available
-      const bookingStateCheck = location.state || sessionStorage.getItem('restored_booking_state');
-      
-      if (!bookingStateCheck) {
-        console.log('⏳ Payment - No booking state on mount - pageView will not fire');
-        return;
-      }
-      
-      console.log('✅ Payment - Location state validated, pushing pageView (FIRST TIME ONLY)...');
-      hasInitialized.current = true;
-      
-      await pushToAdobeDataLayer({
-        event: 'pageView',
-        pageName: 'Payment',
-        pageCategory: 'booking',
-        bookingStep: 'payment',
-        pageType: 'payment',
-        sections: ['payment-form', 'price-breakdown', 'security-info'],
-        timestamp: new Date().toISOString()
-      });
-      
-      console.log('✅ Payment - pageView push completed');
-    };
-    
-    initializePageView();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Empty array - run once on mount like TravellerDetails
 
   // Get state from location or restored from sessionStorage
   const getBookingState = () => {
