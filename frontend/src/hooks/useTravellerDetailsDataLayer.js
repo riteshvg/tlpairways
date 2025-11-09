@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import enhancedAirlinesDataLayer from '../services/EnhancedAirlinesDataLayer';
 import pageDataLayerManager from '../services/PageDataLayerManager';
 import { format, parseISO, isValid } from 'date-fns';
+import { pushToAdobeDataLayer } from '../utils/adobeDataLayerReady';
 
 /**
  * Comprehensive Traveller Details Data Layer Hook
@@ -201,7 +202,7 @@ const useTravellerDetailsDataLayer = (pageViewOptions = {}) => {
   }, []);
 
   // Initialize traveller details data layer
-  const initializeTravellerDetailsDataLayer = useCallback(() => {
+  const initializeTravellerDetailsDataLayer = useCallback(async () => {
     try {
       // Get booking state from sessionStorage (same as TravellerDetails component)
       const getBookingState = () => {
@@ -398,10 +399,8 @@ const useTravellerDetailsDataLayer = (pageViewOptions = {}) => {
         timestamp: new Date().toISOString()
       };
 
-      // Push data directly to Adobe Data Layer
-      if (typeof window !== 'undefined' && window.adobeDataLayer) {
-        window.adobeDataLayer.push(dataLayerObject);
-      }
+      // Push data directly to Adobe Data Layer with readiness check
+      await pushToAdobeDataLayer(dataLayerObject);
 
       // Set previous page for next navigation
       pageDataLayerManager.setPreviousPage('Traveller Details');

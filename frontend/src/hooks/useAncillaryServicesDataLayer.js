@@ -3,14 +3,23 @@
  * Comprehensive data layer tracking for Ancillary Services page
  */
 
-import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import pageDataLayerManager from '../services/PageDataLayerManager';
+import { pushToAdobeDataLayer } from '../utils/adobeDataLayerReady';
 
 const useAncillaryServicesDataLayer = (pageViewOptions = {}) => {
   const location = useLocation();
   const { user, isAuthenticated } = useAuth();
+  const hasInitialized = useRef(false); // Track if pageView already sent
+  
+  console.log('🎯 useAncillaryServicesDataLayer HOOK CALLED', {
+    hasLocationState: !!location.state,
+    locationState: location.state,
+    pageViewOptions,
+    hasInitialized: hasInitialized.current
+  });
   
   // Form interaction tracking state
   const [formContext, setFormContext] = useState({
@@ -118,13 +127,17 @@ const useAncillaryServicesDataLayer = (pageViewOptions = {}) => {
   }, []);
 
   // Initialize ancillary services data layer - PageView event only
-  const initializeAncillaryServicesDataLayer = useCallback(() => {
+  const initializeAncillaryServicesDataLayer = useCallback(async () => {
+    console.log('🔍 useAncillaryServicesDataLayer - Checking location.state:', location.state);
+    
     const { selectedFlights, travellerDetails, contactInfo, tripType } = location.state || {};
     
     if (!selectedFlights?.onward) {
-      console.warn('No selected flights data found in location state');
+      console.warn('⚠️ No selected flights data found in location state - skipping pageView');
       return;
     }
+    
+    console.log('✅ Location state validated, initializing pageView...');
 
     // Generate IDs
     const bookingId = generateBookingId();
@@ -199,21 +212,39 @@ const useAncillaryServicesDataLayer = (pageViewOptions = {}) => {
       }
     };
 
-    // Push PageView data to Adobe Data Layer
-    if (typeof window !== 'undefined' && window.adobeDataLayer) {
-      window.adobeDataLayer.push(pageViewObject);
-    }
+    // Push PageView data to Adobe Data Layer with readiness check
+    await pushToAdobeDataLayer(pageViewObject);
 
     pageDataLayerManager.setPreviousPage('Ancillary Services');
     console.log('✅ Ancillary Services PageView Data Layer initialized:', pageViewObject);
 
-  }, [generateBookingId, generateSearchId, generatePNR, formatFlightData, calculatePricing, calculateRouteInfo, isAuthenticated, user]);
+  }, [generateBookingId, generateSearchId, generatePNR, formatFlightData, calculatePricing, calculateRouteInfo, isAuthenticated, user, location.state, pageViewOptions]);
 
 
-  // Initialize data layer on component mount
+  // Initialize data layer on component mount (only once)
   useEffect(() => {
-    initializeAncillaryServicesDataLayer();
-  }, [initializeAncillaryServicesDataLayer]);
+    // Prevent duplicate initialization
+    if (hasInitialized.current) {
+      console.log('⚠️ PageView already initialized, skipping...');
+      return;
+    }
+    
+    console.log('📍 useEffect FIRED in useAncillaryServicesDataLayer (ONCE)', {
+      hasLocationState: !!location.state,
+      hasSelectedFlights: !!location.state?.selectedFlights,
+      hasOnwardFlight: !!location.state?.selectedFlights?.onward
+    });
+    
+    // Only initialize if we have flight data
+    if (location.state?.selectedFlights?.onward) {
+      console.log('🚀 Triggering pageView for Ancillary Services (FIRST TIME ONLY)');
+      hasInitialized.current = true;
+      initializeAncillaryServicesDataLayer();
+    } else {
+      console.log('⏳ No location.state on mount - pageView will not fire');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Empty array - run once on mount like TravellerDetails
 
   return {
     formContext

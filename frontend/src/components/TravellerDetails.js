@@ -627,11 +627,13 @@ const TravellerDetails = () => {
                    (navigationState.selectedFlights.return?.price?.amount || 0)
       });
 
-      // Navigate to ancillary services page
-      navigate('/ancillary-services', {
-        state: navigationState,
-        replace: true
-      });
+      // Navigate to ancillary services page with delay for data layer processing
+      setTimeout(() => {
+        navigate('/ancillary-services', {
+          state: navigationState,
+          replace: true
+        });
+      }, 1500); // 1.5 second delay for data layer
     } catch (error) {
       console.error('Error in handleSubmit:', error);
       setSnackbar({

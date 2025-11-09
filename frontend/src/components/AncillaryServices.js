@@ -1378,7 +1378,10 @@ Price: ₹${seatPrice}`}
         console.log('✅ Proceed to payment event pushed to adobeDataLayer');
       }
 
-      navigate('/payment', { state: navigationState });
+      // Navigate to payment page with delay for data layer processing
+      setTimeout(() => {
+        navigate('/payment', { state: navigationState });
+      }, 1500); // 1.5 second delay for data layer
     } catch (error) {
       console.error('Error in handleProceedToPayment:', error);
     }
