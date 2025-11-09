@@ -895,6 +895,7 @@ const BookingConfirmation = () => {
           products: products,
           bookingReference: bookingRef,
           paymentMethod: (paymentDetails?.method || 'credit card').replace(/_/g, ' ').replace(/-/g, ' '),
+          paymentVendor: paymentDetails?.vendor || null,
           paymentMode: paymentType || 'cash', // Payment mode: cash, points, cash_points
           paymentStatus: 'completed',
           timestamp: new Date().toISOString()
