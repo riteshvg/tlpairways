@@ -33,6 +33,7 @@ import { format, differenceInMinutes, differenceInDays } from 'date-fns';
 import CloseIcon from '@mui/icons-material/Close';
 import flightsData from '../data/flights.json';
 import FlightDetailsModal from './FlightDetailsModal';
+import DestinationTriviaBanner from './DestinationTriviaBanner';
 import CURRENCY_CONFIG from '../config/currencyConfig';
 import airports from '../data/airports.json';
 
@@ -959,6 +960,12 @@ const SearchResults = () => {
           </Grid>
         </Grid>
       </Paper>
+
+      {/* Destination Trivia Banner - Adobe Target Integrated */}
+      <DestinationTriviaBanner 
+        destination={searchParams.destinationCode}
+        onLoad={() => console.log('✅ Destination trivia banner loaded')}
+      />
 
       <Grid container spacing={4}>
         <Grid item xs={12} md={8}>
