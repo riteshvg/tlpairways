@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import '../styles/DestinationTriviaBanner.css';
 
 // Destination data for fallback and testing
@@ -67,9 +67,6 @@ const DESTINATION_DATA = {
  */
 const DestinationTriviaBanner = ({ destination, onLoad }) => {
   const [bannerContent, setBannerContent] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const bannerRef = useRef(null);
   const hasInitialized = useRef(false);
   const targetTimeout = useRef(null);
 
@@ -81,9 +78,6 @@ const DestinationTriviaBanner = ({ destination, onLoad }) => {
 
     hasInitialized.current = true;
     console.log('🎯 DestinationTriviaBanner: Initializing for destination:', destination);
-
-    // Track banner impression
-    trackBannerImpression(destination);
 
     // Try Adobe Target first
     loadFromAdobeTarget(destination);
@@ -132,19 +126,24 @@ const DestinationTriviaBanner = ({ destination, onLoad }) => {
           window.adobe.target.applyOffer({
             mbox: 'flight-search-trivia-banner',
             offer: offer,
+            selector: '#flight-search-trivia-banner-target',
             success: () => {
               console.log('✅ Adobe Target offer applied successfully');
               
-              // Check if Target injected content into the container
-              const container = bannerRef.current;
-              if (container && container.querySelector('.target-injected-content')) {
-                setIsLoading(false);
-                setBannerContent('target'); // Flag that Target content is loaded
-                if (onLoad) onLoad();
-              } else {
-                // No content injected, use fallback
-                loadFallbackContent(dest);
-              }
+              // Verify that Target injected content after the DOM updates
+              setTimeout(() => {
+                const injectedContent = document.getElementById('flight-search-trivia-banner-target');
+                const hasTargetHtml = injectedContent && injectedContent.innerHTML && injectedContent.innerHTML.trim().length > 0;
+
+                if (hasTargetHtml) {
+                  setBannerContent('target'); // Flag that Target content is loaded
+                  trackBannerImpression(dest);
+                  if (onLoad) onLoad();
+                } else {
+                  // No content injected, use fallback
+                  loadFallbackContent(dest);
+                }
+              }, 50);
             },
             error: (error) => {
               console.error('❌ Adobe Target apply offer error:', error);
@@ -166,25 +165,12 @@ const DestinationTriviaBanner = ({ destination, onLoad }) => {
   };
 
   /**
-   * Load fallback content from local data
+   * Handle scenarios where Adobe Target does not return content.
+   * For Target-only mode we simply skip rendering the banner.
    */
   const loadFallbackContent = (dest) => {
-    const data = DESTINATION_DATA[dest];
-    
-    if (!data) {
-      console.error('❌ No destination data found for:', dest);
-      setError(`Destination ${dest} not found`);
-      setIsLoading(false);
-      return;
-    }
-
-    console.log('✅ Loading fallback content for:', dest);
-    setBannerContent(data);
-    setIsLoading(false);
-    
-    if (onLoad) {
-      onLoad();
-    }
+    console.warn('⚠️ Adobe Target did not deliver content for destination:', dest, '- banner will not be displayed.');
+    setBannerContent(null);
   };
 
   /**
@@ -226,90 +212,23 @@ const DestinationTriviaBanner = ({ destination, onLoad }) => {
     return null;
   }
 
-  // Don't render if error
-  if (error) {
-    console.error('DestinationTriviaBanner error:', error);
-    return null;
-  }
+  const isVisible = bannerContent === 'target';
+  const accessibilityProps = isVisible
+    ? {
+        role: 'complementary',
+        'aria-label': `Destination information for ${destination}`
+      }
+    : {
+        'aria-hidden': true
+      };
 
-  // Show loading state briefly
-  if (isLoading) {
-    return (
-      <Box className="destination-trivia-banner destination-trivia-loading" sx={{ my: 3 }}>
-        <Typography variant="body2" color="white">
-          Loading destination info...
-        </Typography>
-      </Box>
-    );
-  }
-
-  // If Adobe Target loaded content, show the container
-  if (bannerContent === 'target') {
-    return (
-      <Box 
-        ref={bannerRef}
-        className="destination-trivia-banner-container"
-        sx={{ my: 3 }}
-        role="complementary"
-        aria-label={`Destination information for ${destination}`}
-      >
-        <div className="target-injected-content" />
-      </Box>
-    );
-  }
-
-  // Render fallback content
-  const data = bannerContent;
-  
   return (
     <Box 
-      ref={bannerRef}
-      className="destination-trivia-banner"
-      sx={{ my: 3 }}
-      role="complementary"
-      aria-label={`Destination information for ${data.city}`}
+      className="destination-trivia-banner-container"
+      sx={{ my: 3, display: isVisible ? 'block' : 'none' }}
+      {...accessibilityProps}
     >
-      <Typography variant="h5" className="banner-title" component="h3">
-        {data.emoji} Discover {data.city}
-      </Typography>
-      
-      <Box className="banner-stats" sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', my: 2 }}>
-        <Typography variant="body2" className="stat-item">
-          👥 {data.population}
-        </Typography>
-        <Typography variant="body2" className="stat-item">
-          🌡️ {data.temperature} ({data.climate})
-        </Typography>
-      </Box>
-
-      <Box className="banner-details" sx={{ mt: 2 }}>
-        <Box className="detail-item" sx={{ mb: 1.5 }}>
-          <Typography variant="body2" className="detail-label">
-            🚗 Getting Around:
-          </Typography>
-          <Typography variant="body2" className="detail-text">
-            {data.transport}
-          </Typography>
-        </Box>
-
-        <Box className="detail-item" sx={{ mb: 1.5 }}>
-          <Typography variant="body2" className="detail-label">
-            🍽️ Must-Try:
-          </Typography>
-          <Typography variant="body2" className="detail-text">
-            {data.food}
-          </Typography>
-        </Box>
-
-        <Box className="detail-item">
-          <Typography variant="body2" className="detail-label">
-            💡 Pro Tip:
-          </Typography>
-          <Typography variant="body2" className="detail-text">
-            {data.tip}
-          </Typography>
-        </Box>
-      </Box>
+      <div id="flight-search-trivia-banner-target" className="target-injected-content" />
     </Box>
   );
 };

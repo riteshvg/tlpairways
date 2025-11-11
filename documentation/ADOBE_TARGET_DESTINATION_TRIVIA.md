@@ -147,7 +147,7 @@ Repeat for all 5 destinations.
 ```html
 <div class="destination-trivia-banner target-injected-content" role="complementary" aria-label="Destination information for Delhi">
   <h3 class="banner-title" style="font-size: 24px; font-weight: 700; margin-bottom: 12px; color: white; letter-spacing: -0.5px;">
-    🏛️ Discover Delhi
+    🏛️ Discover Chandni Chowk
   </h3>
   
   <div class="banner-stats" style="display: flex; gap: 16px; flex-wrap: wrap; padding: 12px 0; border-top: 1px solid rgba(255, 255, 255, 0.2); border-bottom: 1px solid rgba(255, 255, 255, 0.2);">
@@ -276,20 +276,17 @@ Repeat for all 5 destinations.
 
 ### Local Testing (Without Adobe Target)
 
-The component automatically falls back to local data when Adobe Target is unavailable.
+By default the banner now renders **only when Adobe Target returns an offer**. If at.js is not loaded or no experience is active, the banner remains hidden to avoid showing stale content.
 
-#### Test URLs:
-1. **Bengaluru**: Search for flights to BLR
-2. **Delhi**: Search for flights to DEL
-3. **Kolkata**: Search for flights to CCU
-4. **Hyderabad**: Search for flights to HYD
-5. **Kochi**: Search for flights to COK
+#### Ways to test locally:
+1. **Connect to Adobe Target sandbox** – load at.js with sandbox credentials and enable the activity.
+2. **Mock Adobe Target** – stub `window.adobe.target.getOffer` / `applyOffer` to return the HTML templates below.
+3. **Use Storybook / static sandbox** – drop the HTML template directly into a test page to preview styling.
 
 #### Expected Behavior:
-- Banner appears between search summary and flight results
-- Displays destination-specific trivia
-- Responsive design on mobile
-- Smooth animation on load
+- Banner stays hidden until Adobe Target injects the experience
+- When an offer is delivered, it appears between the search summary and flight results
+- Responsive design and animations still apply once rendered
 
 ### Testing with Adobe Target
 
@@ -322,7 +319,7 @@ window.adobe.target.getOffer({
 - [ ] Emojis render properly
 - [ ] Smooth animations and transitions
 - [ ] No console errors
-- [ ] Fallback works when Target is unavailable
+- [ ] Banner remains hidden when Target is unavailable
 - [ ] Analytics tracking fires correctly
 
 ---
@@ -394,7 +391,7 @@ window.adobeDataLayer.filter(e => e.event === 'bannerImpression');
 
 **Solution:**
 1. Component has 3-second timeout for Target
-2. Falls back to local content automatically
+2. If no offer arrives within the timeout, the banner remains hidden
 3. Check network tab for Target requests
 
 ### Issue: Styling issues
@@ -452,7 +449,7 @@ Tested and working on:
 ## Performance Optimization
 
 - Component has 3-second timeout to prevent slow page loads
-- Automatic fallback ensures no broken experience
+- Target-only rendering ensures no stale content is displayed
 - CSS animations use GPU acceleration
 - Minimal DOM manipulation
 - Lazy loading support
