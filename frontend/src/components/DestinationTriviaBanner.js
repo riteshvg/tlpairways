@@ -222,9 +222,16 @@ const DestinationTriviaBanner = ({ destination, onLoad }) => {
         'aria-hidden': true
       };
 
+  const containerClassName = [
+    'destination-trivia-banner-container',
+    'personalization-container',
+    'target-content-slot',
+    isVisible ? 'target-content-slot--visible' : 'target-content-slot--hidden',
+  ].join(' ');
+
   return (
     <Box 
-      className="destination-trivia-banner-container"
+      className={containerClassName}
       sx={{ my: 3, display: isVisible ? 'block' : 'none' }}
       {...accessibilityProps}
     >

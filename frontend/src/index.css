@@ -12,3 +12,22 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 } 
+
+.personalization-container {
+  position: relative;
+}
+
+.target-content-slot {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  opacity: 0;
+}
+
+.target-content-slot--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.target-content-slot--hidden {
+  opacity: 0;
+  transform: translateY(8px);
+}

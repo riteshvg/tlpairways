@@ -130,6 +130,93 @@
       })();
     </script>
 
+    <!-- Adobe Target helper utilities for SPA view tracking -->
+    <script>
+      (function (window) {
+        if (!window) {
+          return;
+        }
+
+        var MAX_ATTEMPTS = 10;
+        var RETRY_DELAY = 400;
+
+        window.__tlTargetPageParams = window.__tlTargetPageParams || {
+          pageName: 'home',
+          pageType: 'landing',
+          siteSection: 'homepage'
+        };
+
+        if (typeof window.targetPageParamsAll !== 'function') {
+          window.targetPageParamsAll = function () {
+            return window.__tlTargetPageParams || {};
+          };
+        }
+
+        window.TLAirwaysTarget = window.TLAirwaysTarget || {};
+
+        window.TLAirwaysTarget.setPageParams = function setPageParams(params) {
+          window.__tlTargetPageParams = Object.assign(
+            {},
+            window.__tlTargetPageParams || {},
+            params || {}
+          );
+
+          return window.__tlTargetPageParams;
+        };
+
+        window.TLAirwaysTarget.triggerView = function triggerView(viewName, data, attempt) {
+          if (!viewName) {
+            return false;
+          }
+
+          attempt = attempt || 0;
+          var target = window.adobe && window.adobe.target;
+
+          if (target && typeof target.triggerView === 'function') {
+            try {
+              target.triggerView(viewName, data || {});
+              console.log('✅ Adobe Target view triggered:', viewName, data || {});
+              return true;
+            } catch (error) {
+              console.error('❌ Adobe Target triggerView failed:', error);
+              return false;
+            }
+          }
+
+          if (attempt >= MAX_ATTEMPTS) {
+            console.warn('⚠️ Adobe Target triggerView unavailable for', viewName);
+            return false;
+          }
+
+          setTimeout(function () {
+            triggerView(viewName, data, attempt + 1);
+          }, RETRY_DELAY);
+
+          return false;
+        };
+
+        var onDomReady = function () {
+          var locale = window.navigator ? window.navigator.language : 'en-US';
+
+          window.TLAirwaysTarget.setPageParams({
+            language: locale
+          });
+
+          window.TLAirwaysTarget.triggerView('home', {
+            pageName: 'home',
+            siteSection: 'homepage',
+            language: locale
+          });
+        };
+
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+          onDomReady();
+        } else {
+          document.addEventListener('DOMContentLoaded', onDomReady, { once: true });
+        }
+      })(window);
+    </script>
+
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

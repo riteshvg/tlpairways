@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 // usePageView removed - now using merged pageView event
 import { useAuth } from '../context/AuthContext';
@@ -34,8 +34,14 @@ import CloseIcon from '@mui/icons-material/Close';
 import flightsData from '../data/flights.json';
 import FlightDetailsModal from './FlightDetailsModal';
 import DestinationTriviaBanner from './DestinationTriviaBanner';
+import TargetContentSlot from './TargetContentSlot';
 import CURRENCY_CONFIG from '../config/currencyConfig';
 import airports from '../data/airports.json';
+import {
+  ensureTargetPageParamsCallback,
+  setTargetPageParams,
+  triggerAdobeTargetView,
+} from '../utils/adobeTargetUtils';
 
 // Helper function to find airport by code in the new structure
 const findAirportByCode = (code) => {
@@ -57,6 +63,7 @@ const SearchResults = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
   const { startBookingTimer } = useBookingTimer();
+  const targetViewKeyRef = useRef('');
   
   // Page view is now handled in the merged event below
   
@@ -71,6 +78,10 @@ const SearchResults = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isReturnModalOpen, setIsReturnModalOpen] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
+
+  useEffect(() => {
+    ensureTargetPageParamsCallback();
+  }, []);
 
   // Initialize search parameters from location state
   useEffect(() => {
@@ -888,6 +899,46 @@ const SearchResults = () => {
     }
   }, [searchId, searchParams, onwardFlights, returnFlights, selectedOnwardFlight, selectedReturnFlight, debugDataLayer]);
 
+  useEffect(() => {
+    if (!searchParams) return;
+
+    const pageParams = {
+      pageName: 'search_results',
+      pageType: 'search-results',
+      siteSection: 'booking-flow',
+      origin: searchParams.originCode,
+      destination: searchParams.destinationCode,
+      tripType: searchParams.tripType,
+      departureDate: searchParams.date || null,
+      returnDate: searchParams.returnDate || null,
+      passengers: searchParams.passengers || null,
+      cabinClass: searchParams.cabinClass || null,
+      searchId: searchId || null,
+    };
+
+    setTargetPageParams(pageParams);
+
+    const viewKey = JSON.stringify({
+      origin: searchParams.originCode,
+      destination: searchParams.destinationCode,
+      departureDate: searchParams.date,
+      returnDate: searchParams.returnDate,
+      tripType: searchParams.tripType,
+      passengers: searchParams.passengers,
+    });
+
+    if (targetViewKeyRef.current !== viewKey) {
+      triggerAdobeTargetView('search-results', {
+        destination: searchParams.destinationCode,
+        origin: searchParams.originCode,
+        tripType: searchParams.tripType,
+        passengers: searchParams.passengers,
+        searchId,
+      });
+      targetViewKeyRef.current = viewKey;
+    }
+  }, [searchParams, searchId]);
+
   if (!searchParams) {
     return (
       <Container maxWidth="lg" sx={{ mt: 4 }}>
@@ -965,6 +1016,13 @@ const SearchResults = () => {
       <DestinationTriviaBanner 
         destination={searchParams.destinationCode}
         onLoad={() => console.log('✅ Destination trivia banner loaded')}
+      />
+
+      {/* Additional Adobe Target placement for hero messaging */}
+      <TargetContentSlot
+        id="target-search-results-hero"
+        region="search-results-hero"
+        sx={{ my: 3 }}
       />
 
       <Grid container spacing={4}>
@@ -1133,6 +1191,12 @@ const SearchResults = () => {
             >
               Continue to Traveller Details
             </Button>
+
+            <TargetContentSlot
+              id="target-search-results-sidebar"
+              region="search-results-sidebar"
+              sx={{ mt: 3 }}
+            />
           </Paper>
         </Grid>
       </Grid>

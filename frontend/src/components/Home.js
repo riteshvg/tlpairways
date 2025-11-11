@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Container,
@@ -9,9 +9,32 @@ import {
   Grid,
 } from '@mui/material';
 import { FlightTakeoff, FlightLand, Search } from '@mui/icons-material';
+import TargetContentSlot from './TargetContentSlot';
+import { syncTargetForView, ensureTargetPageParamsCallback } from '../utils/adobeTargetUtils';
 
 const Home = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    ensureTargetPageParamsCallback();
+
+    const locale = typeof navigator !== 'undefined' ? navigator.language : 'en-US';
+
+    syncTargetForView(
+      'home',
+      {
+        pageName: 'home',
+        pageType: 'landing',
+        siteSection: 'homepage',
+        language: locale,
+      },
+      {
+        pageName: 'home',
+        siteSection: 'homepage',
+        language: locale,
+      }
+    );
+  }, []);
 
   return (
     <Container maxWidth="xl">
@@ -55,6 +78,12 @@ const Home = () => {
           </Button>
         </Box>
       </Box>
+
+      <TargetContentSlot
+        id="target-home-hero"
+        region="home-hero-offer"
+        sx={{ mt: 4 }}
+      />
 
       {/* Features Section */}
       <Box sx={{ py: 8 }}>
@@ -103,6 +132,12 @@ const Home = () => {
           </Grid>
         </Grid>
       </Box>
+
+      <TargetContentSlot
+        id="target-home-midpage"
+        region="home-midpage-offer"
+        sx={{ my: 4 }}
+      />
 
       {/* Call to Action */}
       <Box sx={{ py: 8, textAlign: 'center' }}>
