@@ -301,10 +301,72 @@ const SearchResults = () => {
     }
   }, [searchParams, searchId]);
 
-  // Track merged page view with search results data
+  // IMMEDIATE PageView - fires as soon as component mounts (for Target rules)
+  // This ensures Adobe Target rules can fire immediately without waiting for flight data
+  useEffect(() => {
+    if (searchParams && searchId) {
+      const immediateStartTime = performance.now();
+      console.log('%c📊 IMMEDIATE PageView - Firing for Target rules', 'color: #4CAF50; font-weight: bold;');
+      
+      const originAirport = findAirportByCode(searchParams.originCode);
+      const destAirport = findAirportByCode(searchParams.destinationCode);
+      
+      // Lightweight immediate pageView for Target - no async operations
+      const immediatePageView = {
+        event: 'pageView',
+        pageData: {
+          pageType: 'searchResults',
+          pageName: 'Search Results',
+          pageURL: window.location.href,
+          referrer: document.referrer,
+          previousPage: searchParams.previousPage || document.referrer || 'direct',
+          timestamp: new Date().toISOString(),
+          pageCategory: 'booking',
+          searchType: 'flightResults',
+          sections: ['resultsList', 'filters', 'sorting']
+        },
+        searchContext: {
+          searchId,
+          origin: searchParams.originCode,
+          destination: searchParams.destinationCode,
+          originDestination: `${searchParams.originCode}-${searchParams.destinationCode}`,
+          departureDate: searchParams.date ? format(new Date(searchParams.date), 'yyyy-MM-dd') : null,
+          returnDate: searchParams.returnDate ? format(new Date(searchParams.returnDate), 'yyyy-MM-dd') : null,
+          passengers: searchParams.passengers || 0,
+          tripType: searchParams.tripType || 'oneWay',
+          cabinClass: searchParams.cabinClass || 'economy',
+          originAirportName: originAirport?.name || null,
+          destinationAirportName: destAirport?.name || null,
+          originCity: originAirport?.city || null,
+          destinationCity: destAirport?.city || null,
+          immediate: true
+        },
+        timing: {
+          immediate: true,
+          performanceTime: immediateStartTime
+        }
+      };
+      
+      // Push immediately - no async operations
+      if (typeof window !== 'undefined' && window.adobeDataLayer) {
+        window.adobeDataLayer.push(immediatePageView);
+        const immediateEndTime = performance.now();
+        console.log('%c✅ IMMEDIATE PageView pushed', 'color: #4CAF50; font-weight: bold;', {
+          performanceTime: `${immediateEndTime.toFixed(2)}ms`,
+          duration: `${(immediateEndTime - immediateStartTime).toFixed(2)}ms`,
+          searchId,
+          destination: searchParams.destinationCode
+        });
+      }
+    }
+  }, [searchParams, searchId]); // NO flight dependencies - fires fast!
+
+  // ENHANCED PageView - fires after flights load (for detailed analytics)
+  // This provides comprehensive data but doesn't block Target rules
   useEffect(() => {
     const trackPageView = async () => {
       if (searchParams && (onwardFlights.length > 0 || returnFlights.length > 0)) {
+        console.log('%c📊 ENHANCED PageView - Firing after flights loaded', 'color: #2196F3; font-weight: bold;');
         try {
         // Get airport information for enhanced data
         const originAirport = findAirportByCode(searchParams.originCode);
@@ -357,9 +419,10 @@ const SearchResults = () => {
           avgBookingWindow: differenceInDays(searchParams.date, new Date())
         });
 
-        // Create merged pageView event with enhanced search results data
+        // Create enhanced pageView event with full search results data
+        // Note: This fires AFTER the immediate pageView (which enables Target rules)
         const mergedEvent = {
-          event: 'pageView',
+          event: 'pageViewEnhanced',
           pageData: {
             pageType: 'searchResults',
             pageName: 'Search Results',
@@ -488,10 +551,16 @@ const SearchResults = () => {
           timestamp: new Date().toISOString()
         };
 
-        // Push merged event to data layer
+        // Push enhanced event to data layer
+        const enhancedEndTime = performance.now();
         airlinesDataLayer.pushToDataLayer(mergedEvent);
         
-          console.log('🛩️ Enhanced pageView with merged search results tracked:', mergedEvent);
+        console.log('%c✅ ENHANCED PageView pushed', 'color: #2196F3; font-weight: bold;', {
+          performanceTime: `${enhancedEndTime.toFixed(2)}ms`,
+          searchId,
+          flightCount: onwardFlights.length + returnFlights.length
+        });
+        console.log('🛩️ Enhanced pageView with merged search results tracked:', mergedEvent);
         } catch (err) {
           console.error('Error tracking merged page view:', err);
           airlinesDataLayer.trackEvent('searchError', {
