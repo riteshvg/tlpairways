@@ -109,9 +109,70 @@
         }
         
         script.onload = function() {
+          const launchLoadTime = performance.now();
+          const launchTimestamp = new Date().toISOString();
+          const launchTimeMs = Date.now();
+          
+          // Mark Adobe Launch as loaded
+          window.__tlLaunchInitTime = {
+            timestamp: launchTimestamp,
+            timeMs: launchTimeMs,
+            performanceTime: launchLoadTime,
+            scriptUrl: scriptUrl,
+            complete: true
+          };
+          
+          // Log with precise timestamp
+          console.log('%c🚀 ADOBE LAUNCH SCRIPT LOADED (COMPLETE)', 'color: #9C27B0; font-weight: bold; font-size: 14px;', {
+            timestamp: launchTimestamp,
+            timeMs: launchTimeMs,
+            performanceTime: `${launchLoadTime.toFixed(2)}ms`,
+            scriptUrl: scriptUrl,
+            scriptAttributes: scriptAttributes,
+            launchReady: true,
+            adobeTargetAvailable: !!(window.adobe && window.adobe.target),
+            adobeAnalyticsAvailable: !!(window.s && window.s.t)
+          });
+          
+          // Check for overlap with DataLayer if it's already initialized
+          checkDataLayerOverlap(launchLoadTime);
+          
+          // Call timing summary if DataLayer is ready (will be called by DataLayer if it loads after Launch)
+          if (window.showTimingSummary && typeof window.showTimingSummary === 'function') {
+            setTimeout(function() {
+              window.showTimingSummary();
+            }, 100); // Small delay to ensure DataLayer has updated
+          }
+          
           console.log('✅ Adobe Launch script loaded:', scriptUrl);
           console.log('✅ Script attributes:', scriptAttributes);
         };
+        
+        // Helper function to check overlap with DataLayer
+        function checkDataLayerOverlap(launchTime) {
+          if (typeof window === 'undefined') return;
+          
+          const dataLayerInitTime = window.__tlDataLayerInitTime;
+          
+          if (dataLayerInitTime) {
+            const timeDiff = Math.abs(launchTime - dataLayerInitTime.performanceTime);
+            const overlap = timeDiff < 100; // Consider overlap if within 100ms
+            
+            console.log('%c⚠️ LAUNCH vs DATALAYER TIMING ANALYSIS', 'color: #FF9800; font-weight: bold; font-size: 14px;', {
+              launchTime: `${launchTime.toFixed(2)}ms`,
+              dataLayerTime: `${dataLayerInitTime.performanceTime.toFixed(2)}ms`,
+              timeDifference: `${timeDiff.toFixed(2)}ms`,
+              hasOverlap: overlap,
+              launchFirst: launchTime < dataLayerInitTime.performanceTime,
+              dataLayerFirst: dataLayerInitTime.performanceTime < launchTime,
+              recommendation: overlap 
+                ? 'Potential race condition - consider adding explicit wait logic'
+                : 'No overlap detected - safe execution order'
+            });
+          } else {
+            console.log('%c⏳ DataLayer not yet initialized - will check when DataLayer initializes', 'color: #2196F3; font-weight: bold;');
+          }
+        }
         
         script.onerror = function() {
           console.error('❌ Failed to load Adobe Launch script:', scriptUrl);

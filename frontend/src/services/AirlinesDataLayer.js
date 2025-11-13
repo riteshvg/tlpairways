@@ -16,6 +16,10 @@ class AirlinesDataLayer {
    */
   initializeDataLayer() {
     if (typeof window !== 'undefined') {
+      const initStartTime = performance.now();
+      const initTimestamp = new Date().toISOString();
+      const initTimeMs = Date.now();
+      
       // Initialize adobeDataLayer if it doesn't exist
       if (!window.adobeDataLayer) {
         window.adobeDataLayer = [];
@@ -26,11 +30,109 @@ class AirlinesDataLayer {
         window._adobeDataLayerState = {};
       }
       
+      const initEndTime = performance.now();
+      const initDuration = initEndTime - initStartTime;
+      
+      // Mark DataLayer as completely initialized
+      window.__tlDataLayerInitTime = {
+        timestamp: initTimestamp,
+        timeMs: initTimeMs,
+        performanceTime: initEndTime,
+        duration: initDuration,
+        complete: true
+      };
+      
+      // Log with precise timestamp
+      console.log('%c📊 DATALAYER INITIALIZED (COMPLETE)', 'color: #4CAF50; font-weight: bold; font-size: 14px;', {
+        timestamp: initTimestamp,
+        timeMs: initTimeMs,
+        performanceTime: `${initEndTime.toFixed(2)}ms`,
+        duration: `${initDuration.toFixed(2)}ms`,
+        dataLayerLength: window.adobeDataLayer.length,
+        dataLayerReady: true
+      });
+      
+      // Check for overlap with Adobe Launch if it's already loaded
+      this.checkLaunchOverlap(initEndTime);
+      
       this.log('AirlinesDataLayer initialized', {
         dataLayerLength: window.adobeDataLayer.length,
-        timestamp: new Date().toISOString()
+        timestamp: initTimestamp
       });
     }
+  }
+  
+  /**
+   * Check for overlap between DataLayer and Adobe Launch script loading
+   */
+  checkLaunchOverlap(dataLayerTime) {
+    if (typeof window === 'undefined') return;
+    
+    const launchInitTime = window.__tlLaunchInitTime;
+    
+    if (launchInitTime) {
+      const timeDiff = Math.abs(dataLayerTime - launchInitTime.performanceTime);
+      const overlap = timeDiff < 100; // Consider overlap if within 100ms
+      
+      console.log('%c⚠️ DATALAYER vs LAUNCH TIMING ANALYSIS', 'color: #FF9800; font-weight: bold; font-size: 14px;', {
+        dataLayerTime: `${dataLayerTime.toFixed(2)}ms`,
+        launchTime: `${launchInitTime.performanceTime.toFixed(2)}ms`,
+        timeDifference: `${timeDiff.toFixed(2)}ms`,
+        hasOverlap: overlap,
+        dataLayerFirst: dataLayerTime < launchInitTime.performanceTime,
+        launchFirst: launchInitTime.performanceTime < dataLayerTime,
+        recommendation: overlap 
+          ? 'Potential race condition - consider adding explicit wait logic'
+          : 'No overlap detected - safe execution order'
+      });
+      
+      // Show final summary
+      this.showTimingSummary();
+    } else {
+      console.log('%c⏳ Adobe Launch not yet loaded - will check when Launch loads', 'color: #2196F3; font-weight: bold;');
+    }
+  }
+  
+  /**
+   * Show complete timing summary for both DataLayer and Launch
+   */
+  showTimingSummary() {
+    if (typeof window === 'undefined') return;
+    
+    const dataLayerTime = window.__tlDataLayerInitTime;
+    const launchTime = window.__tlLaunchInitTime;
+    
+    if (!dataLayerTime || !launchTime) {
+      return; // Wait for both to be ready
+    }
+    
+    const timeDiff = Math.abs(dataLayerTime.performanceTime - launchTime.performanceTime);
+    const overlap = timeDiff < 100;
+    const dataLayerFirst = dataLayerTime.performanceTime < launchTime.performanceTime;
+    
+    console.log('%c📊 COMPLETE TIMING SUMMARY', 'color: #2196F3; font-weight: bold; font-size: 16px; background: #E3F2FD; padding: 10px; border-radius: 5px;');
+    console.table({
+      'DataLayer': {
+        'Status': '✅ Complete',
+        'Timestamp': dataLayerTime.timestamp,
+        'Performance Time': `${dataLayerTime.performanceTime.toFixed(2)}ms`,
+        'Duration': `${dataLayerTime.duration.toFixed(2)}ms`
+      },
+      'Adobe Launch': {
+        'Status': '✅ Complete',
+        'Timestamp': launchTime.timestamp,
+        'Performance Time': `${launchTime.performanceTime.toFixed(2)}ms`,
+        'Script URL': launchTime.scriptUrl
+      },
+      'Timing Analysis': {
+        'Time Difference': `${timeDiff.toFixed(2)}ms`,
+        'Has Overlap': overlap ? '⚠️ YES' : '✅ NO',
+        'Load Order': dataLayerFirst ? 'DataLayer → Launch' : 'Launch → DataLayer',
+        'Recommendation': overlap 
+          ? '⚠️ Potential race condition'
+          : '✅ Safe execution order'
+      }
+    });
   }
 
   /**
@@ -623,6 +725,7 @@ const airlinesDataLayer = new AirlinesDataLayer();
 if (typeof window !== 'undefined') {
   window.debugDataLayer = airlinesDataLayer.debugDataLayer.bind(airlinesDataLayer);
   window.resetHomepageInit = airlinesDataLayer.resetHomepageInitialization.bind(airlinesDataLayer);
+  window.showTimingSummary = airlinesDataLayer.showTimingSummary.bind(airlinesDataLayer);
 }
 
 export default airlinesDataLayer;
