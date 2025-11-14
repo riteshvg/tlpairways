@@ -191,19 +191,29 @@
 
         window.__tlConsentScriptLoader = {
           loadAdobeLaunch: function(force) {
+            console.log('🔍 loadAdobeLaunch called', { force, existingScript: !!document.getElementById(SCRIPT_ID) });
             if (!force && document.getElementById(SCRIPT_ID)) {
+              console.log('ℹ️ Adobe Launch already loaded');
               return { alreadyLoaded: true };
             }
-            return injectScript();
+            var result = injectScript();
+            console.log('✅ Adobe Launch injection result:', result);
+            return result;
           },
           disableAdobeLaunch: function() {
+            console.log('🛑 disableAdobeLaunch called');
             removeScript();
           },
           getConsentState: getConsentState,
           canLoadAdobeLaunch: hasAdobeConsent
         };
 
+        console.log('🚀 Initializing Adobe Launch consent loader...');
         init();
+        console.log('✅ Adobe Launch consent loader initialized', {
+          blocked: window.__tlAdobeLaunchBlocked,
+          loaded: window.__tlAdobeLaunchLoaded
+        });
       })();
     </script>
 

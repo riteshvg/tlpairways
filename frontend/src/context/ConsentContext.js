@@ -123,13 +123,20 @@ export const ConsentProvider = ({ children }) => {
     }
 
     const loader = window.__tlConsentScriptLoader;
-    if (!loader) return;
+    if (!loader) {
+      console.warn('⚠️ ConsentContext: __tlConsentScriptLoader not found');
+      return;
+    }
 
     const allowed = !!(updatedPreferences.analytics || updatedPreferences.marketing);
+    console.log('🔍 ConsentContext: handleScriptLoading', { allowed, preferences: updatedPreferences });
 
     if (allowed && typeof loader.loadAdobeLaunch === 'function') {
-      loader.loadAdobeLaunch();
+      console.log('✅ ConsentContext: Calling loadAdobeLaunch()');
+      const result = loader.loadAdobeLaunch();
+      console.log('✅ ConsentContext: loadAdobeLaunch result:', result);
     } else if (!allowed && typeof loader.disableAdobeLaunch === 'function') {
+      console.log('🛑 ConsentContext: Calling disableAdobeLaunch()');
       loader.disableAdobeLaunch();
     }
   }, []);
