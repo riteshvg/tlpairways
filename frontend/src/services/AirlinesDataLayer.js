@@ -34,6 +34,9 @@ class AirlinesDataLayer {
         window._adobeDataLayerState = {};
       }
       
+      // Initialize consent in data layer state BEFORE any page events
+      this.initializeConsentState();
+      
       const initEndTime = performance.now();
       const initDuration = initEndTime - initStartTime;
       
@@ -94,6 +97,42 @@ class AirlinesDataLayer {
       this.showTimingSummary();
     } else {
       console.log('%c⏳ Adobe Launch not yet loaded - will check when Launch loads', 'color: #2196F3; font-weight: bold;');
+    }
+  }
+  
+  /**
+   * Initialize consent state from localStorage into data layer
+   * This runs BEFORE any pageView events to ensure Web SDK can configure first
+   */
+  initializeConsentState() {
+    if (typeof window === 'undefined') return;
+    
+    const CONSENT_STORAGE_KEY = 'tlairways_consent_preferences';
+    let consentState = null;
+    
+    try {
+      const stored = localStorage.getItem(CONSENT_STORAGE_KEY);
+      if (stored) {
+        consentState = JSON.parse(stored);
+      }
+    } catch (error) {
+      console.warn('⚠️ Failed to load consent from localStorage:', error);
+    }
+    
+    if (consentState && consentState.preferences) {
+      // Sync to _adobeDataLayerState immediately
+      window._adobeDataLayerState.consent = {
+        ...consentState,
+        categories: consentState.preferences
+      };
+      
+      console.log('✅ Consent pre-loaded into data layer state:', {
+        action: consentState.action,
+        preferences: consentState.preferences,
+        updatedAt: consentState.updatedAt
+      });
+    } else {
+      console.log('ℹ️ No stored consent found - waiting for user interaction');
     }
   }
   

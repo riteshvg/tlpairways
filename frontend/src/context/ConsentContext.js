@@ -232,10 +232,20 @@ export const ConsentProvider = ({ children }) => {
 
   const replayConsentEvent = useCallback(() => {
     if (!initialState) {
+      console.log('ℹ️ No stored consent to replay');
       return;
     }
 
-    // Replay with original action ('in' or 'out'), not 'replayOnLoad'
+    // Check if consent was already pre-loaded into state by AirlinesDataLayer
+    const alreadyInState = window._adobeDataLayerState?.consent?.updatedAt === initialState.updatedAt;
+    
+    if (alreadyInState) {
+      console.log('✅ Consent already in data layer state, pushing event to array for Launch rules');
+    } else {
+      console.log('🔄 Replaying consent to data layer');
+    }
+
+    // Always push event to array so Launch rules can fire, with original action ('in' or 'out')
     sendConsentEvent(initialState, {});
   }, [initialState, sendConsentEvent]);
 
