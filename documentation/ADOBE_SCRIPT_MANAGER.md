@@ -120,6 +120,35 @@ Test different tracking implementations:
 └─────────────────────────────────────────┘
 ```
 
+### Consent Management Integration (2025-11 Update)
+
+```
+┌─────────────────────────────────────────┐
+│   Consent Manager (React Context)       │
+│ - Banner + modal                        │
+│ - Stores preferences in localStorage    │
+└────────────┬────────────────────────────┘
+             │ writes
+             ▼
+┌─────────────────────────────────────────┐
+│ localStorage key: tlairways_consent_*   │
+│ - Stores versioned preferences          │
+└────────────┬────────────────────────────┘
+             │ read by
+             ▼
+┌─────────────────────────────────────────┐
+│ index.html consent loader               │
+│ - Blocks Adobe Launch until             │
+│   analytics/marketing consent           │
+│ - Exposes window.__tlConsentScriptLoader│
+└─────────────────────────────────────────┘
+```
+
+- **Strictly Necessary** cookies remain always-on; other categories default to off.
+- When a traveler accepts personalization/analytics, the CMP calls `window.__tlConsentScriptLoader.loadAdobeLaunch()` so Launch + Target spin up immediately without reload.
+- Rejecting optional categories tears down the script via `disableAdobeLaunch()` and pushes a `consentPreferencesUpdated` event to the Adobe Data Layer for auditing.
+
+
 ### Files Modified
 
 #### 1. `frontend/src/utils/adobeScriptManager.js`

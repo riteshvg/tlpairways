@@ -6,6 +6,8 @@ import { Auth0Provider } from '@auth0/auth0-react';
 import theme from './theme/theme';
 import { auth0Config } from './config/auth0Config';
 import { AuthProvider } from './context/AuthContext';
+import { ConsentProvider } from './context/ConsentContext';
+import ConsentExperience from './components/consent/ConsentExperience';
 import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
@@ -41,11 +43,13 @@ function App() {
   return (
     <Auth0Provider {...auth0Config}>
       <AuthProvider>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <Router>
-            <Navbar />
-            <Routes>
+        <ConsentProvider>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Router>
+              <Navbar />
+              <ConsentExperience />
+              <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/search" element={<FlightSearch />} />
@@ -106,9 +110,10 @@ function App() {
                   </ProtectedRoute>
                 } 
               />
-            </Routes>
-          </Router>
-        </ThemeProvider>
+              </Routes>
+            </Router>
+          </ThemeProvider>
+        </ConsentProvider>
       </AuthProvider>
     </Auth0Provider>
   );

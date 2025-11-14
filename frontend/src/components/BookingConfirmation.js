@@ -609,6 +609,8 @@ const BookingConfirmation = () => {
       tripType: tripType
     });
 
+    const feeBreakdown = calculateFeeBreakdown();
+
     // Set page data with confirmation page type
     airlinesDataLayer.setPageDataWithView({
       pageType: 'confirmation',
