@@ -94,9 +94,18 @@ const syncWindowState = (state) => {
   if (typeof window === 'undefined') return;
   window.__tlConsentState = state;
   
+  // Determine defaultConsent value for Adobe Web SDK
+  let defaultConsent = 'pending';
+  if (state.preferences?.analytics || state.preferences?.marketing) {
+    defaultConsent = 'in';
+  } else if (state.action === 'out') {
+    defaultConsent = 'out';
+  }
+  
   // Also sync to _adobeDataLayerState so Launch Data Elements can read it
   if (window._adobeDataLayerState) {
     window._adobeDataLayerState.consent = {
+      defaultConsent,
       ...state,
       categories: state.preferences
     };
@@ -142,9 +151,18 @@ export const ConsentProvider = ({ children }) => {
   }, []);
 
   const sendConsentEvent = useCallback(async (state, metadata) => {
+    // Determine defaultConsent for Adobe Web SDK
+    let defaultConsent = 'pending';
+    if (state.preferences?.analytics || state.preferences?.marketing) {
+      defaultConsent = 'in';
+    } else if (state.action === 'out') {
+      defaultConsent = 'out';
+    }
+    
     const payload = {
       event: 'consentPreferencesUpdated',
       consent: {
+        defaultConsent,
         ...state,
         ...metadata,
         categories: state.preferences

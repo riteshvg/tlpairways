@@ -109,19 +109,31 @@ class AirlinesDataLayer {
     
     const CONSENT_STORAGE_KEY = 'tlairways_consent_preferences';
     let consentState = null;
+    let defaultConsent = 'pending'; // Default to 'pending' if no consent stored
     
     try {
       const stored = localStorage.getItem(CONSENT_STORAGE_KEY);
       if (stored) {
         consentState = JSON.parse(stored);
+        // Determine defaultConsent based on stored preferences
+        if (consentState.preferences?.analytics || consentState.preferences?.marketing) {
+          defaultConsent = 'in';
+        } else {
+          defaultConsent = 'out';
+        }
       }
     } catch (error) {
       console.warn('⚠️ Failed to load consent from localStorage:', error);
     }
     
+    // ALWAYS set defaultConsent in state (even if 'pending')
+    window._adobeDataLayerState.consent = window._adobeDataLayerState.consent || {};
+    window._adobeDataLayerState.consent.defaultConsent = defaultConsent;
+    
     if (consentState && consentState.preferences) {
-      // Sync to _adobeDataLayerState immediately
+      // Merge full consent state
       window._adobeDataLayerState.consent = {
+        defaultConsent,
         ...consentState,
         categories: consentState.preferences
       };
@@ -130,19 +142,21 @@ class AirlinesDataLayer {
       window.adobeDataLayer.push({
         event: 'consentPreferencesUpdated',
         consent: {
+          defaultConsent,
           ...consentState,
           categories: consentState.preferences
         }
       });
       
       console.log('✅ Consent pushed to data layer (position 0):', {
+        defaultConsent,
         action: consentState.action,
         preferences: consentState.preferences,
         updatedAt: consentState.updatedAt,
         arrayPosition: 0
       });
     } else {
-      console.log('ℹ️ No stored consent found - waiting for user interaction');
+      console.log('ℹ️ No stored consent - defaultConsent set to "pending"');
     }
   }
   
