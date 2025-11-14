@@ -101,6 +101,85 @@ class AirlinesDataLayer {
   }
   
   /**
+   * Helper: Check if this is the user's first visit
+   */
+  isFirstVisit() {
+    if (typeof window === 'undefined') return false;
+    try {
+      const firstVisit = localStorage.getItem('tlairways_firstVisit');
+      if (firstVisit === null) {
+        localStorage.setItem('tlairways_firstVisit', 'false');
+        return true;
+      }
+      return false;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  /**
+   * Helper: Get cookie value by name
+   */
+  getCookieValue(name) {
+    if (typeof document === 'undefined') return null;
+    
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.startsWith(name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  /**
+   * Determine defaultConsent intelligently based on stored state, cookies, and geolocation
+   */
+  determineDefaultConsent(consentState) {
+    // If we have stored consent preferences, use them
+    if (consentState?.preferences) {
+      if (consentState.preferences.analytics || consentState.preferences.marketing) {
+        return 'in';
+      }
+      if (consentState.action === 'out') {
+        return 'out';
+      }
+    }
+    
+    // Check for OneTrust cookie (if migrating from OneTrust)
+    try {
+      const optanonConsent = this.getCookieValue('OptanonConsent');
+      if (optanonConsent) {
+        const c0002Pattern = /C0002:([01])/;
+        const c0002Match = optanonConsent.match(c0002Pattern);
+        if (c0002Match && c0002Match[1] === '1') {
+          console.log('📊 Detected OneTrust consent cookie: "in"');
+          return 'in';
+        }
+      }
+    } catch (error) {
+      console.warn('⚠️ Error reading OneTrust cookie:', error);
+    }
+    
+    // For first-time visitors in privacy-sensitive regions, default to 'in' (opt-in required)
+    // For other regions, 'pending' allows data collection until explicit opt-out
+    if (this.isFirstVisit()) {
+      // You can add geolocation logic here if needed
+      // For now, default to 'pending' for all first-time visitors
+      console.log('👋 First visit detected - defaultConsent: "pending"');
+      return 'pending';
+    }
+    
+    // Default for returning visitors with no stored consent
+    return 'pending';
+  }
+
+  /**
    * Initialize consent state from localStorage into data layer
    * This runs BEFORE any pageView events to ensure Web SDK can configure first
    */
@@ -109,22 +188,18 @@ class AirlinesDataLayer {
     
     const CONSENT_STORAGE_KEY = 'tlairways_consent_preferences';
     let consentState = null;
-    let defaultConsent = 'pending'; // Default to 'pending' if no consent stored
     
     try {
       const stored = localStorage.getItem(CONSENT_STORAGE_KEY);
       if (stored) {
         consentState = JSON.parse(stored);
-        // Determine defaultConsent based on stored preferences
-        if (consentState.preferences?.analytics || consentState.preferences?.marketing) {
-          defaultConsent = 'in';
-        } else {
-          defaultConsent = 'out';
-        }
       }
     } catch (error) {
       console.warn('⚠️ Failed to load consent from localStorage:', error);
     }
+    
+    // Determine defaultConsent intelligently
+    const defaultConsent = this.determineDefaultConsent(consentState);
     
     // ALWAYS set defaultConsent in state (even if 'pending')
     window._adobeDataLayerState.consent = window._adobeDataLayerState.consent || {};
@@ -156,7 +231,7 @@ class AirlinesDataLayer {
         arrayPosition: 0
       });
     } else {
-      console.log('ℹ️ No stored consent - defaultConsent set to "pending"');
+      console.log(`ℹ️ No stored consent - defaultConsent set to "${defaultConsent}"`);
     }
   }
   
