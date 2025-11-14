@@ -67,127 +67,143 @@
       })(document, document.location.href.indexOf("adobe_authoring_enabled") !== -1, ".personalization-container { opacity: 0 !important }", 3000);
     </script>
     
-    <!-- Adobe Launch/DTM Script - Dynamic Loading based on User Preference -->
+    <!-- Adobe Launch/DTM Script - Consent Managed Loading -->
     <script>
       (function() {
-        // Default Adobe Launch script URL and attributes
-        var defaultScriptUrl = 'https://assets.adobedtm.com/01296dd00565/26201e3c8f15/launch-2f8b80d50cb3-development.min.js';
-        var defaultAttributes = {
+        var CONSENT_STORAGE_KEY = 'tlairways_consent_preferences';
+        var CUSTOM_SCRIPT_KEY = 'tlairways_adobe_script_url';
+        var CUSTOM_ATTR_KEY = 'tlairways_adobe_script_attributes';
+        var DEFAULT_SCRIPT_URL = 'https://assets.adobedtm.com/01296dd00565/26201e3c8f15/launch-2f8b80d50cb3-development.min.js';
+        var DEFAULT_ATTRIBUTES = {
           async: true,
           crossOrigin: 'anonymous'
         };
-        
-        // Check localStorage for custom script URL and attributes
-        var customScriptUrl = null;
-        var customAttributes = null;
-        
-        try {
-          customScriptUrl = localStorage.getItem('tlairways_adobe_script_url');
-          var storedAttrs = localStorage.getItem('tlairways_adobe_script_attributes');
-          customAttributes = storedAttrs ? JSON.parse(storedAttrs) : null;
-        } catch (e) {
-          console.warn('Could not access localStorage for Adobe script preference:', e);
+        var SCRIPT_ID = 'tlairways-adobe-launch';
+
+        var currentScript = null;
+
+        function safeParseJSON(value) {
+          if (!value) return null;
+          try {
+            return JSON.parse(value);
+          } catch (e) {
+            console.warn('⚠️ Failed to parse stored JSON value:', e);
+            return null;
+>>>>>>> enhancements
+          }
         }
-        
-        // Use custom script if available, otherwise use default
-        var scriptUrl = customScriptUrl || defaultScriptUrl;
-        var scriptAttributes = customAttributes || defaultAttributes;
-        
-        // Create and load the script with attributes
-        var script = document.createElement('script');
-        script.src = scriptUrl;
-        
-        // Apply attributes
-        if (scriptAttributes.async) {
-          script.async = true;
+
+        function getConsentState() {
+          try {
+            return safeParseJSON(localStorage.getItem(CONSENT_STORAGE_KEY));
+          } catch (error) {
+            console.warn('⚠️ Unable to read consent preferences:', error);
+            return null;
+          }
         }
-        if (scriptAttributes.defer) {
-          script.defer = true;
+
+        function hasAdobeConsent(state) {
+          if (!state || !state.preferences) return false;
+          var prefs = state.preferences;
+          return !!(prefs.analytics || prefs.marketing);
         }
-        if (scriptAttributes.crossOrigin) {
-          script.crossOrigin = scriptAttributes.crossOrigin;
-        }
-        
-        script.onload = function() {
-          const launchLoadTime = performance.now();
-          const launchTimestamp = new Date().toISOString();
-          const launchTimeMs = Date.now();
-          
-          // Mark Adobe Launch as loaded
-          window.__tlLaunchInitTime = {
-            timestamp: launchTimestamp,
-            timeMs: launchTimeMs,
-            performanceTime: launchLoadTime,
-            scriptUrl: scriptUrl,
-            complete: true
+
+        function getScriptConfig() {
+          var customUrl = null;
+          var customAttrs = null;
+
+          try {
+            customUrl = localStorage.getItem(CUSTOM_SCRIPT_KEY);
+            customAttrs = safeParseJSON(localStorage.getItem(CUSTOM_ATTR_KEY));
+          } catch (error) {
+            console.warn('⚠️ Unable to read Adobe script config:', error);
+          }
+
+          return {
+            url: customUrl || DEFAULT_SCRIPT_URL,
+            attrs: { ...DEFAULT_ATTRIBUTES, ...(customAttrs || {}) }
           };
-          
-          // Log with precise timestamp
-          console.log('%c🚀 ADOBE LAUNCH SCRIPT LOADED (COMPLETE)', 'color: #9C27B0; font-weight: bold; font-size: 14px;', {
-            timestamp: launchTimestamp,
-            timeMs: launchTimeMs,
-            performanceTime: `${launchLoadTime.toFixed(2)}ms`,
-            scriptUrl: scriptUrl,
-            scriptAttributes: scriptAttributes,
-            launchReady: true,
-            adobeTargetAvailable: !!(window.adobe && window.adobe.target),
-            adobeAnalyticsAvailable: !!(window.s && window.s.t)
-          });
-          
-          // Check for overlap with DataLayer if it's already initialized
-          checkDataLayerOverlap(launchLoadTime);
-          
-          // Call timing summary if DataLayer is ready (will be called by DataLayer if it loads after Launch)
-          if (window.showTimingSummary && typeof window.showTimingSummary === 'function') {
-            setTimeout(function() {
-              window.showTimingSummary();
-            }, 100); // Small delay to ensure DataLayer has updated
+        }
+
+        function buildScriptElement(url, attrs) {
+          var script = document.createElement('script');
+          script.id = SCRIPT_ID;
+          script.src = url;
+          script.dataset.tlAdobeLaunch = 'true';
+
+          if (attrs.async) script.async = true;
+          if (attrs.defer) script.defer = true;
+          if (attrs.crossOrigin) script.crossOrigin = attrs.crossOrigin;
+
+          script.onload = function() {
+            window.__tlAdobeLaunchLoaded = true;
+            console.log('✅ Adobe Launch script loaded:', url);
+          };
+
+          script.onerror = function() {
+            console.error('❌ Failed to load Adobe Launch script:', url);
+            if (url !== DEFAULT_SCRIPT_URL) {
+              console.log('🔄 Attempting default Adobe Launch script...');
+              if (script.parentNode) {
+                script.parentNode.removeChild(script);
+              }
+              var fallbackScript = buildScriptElement(DEFAULT_SCRIPT_URL, DEFAULT_ATTRIBUTES);
+              currentScript = fallbackScript;
+              document.head.appendChild(fallbackScript);
+            }
+          };
+
+          return script;
+        }
+
+        function injectScript() {
+          if (document.getElementById(SCRIPT_ID)) {
+            console.log('ℹ️ Adobe Launch already injected.');
+            return { alreadyLoaded: true };
           }
-          
-          console.log('✅ Adobe Launch script loaded:', scriptUrl);
-          console.log('✅ Script attributes:', scriptAttributes);
-        };
-        
-        // Helper function to check overlap with DataLayer
-        function checkDataLayerOverlap(launchTime) {
-          if (typeof window === 'undefined') return;
-          
-          const dataLayerInitTime = window.__tlDataLayerInitTime;
-          
-          if (dataLayerInitTime) {
-            const timeDiff = Math.abs(launchTime - dataLayerInitTime.performanceTime);
-            const overlap = timeDiff < 100; // Consider overlap if within 100ms
-            
-            console.log('%c⚠️ LAUNCH vs DATALAYER TIMING ANALYSIS', 'color: #FF9800; font-weight: bold; font-size: 14px;', {
-              launchTime: `${launchTime.toFixed(2)}ms`,
-              dataLayerTime: `${dataLayerInitTime.performanceTime.toFixed(2)}ms`,
-              timeDifference: `${timeDiff.toFixed(2)}ms`,
-              hasOverlap: overlap,
-              launchFirst: launchTime < dataLayerInitTime.performanceTime,
-              dataLayerFirst: dataLayerInitTime.performanceTime < launchTime,
-              recommendation: overlap 
-                ? 'Potential race condition - consider adding explicit wait logic'
-                : 'No overlap detected - safe execution order'
-            });
-          } else {
-            console.log('%c⏳ DataLayer not yet initialized - will check when DataLayer initializes', 'color: #2196F3; font-weight: bold;');
+
+          var config = getScriptConfig();
+          var script = buildScriptElement(config.url, config.attrs);
+          currentScript = script;
+          document.head.appendChild(script);
+          return { success: true };
+        }
+
+        function removeScript() {
+          var existing = document.getElementById(SCRIPT_ID) || document.querySelector('script[src*="adobedtm.com"]');
+          if (existing) {
+            existing.parentNode.removeChild(existing);
+            currentScript = null;
+            window.__tlAdobeLaunchLoaded = false;
+            console.log('🛑 Adobe Launch script removed pending consent.');
           }
         }
-        
-        script.onerror = function() {
-          console.error('❌ Failed to load Adobe Launch script:', scriptUrl);
-          // Fallback to default if custom script fails
-          if (customScriptUrl && scriptUrl !== defaultScriptUrl) {
-            console.log('🔄 Attempting to load default script...');
-            var fallbackScript = document.createElement('script');
-            fallbackScript.src = defaultScriptUrl;
-            fallbackScript.async = true;
-            fallbackScript.crossOrigin = 'anonymous';
-            document.head.appendChild(fallbackScript);
+
+        function init() {
+          var consentState = getConsentState();
+          if (hasAdobeConsent(consentState)) {
+            injectScript();
+          } else {
+            window.__tlAdobeLaunchBlocked = true;
+            console.log('⚠️ Adobe Launch blocked until marketing/analytics consent is granted.');
           }
+        }
+
+        window.__tlConsentScriptLoader = {
+          loadAdobeLaunch: function(force) {
+            if (!force && document.getElementById(SCRIPT_ID)) {
+              return { alreadyLoaded: true };
+            }
+            return injectScript();
+          },
+          disableAdobeLaunch: function() {
+            removeScript();
+          },
+          getConsentState: getConsentState,
+          canLoadAdobeLaunch: hasAdobeConsent
         };
-        
-        document.head.appendChild(script);
+
+        init();
       })();
     </script>
 

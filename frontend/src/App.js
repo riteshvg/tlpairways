@@ -7,6 +7,8 @@ import theme from './theme/theme';
 import { auth0Config } from './config/auth0Config';
 import { AuthProvider } from './context/AuthContext';
 import { BookingTimerProvider } from './context/BookingTimerContext';
+import { ConsentProvider } from './context/ConsentContext';
+import ConsentExperience from './components/consent/ConsentExperience';
 import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
@@ -43,11 +45,13 @@ function App() {
     <Auth0Provider {...auth0Config}>
       <AuthProvider>
         <BookingTimerProvider>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <Router>
-            <Navbar />
-            <Routes>
+          <ConsentProvider>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <Router>
+                <Navbar />
+                <ConsentExperience />
+                <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/search" element={<FlightSearch />} />
@@ -100,17 +104,18 @@ function App() {
                   </ProtectedRoute>
                 } 
               />
-              <Route 
-                path="/confirmation" 
-                element={
-                  <ProtectedRoute>
-                    <BookingConfirmation />
-                  </ProtectedRoute>
-                } 
-              />
-            </Routes>
-          </Router>
-        </ThemeProvider>
+                <Route 
+                  path="/confirmation" 
+                  element={
+                    <ProtectedRoute>
+                      <BookingConfirmation />
+                    </ProtectedRoute>
+                  } 
+                />
+                </Routes>
+              </Router>
+            </ThemeProvider>
+          </ConsentProvider>
         </BookingTimerProvider>
       </AuthProvider>
     </Auth0Provider>
