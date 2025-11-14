@@ -131,6 +131,9 @@ export const ConsentProvider = ({ children }) => {
       return;
     }
 
+    // Note: Adobe Launch loading is now handled by the delayed loader in index.html
+    // This function now only manages the disable logic for rejected consent
+    
     const loader = window.__tlConsentScriptLoader;
     if (!loader) {
       console.warn('⚠️ ConsentContext: __tlConsentScriptLoader not found');
@@ -140,13 +143,12 @@ export const ConsentProvider = ({ children }) => {
     const allowed = !!(updatedPreferences.analytics || updatedPreferences.marketing);
     console.log('🔍 ConsentContext: handleScriptLoading', { allowed, preferences: updatedPreferences });
 
-    if (allowed && typeof loader.loadAdobeLaunch === 'function') {
-      console.log('✅ ConsentContext: Calling loadAdobeLaunch()');
-      const result = loader.loadAdobeLaunch();
-      console.log('✅ ConsentContext: loadAdobeLaunch result:', result);
-    } else if (!allowed && typeof loader.disableAdobeLaunch === 'function') {
+    // Only disable if user explicitly rejected consent
+    if (!allowed && typeof loader.disableAdobeLaunch === 'function') {
       console.log('🛑 ConsentContext: Calling disableAdobeLaunch()');
       loader.disableAdobeLaunch();
+    } else if (allowed) {
+      console.log('✅ ConsentContext: Consent granted - Adobe Launch will be loaded by delayed loader');
     }
   }, []);
 
