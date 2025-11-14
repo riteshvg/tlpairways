@@ -187,7 +187,7 @@ export const ConsentProvider = ({ children }) => {
         analytics: true,
         marketing: true
       },
-      { action: 'acceptAll', method: 'oneClick' }
+      { action: 'in', method: 'oneClick' }
     );
   }, [updateConsentState]);
 
@@ -199,7 +199,7 @@ export const ConsentProvider = ({ children }) => {
         analytics: false,
         marketing: false
       },
-      { action: 'rejectAll', method: 'oneClick' }
+      { action: 'out', method: 'oneClick' }
     );
   }, [updateConsentState]);
 
