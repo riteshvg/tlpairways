@@ -24,6 +24,10 @@ class AirlinesDataLayer {
       if (!window.adobeDataLayer) {
         window.adobeDataLayer = [];
       }
+
+      if (!window.adobeDataLayer.getState) {
+        window.adobeDataLayer.getState = () => window._adobeDataLayerState || {};
+      }
       
       // Initialize computed state object for current page data (separate from array)
       if (!window._adobeDataLayerState) {
