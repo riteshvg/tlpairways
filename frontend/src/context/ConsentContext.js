@@ -93,6 +93,14 @@ const persistConsentState = (state) => {
 const syncWindowState = (state) => {
   if (typeof window === 'undefined') return;
   window.__tlConsentState = state;
+  
+  // Also sync to _adobeDataLayerState so Launch Data Elements can read it
+  if (window._adobeDataLayerState) {
+    window._adobeDataLayerState.consent = {
+      ...state,
+      categories: state.preferences
+    };
+  }
 };
 
 export const ConsentProvider = ({ children }) => {
