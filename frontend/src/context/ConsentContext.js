@@ -236,16 +236,19 @@ export const ConsentProvider = ({ children }) => {
       return;
     }
 
-    // Check if consent was already pre-loaded into state by AirlinesDataLayer
-    const alreadyInState = window._adobeDataLayerState?.consent?.updatedAt === initialState.updatedAt;
+    // Check if consent was already pushed to the array by AirlinesDataLayer
+    const consentEventExists = window.adobeDataLayer?.some(
+      item => item.event === 'consentPreferencesUpdated' && 
+              item.consent?.updatedAt === initialState.updatedAt
+    );
     
-    if (alreadyInState) {
-      console.log('✅ Consent already in data layer state, pushing event to array for Launch rules');
-    } else {
-      console.log('🔄 Replaying consent to data layer');
+    if (consentEventExists) {
+      console.log('✅ Consent event already in data layer array - skipping duplicate push');
+      return;
     }
 
-    // Always push event to array so Launch rules can fire, with original action ('in' or 'out')
+    console.log('🔄 Replaying consent to data layer (not pre-loaded)');
+    // Push event to array with original action ('in' or 'out')
     sendConsentEvent(initialState, {});
   }, [initialState, sendConsentEvent]);
 

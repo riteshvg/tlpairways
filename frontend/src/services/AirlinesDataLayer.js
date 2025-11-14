@@ -126,10 +126,20 @@ class AirlinesDataLayer {
         categories: consentState.preferences
       };
       
-      console.log('✅ Consent pre-loaded into data layer state:', {
+      // Push consent event to array BEFORE any pageView events
+      window.adobeDataLayer.push({
+        event: 'consentPreferencesUpdated',
+        consent: {
+          ...consentState,
+          categories: consentState.preferences
+        }
+      });
+      
+      console.log('✅ Consent pushed to data layer (position 0):', {
         action: consentState.action,
         preferences: consentState.preferences,
-        updatedAt: consentState.updatedAt
+        updatedAt: consentState.updatedAt,
+        arrayPosition: 0
       });
     } else {
       console.log('ℹ️ No stored consent found - waiting for user interaction');
