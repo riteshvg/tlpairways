@@ -607,6 +607,12 @@ class AirlinesDataLayer {
    */
   pushToDataLayer(data) {
     if (typeof window !== 'undefined' && window.adobeDataLayer) {
+      // Validate data before pushing
+      if (!data || typeof data !== 'object') {
+        console.warn('⚠️ Attempted to push invalid data to adobeDataLayer:', data);
+        return;
+      }
+      
       // Push event to array for history
       window.adobeDataLayer.push(data);
       

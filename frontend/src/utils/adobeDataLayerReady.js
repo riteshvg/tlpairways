@@ -31,6 +31,12 @@ export const waitForAdobeDataLayer = (timeout = 5000, checkInterval = 50) => {
 
 export const pushToAdobeDataLayer = async (event, timeout = 5000) => {
   try {
+    // Validate event before waiting
+    if (!event || typeof event !== 'object') {
+      console.warn('⚠️ Attempted to push invalid event to adobeDataLayer:', event);
+      return false;
+    }
+
     await waitForAdobeDataLayer(timeout);
 
     if (typeof window !== 'undefined' && Array.isArray(window.adobeDataLayer)) {
