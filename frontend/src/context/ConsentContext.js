@@ -228,7 +228,8 @@ export const ConsentProvider = ({ children }) => {
       return;
     }
 
-    sendConsentEvent(initialState, { action: 'replayOnLoad', method: 'storageRestore' });
+    // Replay with original action ('in' or 'out'), not 'replayOnLoad'
+    sendConsentEvent(initialState, {});
   }, [initialState, sendConsentEvent]);
 
   useEffect(() => {
