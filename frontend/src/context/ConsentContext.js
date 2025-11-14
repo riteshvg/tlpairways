@@ -215,6 +215,20 @@ export const ConsentProvider = ({ children }) => {
     handleScriptLoading(consentState.preferences);
   }, [consentState, handleScriptLoading]);
 
+  const replayConsentEvent = useCallback(() => {
+    if (!initialState) {
+      return;
+    }
+
+    sendConsentEvent(initialState, { action: 'replayOnLoad', method: 'storageRestore' });
+  }, [initialState, sendConsentEvent]);
+
+  useEffect(() => {
+    if (initialState) {
+      replayConsentEvent();
+    }
+  }, [initialState, replayConsentEvent]);
+
   const value = useMemo(
     () => ({
       consentState,
