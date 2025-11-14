@@ -1,1 +1,146 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"/><link rel="icon" href="/favicon.ico"/><link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>"><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="theme-color" content="#000000"/><meta name="description" content="TLAirways - Premium Air Travel Experience"/><meta http-equiv="Content-Security-Policy" content=" default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://dev-q6p3jrm5pbykuq23.us.auth0.com https://assets.adobedtm.com https://*.adobedtm.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://dev-q6p3jrm5pbykuq23.us.auth0.com; font-src 'self' https://fonts.gstatic.com https://dev-q6p3jrm5pbykuq23.us.auth0.com; img-src 'self' data: blob: https://dev-q6p3jrm5pbykuq23.us.auth0.com https://assets.adobedtm.com https://*.adobedtm.com https://images.unsplash.com https://*.unsplash.com https://www.gravatar.com https://*.gravatar.com; connect-src 'self' https://dev-q6p3jrm5pbykuq23.us.auth0.com https://*.auth0.com https://api.tlairways.com https://assets.adobedtm.com https://*.adobedtm.com https://*.adobe.com https://*.demdex.net https://adobedc.demdex.net https://edge.adobedc.net; frame-src 'self' https://dev-q6p3jrm5pbykuq23.us.auth0.com https://*.auth0.com https://assets.adobedtm.com https://*.adobedtm.com; object-src 'none'; base-uri 'self'; form-action 'self' https://dev-q6p3jrm5pbykuq23.us.auth0.com; "><link rel="apple-touch-icon" href="/logo192.png"/><link rel="manifest" href="/manifest.json"/><title>TLAirways</title><script>!function(e,n){var t=e.head;if(t){if(n)return;var i=e.createElement("style");i.id="alloy-prehiding",i.innerText=".personalization-container { opacity: 0 !important }",t.appendChild(i),setTimeout(function(){i.parentNode&&i.parentNode.removeChild(i)},3e3)}}(document,-1!==document.location.href.indexOf("adobe_authoring_enabled"))</script><script src="https://assets.adobedtm.com/01296dd00565/26201e3c8f15/launch-2f8b80d50cb3-development.min.js" async crossorigin="anonymous"></script><script defer="defer" src="/static/js/main.41a11062.js"></script><link href="/static/css/main.f364fef0.css" rel="stylesheet"></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"></div></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><link rel="icon" href="/favicon.ico"/><link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>"><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="theme-color" content="#000000"/><meta name="description" content="TLAirways - Premium Air Travel Experience"/><meta http-equiv="Content-Security-Policy" content=" default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://dev-q6p3jrm5pbykuq23.us.auth0.com https://assets.adobedtm.com https://*.adobedtm.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://dev-q6p3jrm5pbykuq23.us.auth0.com; font-src 'self' https://fonts.gstatic.com https://dev-q6p3jrm5pbykuq23.us.auth0.com; img-src 'self' data: blob: https://dev-q6p3jrm5pbykuq23.us.auth0.com https://assets.adobedtm.com https://*.adobedtm.com https://images.unsplash.com https://*.unsplash.com https://www.gravatar.com https://*.gravatar.com; connect-src 'self' https://dev-q6p3jrm5pbykuq23.us.auth0.com https://*.auth0.com https://api.tlairways.com https://assets.adobedtm.com https://*.adobedtm.com https://*.adobe.com https://*.demdex.net https://adobedc.demdex.net https://edge.adobedc.net; frame-src 'self' https://dev-q6p3jrm5pbykuq23.us.auth0.com https://*.auth0.com https://assets.adobedtm.com https://*.adobedtm.com; object-src 'none'; base-uri 'self'; form-action 'self' https://dev-q6p3jrm5pbykuq23.us.auth0.com; "><link rel="apple-touch-icon" href="/logo192.png"/><link rel="manifest" href="/manifest.json"/><title>TLAirways</title><script>!function(e,n){var t=e.head;if(t){if(n)return;var i=e.createElement("style");i.id="alloy-prehiding",i.innerText=".personalization-container { opacity: 0 !important }",t.appendChild(i),setTimeout(function(){i.parentNode&&i.parentNode.removeChild(i)},3e3)}}(document,-1!==document.location.href.indexOf("adobe_authoring_enabled"))</script><script>(function() {
+        var CONSENT_STORAGE_KEY = 'tlairways_consent_preferences';
+        var CUSTOM_SCRIPT_KEY = 'tlairways_adobe_script_url';
+        var CUSTOM_ATTR_KEY = 'tlairways_adobe_script_attributes';
+        var DEFAULT_SCRIPT_URL = 'https://assets.adobedtm.com/01296dd00565/26201e3c8f15/launch-2f8b80d50cb3-development.min.js';
+        var DEFAULT_ATTRIBUTES = {
+          async: true,
+          crossOrigin: 'anonymous'
+        };
+        var SCRIPT_ID = 'tlairways-adobe-launch';
+
+        var currentScript = null;
+
+        function safeParseJSON(value) {
+          if (!value) return null;
+          try {
+            return JSON.parse(value);
+          } catch (e) {
+            console.warn('⚠️ Failed to parse stored JSON value:', e);
+            return null;
+>>>>>>> enhancements
+          }
+        }
+
+        function getConsentState() {
+          try {
+            return safeParseJSON(localStorage.getItem(CONSENT_STORAGE_KEY));
+          } catch (error) {
+            console.warn('⚠️ Unable to read consent preferences:', error);
+            return null;
+          }
+        }
+
+        function hasAdobeConsent(state) {
+          if (!state || !state.preferences) return false;
+          var prefs = state.preferences;
+          return !!(prefs.analytics || prefs.marketing);
+        }
+
+        function getScriptConfig() {
+          var customUrl = null;
+          var customAttrs = null;
+
+          try {
+            customUrl = localStorage.getItem(CUSTOM_SCRIPT_KEY);
+            customAttrs = safeParseJSON(localStorage.getItem(CUSTOM_ATTR_KEY));
+          } catch (error) {
+            console.warn('⚠️ Unable to read Adobe script config:', error);
+          }
+
+          return {
+            url: customUrl || DEFAULT_SCRIPT_URL,
+            attrs: { ...DEFAULT_ATTRIBUTES, ...(customAttrs || {}) }
+          };
+        }
+
+        function buildScriptElement(url, attrs) {
+          var script = document.createElement('script');
+          script.id = SCRIPT_ID;
+          script.src = url;
+          script.dataset.tlAdobeLaunch = 'true';
+
+          if (attrs.async) script.async = true;
+          if (attrs.defer) script.defer = true;
+          if (attrs.crossOrigin) script.crossOrigin = attrs.crossOrigin;
+
+          script.onload = function() {
+            window.__tlAdobeLaunchLoaded = true;
+            console.log('✅ Adobe Launch script loaded:', url);
+          };
+
+          script.onerror = function() {
+            console.error('❌ Failed to load Adobe Launch script:', url);
+            if (url !== DEFAULT_SCRIPT_URL) {
+              console.log('🔄 Attempting default Adobe Launch script...');
+              if (script.parentNode) {
+                script.parentNode.removeChild(script);
+              }
+              var fallbackScript = buildScriptElement(DEFAULT_SCRIPT_URL, DEFAULT_ATTRIBUTES);
+              currentScript = fallbackScript;
+              document.head.appendChild(fallbackScript);
+            }
+          };
+
+          return script;
+        }
+
+        function injectScript() {
+          if (document.getElementById(SCRIPT_ID)) {
+            console.log('ℹ️ Adobe Launch already injected.');
+            return { alreadyLoaded: true };
+          }
+
+          var config = getScriptConfig();
+          var script = buildScriptElement(config.url, config.attrs);
+          currentScript = script;
+          document.head.appendChild(script);
+          return { success: true };
+        }
+
+        function removeScript() {
+          var existing = document.getElementById(SCRIPT_ID) || document.querySelector('script[src*="adobedtm.com"]');
+          if (existing) {
+            existing.parentNode.removeChild(existing);
+            currentScript = null;
+            window.__tlAdobeLaunchLoaded = false;
+            console.log('🛑 Adobe Launch script removed pending consent.');
+          }
+        }
+
+        function init() {
+          var consentState = getConsentState();
+          if (hasAdobeConsent(consentState)) {
+            injectScript();
+          } else {
+            window.__tlAdobeLaunchBlocked = true;
+            console.log('⚠️ Adobe Launch blocked until marketing/analytics consent is granted.');
+          }
+        }
+
+        window.__tlConsentScriptLoader = {
+          loadAdobeLaunch: function(force) {
+            console.log('🔍 loadAdobeLaunch called', { force, existingScript: !!document.getElementById(SCRIPT_ID) });
+            if (!force && document.getElementById(SCRIPT_ID)) {
+              console.log('ℹ️ Adobe Launch already loaded');
+              return { alreadyLoaded: true };
+            }
+            var result = injectScript();
+            console.log('✅ Adobe Launch injection result:', result);
+            return result;
+          },
+          disableAdobeLaunch: function() {
+            console.log('🛑 disableAdobeLaunch called');
+            removeScript();
+          },
+          getConsentState: getConsentState,
+          canLoadAdobeLaunch: hasAdobeConsent
+        };
+
+        console.log('🚀 Initializing Adobe Launch consent loader...');
+        init();
+        console.log('✅ Adobe Launch consent loader initialized', {
+          blocked: window.__tlAdobeLaunchBlocked,
+          loaded: window.__tlAdobeLaunchLoaded
+        });
+      })();</script><script>!function(e){if(e){e.__tlTargetPageParams=e.__tlTargetPageParams||{pageName:"home",pageType:"landing",siteSection:"homepage"},"function"!=typeof e.targetPageParamsAll&&(e.targetPageParamsAll=function(){return e.__tlTargetPageParams||{}}),e.TLAirwaysTarget=e.TLAirwaysTarget||{},e.TLAirwaysTarget.setPageParams=function(a){return e.__tlTargetPageParams=Object.assign({},e.__tlTargetPageParams||{},a||{}),e.__tlTargetPageParams},e.TLAirwaysTarget.triggerView=function a(t,r,g){if(!t)return!1;g=g||0;var n=e.adobe&&e.adobe.target;if(n&&"function"==typeof n.triggerView)try{return n.triggerView(t,r||{}),console.log("✅ Adobe Target view triggered:",t,r||{}),!0}catch(e){return console.error("❌ Adobe Target triggerView failed:",e),!1}return g>=10?(console.warn("⚠️ Adobe Target triggerView unavailable for",t),!1):(setTimeout(function(){a(t,r,g+1)},400),!1)};var a=function(){var a=e.navigator?e.navigator.language:"en-US";e.TLAirwaysTarget.setPageParams({language:a}),e.TLAirwaysTarget.triggerView("home",{pageName:"home",siteSection:"homepage",language:a})};"complete"===document.readyState||"interactive"===document.readyState?a():document.addEventListener("DOMContentLoaded",a,{once:!0})}}(window)</script><script defer="defer" src="/static/js/main.242566d8.js"></script><link href="/static/css/main.329f2440.css" rel="stylesheet"></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"></div></body></html>
