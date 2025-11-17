@@ -290,6 +290,19 @@ export const ConsentProvider = ({ children }) => {
       return;
     }
 
+    // CRITICAL: Don't replay if consent was just updated (within last 2 seconds)
+    // This prevents duplicate events when user clicks Accept/Reject and navigates
+    if (initialState.updatedAt) {
+      const updatedTime = new Date(initialState.updatedAt).getTime();
+      const now = Date.now();
+      const timeSinceUpdate = now - updatedTime;
+      
+      if (timeSinceUpdate < 2000) {
+        console.log('✅ Consent recently updated - already pushed by sendConsentEvent, skipping replay');
+        return;
+      }
+    }
+
     // Check if consent was already pushed to the array by AirlinesDataLayer
     const consentEventExists = window.adobeDataLayer?.some(
       item => item.event === 'consentPreferencesUpdated' && 
