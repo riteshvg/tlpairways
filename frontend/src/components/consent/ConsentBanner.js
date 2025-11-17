@@ -71,6 +71,26 @@ const ConsentBanner = () => {
           </Button>
           
           <Button
+            id="consent-banner-reject-all"
+            variant="outlined"
+            color="error"
+            onClick={rejectAll}
+            fullWidth
+            sx={{
+              textTransform: 'none',
+              fontWeight: 600,
+              py: 1.25,
+              borderWidth: 2,
+              '&:hover': { 
+                borderWidth: 2,
+                backgroundColor: `${theme.palette.error.main}0a` 
+              }
+            }}
+          >
+            Reject All
+          </Button>
+          
+          <Button
             id="consent-banner-manage-preferences"
             variant="outlined"
             color="primary"
