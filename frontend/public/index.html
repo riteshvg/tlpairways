@@ -80,6 +80,20 @@
         }
         if (!window.adobeDataLayer) {
           window.adobeDataLayer = [];
+          
+          // CRITICAL: Intercept push() to prevent null/invalid values
+          var originalPush = window.adobeDataLayer.push;
+          window.adobeDataLayer.push = function() {
+            for (var i = 0; i < arguments.length; i++) {
+              var item = arguments[i];
+              if (item === null || item === undefined || typeof item !== 'object') {
+                console.error('❌ BLOCKED: Attempted to push invalid item to adobeDataLayer:', item);
+                console.trace('Stack trace:');
+                continue; // Skip invalid items
+              }
+              originalPush.call(window.adobeDataLayer, item);
+            }
+          };
         }
         
         // Load consent from localStorage SYNCHRONOUSLY
