@@ -26,10 +26,66 @@ class AirlinesDataLayer {
         window._adobeDataLayerState = {};
       }
       
+      // CRITICAL: Initialize consent state IMMEDIATELY
+      // This ensures defaultConsent is available when Adobe Launch loads
+      this.initializeConsentState();
+      
       this.log('AirlinesDataLayer initialized', {
         dataLayerLength: window.adobeDataLayer.length,
         timestamp: new Date().toISOString()
       });
+    }
+  }
+
+  /**
+   * Initialize consent state from localStorage
+   * Sets defaultConsent BEFORE Adobe Launch loads
+   */
+  initializeConsentState() {
+    if (typeof window === 'undefined') return;
+    
+    const CONSENT_STORAGE_KEY = 'tlairways_consent_preferences';
+    let consentState = null;
+    let defaultConsent = 'pending'; // Safe default
+    
+    try {
+      const stored = localStorage.getItem(CONSENT_STORAGE_KEY);
+      if (stored) {
+        consentState = JSON.parse(stored);
+        // Determine defaultConsent based on stored preferences
+        if (consentState.preferences?.analytics || consentState.preferences?.marketing) {
+          defaultConsent = 'in';
+        } else if (consentState.action === 'out') {
+          defaultConsent = 'out';
+        }
+      }
+    } catch (error) {
+      console.warn('⚠️ Failed to load consent from localStorage:', error);
+    }
+    
+    // ALWAYS set defaultConsent - even if 'pending'
+    window._adobeDataLayerState.consent = {
+      defaultConsent,
+      ...(consentState || {}),
+      categories: consentState?.preferences || { necessary: true }
+    };
+    
+    console.log('✅ Consent initialized in data layer:', {
+      defaultConsent,
+      hasStoredConsent: !!consentState
+    });
+    
+    // If we have stored consent, push the event too
+    if (consentState && consentState.preferences) {
+      window.adobeDataLayer.push({
+        event: 'consentPreferencesUpdated',
+        consent: {
+          defaultConsent,
+          ...consentState,
+          categories: consentState.preferences
+        }
+      });
+      console.log('✅ Consent event pushed to data layer');
     }
   }
 

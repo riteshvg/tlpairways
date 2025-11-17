@@ -179,13 +179,22 @@
         }
 
         function init() {
+          console.log('🚀 Adobe Launch consent loader initializing...');
+          
+          // ALWAYS load Adobe Launch - let defaultConsent control data collection
+          // Blocking the script entirely prevents Target/Analytics from initializing
           var consentState = getConsentState();
-          if (hasAdobeConsent(consentState)) {
-            injectScript();
-          } else {
-            window.__tlAdobeLaunchBlocked = true;
-            console.log('⚠️ Adobe Launch blocked until marketing/analytics consent is granted.');
-          }
+          var hasConsent = hasAdobeConsent(consentState);
+          
+          console.log('📊 Consent state:', {
+            hasStoredConsent: !!consentState,
+            hasAnalyticsConsent: hasConsent,
+            willLoadLaunch: true  // Always true now
+          });
+          
+          // Load Adobe Launch unconditionally
+          // The Web SDK will read defaultConsent from data layer to control tracking
+          injectScript();
         }
 
         window.__tlConsentScriptLoader = {
