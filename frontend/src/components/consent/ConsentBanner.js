@@ -2,16 +2,11 @@ import React from 'react';
 import {
   Box,
   Button,
-  Chip,
-  Divider,
   Stack,
   Typography,
   useMediaQuery
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined';
-import PrivacyTipIcon from '@mui/icons-material/PrivacyTip';
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import { useConsent } from '../../context/ConsentContext';
 
 const bannerStyles = (isDesktop, theme) => ({
@@ -19,14 +14,14 @@ const bannerStyles = (isDesktop, theme) => ({
   bottom: 32,
   right: 32,
   width: isDesktop ? 420 : 'calc(100% - 32px)',
-  maxWidth: 460,
+  maxWidth: 400,
   backgroundColor: theme.palette.background.paper,
   color: theme.palette.text.primary,
-  borderRadius: 0,
+  borderRadius: 2,
   padding: '20px 24px',
-  boxShadow: '0 30px 70px rgba(0,0,0,0.2)',
+  boxShadow: '0px 8px 16px rgba(0, 105, 92, 0.15)',
   zIndex: 1300,
-  border: `1px solid ${theme.palette.primary.main}1f`,
+  border: `1px solid ${theme.palette.primary.light}40`,
   transform: 'translateX(0)',
   transition: 'transform 0.35s ease, opacity 0.35s ease'
 });
@@ -48,59 +43,51 @@ const ConsentBanner = () => {
   return (
     <Box sx={bannerStyles(isDesktop, theme)}>
       <Stack spacing={2}>
-        <Typography variant="h6" fontWeight={600} color="text.primary">
-          Set your cookies
+        <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6 }}>
+          This website stores or retrieves information on your browser using cookies.
         </Typography>
-
-        <Typography variant="body2" color="text.secondary">
-          We use cookies to keep booking secure, analyse traffic, and deliver personalized Adobe Target content.
-          Click "Accept All" to allow every category or choose "Manage Cookies" to customize your preferences.
-        </Typography>
-
-        <Stack direction="row" spacing={1} flexWrap="wrap">
-          {['Functional', 'Analytics', 'Personalization'].map(label => (
-            <Chip
-              key={label}
-              size="small"
-              label={label}
-              variant="outlined"
-              sx={{
-                borderColor: theme.palette.primary.main,
-                color: theme.palette.primary.dark,
-                fontWeight: 500
-              }}
-            />
-          ))}
-        </Stack>
 
         <Stack
-          direction={{ xs: 'column', sm: 'row' }}
+          direction="column"
           spacing={1.5}
-          justifyContent="flex-end"
         >
           <Button
-            variant="outlined"
-            color="primary"
-            onClick={openManager}
-            startIcon={<ManageAccountsIcon />}
-            sx={{
-              borderColor: theme.palette.primary.main,
-              color: theme.palette.primary.main,
-              '&:hover': { borderColor: theme.palette.primary.dark, backgroundColor: `${theme.palette.primary.main}0a` }
-            }}
-          >
-            Manage Cookies
-          </Button>
-          <Button
+            id="consent-banner-accept-all"
             variant="contained"
+            color="primary"
             onClick={acceptAll}
-            startIcon={<PrivacyTipIcon />}
+            fullWidth
             sx={{
-              backgroundColor: theme.palette.primary.main,
-              '&:hover': { backgroundColor: theme.palette.primary.dark }
+              textTransform: 'none',
+              fontWeight: 600,
+              py: 1.25,
+              '&:hover': { 
+                backgroundColor: theme.palette.primary.dark,
+                boxShadow: '0px 4px 8px rgba(0, 105, 92, 0.2)'
+              }
             }}
           >
             Accept All
+          </Button>
+          
+          <Button
+            id="consent-banner-manage-preferences"
+            variant="outlined"
+            color="primary"
+            onClick={openManager}
+            fullWidth
+            sx={{
+              textTransform: 'none',
+              fontWeight: 600,
+              py: 1.25,
+              borderWidth: 2,
+              '&:hover': { 
+                borderWidth: 2,
+                backgroundColor: `${theme.palette.primary.main}0a` 
+              }
+            }}
+          >
+            Manage Consent Preferences
           </Button>
         </Stack>
       </Stack>

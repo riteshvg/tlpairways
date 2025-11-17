@@ -34,7 +34,8 @@ class AirlinesDataLayer {
         window._adobeDataLayerState = {};
       }
       
-      // Initialize consent in data layer state BEFORE any page events
+      // CRITICAL: Initialize consent state IMMEDIATELY
+      // This ensures defaultConsent is available when Adobe Launch loads
       this.initializeConsentState();
       
       const initEndTime = performance.now();
@@ -278,6 +279,78 @@ class AirlinesDataLayer {
   }
 
   /**
+   * Initialize consent state from localStorage
+   * Sets defaultConsent BEFORE Adobe Launch loads
+   */
+  initializeConsentState() {
+    if (typeof window === 'undefined') return;
+    
+    const CONSENT_STORAGE_KEY = 'tlairways_consent_preferences';
+    let consentState = null;
+    let defaultConsent = 'pending'; // Safe default
+    let consentValue = 'pending'; // Explicit consent value attribute
+    
+    try {
+      const stored = localStorage.getItem(CONSENT_STORAGE_KEY);
+      if (stored) {
+        consentState = JSON.parse(stored);
+        
+        // Map action to consent value
+        if (consentState.action === 'in' || consentState.action === 'acceptAll') {
+          defaultConsent = 'in';
+          consentValue = 'in';
+        } else if (consentState.action === 'out' || consentState.action === 'rejectAll') {
+          defaultConsent = 'out';
+          consentValue = 'out';
+        } else if (consentState.preferences) {
+          // For granular saves: check if user has enabled analytics OR marketing
+          const hasAnalyticsOrMarketing = consentState.preferences.analytics || consentState.preferences.marketing;
+          
+          if (hasAnalyticsOrMarketing) {
+            defaultConsent = 'in';
+            consentValue = 'in';
+          } else {
+            // User has denied both analytics and marketing
+            defaultConsent = 'out';
+            consentValue = 'out';
+          }
+        }
+      }
+    } catch (error) {
+      console.warn('⚠️ Failed to load consent from localStorage:', error);
+    }
+    
+    // ALWAYS set defaultConsent - even if 'pending'
+    window._adobeDataLayerState.consent = {
+      value: consentValue,           // NEW: Direct consent value ('in'|'out'|'pending')
+      defaultConsent: defaultConsent, // For Adobe Web SDK
+      ...(consentState || {}),
+      categories: consentState?.preferences || { necessary: true }
+    };
+    
+    console.log('✅ Consent initialized in data layer:', {
+      value: consentValue,
+      defaultConsent: defaultConsent,
+      action: consentState?.action,
+      hasStoredConsent: !!consentState
+    });
+    
+    // If we have stored consent, push the event too
+    if (consentState && consentState.preferences) {
+      window.adobeDataLayer.push({
+        event: 'consentPreferencesUpdated',
+        consent: {
+          value: consentValue,
+          defaultConsent: defaultConsent,
+          ...consentState,
+          categories: consentState.preferences
+        }
+      });
+      console.log('✅ Consent event pushed to data layer');
+    }
+  }
+
+  /**
    * Set page data in the data layer
    * @param {Object} pageData - Page information object
    */
@@ -300,11 +373,27 @@ class AirlinesDataLayer {
   }
 
   /**
+   * Ensure consent is available before any pageView events
+   * Called before EVERY pageView to prevent race conditions
+   */
+  ensureConsentReady() {
+    if (typeof window === 'undefined') return;
+    
+    // If consent not yet initialized, do it NOW (synchronously)
+    if (!window._adobeDataLayerState?.consent?.value) {
+      console.warn('⚠️ Consent not ready - initializing now (emergency fallback)');
+      this.initializeConsentState();
+    }
+  }
+
+  /**
    * Set page data and track page view in a single event
    * @param {Object} pageData - Page information object
    * @param {Object} viewData - Additional view tracking data
    */
   setPageDataWithView(pageData, viewData = {}) {
+    // CRITICAL: Ensure consent is ready BEFORE pushing pageView
+    this.ensureConsentReady();
     const combinedEvent = {
       event: 'pageView',
       pageData: {

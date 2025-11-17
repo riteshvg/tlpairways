@@ -94,18 +94,35 @@ const syncWindowState = (state) => {
   if (typeof window === 'undefined') return;
   window.__tlConsentState = state;
   
-  // Determine defaultConsent value for Adobe Web SDK
+  // Determine consent value for Adobe based on action and preferences
+  let consentValue = 'pending';
   let defaultConsent = 'pending';
-  if (state.preferences?.analytics || state.preferences?.marketing) {
+  
+  if (state.action === 'in' || state.action === 'acceptAll') {
+    consentValue = 'in';
     defaultConsent = 'in';
-  } else if (state.action === 'out') {
+  } else if (state.action === 'out' || state.action === 'rejectAll') {
+    consentValue = 'out';
     defaultConsent = 'out';
+  } else if (state.preferences) {
+    // For granular saves: check if user has enabled analytics OR marketing
+    const hasAnalyticsOrMarketing = state.preferences.analytics || state.preferences.marketing;
+    
+    if (hasAnalyticsOrMarketing) {
+      consentValue = 'in';
+      defaultConsent = 'in';
+    } else {
+      // User has denied both analytics and marketing
+      consentValue = 'out';
+      defaultConsent = 'out';
+    }
   }
   
-  // Also sync to _adobeDataLayerState so Launch Data Elements can read it
+  // Sync to _adobeDataLayerState with both value and defaultConsent
   if (window._adobeDataLayerState) {
     window._adobeDataLayerState.consent = {
-      defaultConsent,
+      value: consentValue,           // Direct consent value
+      defaultConsent: defaultConsent, // For Adobe Web SDK
       ...state,
       categories: state.preferences
     };
@@ -153,18 +170,35 @@ export const ConsentProvider = ({ children }) => {
   }, []);
 
   const sendConsentEvent = useCallback(async (state, metadata) => {
-    // Determine defaultConsent for Adobe Web SDK
+    // Determine consent value based on action and preferences
+    let consentValue = 'pending';
     let defaultConsent = 'pending';
-    if (state.preferences?.analytics || state.preferences?.marketing) {
+    
+    if (state.action === 'in' || state.action === 'acceptAll') {
+      consentValue = 'in';
       defaultConsent = 'in';
-    } else if (state.action === 'out') {
+    } else if (state.action === 'out' || state.action === 'rejectAll') {
+      consentValue = 'out';
       defaultConsent = 'out';
+    } else if (state.preferences) {
+      // For granular saves: check if user has enabled analytics OR marketing
+      const hasAnalyticsOrMarketing = state.preferences.analytics || state.preferences.marketing;
+      
+      if (hasAnalyticsOrMarketing) {
+        consentValue = 'in';
+        defaultConsent = 'in';
+      } else {
+        // User has denied both analytics and marketing
+        consentValue = 'out';
+        defaultConsent = 'out';
+      }
     }
     
     const payload = {
       event: 'consentPreferencesUpdated',
       consent: {
-        defaultConsent,
+        value: consentValue,           // Direct consent value
+        defaultConsent: defaultConsent, // For Adobe Web SDK
         ...state,
         ...metadata,
         categories: state.preferences

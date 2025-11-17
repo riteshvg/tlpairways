@@ -21,8 +21,14 @@ const useHomepageDataLayer = () => {
    * Initialize homepage data layer on component mount
    */
   useEffect(() => {
-    // Prevent duplicate initialization across component re-renders and React StrictMode
+    // CRITICAL: ALWAYS ensure consent is ready, even on re-visits
+    // This must happen BEFORE any check to prevent timeout errors
+    airlinesDataLayer.ensureConsentReady();
+    
+    // Prevent duplicate pageView across component re-renders and React StrictMode
     if (homepageInitialized) {
+      console.log('🏠 Homepage already initialized - skipping duplicate pageView');
+      // Consent is refreshed above, but skip duplicate pageView
       return;
     }
     
@@ -44,16 +50,20 @@ const useHomepageDataLayer = () => {
     homepageInitialized = true;
     console.log('🏠 Homepage data layer initialized');
     
-    // Reset flag when page is unloaded (for browser navigation)
-    const handleBeforeUnload = () => {
+    // Reset flag on SPA navigation away (not just browser unload)
+    const resetFlag = () => {
       homepageInitialized = false;
+      console.log('🔄 Homepage flag reset');
     };
     
-    window.addEventListener('beforeunload', handleBeforeUnload);
+    // Reset on browser unload
+    window.addEventListener('beforeunload', resetFlag);
     
-    // Cleanup function
+    // Cleanup function - reset when component unmounts (SPA navigation)
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('beforeunload', resetFlag);
+      // Reset flag when navigating away in SPA
+      homepageInitialized = false;
     };
   }, [isAuthenticated, user?.id]);
 

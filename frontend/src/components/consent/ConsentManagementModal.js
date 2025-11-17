@@ -12,8 +12,6 @@ import {
   Switch,
   Typography
 } from '@mui/material';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import ReplayIcon from '@mui/icons-material/Replay';
 import LockIcon from '@mui/icons-material/Lock';
 import { useConsent, CONSENT_CATEGORIES } from '../../context/ConsentContext';
 
@@ -60,50 +58,80 @@ const ConsentManagementModal = () => {
       maxWidth="md"
       fullWidth
       aria-labelledby="consent-management-dialog"
+      PaperProps={{
+        sx: {
+          borderRadius: 2,
+          border: (theme) => `1px solid ${theme.palette.primary.light}40`
+        }
+      }}
     >
-      <DialogTitle id="consent-management-dialog">
-        Privacy & Cookie Preferences
+      <DialogTitle 
+        id="consent-management-dialog" 
+        sx={{ 
+          pb: 1,
+          fontWeight: 600,
+          fontSize: '1.25rem'
+        }}
+      >
+        Customise Your Cookie Preferences
       </DialogTitle>
-      <DialogContent dividers>
+      <DialogContent dividers sx={{ borderTop: 'none', borderBottom: 'none' }}>
         <Stack spacing={3}>
+          <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6 }}>
+            This website stores or retrieves information on your browser using cookies. This information might include details about you, your preferences, or your device. Cookies help the website function properly and can help provide a more personalised experience tailored to you. We respect your right to privacy, and you can choose to opt out of cookies at any time, with the exception of 'Strictly Necessary Cookies.' Please be aware that blocking cookies may impact your experience on the site and services we are able to offer you. For more information, please refer to our{' '}
+            <Typography 
+              component="a" 
+              href="/cookie-policy" 
+              sx={{ color: 'primary.main', textDecoration: 'underline', fontWeight: 500 }}
+            >
+              Cookie Policy.
+            </Typography>
+          </Typography>
+
+          <Divider />
+
+          <Typography variant="h6" fontWeight={600}>
+            Manage Consent Preferences
+          </Typography>
+
           {CONSENT_CATEGORIES.map((category) => {
             const isLocked = category.required;
             const checked = draftPreferences[category.id];
 
             return (
-              <Box
-                key={category.id}
-                sx={{
-                  border: '1px solid',
-                  borderColor: checked ? 'success.light' : 'divider',
-                  borderRadius: 2,
-                  padding: 2,
-                  backgroundColor: checked ? 'success.50' : 'background.paper'
-                }}
-              >
-                <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
-                  <Box>
-                    <Typography variant="subtitle1" fontWeight={600} display="flex" alignItems="center" gap={1}>
-                      {checked ? (
-                        <CheckCircleOutlineIcon color="success" fontSize="small" />
-                      ) : (
-                        isLocked ? <LockIcon fontSize="small" color="action" /> : null
-                      )}
+              <Box key={category.id}>
+                <Stack 
+                  direction="row" 
+                  justifyContent="space-between" 
+                  alignItems="flex-start" 
+                  spacing={2}
+                  sx={{ 
+                    py: 1.5,
+                    borderBottom: '1px solid',
+                    borderColor: 'divider'
+                  }}
+                >
+                  <Box sx={{ flex: 1, cursor: 'pointer' }}>
+                    <Typography 
+                      variant="subtitle1" 
+                      fontWeight={600} 
+                      display="flex" 
+                      alignItems="center" 
+                      gap={1}
+                      sx={{ mb: 0.5 }}
+                    >
+                      {isLocked && <LockIcon fontSize="small" color="action" />}
                       {category.label}
-                      {isLocked && (
-                        <Typography component="span" variant="caption" color="text.secondary">
-                          (Always on)
-                        </Typography>
-                      )}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                    <Typography variant="body2" color="text.secondary">
                       {category.description}
                     </Typography>
                   </Box>
                   <FormControlLabel
                     control={
                       <Switch
-                        color="success"
+                        id={`consent-switch-${category.id}`}
+                        color="primary"
                         checked={checked}
                         onChange={handleToggle(category.id)}
                         disabled={isLocked}
@@ -111,51 +139,34 @@ const ConsentManagementModal = () => {
                       />
                     }
                     label=""
-                    sx={{ marginRight: 0 }}
+                    sx={{ marginRight: 0, marginLeft: 2 }}
                   />
                 </Stack>
               </Box>
             );
           })}
-
-          <Divider />
-
-          <Stack spacing={1}>
-            <Typography variant="subtitle2">
-              What happens if I disable personalization & analytics?
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Adobe Target experiences, destination trivia, ancillary upsells, and performance insights rely on these categories.
-              Disabling them keeps core booking features intact but removes tailored offers and diagnostics.
-            </Typography>
-          </Stack>
         </Stack>
       </DialogContent>
-      <DialogActions sx={{ justifyContent: 'space-between', px: 3, py: 2 }}>
-        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}>
-          <Button
-            variant="outlined"
-            color="inherit"
-            startIcon={<ReplayIcon />}
-            onClick={() => setDraftPreferences(preferences)}
-          >
-            Reset changes
-          </Button>
-        </Stack>
-
-        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}>
-          <Button color="inherit" onClick={rejectAll}>
-            Reject optional
-          </Button>
-          <Button onClick={acceptAll}>Accept all</Button>
-          <Button
-            variant="contained"
-            onClick={handleSave}
-            disabled={!isModalOpen}
-          >
-            Save preferences
-          </Button>
-        </Stack>
+      <DialogActions sx={{ justifyContent: 'flex-end', px: 3, py: 2.5, gap: 1.5 }}>
+        <Button
+          id="consent-modal-save-settings"
+          variant="outlined"
+          color="primary"
+          onClick={handleSave}
+          disabled={!isModalOpen}
+          sx={{
+            textTransform: 'none',
+            fontWeight: 600,
+            px: 3,
+            borderWidth: 2,
+            '&:hover': { 
+              borderWidth: 2,
+              backgroundColor: (theme) => `${theme.palette.primary.main}0a` 
+            }
+          }}
+        >
+          Save Settings
+        </Button>
       </DialogActions>
     </Dialog>
   );

@@ -245,31 +245,22 @@
          * Initialize - Wait for defaultConsent before loading Adobe Launch
          */
         function init() {
-          console.log('🚀 Waiting for defaultConsent before loading Adobe Launch...');
+          console.log('🚀 Adobe Launch consent loader initializing...');
           
-          waitForDefaultConsent().then(function(defaultConsent) {
-            console.log('📊 defaultConsent received:', defaultConsent);
-            
-            // Check if user has explicitly consented
-            var consentState = getConsentState();
-            var hasConsent = hasAdobeConsent(consentState);
-            
-            // Load Adobe Launch if:
-            // 1. User has explicitly consented (analytics or marketing = true), OR
-            // 2. defaultConsent is 'in' or 'pending' (allowing implicit consent)
-            if (hasConsent || defaultConsent === 'in' || defaultConsent === 'pending') {
-              console.log('✅ Loading Adobe Launch with defaultConsent:', defaultConsent);
-              injectScript();
-            } else {
-              window.__tlAdobeLaunchBlocked = true;
-              console.log('⚠️ Adobe Launch blocked - defaultConsent:', defaultConsent);
-            }
-          }).catch(function(error) {
-            console.error('❌ Error waiting for consent:', error);
-            // Fallback: load anyway with 'pending' as default
-            console.log('⚠️ Proceeding with Adobe Launch load due to error');
-            injectScript();
+          // ALWAYS load Adobe Launch - let defaultConsent control data collection
+          // Blocking the script entirely prevents Target/Analytics from initializing
+          var consentState = getConsentState();
+          var hasConsent = hasAdobeConsent(consentState);
+          
+          console.log('📊 Consent state:', {
+            hasStoredConsent: !!consentState,
+            hasAnalyticsConsent: hasConsent,
+            willLoadLaunch: true  // Always true now
           });
+          
+          // Load Adobe Launch unconditionally
+          // The Web SDK will read defaultConsent from data layer to control tracking
+          injectScript();
         }
 
         window.__tlConsentScriptLoader = {
