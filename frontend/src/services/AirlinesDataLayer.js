@@ -61,12 +61,18 @@ class AirlinesDataLayer {
         } else if (consentState.action === 'out' || consentState.action === 'rejectAll') {
           defaultConsent = 'out';
           consentValue = 'out';
-        } else if (consentState.preferences?.analytics || consentState.preferences?.marketing) {
-          // Fallback: check preferences if action is not standard
-          defaultConsent = 'in';
-          consentValue = 'in';
-        } else {
-          consentValue = 'pending';
+        } else if (consentState.preferences) {
+          // For granular saves: check if user has enabled analytics OR marketing
+          const hasAnalyticsOrMarketing = consentState.preferences.analytics || consentState.preferences.marketing;
+          
+          if (hasAnalyticsOrMarketing) {
+            defaultConsent = 'in';
+            consentValue = 'in';
+          } else {
+            // User has denied both analytics and marketing
+            defaultConsent = 'out';
+            consentValue = 'out';
+          }
         }
       }
     } catch (error) {

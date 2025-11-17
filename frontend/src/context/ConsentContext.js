@@ -94,7 +94,7 @@ const syncWindowState = (state) => {
   if (typeof window === 'undefined') return;
   window.__tlConsentState = state;
   
-  // Determine consent value for Adobe based on action
+  // Determine consent value for Adobe based on action and preferences
   let consentValue = 'pending';
   let defaultConsent = 'pending';
   
@@ -104,9 +104,18 @@ const syncWindowState = (state) => {
   } else if (state.action === 'out' || state.action === 'rejectAll') {
     consentValue = 'out';
     defaultConsent = 'out';
-  } else if (state.preferences?.analytics || state.preferences?.marketing) {
-    consentValue = 'in';
-    defaultConsent = 'in';
+  } else if (state.preferences) {
+    // For granular saves: check if user has enabled analytics OR marketing
+    const hasAnalyticsOrMarketing = state.preferences.analytics || state.preferences.marketing;
+    
+    if (hasAnalyticsOrMarketing) {
+      consentValue = 'in';
+      defaultConsent = 'in';
+    } else {
+      // User has denied both analytics and marketing
+      consentValue = 'out';
+      defaultConsent = 'out';
+    }
   }
   
   // Sync to _adobeDataLayerState with both value and defaultConsent
@@ -152,7 +161,7 @@ export const ConsentProvider = ({ children }) => {
   }, []);
 
   const sendConsentEvent = useCallback(async (state, metadata) => {
-    // Determine consent value based on action
+    // Determine consent value based on action and preferences
     let consentValue = 'pending';
     let defaultConsent = 'pending';
     
@@ -162,9 +171,18 @@ export const ConsentProvider = ({ children }) => {
     } else if (state.action === 'out' || state.action === 'rejectAll') {
       consentValue = 'out';
       defaultConsent = 'out';
-    } else if (state.preferences?.analytics || state.preferences?.marketing) {
-      consentValue = 'in';
-      defaultConsent = 'in';
+    } else if (state.preferences) {
+      // For granular saves: check if user has enabled analytics OR marketing
+      const hasAnalyticsOrMarketing = state.preferences.analytics || state.preferences.marketing;
+      
+      if (hasAnalyticsOrMarketing) {
+        consentValue = 'in';
+        defaultConsent = 'in';
+      } else {
+        // User has denied both analytics and marketing
+        consentValue = 'out';
+        defaultConsent = 'out';
+      }
     }
     
     const payload = {
