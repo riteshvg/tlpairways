@@ -39,9 +39,13 @@
         https://assets.adobedtm.com 
         https://*.adobedtm.com 
         https://*.adobe.com 
+        https://*.adobe.io
         https://*.demdex.net 
         https://adobedc.demdex.net 
-        https://edge.adobedc.net;
+        https://edge.adobedc.net
+        https://*.tt.omtrdc.net
+        https://*.sc.omtrdc.net
+        https://*.adobedc.net;
       frame-src 'self' 
         https://dev-q6p3jrm5pbykuq23.us.auth0.com 
         https://*.auth0.com 
@@ -81,14 +85,14 @@
         var SCRIPT_ID = 'tlairways-adobe-launch';
         var MAX_WAIT_TIME = 3000; // Wait up to 3 seconds for defaultConsent
         var CHECK_INTERVAL = 50; // Check every 50ms
-
+        
         var currentScript = null;
-
+        
         function safeParseJSON(value) {
           if (!value) return null;
-          try {
+        try {
             return JSON.parse(value);
-          } catch (e) {
+        } catch (e) {
             console.warn('⚠️ Failed to parse stored JSON value:', e);
             return null;
           }
@@ -167,7 +171,7 @@
         }
 
         function buildScriptElement(url, attrs) {
-          var script = document.createElement('script');
+        var script = document.createElement('script');
           script.id = SCRIPT_ID;
           script.src = url;
           script.dataset.tlAdobeLaunch = 'true';
@@ -175,13 +179,30 @@
           if (attrs.async) script.async = true;
           if (attrs.defer) script.defer = true;
           if (attrs.crossOrigin) script.crossOrigin = attrs.crossOrigin;
-
-          script.onload = function() {
+        
+        script.onload = function() {
             window.__tlAdobeLaunchLoaded = true;
             console.log('✅ Adobe Launch script loaded:', url);
-          };
-
-          script.onerror = function() {
+            
+            // Check if Web SDK (alloy) initialized after Launch loads
+            setTimeout(function() {
+              if (typeof window.alloy !== 'undefined') {
+                console.log('✅ Adobe Web SDK (alloy) detected');
+              } else {
+                console.warn('⚠️ Adobe Web SDK (alloy) not found after Launch load');
+              }
+              
+              if (typeof window._satellite !== 'undefined') {
+                console.log('✅ _satellite object available');
+                console.log('📊 Available data elements:', Object.keys(window._satellite._container?.dataElements || {}));
+              }
+              
+              // Check if defaultConsent was read by Web SDK
+              console.log('📊 defaultConsent at Launch load:', window._adobeDataLayerState?.consent?.defaultConsent);
+            }, 1000);
+        };
+        
+        script.onerror = function() {
             console.error('❌ Failed to load Adobe Launch script:', url);
             if (url !== DEFAULT_SCRIPT_URL) {
               console.log('🔄 Attempting default Adobe Launch script...');
@@ -190,10 +211,10 @@
               }
               var fallbackScript = buildScriptElement(DEFAULT_SCRIPT_URL, DEFAULT_ATTRIBUTES);
               currentScript = fallbackScript;
-              document.head.appendChild(fallbackScript);
-            }
-          };
-
+            document.head.appendChild(fallbackScript);
+          }
+        };
+        
           return script;
         }
 
@@ -206,7 +227,7 @@
           var config = getScriptConfig();
           var script = buildScriptElement(config.url, config.attrs);
           currentScript = script;
-          document.head.appendChild(script);
+        document.head.appendChild(script);
           return { success: true };
         }
 
