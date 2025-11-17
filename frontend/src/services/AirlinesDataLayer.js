@@ -232,6 +232,14 @@ class AirlinesDataLayer {
   initializeConsentState() {
     if (typeof window === 'undefined') return;
     
+    // CRITICAL: If consent.value already exists (set by index.html), don't overwrite it
+    if (window._adobeDataLayerState?.consent?.value && 
+        window._adobeDataLayerState.consent.value !== 'pending') {
+      console.log('✅ Consent already initialized (from index.html) - skipping duplicate init:', 
+        window._adobeDataLayerState.consent.value);
+      return;
+    }
+    
     const CONSENT_STORAGE_KEY = 'tlairways_consent_preferences';
     let consentState = null;
     let defaultConsent = 'pending'; // Safe default
@@ -268,11 +276,14 @@ class AirlinesDataLayer {
     }
     
     // ALWAYS set defaultConsent - even if 'pending'
+    // But preserve any existing consent object properties
+    const existingConsent = window._adobeDataLayerState?.consent || {};
     window._adobeDataLayerState.consent = {
-      value: consentValue,           // NEW: Direct consent value ('in'|'out'|'pending')
-      defaultConsent: defaultConsent, // For Adobe Web SDK
+      ...existingConsent,              // Preserve any early-set values
+      value: consentValue,              // Direct consent value ('in'|'out'|'pending')
+      defaultConsent: defaultConsent,   // For Adobe Web SDK
       ...(consentState || {}),
-      categories: consentState?.preferences || { necessary: true }
+      categories: consentState?.preferences || existingConsent.categories || { necessary: true }
     };
     
     console.log('✅ Consent initialized in data layer:', {
@@ -326,10 +337,20 @@ class AirlinesDataLayer {
   ensureConsentReady() {
     if (typeof window === 'undefined') return;
     
-    // If consent not yet initialized, do it NOW (synchronously)
-    if (!window._adobeDataLayerState?.consent?.value) {
+    const currentConsentValue = window._adobeDataLayerState?.consent?.value;
+    
+    // If consent exists and is not 'pending', we're good
+    if (currentConsentValue && currentConsentValue !== 'pending') {
+      console.log('✅ Consent already ready:', currentConsentValue);
+      return;
+    }
+    
+    // If consent not yet initialized or still pending, try to initialize it NOW
+    if (!currentConsentValue) {
       console.warn('⚠️ Consent not ready - initializing now (emergency fallback)');
       this.initializeConsentState();
+    } else {
+      console.log('ℹ️ Consent is "pending" - will allow tracking until explicit opt-out');
     }
   }
 
