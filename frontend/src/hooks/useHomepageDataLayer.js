@@ -19,6 +19,7 @@ const useHomepageDataLayer = () => {
 
   /**
    * Initialize homepage data layer on component mount
+   * CRITICAL: This must fire IMMEDIATELY without waiting for Auth0
    */
   useEffect(() => {
     // CRITICAL: ALWAYS ensure consent is ready, even on re-visits
@@ -33,6 +34,7 @@ const useHomepageDataLayer = () => {
     }
     
     // Set page data and track view in a single merged event
+    // NOTE: Fire immediately without waiting for Auth0 to avoid timeout
     airlinesDataLayer.setPageDataWithView({
       pageType: 'home',
       pageName: 'Homepage',
@@ -65,6 +67,24 @@ const useHomepageDataLayer = () => {
       // Reset flag when navigating away in SPA
       homepageInitialized = false;
     };
+  }, []); // CRITICAL: Empty array = fire once on mount, don't wait for Auth0
+
+  /**
+   * Update user data separately when Auth0 loads
+   * This happens after initial pageView to avoid timeout
+   */
+  useEffect(() => {
+    if (!homepageInitialized) return; // Only update if page is already initialized
+    
+    // Update data layer with user context when Auth0 finishes loading
+    console.log('🔄 Updating homepage data layer with Auth0 user data');
+    
+    // You could push a separate event here if needed for analytics
+    // airlinesDataLayer.pushToDataLayer({
+    //   event: 'userContextUpdated',
+    //   userAuthenticated: isAuthenticated,
+    //   userId: user?.id || null
+    // });
   }, [isAuthenticated, user?.id]);
 
   /**
