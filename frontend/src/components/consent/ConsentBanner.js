@@ -2,16 +2,11 @@ import React from 'react';
 import {
   Box,
   Button,
-  Chip,
-  Divider,
   Stack,
   Typography,
   useMediaQuery
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined';
-import PrivacyTipIcon from '@mui/icons-material/PrivacyTip';
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import { useConsent } from '../../context/ConsentContext';
 
 const bannerStyles = (isDesktop, theme) => ({
@@ -47,60 +42,60 @@ const ConsentBanner = () => {
 
   return (
     <Box sx={bannerStyles(isDesktop, theme)}>
-      <Stack spacing={2}>
+      <Stack spacing={2.5}>
         <Typography variant="h6" fontWeight={600} color="text.primary">
-          Set your cookies
+          Customise Your Cookie Preferences
         </Typography>
 
-        <Typography variant="body2" color="text.secondary">
-          We use cookies to keep booking secure, analyse traffic, and deliver personalized Adobe Target content.
-          Click "Accept All" to allow every category or choose "Manage Cookies" to customize your preferences.
+        <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6 }}>
+          This website stores or retrieves information on your browser using cookies. This information might include details about you, your preferences, or your device. Cookies help the website function properly and can help provide a more personalised experience tailored to you. We respect your right to privacy, and you can choose to opt out of cookies at any time, with the exception of 'Strictly Necessary Cookies.' Please be aware that blocking cookies may impact your experience on the site and services we are able to offer you. For more information, please refer to our{' '}
+          <Typography 
+            component="a" 
+            href="/cookie-policy" 
+            sx={{ color: theme.palette.error.main, textDecoration: 'underline', fontWeight: 500 }}
+          >
+            Cookie Policy.
+          </Typography>
         </Typography>
-
-        <Stack direction="row" spacing={1} flexWrap="wrap">
-          {['Functional', 'Analytics', 'Personalization'].map(label => (
-            <Chip
-              key={label}
-              size="small"
-              label={label}
-              variant="outlined"
-              sx={{
-                borderColor: theme.palette.primary.main,
-                color: theme.palette.primary.dark,
-                fontWeight: 500
-              }}
-            />
-          ))}
-        </Stack>
 
         <Stack
           direction={{ xs: 'column', sm: 'row' }}
           spacing={1.5}
-          justifyContent="flex-end"
+          justifyContent="flex-start"
         >
           <Button
-            variant="outlined"
-            color="primary"
-            onClick={openManager}
-            startIcon={<ManageAccountsIcon />}
-            sx={{
-              borderColor: theme.palette.primary.main,
-              color: theme.palette.primary.main,
-              '&:hover': { borderColor: theme.palette.primary.dark, backgroundColor: `${theme.palette.primary.main}0a` }
-            }}
-          >
-            Manage Cookies
-          </Button>
-          <Button
+            id="consent-banner-accept-all"
             variant="contained"
             onClick={acceptAll}
-            startIcon={<PrivacyTipIcon />}
             sx={{
-              backgroundColor: theme.palette.primary.main,
-              '&:hover': { backgroundColor: theme.palette.primary.dark }
+              backgroundColor: theme.palette.error.main,
+              color: '#fff',
+              textTransform: 'none',
+              fontWeight: 600,
+              px: 3,
+              '&:hover': { backgroundColor: theme.palette.error.dark }
             }}
           >
             Accept All
+          </Button>
+          
+          <Button
+            id="consent-banner-manage-preferences"
+            variant="outlined"
+            onClick={openManager}
+            sx={{
+              borderColor: theme.palette.error.main,
+              color: theme.palette.error.main,
+              textTransform: 'none',
+              fontWeight: 600,
+              px: 3,
+              '&:hover': { 
+                borderColor: theme.palette.error.dark,
+                backgroundColor: `${theme.palette.error.main}0a` 
+              }
+            }}
+          >
+            Manage Consent Preferences
           </Button>
         </Stack>
       </Stack>

@@ -17,6 +17,7 @@ const ConsentManagerLauncher = () => {
     <Zoom in={!isBannerVisible}>
       <Tooltip title="Privacy & cookie preferences" placement="right">
         <Fab
+          id="consent-launcher-button"
           color="primary"
           aria-label="cookie preferences"
           onClick={openManager}
