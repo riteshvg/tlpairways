@@ -71,6 +71,65 @@
       })(document, document.location.href.indexOf("adobe_authoring_enabled") !== -1, ".personalization-container { opacity: 0 !important }", 3000);
     </script>
     
+    <!-- CRITICAL: Initialize Consent State IMMEDIATELY (Before Adobe Launch) -->
+    <script>
+      (function() {
+        // Initialize data layer state object if not exists
+        if (!window._adobeDataLayerState) {
+          window._adobeDataLayerState = {};
+        }
+        if (!window.adobeDataLayer) {
+          window.adobeDataLayer = [];
+        }
+        
+        // Load consent from localStorage SYNCHRONOUSLY
+        var CONSENT_STORAGE_KEY = 'tlairways_consent_preferences';
+        var consentState = null;
+        var consentValue = 'pending';
+        var defaultConsent = 'pending';
+        
+        try {
+          var stored = localStorage.getItem(CONSENT_STORAGE_KEY);
+          if (stored) {
+            consentState = JSON.parse(stored);
+            
+            // Map action to consent value
+            if (consentState.action === 'in' || consentState.action === 'acceptAll') {
+              consentValue = 'in';
+              defaultConsent = 'in';
+            } else if (consentState.action === 'out' || consentState.action === 'rejectAll') {
+              consentValue = 'out';
+              defaultConsent = 'out';
+            } else if (consentState.preferences) {
+              var hasAnalyticsOrMarketing = consentState.preferences.analytics || consentState.preferences.marketing;
+              if (hasAnalyticsOrMarketing) {
+                consentValue = 'in';
+                defaultConsent = 'in';
+              } else {
+                consentValue = 'out';
+                defaultConsent = 'out';
+              }
+            }
+          }
+        } catch (error) {
+          console.warn('⚠️ Failed to load consent from localStorage:', error);
+        }
+        
+        // CRITICAL: Set consent.value IMMEDIATELY (before Adobe Launch loads)
+        window._adobeDataLayerState.consent = {
+          value: consentValue,           // For data elements
+          defaultConsent: defaultConsent, // For Web SDK
+          categories: consentState?.preferences || { necessary: true }
+        };
+        
+        console.log('✅ EARLY Consent initialized (before Adobe Launch):', {
+          value: consentValue,
+          defaultConsent: defaultConsent,
+          timestamp: new Date().toISOString()
+        });
+      })();
+    </script>
+    
     <!-- Adobe Launch/DTM Script - Consent Managed Loading with Data Layer Wait -->
     <script>
       (function() {

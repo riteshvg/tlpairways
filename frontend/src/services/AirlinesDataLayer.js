@@ -180,61 +180,8 @@ class AirlinesDataLayer {
     return 'pending';
   }
 
-  /**
-   * Initialize consent state from localStorage into data layer
-   * This runs BEFORE any pageView events to ensure Web SDK can configure first
-   */
-  initializeConsentState() {
-    if (typeof window === 'undefined') return;
-    
-    const CONSENT_STORAGE_KEY = 'tlairways_consent_preferences';
-    let consentState = null;
-    
-    try {
-      const stored = localStorage.getItem(CONSENT_STORAGE_KEY);
-      if (stored) {
-        consentState = JSON.parse(stored);
-      }
-    } catch (error) {
-      console.warn('⚠️ Failed to load consent from localStorage:', error);
-    }
-    
-    // Determine defaultConsent intelligently
-    const defaultConsent = this.determineDefaultConsent(consentState);
-    
-    // ALWAYS set defaultConsent in state (even if 'pending')
-    window._adobeDataLayerState.consent = window._adobeDataLayerState.consent || {};
-    window._adobeDataLayerState.consent.defaultConsent = defaultConsent;
-    
-    if (consentState && consentState.preferences) {
-      // Merge full consent state
-      window._adobeDataLayerState.consent = {
-        defaultConsent,
-        ...consentState,
-        categories: consentState.preferences
-      };
-      
-      // Push consent event to array BEFORE any pageView events
-      window.adobeDataLayer.push({
-        event: 'consentPreferencesUpdated',
-        consent: {
-          defaultConsent,
-          ...consentState,
-          categories: consentState.preferences
-        }
-      });
-      
-      console.log('✅ Consent pushed to data layer (position 0):', {
-        defaultConsent,
-        action: consentState.action,
-        preferences: consentState.preferences,
-        updatedAt: consentState.updatedAt,
-        arrayPosition: 0
-      });
-    } else {
-      console.log(`ℹ️ No stored consent - defaultConsent set to "${defaultConsent}"`);
-    }
-  }
+  // REMOVED: Duplicate initializeConsentState() method
+  // The correct implementation is at line ~285 with consent.value support
   
   /**
    * Show complete timing summary for both DataLayer and Launch
