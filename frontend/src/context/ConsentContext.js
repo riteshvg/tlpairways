@@ -93,6 +93,31 @@ const persistConsentState = (state) => {
 const syncWindowState = (state) => {
   if (typeof window === 'undefined') return;
   window.__tlConsentState = state;
+  
+  // Determine consent value for Adobe based on action
+  let consentValue = 'pending';
+  let defaultConsent = 'pending';
+  
+  if (state.action === 'in' || state.action === 'acceptAll') {
+    consentValue = 'in';
+    defaultConsent = 'in';
+  } else if (state.action === 'out' || state.action === 'rejectAll') {
+    consentValue = 'out';
+    defaultConsent = 'out';
+  } else if (state.preferences?.analytics || state.preferences?.marketing) {
+    consentValue = 'in';
+    defaultConsent = 'in';
+  }
+  
+  // Sync to _adobeDataLayerState with both value and defaultConsent
+  if (window._adobeDataLayerState) {
+    window._adobeDataLayerState.consent = {
+      value: consentValue,           // Direct consent value
+      defaultConsent: defaultConsent, // For Adobe Web SDK
+      ...state,
+      categories: state.preferences
+    };
+  }
 };
 
 export const ConsentProvider = ({ children }) => {
@@ -127,9 +152,26 @@ export const ConsentProvider = ({ children }) => {
   }, []);
 
   const sendConsentEvent = useCallback(async (state, metadata) => {
+    // Determine consent value based on action
+    let consentValue = 'pending';
+    let defaultConsent = 'pending';
+    
+    if (state.action === 'in' || state.action === 'acceptAll') {
+      consentValue = 'in';
+      defaultConsent = 'in';
+    } else if (state.action === 'out' || state.action === 'rejectAll') {
+      consentValue = 'out';
+      defaultConsent = 'out';
+    } else if (state.preferences?.analytics || state.preferences?.marketing) {
+      consentValue = 'in';
+      defaultConsent = 'in';
+    }
+    
     const payload = {
       event: 'consentPreferencesUpdated',
       consent: {
+        value: consentValue,           // Direct consent value
+        defaultConsent: defaultConsent, // For Adobe Web SDK
         ...state,
         ...metadata,
         categories: state.preferences

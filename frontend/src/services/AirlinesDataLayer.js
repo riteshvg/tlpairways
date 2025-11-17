@@ -47,16 +47,26 @@ class AirlinesDataLayer {
     const CONSENT_STORAGE_KEY = 'tlairways_consent_preferences';
     let consentState = null;
     let defaultConsent = 'pending'; // Safe default
+    let consentValue = 'pending'; // Explicit consent value attribute
     
     try {
       const stored = localStorage.getItem(CONSENT_STORAGE_KEY);
       if (stored) {
         consentState = JSON.parse(stored);
-        // Determine defaultConsent based on stored preferences
-        if (consentState.preferences?.analytics || consentState.preferences?.marketing) {
+        
+        // Map action to consent value
+        if (consentState.action === 'in' || consentState.action === 'acceptAll') {
           defaultConsent = 'in';
-        } else if (consentState.action === 'out') {
+          consentValue = 'in';
+        } else if (consentState.action === 'out' || consentState.action === 'rejectAll') {
           defaultConsent = 'out';
+          consentValue = 'out';
+        } else if (consentState.preferences?.analytics || consentState.preferences?.marketing) {
+          // Fallback: check preferences if action is not standard
+          defaultConsent = 'in';
+          consentValue = 'in';
+        } else {
+          consentValue = 'pending';
         }
       }
     } catch (error) {
@@ -65,13 +75,16 @@ class AirlinesDataLayer {
     
     // ALWAYS set defaultConsent - even if 'pending'
     window._adobeDataLayerState.consent = {
-      defaultConsent,
+      value: consentValue,           // NEW: Direct consent value ('in'|'out'|'pending')
+      defaultConsent: defaultConsent, // For Adobe Web SDK
       ...(consentState || {}),
       categories: consentState?.preferences || { necessary: true }
     };
     
     console.log('✅ Consent initialized in data layer:', {
-      defaultConsent,
+      value: consentValue,
+      defaultConsent: defaultConsent,
+      action: consentState?.action,
       hasStoredConsent: !!consentState
     });
     
@@ -80,7 +93,8 @@ class AirlinesDataLayer {
       window.adobeDataLayer.push({
         event: 'consentPreferencesUpdated',
         consent: {
-          defaultConsent,
+          value: consentValue,
+          defaultConsent: defaultConsent,
           ...consentState,
           categories: consentState.preferences
         }
