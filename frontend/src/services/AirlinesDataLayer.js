@@ -126,11 +126,27 @@ class AirlinesDataLayer {
   }
 
   /**
+   * Ensure consent is available before any pageView events
+   * Called before EVERY pageView to prevent race conditions
+   */
+  ensureConsentReady() {
+    if (typeof window === 'undefined') return;
+    
+    // If consent not yet initialized, do it NOW (synchronously)
+    if (!window._adobeDataLayerState?.consent?.value) {
+      console.warn('⚠️ Consent not ready - initializing now (emergency fallback)');
+      this.initializeConsentState();
+    }
+  }
+
+  /**
    * Set page data and track page view in a single event
    * @param {Object} pageData - Page information object
    * @param {Object} viewData - Additional view tracking data
    */
   setPageDataWithView(pageData, viewData = {}) {
+    // CRITICAL: Ensure consent is ready BEFORE pushing pageView
+    this.ensureConsentReady();
     const combinedEvent = {
       event: 'pageView',
       pageData: {
