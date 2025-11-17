@@ -14,7 +14,7 @@ const bannerStyles = (isDesktop, theme) => ({
   bottom: 32,
   right: 32,
   width: isDesktop ? 420 : 'calc(100% - 32px)',
-  maxWidth: 460,
+  maxWidth: 400,
   backgroundColor: theme.palette.background.paper,
   color: theme.palette.text.primary,
   borderRadius: 2,
