@@ -42,37 +42,26 @@ const ConsentBanner = () => {
 
   return (
     <Box sx={bannerStyles(isDesktop, theme)}>
-      <Stack spacing={2.5}>
-        <Typography variant="h6" fontWeight={600} color="text.primary">
-          Customise Your Cookie Preferences
-        </Typography>
-
+      <Stack spacing={2}>
         <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6 }}>
-          This website stores or retrieves information on your browser using cookies. This information might include details about you, your preferences, or your device. Cookies help the website function properly and can help provide a more personalised experience tailored to you. We respect your right to privacy, and you can choose to opt out of cookies at any time, with the exception of 'Strictly Necessary Cookies.' Please be aware that blocking cookies may impact your experience on the site and services we are able to offer you. For more information, please refer to our{' '}
-          <Typography 
-            component="a" 
-            href="/cookie-policy" 
-            sx={{ color: theme.palette.error.main, textDecoration: 'underline', fontWeight: 500 }}
-          >
-            Cookie Policy.
-          </Typography>
+          This website stores or retrieves information on your browser using cookies.
         </Typography>
 
         <Stack
-          direction={{ xs: 'column', sm: 'row' }}
+          direction="column"
           spacing={1.5}
-          justifyContent="flex-start"
         >
           <Button
             id="consent-banner-accept-all"
             variant="contained"
             onClick={acceptAll}
+            fullWidth
             sx={{
               backgroundColor: theme.palette.error.main,
               color: '#fff',
               textTransform: 'none',
               fontWeight: 600,
-              px: 3,
+              py: 1.25,
               '&:hover': { backgroundColor: theme.palette.error.dark }
             }}
           >
@@ -83,12 +72,13 @@ const ConsentBanner = () => {
             id="consent-banner-manage-preferences"
             variant="outlined"
             onClick={openManager}
+            fullWidth
             sx={{
               borderColor: theme.palette.error.main,
               color: theme.palette.error.main,
               textTransform: 'none',
               fontWeight: 600,
-              px: 3,
+              py: 1.25,
               '&:hover': { 
                 borderColor: theme.palette.error.dark,
                 backgroundColor: `${theme.palette.error.main}0a` 
