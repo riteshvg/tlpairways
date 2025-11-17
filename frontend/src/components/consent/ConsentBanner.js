@@ -17,11 +17,11 @@ const bannerStyles = (isDesktop, theme) => ({
   maxWidth: 460,
   backgroundColor: theme.palette.background.paper,
   color: theme.palette.text.primary,
-  borderRadius: 0,
+  borderRadius: 2,
   padding: '20px 24px',
-  boxShadow: '0 30px 70px rgba(0,0,0,0.2)',
+  boxShadow: '0px 8px 16px rgba(0, 105, 92, 0.15)',
   zIndex: 1300,
-  border: `1px solid ${theme.palette.primary.main}1f`,
+  border: `1px solid ${theme.palette.primary.light}40`,
   transform: 'translateX(0)',
   transition: 'transform 0.35s ease, opacity 0.35s ease'
 });
@@ -54,15 +54,17 @@ const ConsentBanner = () => {
           <Button
             id="consent-banner-accept-all"
             variant="contained"
+            color="primary"
             onClick={acceptAll}
             fullWidth
             sx={{
-              backgroundColor: theme.palette.error.main,
-              color: '#fff',
               textTransform: 'none',
               fontWeight: 600,
               py: 1.25,
-              '&:hover': { backgroundColor: theme.palette.error.dark }
+              '&:hover': { 
+                backgroundColor: theme.palette.primary.dark,
+                boxShadow: '0px 4px 8px rgba(0, 105, 92, 0.2)'
+              }
             }}
           >
             Accept All
@@ -71,17 +73,17 @@ const ConsentBanner = () => {
           <Button
             id="consent-banner-manage-preferences"
             variant="outlined"
+            color="primary"
             onClick={openManager}
             fullWidth
             sx={{
-              borderColor: theme.palette.error.main,
-              color: theme.palette.error.main,
               textTransform: 'none',
               fontWeight: 600,
               py: 1.25,
+              borderWidth: 2,
               '&:hover': { 
-                borderColor: theme.palette.error.dark,
-                backgroundColor: `${theme.palette.error.main}0a` 
+                borderWidth: 2,
+                backgroundColor: `${theme.palette.primary.main}0a` 
               }
             }}
           >

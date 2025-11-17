@@ -60,8 +60,8 @@ const ConsentManagementModal = () => {
       aria-labelledby="consent-management-dialog"
       PaperProps={{
         sx: {
-          borderRadius: 0,
-          border: (theme) => `1px solid ${theme.palette.divider}`
+          borderRadius: 2,
+          border: (theme) => `1px solid ${theme.palette.primary.light}40`
         }
       }}
     >
@@ -82,7 +82,7 @@ const ConsentManagementModal = () => {
             <Typography 
               component="a" 
               href="/cookie-policy" 
-              sx={{ color: 'error.main', textDecoration: 'underline', fontWeight: 500 }}
+              sx={{ color: 'primary.main', textDecoration: 'underline', fontWeight: 500 }}
             >
               Cookie Policy.
             </Typography>
@@ -131,7 +131,7 @@ const ConsentManagementModal = () => {
                     control={
                       <Switch
                         id={`consent-switch-${category.id}`}
-                        color="error"
+                        color="primary"
                         checked={checked}
                         onChange={handleToggle(category.id)}
                         disabled={isLocked}
@@ -151,17 +151,17 @@ const ConsentManagementModal = () => {
         <Button
           id="consent-modal-save-settings"
           variant="outlined"
+          color="primary"
           onClick={handleSave}
           disabled={!isModalOpen}
           sx={{
-            borderColor: 'error.main',
-            color: 'error.main',
             textTransform: 'none',
             fontWeight: 600,
             px: 3,
+            borderWidth: 2,
             '&:hover': { 
-              borderColor: 'error.dark',
-              backgroundColor: (theme) => `${theme.palette.error.main}0a` 
+              borderWidth: 2,
+              backgroundColor: (theme) => `${theme.palette.primary.main}0a` 
             }
           }}
         >
