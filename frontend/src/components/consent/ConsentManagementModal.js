@@ -65,10 +65,15 @@ const ConsentManagementModal = () => {
         }
       }}
     >
-      <DialogTitle id="consent-management-dialog" sx={{ pb: 1 }}>
-        <Typography variant="h6" fontWeight={600}>
-          Customise Your Cookie Preferences
-        </Typography>
+      <DialogTitle 
+        id="consent-management-dialog" 
+        sx={{ 
+          pb: 1,
+          fontWeight: 600,
+          fontSize: '1.25rem'
+        }}
+      >
+        Customise Your Cookie Preferences
       </DialogTitle>
       <DialogContent dividers sx={{ borderTop: 'none', borderBottom: 'none' }}>
         <Stack spacing={3}>
