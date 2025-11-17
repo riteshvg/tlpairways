@@ -142,6 +142,19 @@ export const ConsentProvider = ({ children }) => {
   );
   const [isBannerVisible, setIsBannerVisible] = useState(!initialState);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  // CRITICAL: Sync window state IMMEDIATELY on provider mount
+  // This ensures _adobeDataLayerState.consent is set on every page load/navigation
+  useEffect(() => {
+    if (consentState) {
+      syncWindowState(consentState);
+      console.log('✅ ConsentProvider: Synced window state on mount', {
+        value: consentState.action === 'in' ? 'in' : consentState.action === 'out' ? 'out' : 'pending'
+      });
+    }
+  }, []); // Empty deps = run once on mount
+  
+  // eslint-disable-next-line react-hooks/exhaustive-deps
 
   const handleScriptLoading = useCallback((updatedPreferences) => {
     if (typeof window === 'undefined') {
