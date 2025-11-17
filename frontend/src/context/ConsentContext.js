@@ -98,25 +98,43 @@ const syncWindowState = (state) => {
   let consentValue = 'pending';
   let defaultConsent = 'pending';
   
+  console.log('🔍 syncWindowState: Evaluating consent', {
+    action: state.action,
+    preferences: state.preferences
+  });
+  
   if (state.action === 'in' || state.action === 'acceptAll') {
+    console.log('✅ syncWindowState: action is "in" or "acceptAll"');
     consentValue = 'in';
     defaultConsent = 'in';
   } else if (state.action === 'out' || state.action === 'rejectAll') {
+    console.log('✅ syncWindowState: action is "out" or "rejectAll"');
     consentValue = 'out';
     defaultConsent = 'out';
   } else if (state.preferences) {
     // For granular saves: check if user has enabled analytics OR marketing
     const hasAnalyticsOrMarketing = state.preferences.analytics || state.preferences.marketing;
+    console.log('🔍 syncWindowState: Checking preferences', {
+      analytics: state.preferences.analytics,
+      marketing: state.preferences.marketing,
+      hasAnalyticsOrMarketing
+    });
     
     if (hasAnalyticsOrMarketing) {
+      console.log('✅ syncWindowState: Has analytics or marketing, setting to "in"');
       consentValue = 'in';
       defaultConsent = 'in';
     } else {
+      console.log('⚠️ syncWindowState: No analytics or marketing, setting to "out"');
       // User has denied both analytics and marketing
       consentValue = 'out';
       defaultConsent = 'out';
     }
+  } else {
+    console.warn('⚠️ syncWindowState: No action or preferences, defaulting to "pending"');
   }
+  
+  console.log('📊 syncWindowState: Final consent value:', { consentValue, defaultConsent });
   
   // Sync to _adobeDataLayerState with both value and defaultConsent
   if (window._adobeDataLayerState) {
@@ -147,9 +165,14 @@ export const ConsentProvider = ({ children }) => {
   // This ensures _adobeDataLayerState.consent is set on every page load/navigation
   useEffect(() => {
     if (consentState) {
+      console.log('🔍 ConsentProvider: Syncing with state:', {
+        action: consentState.action,
+        preferences: consentState.preferences,
+        method: consentState.method
+      });
       syncWindowState(consentState);
       console.log('✅ ConsentProvider: Synced window state on mount', {
-        value: consentState.action === 'in' ? 'in' : consentState.action === 'out' ? 'out' : 'pending'
+        value: window._adobeDataLayerState?.consent?.value
       });
     }
   }, []); // Empty deps = run once on mount
