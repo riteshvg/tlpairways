@@ -184,8 +184,27 @@
             window.__tlAdobeLaunchLoaded = true;
             console.log('✅ Adobe Launch script loaded:', url);
             
-            // Check if Web SDK (alloy) initialized after Launch loads
+            // WORKAROUND: Override Adobe Launch's default action timeout
+            // This prevents 2-second timeout errors on slow networks (Railway)
             setTimeout(function() {
+              if (typeof window._satellite !== 'undefined' && window._satellite._container) {
+                // Increase timeout for all actions to 10 seconds
+                var originalTrigger = window._satellite._container.execAction;
+                if (originalTrigger) {
+                  window._satellite._container.execAction = function(action, event, ruleId) {
+                    // Set a longer timeout for actions
+                    var originalTimeout = action.timeout;
+                    if (action.timeout && action.timeout < 10000) {
+                      action.timeout = 10000; // 10 seconds
+                      console.log('⚙️ Increased action timeout to 10s for:', action.modulePath);
+                    }
+                    return originalTrigger.call(this, action, event, ruleId);
+                  };
+                  console.log('✅ Adobe Launch action timeout override applied');
+                }
+              }
+              
+              // Check if Web SDK (alloy) initialized after Launch loads
               if (typeof window.alloy !== 'undefined') {
                 console.log('✅ Adobe Web SDK (alloy) detected');
               } else {
@@ -199,7 +218,7 @@
               
               // Check if defaultConsent was read by Web SDK
               console.log('📊 defaultConsent at Launch load:', window._adobeDataLayerState?.consent?.defaultConsent);
-            }, 1000);
+            }, 500);
         };
         
         script.onerror = function() {
