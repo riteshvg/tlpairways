@@ -249,7 +249,7 @@ export const ConsentProvider = ({ children }) => {
   }, []);
 
   const updateConsentState = useCallback(
-    (preferences, metadata = {}) => {
+    async (preferences, metadata = {}) => {
       const normalized = {
         ...DEFAULT_PREFERENCES,
         ...preferences,
@@ -271,7 +271,15 @@ export const ConsentProvider = ({ children }) => {
       handleScriptLoading(normalized);
       setIsBannerVisible(false);
       setIsModalOpen(false);
-      sendConsentEvent(nextState, metadata);
+      
+      // Send consent event and wait for it to be processed
+      await sendConsentEvent(nextState, metadata);
+      
+      // CRITICAL: Add delay to allow Adobe Launch to process consent before navigation
+      // This ensures interact calls can fire with correct consent value
+      console.log('⏳ Waiting 300ms for Adobe Launch to process consent...');
+      await new Promise(resolve => setTimeout(resolve, 300));
+      console.log('✅ Consent processing delay complete');
     },
     [handleScriptLoading, sendConsentEvent]
   );
