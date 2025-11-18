@@ -90,94 +90,121 @@ const persistConsentState = (state) => {
   }
 };
 
-const syncWindowState = (state) => {
-  if (typeof window === 'undefined') return;
-  window.__tlConsentState = state;
-  
-  // Determine consent value for Adobe based on action and preferences
+/**
+ * Calculate consent value from state
+ * @param {Object} state - Consent state object
+ * @returns {Object} { consentValue, defaultConsent }
+ */
+const calculateConsentValue = (state) => {
   let consentValue = 'pending';
   let defaultConsent = 'pending';
   
-  console.log('🔍 syncWindowState: Evaluating consent', {
-    action: state.action,
-    preferences: state.preferences
-  });
-  
   if (state.action === 'in' || state.action === 'acceptAll') {
-    console.log('✅ syncWindowState: action is "in" or "acceptAll"');
     consentValue = 'in';
     defaultConsent = 'in';
   } else if (state.action === 'out' || state.action === 'rejectAll') {
-    console.log('✅ syncWindowState: action is "out" or "rejectAll"');
     consentValue = 'out';
     defaultConsent = 'out';
   } else if (state.preferences) {
     // For granular saves: check if user has enabled analytics OR marketing
     const hasAnalyticsOrMarketing = state.preferences.analytics || state.preferences.marketing;
-    console.log('🔍 syncWindowState: Checking preferences', {
-      analytics: state.preferences.analytics,
-      marketing: state.preferences.marketing,
-      hasAnalyticsOrMarketing
-    });
     
     if (hasAnalyticsOrMarketing) {
-      console.log('✅ syncWindowState: Has analytics or marketing, setting to "in"');
       consentValue = 'in';
       defaultConsent = 'in';
     } else {
-      console.log('⚠️ syncWindowState: No analytics or marketing, setting to "out"');
       // User has denied both analytics and marketing
       consentValue = 'out';
       defaultConsent = 'out';
     }
-  } else {
-    console.warn('⚠️ syncWindowState: No action or preferences, defaulting to "pending"');
   }
   
-  console.log('📊 syncWindowState: Final consent value:', { consentValue, defaultConsent });
+  return { consentValue, defaultConsent };
+};
+
+/**
+ * Sync consent state to window objects synchronously
+ * This must be called synchronously, not in useEffect
+ * @param {Object} state - Consent state object
+ * @param {boolean} pushToDataLayer - Whether to push to adobeDataLayer array
+ */
+const syncWindowState = (state, pushToDataLayer = false) => {
+  if (typeof window === 'undefined') return;
+  
+  window.__tlConsentState = state;
+  
+  const { consentValue, defaultConsent } = calculateConsentValue(state);
+  
+  // CRITICAL: Initialize _adobeDataLayerState if it doesn't exist
+  if (!window._adobeDataLayerState) {
+    window._adobeDataLayerState = {};
+  }
   
   // Sync to _adobeDataLayerState with both value and defaultConsent
-  if (window._adobeDataLayerState) {
-    window._adobeDataLayerState.consent = {
-      value: consentValue,           // Direct consent value
-      defaultConsent: defaultConsent, // For Adobe Web SDK
-      ...state,
-      categories: state.preferences
-    };
+  window._adobeDataLayerState.consent = {
+    value: consentValue,           // Direct consent value
+    defaultConsent: defaultConsent, // For Adobe Web SDK
+    ...state,
+    categories: state.preferences
+  };
+  
+  // CRITICAL: Push to adobeDataLayer array synchronously if requested
+  // This is used during initial load to ensure consent is available before any hooks fire
+  if (pushToDataLayer && window.adobeDataLayer && state.action !== 'pending') {
+    window.adobeDataLayer.push({
+      event: 'consentPreferencesUpdated',
+      consent: {
+        value: consentValue,
+        defaultConsent: defaultConsent,
+        ...state,
+        categories: state.preferences
+      }
+    });
   }
 };
 
 export const ConsentProvider = ({ children }) => {
-  const initialState = loadStoredConsent();
-  const [consentState, setConsentState] = useState(
-    initialState || {
+  // CRITICAL: Synchronous initialization - runs before any React hooks
+  // This ensures consent is available immediately when components mount
+  const initialState = (() => {
+    if (typeof window === 'undefined') return null;
+    return loadStoredConsent();
+  })();
+  
+  // CRITICAL: Initialize state synchronously and sync to window objects immediately
+  const [consentState, setConsentState] = useState(() => {
+    const state = initialState || {
       version: CONSENT_VERSION,
       updatedAt: null,
       preferences: { ...DEFAULT_PREFERENCES },
       source: 'cmp',
-      method: 'pending'
+      method: 'pending',
+      action: 'pending'
+    };
+    
+    // CRITICAL: Sync to window objects SYNCHRONOUSLY in initializer
+    // This ensures consent is available before any useEffect hooks run
+    if (typeof window !== 'undefined') {
+      // Initialize adobeDataLayer if it doesn't exist
+      if (!window.adobeDataLayer) {
+        window.adobeDataLayer = [];
+      }
+      
+      // Sync consent state synchronously
+      syncWindowState(state, true); // true = push to adobeDataLayer array
+      
+      console.log('✅ Consent initialized synchronously:', {
+        value: calculateConsentValue(state).consentValue,
+        action: state.action,
+        hasStoredConsent: !!initialState
+      });
     }
-  );
+    
+    return state;
+  });
+  
   const [isBannerVisible, setIsBannerVisible] = useState(!initialState);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
-  // CRITICAL: Sync window state IMMEDIATELY on provider mount
-  // This ensures _adobeDataLayerState.consent is set on every page load/navigation
-  useEffect(() => {
-    if (consentState) {
-      console.log('🔍 ConsentProvider: Syncing with state:', {
-        action: consentState.action,
-        preferences: consentState.preferences,
-        method: consentState.method
-      });
-      syncWindowState(consentState);
-      console.log('✅ ConsentProvider: Synced window state on mount', {
-        value: window._adobeDataLayerState?.consent?.value
-      });
-    }
-  }, []); // Empty deps = run once on mount
-  
-  // eslint-disable-next-line react-hooks/exhaustive-deps
 
   const handleScriptLoading = useCallback((updatedPreferences) => {
     if (typeof window === 'undefined') {
@@ -265,21 +292,22 @@ export const ConsentProvider = ({ children }) => {
         action: metadata.action || 'save'
       };
 
+      // CRITICAL: Sync synchronously before state update
+      // This ensures consent is available immediately when state changes
+      syncWindowState(nextState, true); // Push to data layer
+      
       setConsentState(nextState);
       persistConsentState(nextState);
-      syncWindowState(nextState);
       handleScriptLoading(normalized);
       setIsBannerVisible(false);
       setIsModalOpen(false);
       
-      // Send consent event and wait for it to be processed
+      // Send consent event (async, but consent is already synced above)
       await sendConsentEvent(nextState, metadata);
       
-      // CRITICAL: Add delay to allow Adobe Launch to process consent before navigation
-      // This ensures interact calls can fire with correct consent value
-      console.log('⏳ Waiting 300ms for Adobe Launch to process consent...');
+      // CRITICAL: Add small delay to allow Adobe Launch to process consent
+      // This prevents race condition where pageView fires before Launch processes consent
       await new Promise(resolve => setTimeout(resolve, 300));
-      console.log('✅ Consent processing delay complete');
     },
     [handleScriptLoading, sendConsentEvent]
   );
@@ -292,7 +320,7 @@ export const ConsentProvider = ({ children }) => {
         analytics: true,
         marketing: true
       },
-      { action: 'in', method: 'oneClick' }
+      { action: 'acceptAll', method: 'oneClick' }
     );
   }, [updateConsentState]);
 
@@ -304,7 +332,7 @@ export const ConsentProvider = ({ children }) => {
         analytics: false,
         marketing: false
       },
-      { action: 'out', method: 'oneClick' }
+      { action: 'rejectAll', method: 'oneClick' }
     );
   }, [updateConsentState]);
 
@@ -323,51 +351,16 @@ export const ConsentProvider = ({ children }) => {
   const closeManager = useCallback(() => setIsModalOpen(false), []);
   const dismissBanner = useCallback(() => setIsBannerVisible(false), []);
 
+  // CRITICAL: This useEffect only handles updates AFTER initial mount
+  // Initial sync happens synchronously in useState initializer above
   useEffect(() => {
-    syncWindowState(consentState);
+    // Only sync if this is an update (not initial mount)
+    // Initial sync already happened in useState initializer
+    if (consentState.updatedAt) {
+      syncWindowState(consentState, true); // Push to data layer on updates
+    }
     handleScriptLoading(consentState.preferences);
   }, [consentState, handleScriptLoading]);
-
-  const replayConsentEvent = useCallback(() => {
-    if (!initialState) {
-      console.log('ℹ️ No stored consent to replay');
-      return;
-    }
-
-    // CRITICAL: Don't replay if consent was just updated (within last 2 seconds)
-    // This prevents duplicate events when user clicks Accept/Reject and navigates
-    if (initialState.updatedAt) {
-      const updatedTime = new Date(initialState.updatedAt).getTime();
-      const now = Date.now();
-      const timeSinceUpdate = now - updatedTime;
-      
-      if (timeSinceUpdate < 2000) {
-        console.log('✅ Consent recently updated - already pushed by sendConsentEvent, skipping replay');
-        return;
-      }
-    }
-
-    // Check if consent was already pushed to the array by AirlinesDataLayer
-    const consentEventExists = window.adobeDataLayer?.some(
-      item => item.event === 'consentPreferencesUpdated' && 
-              item.consent?.updatedAt === initialState.updatedAt
-    );
-    
-    if (consentEventExists) {
-      console.log('✅ Consent event already in data layer array - skipping duplicate push');
-      return;
-    }
-
-    console.log('🔄 Replaying consent to data layer (not pre-loaded)');
-    // Push event to array with original action ('in' or 'out')
-    sendConsentEvent(initialState, {});
-  }, [initialState, sendConsentEvent]);
-
-  useEffect(() => {
-    if (initialState) {
-      replayConsentEvent();
-    }
-  }, [initialState, replayConsentEvent]);
 
   const value = useMemo(
     () => ({

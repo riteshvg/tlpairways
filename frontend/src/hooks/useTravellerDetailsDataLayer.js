@@ -205,13 +205,25 @@ const useTravellerDetailsDataLayer = (pageViewOptions = {}) => {
   const initializeTravellerDetailsDataLayer = useCallback(async () => {
     try {
       // Get booking state from sessionStorage (same as TravellerDetails component)
+      // CRITICAL: After login redirect, state is in 'restored_booking_state', not 'auth_redirect_data'
       const getBookingState = () => {
         try {
+          // First, try restored_booking_state (set by AuthContext after login redirect)
+          const restoredState = sessionStorage.getItem('restored_booking_state');
+          if (restoredState) {
+            const parsed = JSON.parse(restoredState);
+            console.log('✅ Found restored_booking_state:', parsed);
+            return parsed;
+          }
+          
+          // Second, try auth_redirect_data (if redirect hasn't happened yet)
           const authRedirectData = sessionStorage.getItem('auth_redirect_data');
           if (authRedirectData) {
             const parsed = JSON.parse(authRedirectData);
-            return parsed.bookingState || parsed;
+            return parsed.bookingState || parsed.state || parsed;
           }
+          
+          // Third, try location.state (direct navigation)
           return location.state || {};
         } catch (error) {
           console.error('Error parsing booking state:', error);
@@ -224,14 +236,61 @@ const useTravellerDetailsDataLayer = (pageViewOptions = {}) => {
       
       console.log('🔍 useTravellerDetailsDataLayer - Debug:', {
         bookingState,
+        hasOnwardFlight: !!onwardFlight,
         passengers,
         passengerCount: pageViewOptions.passengerCount,
         departureDate,
-        returnDate
+        returnDate,
+        locationState: location.state,
+        restoredState: sessionStorage.getItem('restored_booking_state') ? 'exists' : 'missing',
+        authRedirectData: sessionStorage.getItem('auth_redirect_data') ? 'exists' : 'missing'
       });
       
+      // CRITICAL: Even if onwardFlight is missing, we still need to push a pageView event
+      // This ensures the page level object exists in adobeDataLayer
       if (!onwardFlight) {
-        console.warn('No onward flight data found in booking state');
+        console.warn('⚠️ No onward flight data found in booking state - pushing minimal pageView');
+        
+        // Push a minimal pageView event to ensure page level object exists
+        const minimalPageView = {
+          event: 'pageView',
+          pageData: {
+            pageType: 'traveller-details',
+            pageName: 'Traveller Details - TLP Airways',
+            pageURL: window.location.href,
+            referrer: document.referrer || pageDataLayerManager.getPreviousPage(),
+            previousPage: 'Search Results',
+            timestamp: new Date().toISOString(),
+            userAgent: navigator.userAgent,
+            screenResolution: `${window.screen.width}x${window.screen.height}`,
+            viewportSize: `${window.innerWidth}x${window.innerHeight}`,
+            pageCategory: pageViewOptions.pageCategory || 'booking',
+            bookingStep: pageViewOptions.bookingStep || 'passenger-details',
+            bookingStepNumber: 1,
+            totalBookingSteps: 4,
+            sections: pageViewOptions.sections || [
+              'passenger-forms',
+              'contact-information',
+              'booking-summary',
+              'fare-breakdown',
+              'add-ons'
+            ],
+            passengerCount: pageViewOptions.passengerCount || 1,
+            // Flag to indicate incomplete booking state
+            bookingStateIncomplete: true
+          },
+          userContext: {
+            isLoggedIn: false,
+            userId: null,
+            userLoyaltyTier: 'none',
+            sessionId: pageDataLayerManager.getOrCreateSessionId()
+          },
+          timestamp: new Date().toISOString()
+        };
+        
+        await pushToAdobeDataLayer(minimalPageView);
+        pageDataLayerManager.setPreviousPage('Traveller Details');
+        console.log('✅ Minimal pageView pushed to adobeDataLayer (booking state incomplete)');
         return;
       }
 
