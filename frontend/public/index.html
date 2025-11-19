@@ -334,24 +334,57 @@
         }
 
         /**
-         * Initialize - Wait for defaultConsent before loading Adobe Launch
+         * Get consent value from state (checks both value field and calculates from action/preferences)
+         */
+        function getConsentValue(consentState) {
+          if (!consentState) return 'pending';
+          
+          // CRITICAL: Check stored value field first (most reliable)
+          if (consentState.value === 'in' || consentState.value === 'out') {
+            return consentState.value;
+          }
+          
+          // Fallback: Calculate from action
+          if (consentState.action === 'in' || consentState.action === 'acceptAll') {
+            return 'in';
+          } else if (consentState.action === 'out' || consentState.action === 'rejectAll') {
+            return 'out';
+          } else if (consentState.preferences) {
+            // For granular saves: check if user has enabled analytics OR marketing
+            var hasAnalyticsOrMarketing = consentState.preferences.analytics || consentState.preferences.marketing;
+            return hasAnalyticsOrMarketing ? 'in' : 'out';
+          }
+          
+          return 'pending';
+        }
+
+        /**
+         * Initialize - Check consent value before loading Adobe Launch
          */
         function init() {
           console.log('🚀 Adobe Launch consent loader initializing...');
           
-          // ALWAYS load Adobe Launch - let defaultConsent control data collection
-          // Blocking the script entirely prevents Target/Analytics from initializing
+          // CRITICAL: Check consent value - do NOT load if consent is 'out'
           var consentState = getConsentState();
+          var consentValue = getConsentValue(consentState);
           var hasConsent = hasAdobeConsent(consentState);
           
           console.log('📊 Consent state:', {
             hasStoredConsent: !!consentState,
+            consentValue: consentValue,
             hasAnalyticsConsent: hasConsent,
-            willLoadLaunch: true  // Always true now
+            willLoadLaunch: consentValue !== 'out'  // Do NOT load if consent is 'out'
           });
           
-          // Load Adobe Launch unconditionally
-          // The Web SDK will read defaultConsent from data layer to control tracking
+          // CRITICAL: Only load Adobe Launch if consent is NOT 'out'
+          // If consent is 'out', do NOT load Adobe Launch at all to prevent interact calls
+          if (consentValue === 'out') {
+            console.log('🛑 Consent is "out" - NOT loading Adobe Launch to prevent interact calls');
+            return;
+          }
+          
+          // Load Adobe Launch only if consent is 'in' or 'pending'
+          // For 'pending', Launch will load but defaultConsent will control tracking
           injectScript();
         }
 
