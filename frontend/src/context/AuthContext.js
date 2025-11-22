@@ -36,6 +36,24 @@ export const AuthProvider = ({ children }) => {
   const [userProfile, setUserProfile] = useState(null);
   const [isLoadingProfile, setIsLoadingProfile] = useState(false);
 
+  // Initialize/restore Adobe Data Layer on app load
+  useEffect(() => {
+    const savedDataLayerState = sessionStorage.getItem('auth_data_layer_state');
+
+    if (savedDataLayerState && window.adobeDataLayer) {
+      try {
+        const dataLayerState = JSON.parse(savedDataLayerState);
+        window.adobeDataLayer.push(dataLayerState);
+        console.log('🔄 Adobe Data Layer restored on app initialization:', dataLayerState);
+
+        // Clean up after restoration
+        sessionStorage.removeItem('auth_data_layer_state');
+      } catch (error) {
+        console.error('Error restoring data layer on init:', error);
+      }
+    }
+  }, []); // Run only once on mount
+
   // Load user profile data and track authentication
   useEffect(() => {
     const loadUserProfile = async () => {
@@ -103,7 +121,8 @@ export const AuthProvider = ({ children }) => {
             const dataLayerState = JSON.parse(savedDataLayerState);
             window.adobeDataLayer.push(dataLayerState);
             console.log('✅ Adobe Data Layer state restored after auth');
-            sessionStorage.removeItem('auth_data_layer_state');
+            // DON'T remove yet - we're about to do window.location.href which will reload
+            // The page that loads after redirect needs this data!
           } catch (error) {
             console.error('Error restoring data layer state:', error);
           }

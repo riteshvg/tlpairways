@@ -38,13 +38,26 @@ const TravellerDetails = () => {
       return location.state;
     }
 
-    // Try to restore from sessionStorage (after auth redirect)
+    // Try to restore from sessionStorage (after auth redirect from ProtectedRoute)
     const restoredState = sessionStorage.getItem('restored_booking_state');
     if (restoredState) {
       try {
+        sessionStorage.removeItem('restored_booking_state'); // Clean up
         return JSON.parse(restoredState);
       } catch (error) {
         console.error('Error parsing restored booking state:', error);
+      }
+    }
+
+    // Try to restore from current_booking_state (after auth redirect from banner/navbar)
+    const currentState = sessionStorage.getItem('current_booking_state');
+    if (currentState) {
+      try {
+        console.log('✅ Restoring booking state from sessionStorage');
+        // Don't remove yet - might need it for page refreshes
+        return JSON.parse(currentState);
+      } catch (error) {
+        console.error('Error parsing current booking state:', error);
       }
     }
 
@@ -784,6 +797,11 @@ const TravellerDetails = () => {
                 color="inherit"
                 size="small"
                 onClick={() => {
+                  // Save booking state before auth redirect
+                  if (bookingState) {
+                    sessionStorage.setItem('current_booking_state', JSON.stringify(bookingState));
+                    console.log('✅ Booking state saved before login:', bookingState);
+                  }
                   login();
                 }}
                 sx={{ fontWeight: 'bold' }}
