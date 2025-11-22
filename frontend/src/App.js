@@ -30,11 +30,11 @@ function App() {
   // Initialize global click tracking
   useEffect(() => {
     globalClickTracker.init();
-    
+
     // Log build version for debugging
     console.log('🚀 TLAirways App - Build Version: 2025-01-17-v2');
     console.log('✅ Latest changes: City names fixed, seat selection fixed, payment methods updated');
-    
+
     // Cleanup on unmount
     return () => {
       globalClickTracker.destroy();
@@ -52,66 +52,39 @@ function App() {
                 <Navbar />
                 <ConsentExperience />
                 <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/search" element={<FlightSearch />} />
-              <Route path="/search-results" element={<SearchResults />} />
-              <Route 
-                path="/profile" 
-                element={
-                  <ProtectedRoute>
-                    <UserProfilePage />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/my-bookings" 
-                element={
-                  <ProtectedRoute>
-                    <MyBookingsPage />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/settings" 
-                element={
-                  <ProtectedRoute>
-                    <SettingsPage />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/traveller-details" 
-                element={
-                  <ProtectedRoute>
-                    <TravellerDetails />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/ancillary-services" 
-                element={
-                  <ProtectedRoute>
-                    <AncillaryServices />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/payment" 
-                element={
-                  <ProtectedRoute>
-                    <Payment />
-                  </ProtectedRoute>
-                } 
-              />
-                <Route 
-                  path="/confirmation" 
-                  element={
-                    <ProtectedRoute>
-                      <BookingConfirmation />
-                    </ProtectedRoute>
-                  } 
-                />
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/search" element={<FlightSearch />} />
+                  <Route path="/search-results" element={<SearchResults />} />
+                  <Route
+                    path="/profile"
+                    element={
+                      <ProtectedRoute requireAuth={true}>
+                        <UserProfilePage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/my-bookings"
+                    element={
+                      <ProtectedRoute requireAuth={true}>
+                        <MyBookingsPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/settings"
+                    element={
+                      <ProtectedRoute requireAuth={true}>
+                        <SettingsPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  {/* Booking flow - guest access allowed */}
+                  <Route path="/traveller-details" element={<TravellerDetails />} />
+                  <Route path="/ancillary-services" element={<AncillaryServices />} />
+                  <Route path="/payment" element={<Payment />} />
+                  <Route path="/confirmation" element={<BookingConfirmation />} />
                 </Routes>
               </Router>
             </ThemeProvider>

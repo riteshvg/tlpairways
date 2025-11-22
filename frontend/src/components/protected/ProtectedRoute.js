@@ -3,7 +3,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { Box, CircularProgress, Typography } from '@mui/material';
 import { useAuth } from '../../context/AuthContext';
 
-const ProtectedRoute = ({ children, requireAuth = true }) => {
+const ProtectedRoute = ({ children, requireAuth = false }) => {
   const { isAuthenticated, isLoading, login } = useAuth();
   const location = useLocation();
 
@@ -30,16 +30,27 @@ const ProtectedRoute = ({ children, requireAuth = true }) => {
     // Store the current path and state for redirect after login
     const currentPath = location.pathname + location.search;
     const currentState = location.state;
-    
+
     // Store both path and state for booking-related pages
     const redirectData = {
       path: currentPath,
       state: currentState
     };
-    
-    // Store in sessionStorage for persistence across auth redirect
+
+    // Save booking state to sessionStorage
     sessionStorage.setItem('auth_redirect_data', JSON.stringify(redirectData));
-    
+
+    // Save Adobe Data Layer state if available
+    if (window.adobeDataLayer && window.adobeDataLayer.getState) {
+      try {
+        const dataLayerState = window.adobeDataLayer.getState();
+        sessionStorage.setItem('auth_data_layer_state', JSON.stringify(dataLayerState));
+        console.log('✅ Adobe Data Layer state saved before auth redirect');
+      } catch (error) {
+        console.error('Error saving data layer state:', error);
+      }
+    }
+
     login(currentPath);
     return null; // Don't render anything while redirecting
   }

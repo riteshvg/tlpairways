@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
         try {
           // Get access token for API calls
           const token = await getAccessTokenSilently();
-          
+
           // Set user profile with additional data
           const profileData = {
             ...user,
@@ -55,14 +55,14 @@ export const AuthProvider = ({ children }) => {
             picture: user.picture,
             email_verified: user.email_verified,
           };
-          
+
           setUserProfile(profileData);
-          
+
           // Track successful login
           userAnalytics.trackLoginSuccess(user);
         } catch (error) {
           console.error('Error loading user profile:', error);
-          
+
           // Track login failure
           userAnalytics.trackLoginFailure({
             errorType: 'profile_load_failed',
@@ -92,23 +92,39 @@ export const AuthProvider = ({ children }) => {
     if (isAuthenticated && !isLoading && !isLoadingProfile) {
       const returnTo = sessionStorage.getItem('auth_return_to');
       const redirectData = sessionStorage.getItem('auth_redirect_data');
-      
+      const savedDataLayerState = sessionStorage.getItem('auth_data_layer_state');
+
       if (returnTo) {
+        console.log('🔄 Post-auth redirect detected, restoring state...', { returnTo });
+
+        // Restore Adobe Data Layer state FIRST
+        if (savedDataLayerState && window.adobeDataLayer) {
+          try {
+            const dataLayerState = JSON.parse(savedDataLayerState);
+            window.adobeDataLayer.push(dataLayerState);
+            console.log('✅ Adobe Data Layer state restored after auth');
+            sessionStorage.removeItem('auth_data_layer_state');
+          } catch (error) {
+            console.error('Error restoring data layer state:', error);
+          }
+        }
+
         // Clear the stored return path
         sessionStorage.removeItem('auth_return_to');
-        
+
         // Check if we have booking state to restore
         if (redirectData) {
           try {
             const { path, state } = JSON.parse(redirectData);
             sessionStorage.removeItem('auth_redirect_data');
-            
+
             // Store the booking state for the target component to use
             if (state && (path.includes('/traveller-details') || path.includes('/ancillary-services') || path.includes('/payment'))) {
               sessionStorage.setItem('restored_booking_state', JSON.stringify(state));
             }
-            
-            // Redirect to the intended destination
+
+            // Use window.location.href for now to ensure state restoration
+            // TODO: Investigate SPA navigation with React Router
             window.location.href = path;
             return;
           } catch (error) {
@@ -116,7 +132,7 @@ export const AuthProvider = ({ children }) => {
             sessionStorage.removeItem('auth_redirect_data');
           }
         }
-        
+
         // Fallback to simple redirect
         window.location.href = returnTo;
       }
@@ -128,7 +144,7 @@ export const AuthProvider = ({ children }) => {
     if (returnTo) {
       sessionStorage.setItem('auth_return_to', returnTo);
     }
-    
+
     loginWithRedirect({
       authorizationParams: {
         redirect_uri: window.location.origin,
@@ -144,7 +160,7 @@ export const AuthProvider = ({ children }) => {
         reason: 'manual'
       });
     }
-    
+
     logout({
       logoutParams: {
         returnTo: window.location.origin,

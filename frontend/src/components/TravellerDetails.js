@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import useTravellerDetailsDataLayer from '../hooks/useTravellerDetailsDataLayer';
 import {
   Container,
@@ -28,13 +29,15 @@ import BookingSteps from './BookingSteps';
 const TravellerDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { isAuthenticated, login } = useAuth();
+  const [showLoginBanner, setShowLoginBanner] = useState(true);
 
   // Get state from location or restored from sessionStorage
   const getBookingState = () => {
     if (location.state) {
       return location.state;
     }
-    
+
     // Try to restore from sessionStorage (after auth redirect)
     const restoredState = sessionStorage.getItem('restored_booking_state');
     if (restoredState) {
@@ -44,13 +47,13 @@ const TravellerDetails = () => {
         console.error('Error parsing restored booking state:', error);
       }
     }
-    
+
     return null;
   };
 
   const bookingState = getBookingState();
   const { onwardFlight, returnFlight, tripType, passengers } = bookingState || {};
-  
+
   // Debug: Log the payment type we received
   console.log('TravellerDetails - Payment Type Debug:', {
     paymentTypeFromState: bookingState?.paymentType,
@@ -58,7 +61,7 @@ const TravellerDetails = () => {
     onwardFlight: onwardFlight?.flightNumber,
     returnFlight: returnFlight?.flightNumber
   });
-  
+
   // Initialize data layer tracking (includes pageView)
   useTravellerDetailsDataLayer({
     pageCategory: 'booking',
@@ -78,7 +81,7 @@ const TravellerDetails = () => {
   const [travellers, setTravellers] = useState(() => {
     const state = getBookingState();
     const passengerCount = (state?.passengers?.adult || 1) + (state?.passengers?.child || 0) + (state?.passengers?.infant || 0);
-    
+
     return Array.from({ length: passengerCount }, () => ({
       firstName: '',
       lastName: '',
@@ -95,7 +98,7 @@ const TravellerDetails = () => {
     const state = getBookingState();
     if (state) {
       const { onwardFlight, returnFlight } = state;
-      
+
       // Helper function to get price based on cabin class
       const getPriceForCabinClass = (flight) => {
         if (!flight) return null;
@@ -234,7 +237,7 @@ const TravellerDetails = () => {
   // Handler functions
   const handleFillRandomDetails = () => {
     const totalPassengers = (passengers?.adult || 1) + (passengers?.child || 0) + (passengers?.infant || 0);
-    
+
     // Fill passenger details
     const updatedTravellers = travellers.map(() => {
       const { firstName, lastName } = generateRandomName();
@@ -282,7 +285,7 @@ const TravellerDetails = () => {
 
   const handleClearAllDetails = () => {
     const totalPassengers = (passengers?.adult || 1) + (passengers?.child || 0) + (passengers?.infant || 0);
-    
+
     // Clear passenger details
     const clearedTravellers = Array.from({ length: totalPassengers }, () => ({
       firstName: '',
@@ -323,7 +326,7 @@ const TravellerDetails = () => {
       tripType,
       passengers
     });
-    
+
     try {
       // Check if we have valid booking state
       if (!bookingState) {
@@ -336,9 +339,9 @@ const TravellerDetails = () => {
         navigate('/search');
         return;
       }
-      
+
       console.log('Using booking state:', bookingState);
-      
+
     } catch (error) {
       console.error('Error initializing state:', error);
       setSnackbar({
@@ -426,7 +429,7 @@ const TravellerDetails = () => {
         if (!traveller.gender) travellerErrors.gender = 'Gender is required';
         if (!traveller.passportNumber) travellerErrors.passportNumber = 'Passport number is required';
         if (!traveller.nationality) travellerErrors.nationality = 'Nationality is required';
-        
+
         if (Object.keys(travellerErrors).length > 0) {
           errors.travellers[index] = travellerErrors;
         }
@@ -552,7 +555,7 @@ const TravellerDetails = () => {
 
         console.log('Tracking analytics with passenger details:', passengerDetails);
         console.log('Tracking analytics with search params:', searchParams);
-        
+
         // Analytics tracking removed
       }
       let filledTravellers = [...travellers];
@@ -572,16 +575,16 @@ const TravellerDetails = () => {
       // Convert all prices to INR for booking confirmation
       const convertToINR = (flight) => {
         if (!flight) return null;
-        
+
         // Get the price for the selected cabin class
         const cabinClassPrice = flight.displayPrices?.[flight.cabinClass] || flight.price?.amount || 0;
-        
+
         // Convert to INR if not already in INR
         let inrPrice = cabinClassPrice;
         if (flight.displayCurrency && flight.displayCurrency !== 'INR') {
           inrPrice = Math.round(CURRENCY_CONFIG.convertPrice(cabinClassPrice, flight.displayCurrency, 'INR'));
         }
-        
+
         return {
           ...flight,
           price: {
@@ -618,13 +621,13 @@ const TravellerDetails = () => {
         previousPage: 'Traveller Details',
         pnr: bookingState.pnr // Pass the PNR through the booking flow
       };
-      
+
       console.log('Navigating to ancillary services with state:', navigationState);
       console.log('Final price details being passed:', {
         onwardPrice: navigationState.selectedFlights.onward.price.amount,
         returnPrice: navigationState.selectedFlights.return?.price?.amount,
-        totalPrice: navigationState.selectedFlights.onward.price.amount + 
-                   (navigationState.selectedFlights.return?.price?.amount || 0)
+        totalPrice: navigationState.selectedFlights.onward.price.amount +
+          (navigationState.selectedFlights.return?.price?.amount || 0)
       });
 
       // Navigate to ancillary services page with delay for data layer processing
@@ -646,10 +649,10 @@ const TravellerDetails = () => {
 
   const renderFlightPreview = (flight, isReturn = false) => {
     // Get the user-selected date (not the hardcoded date from JSON)
-    const userSelectedDate = isReturn 
+    const userSelectedDate = isReturn
       ? (bookingState.returnDate || flight.departureTime)
       : (bookingState.departureDate || flight.departureTime);
-    
+
     // Debug logging
     console.log(`renderFlightPreview (${isReturn ? 'Return' : 'Onward'}):`, {
       userSelectedDate,
@@ -657,28 +660,28 @@ const TravellerDetails = () => {
       bookingStateDepartureDate: bookingState?.departureDate,
       bookingStateReturnDate: bookingState?.returnDate
     });
-    
+
     // Extract time from flight.departureTime and combine with user-selected date
     const getDateTimeWithUserDate = (flightDateTime, userDate) => {
       const flightTime = new Date(flightDateTime);
       const selectedDate = new Date(userDate);
-      
+
       // Combine user-selected date with flight time
       selectedDate.setHours(flightTime.getHours());
       selectedDate.setMinutes(flightTime.getMinutes());
       selectedDate.setSeconds(0);
-      
+
       return selectedDate;
     };
-    
+
     const departureDateTime = getDateTimeWithUserDate(flight.departureTime, userSelectedDate);
     const arrivalDateTime = getDateTimeWithUserDate(flight.arrivalTime, userSelectedDate);
-    
+
     console.log(`Final dates for ${isReturn ? 'Return' : 'Onward'}:`, {
       departure: format(departureDateTime, 'MMM dd, yyyy HH:mm'),
       arrival: format(arrivalDateTime, 'MMM dd, yyyy HH:mm')
     });
-    
+
     return (
       <Card sx={{ mb: 2 }}>
         <CardContent>
@@ -770,341 +773,366 @@ const TravellerDetails = () => {
     <>
       <BookingSteps activeStep={0} />
       <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
+        {/* Optional Login Banner - Subtle & Dismissible */}
+        {!isAuthenticated && showLoginBanner && (
+          <Alert
+            severity="info"
+            onClose={() => setShowLoginBanner(false)}
+            sx={{ mb: 3 }}
+            action={
+              <Button
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  login();
+                }}
+                sx={{ fontWeight: 'bold' }}
+              >
+                Sign In
+              </Button>
+            }
+          >
+            <Typography variant="body2">
+              <strong>Save time on future bookings!</strong> Sign in to auto-fill traveler details and earn loyalty points.
+            </Typography>
+          </Alert>
+        )}
+
         <Grid container spacing={4}>
-        {/* Traveller Details Form */}
-        <Grid item xs={12} md={8}>
-          <Paper elevation={3} sx={{ p: 4 }}>
-            <Typography variant="h4" gutterBottom>
-              Traveller Details
-            </Typography>
-            <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-              Please provide details for all passengers
-            </Typography>
+          {/* Traveller Details Form */}
+          <Grid item xs={12} md={8}>
+            <Paper elevation={3} sx={{ p: 4 }}>
+              <Typography variant="h4" gutterBottom>
+                Traveller Details
+              </Typography>
+              <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+                Please provide details for all passengers
+              </Typography>
 
-            {/* Flight Preview Section */}
-            {selectedFlights?.onward && (
-              <Box sx={{ mb: 4 }}>
-                <Typography variant="h6" gutterBottom>
-                  Selected Flight
-                </Typography>
-                {renderFlightPreview(selectedFlights.onward)}
-                {selectedFlights.return && renderFlightPreview(selectedFlights.return, true)}
-              </Box>
-            )}
+              {/* Flight Preview Section */}
+              {selectedFlights?.onward && (
+                <Box sx={{ mb: 4 }}>
+                  <Typography variant="h6" gutterBottom>
+                    Selected Flight
+                  </Typography>
+                  {renderFlightPreview(selectedFlights.onward)}
+                  {selectedFlights.return && renderFlightPreview(selectedFlights.return, true)}
+                </Box>
+              )}
 
-            <form onSubmit={handleSubmit}>
-              {/* Random Passenger Details Button */}
-              <Box sx={{ mb: 4, p: 2, border: '1px solid #e0e0e0', borderRadius: 1, backgroundColor: '#f5f5f5' }}>
-                <Typography variant="h6" gutterBottom>
-                  Quick Fill
-                </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                  Fill all passenger details with random data for testing
-                </Typography>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={handleFillRandomDetails}
-                  sx={{ mr: 2 }}
-                >
-                  Fill Random Details
-                </Button>
-                <Button
-                  variant="outlined"
-                  onClick={handleClearAllDetails}
-                >
-                  Clear All
-                </Button>
-              </Box>
+              <form onSubmit={handleSubmit}>
+                {/* Random Passenger Details Button */}
+                <Box sx={{ mb: 4, p: 2, border: '1px solid #e0e0e0', borderRadius: 1, backgroundColor: '#f5f5f5' }}>
+                  <Typography variant="h6" gutterBottom>
+                    Quick Fill
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                    Fill all passenger details with random data for testing
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={handleFillRandomDetails}
+                    sx={{ mr: 2 }}
+                  >
+                    Fill Random Details
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    onClick={handleClearAllDetails}
+                  >
+                    Clear All
+                  </Button>
+                </Box>
 
-              <Box sx={{ mb: 4 }}>
-                <Typography variant="h6" gutterBottom>
-                  Contact Information
-                </Typography>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} md={6}>
-                    <TextField
-                      fullWidth
-                      label="Email"
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      error={!!validationErrors.email}
-                      helperText={validationErrors.email}
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <TextField
-                      fullWidth
-                      label="Phone Number"
-                      type="tel"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      error={!!validationErrors.phone}
-                      helperText={validationErrors.phone}
-                      inputProps={{ maxLength: 10 }}
-                      required
-                    />
-                  </Grid>
-                </Grid>
-              </Box>
-
-              {travellers.map((traveller, index) => (
-                <Box key={index} sx={{ mb: 4 }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                    <Typography variant="h6">
-                      Passenger {index + 1}
-                    </Typography>
-                    {index > 0 && (
-                      <IconButton 
-                        color="error" 
-                        onClick={() => handleRemoveTraveller(index)}
-                        size="small"
-                      >
-                        <RemoveIcon />
-                      </IconButton>
-                    )}
-                  </Box>
-
+                <Box sx={{ mb: 4 }}>
+                  <Typography variant="h6" gutterBottom>
+                    Contact Information
+                  </Typography>
                   <Grid container spacing={2}>
                     <Grid item xs={12} md={6}>
                       <TextField
                         fullWidth
-                        label="First Name"
-                        value={traveller.firstName}
-                        onChange={(e) => handleTravellerChange(index, 'firstName', e.target.value)}
+                        label="Email"
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        error={!!validationErrors.email}
+                        helperText={validationErrors.email}
                         required
                       />
                     </Grid>
                     <Grid item xs={12} md={6}>
                       <TextField
                         fullWidth
-                        label="Last Name"
-                        value={traveller.lastName}
-                        onChange={(e) => handleTravellerChange(index, 'lastName', e.target.value)}
-                        required
-                      />
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <TextField
-                        fullWidth
-                        label="Date of Birth"
-                        type="date"
-                        value={traveller.dateOfBirth}
-                        onChange={(e) => handleTravellerChange(index, 'dateOfBirth', e.target.value)}
-                        InputLabelProps={{ shrink: true }}
-                        required
-                      />
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <FormControl fullWidth required error={!!validationErrors.travellers?.[index]?.gender}>
-                        <InputLabel>Gender</InputLabel>
-                        <Select
-                          value={traveller.gender}
-                          label="Gender"
-                          onChange={(e) => handleTravellerChange(index, 'gender', e.target.value)}
-                        >
-                          <MenuItem value="male">Male</MenuItem>
-                          <MenuItem value="female">Female</MenuItem>
-                          <MenuItem value="other">Other</MenuItem>
-                        </Select>
-                        {validationErrors.travellers?.[index]?.gender && (
-                          <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 2 }}>
-                            {validationErrors.travellers[index].gender}
-                          </Typography>
-                        )}
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <TextField
-                        fullWidth
-                        label="Passport Number"
-                        value={traveller.passportNumber}
-                        onChange={(e) => handleTravellerChange(index, 'passportNumber', e.target.value)}
-                        required
-                      />
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <TextField
-                        fullWidth
-                        label="Nationality"
-                        value={traveller.nationality}
-                        onChange={(e) => handleTravellerChange(index, 'nationality', e.target.value)}
+                        label="Phone Number"
+                        type="tel"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        error={!!validationErrors.phone}
+                        helperText={validationErrors.phone}
+                        inputProps={{ maxLength: 10 }}
                         required
                       />
                     </Grid>
                   </Grid>
                 </Box>
-              ))}
 
-              {travellers.length < numPassengers && (
-                <Button
-                  startIcon={<AddIcon />}
-                  onClick={handleAddTraveller}
-                  sx={{ mb: 4 }}
-                >
-                  Add Another Passenger
-                </Button>
-              )}
+                {travellers.map((traveller, index) => (
+                  <Box key={index} sx={{ mb: 4 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                      <Typography variant="h6">
+                        Passenger {index + 1}
+                      </Typography>
+                      {index > 0 && (
+                        <IconButton
+                          color="error"
+                          onClick={() => handleRemoveTraveller(index)}
+                          size="small"
+                        >
+                          <RemoveIcon />
+                        </IconButton>
+                      )}
+                    </Box>
 
-              <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
-                <Button
-                  variant="outlined"
-                  onClick={() => navigate('/search')}
-                >
-                  Back to Search
-                </Button>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                >
-                  Proceed to Ancillary Services
-                </Button>
-              </Box>
-            </form>
-          </Paper>
-        </Grid>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} md={6}>
+                        <TextField
+                          fullWidth
+                          label="First Name"
+                          value={traveller.firstName}
+                          onChange={(e) => handleTravellerChange(index, 'firstName', e.target.value)}
+                          required
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <TextField
+                          fullWidth
+                          label="Last Name"
+                          value={traveller.lastName}
+                          onChange={(e) => handleTravellerChange(index, 'lastName', e.target.value)}
+                          required
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <TextField
+                          fullWidth
+                          label="Date of Birth"
+                          type="date"
+                          value={traveller.dateOfBirth}
+                          onChange={(e) => handleTravellerChange(index, 'dateOfBirth', e.target.value)}
+                          InputLabelProps={{ shrink: true }}
+                          required
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <FormControl fullWidth required error={!!validationErrors.travellers?.[index]?.gender}>
+                          <InputLabel>Gender</InputLabel>
+                          <Select
+                            value={traveller.gender}
+                            label="Gender"
+                            onChange={(e) => handleTravellerChange(index, 'gender', e.target.value)}
+                          >
+                            <MenuItem value="male">Male</MenuItem>
+                            <MenuItem value="female">Female</MenuItem>
+                            <MenuItem value="other">Other</MenuItem>
+                          </Select>
+                          {validationErrors.travellers?.[index]?.gender && (
+                            <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 2 }}>
+                              {validationErrors.travellers[index].gender}
+                            </Typography>
+                          )}
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <TextField
+                          fullWidth
+                          label="Passport Number"
+                          value={traveller.passportNumber}
+                          onChange={(e) => handleTravellerChange(index, 'passportNumber', e.target.value)}
+                          required
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <TextField
+                          fullWidth
+                          label="Nationality"
+                          value={traveller.nationality}
+                          onChange={(e) => handleTravellerChange(index, 'nationality', e.target.value)}
+                          required
+                        />
+                      </Grid>
+                    </Grid>
+                  </Box>
+                ))}
 
-        {/* Flight Preview */}
-        <Grid item xs={12} md={4}>
-          <Paper elevation={3} sx={{ p: 4 }}>
-            <Typography variant="h5" gutterBottom>
-              Flight Summary
-            </Typography>
-            {renderFlightPreview(onwardFlight)}
-            {tripType === 'roundtrip' && renderFlightPreview(returnFlight, true)}
-            
-            <Box sx={{ mt: 3 }}>
-              <Typography variant="h6" gutterBottom>
-                Price Summary
-              </Typography>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                <Box>
-                <Typography fontWeight="medium">Onward Flight</Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {selectedFlights?.onward?.airline || 'TL Airways'} {selectedFlights?.onward?.flightNumber}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {selectedFlights?.onward?.cabinClass ? 
-                      selectedFlights.onward.cabinClass.charAt(0).toUpperCase() + 
-                      selectedFlights.onward.cabinClass.slice(1).toLowerCase() : 
-                      'Economy'} Class
-                  </Typography>
+                {travellers.length < numPassengers && (
+                  <Button
+                    startIcon={<AddIcon />}
+                    onClick={handleAddTraveller}
+                    sx={{ mb: 4 }}
+                  >
+                    Add Another Passenger
+                  </Button>
+                )}
+
+                <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
+                  <Button
+                    variant="outlined"
+                    onClick={() => navigate('/search')}
+                  >
+                    Back to Search
+                  </Button>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                  >
+                    Proceed to Ancillary Services
+                  </Button>
                 </Box>
-                <Typography>
-                  {selectedFlights?.onward?.isInternational ? (
-                    <>
-                      {CURRENCY_CONFIG.formatPrice((selectedFlights.onward.displayPrices?.[selectedFlights.onward.cabinClass] || selectedFlights.onward.price.amount) * numPassengers, selectedFlights.onward.displayCurrency)}
-                      <Typography component="span" variant="body2" color="textSecondary">
-                        ({CURRENCY_CONFIG.formatPrice(selectedFlights.onward.displayPrices?.[selectedFlights.onward.cabinClass] || selectedFlights.onward.price.amount, selectedFlights.onward.displayCurrency)} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})
-                      </Typography>
-                    </>
-                  ) : (
-                    <>
-                      ₹{(selectedFlights?.onward?.price?.amount * numPassengers).toLocaleString()}
-                      <Typography component="span" variant="body2" color="textSecondary">
-                        (₹{selectedFlights?.onward?.price?.amount?.toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})
-                      </Typography>
-                    </>
-                  )}
+              </form>
+            </Paper>
+          </Grid>
+
+          {/* Flight Preview */}
+          <Grid item xs={12} md={4}>
+            <Paper elevation={3} sx={{ p: 4 }}>
+              <Typography variant="h5" gutterBottom>
+                Flight Summary
+              </Typography>
+              {renderFlightPreview(onwardFlight)}
+              {tripType === 'roundtrip' && renderFlightPreview(returnFlight, true)}
+
+              <Box sx={{ mt: 3 }}>
+                <Typography variant="h6" gutterBottom>
+                  Price Summary
                 </Typography>
-              </Box>
-              {tripType === 'roundtrip' && selectedFlights?.return && (
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                   <Box>
-                  <Typography fontWeight="medium">Return Flight</Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {selectedFlights?.return?.airline || 'TL Airways'} {selectedFlights?.return?.flightNumber}
-                  </Typography>
+                    <Typography fontWeight="medium">Onward Flight</Typography>
                     <Typography variant="body2" color="text.secondary">
-                      {selectedFlights.return.cabinClass ? 
-                        selectedFlights.return.cabinClass.charAt(0).toUpperCase() + 
-                        selectedFlights.return.cabinClass.slice(1).toLowerCase() : 
+                      {selectedFlights?.onward?.airline || 'TL Airways'} {selectedFlights?.onward?.flightNumber}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {selectedFlights?.onward?.cabinClass ?
+                        selectedFlights.onward.cabinClass.charAt(0).toUpperCase() +
+                        selectedFlights.onward.cabinClass.slice(1).toLowerCase() :
                         'Economy'} Class
                     </Typography>
                   </Box>
                   <Typography>
-                    {selectedFlights?.return?.isInternational ? (
+                    {selectedFlights?.onward?.isInternational ? (
                       <>
-                        {CURRENCY_CONFIG.formatPrice((selectedFlights.return.displayPrices?.[selectedFlights.return.cabinClass] || selectedFlights.return.price.amount) * numPassengers, selectedFlights.return.displayCurrency)}
+                        {CURRENCY_CONFIG.formatPrice((selectedFlights.onward.displayPrices?.[selectedFlights.onward.cabinClass] || selectedFlights.onward.price.amount) * numPassengers, selectedFlights.onward.displayCurrency)}
                         <Typography component="span" variant="body2" color="textSecondary">
-                          ({CURRENCY_CONFIG.formatPrice(selectedFlights.return.displayPrices?.[selectedFlights.return.cabinClass] || selectedFlights.return.price.amount, selectedFlights.return.displayCurrency)} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})
+                          ({CURRENCY_CONFIG.formatPrice(selectedFlights.onward.displayPrices?.[selectedFlights.onward.cabinClass] || selectedFlights.onward.price.amount, selectedFlights.onward.displayCurrency)} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})
                         </Typography>
                       </>
                     ) : (
                       <>
-                        ₹{(selectedFlights.return.price.amount * numPassengers).toLocaleString()}
+                        ₹{(selectedFlights?.onward?.price?.amount * numPassengers).toLocaleString()}
                         <Typography component="span" variant="body2" color="textSecondary">
-                          (₹{selectedFlights.return.price.amount?.toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})
+                          (₹{selectedFlights?.onward?.price?.amount?.toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})
                         </Typography>
                       </>
                     )}
                   </Typography>
                 </Box>
-              )}
-              <Divider sx={{ my: 2 }} />
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                <Typography variant="subtitle1">Total Price</Typography>
-                <Typography variant="subtitle1">
-                  {(selectedFlights?.onward?.isInternational || selectedFlights?.return?.isInternational) ? (
-                    <>
-                      {CURRENCY_CONFIG.formatPrice(
-                        ((selectedFlights?.onward?.displayPrices?.[selectedFlights?.onward?.cabinClass] || selectedFlights?.onward?.price?.amount || 0) * numPassengers +
-                        (tripType === 'roundtrip' && selectedFlights?.return ? (selectedFlights.return.displayPrices?.[selectedFlights.return.cabinClass] || selectedFlights.return.price.amount || 0) * numPassengers : 0)),
-                        selectedFlights?.onward?.displayCurrency || 'USD'
+                {tripType === 'roundtrip' && selectedFlights?.return && (
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                    <Box>
+                      <Typography fontWeight="medium">Return Flight</Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {selectedFlights?.return?.airline || 'TL Airways'} {selectedFlights?.return?.flightNumber}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {selectedFlights.return.cabinClass ?
+                          selectedFlights.return.cabinClass.charAt(0).toUpperCase() +
+                          selectedFlights.return.cabinClass.slice(1).toLowerCase() :
+                          'Economy'} Class
+                      </Typography>
+                    </Box>
+                    <Typography>
+                      {selectedFlights?.return?.isInternational ? (
+                        <>
+                          {CURRENCY_CONFIG.formatPrice((selectedFlights.return.displayPrices?.[selectedFlights.return.cabinClass] || selectedFlights.return.price.amount) * numPassengers, selectedFlights.return.displayCurrency)}
+                          <Typography component="span" variant="body2" color="textSecondary">
+                            ({CURRENCY_CONFIG.formatPrice(selectedFlights.return.displayPrices?.[selectedFlights.return.cabinClass] || selectedFlights.return.price.amount, selectedFlights.return.displayCurrency)} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})
+                          </Typography>
+                        </>
+                      ) : (
+                        <>
+                          ₹{(selectedFlights.return.price.amount * numPassengers).toLocaleString()}
+                          <Typography component="span" variant="body2" color="textSecondary">
+                            (₹{selectedFlights.return.price.amount?.toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})
+                          </Typography>
+                        </>
                       )}
-                      <Typography component="span" variant="body2" color="textSecondary">
-                        ({CURRENCY_CONFIG.formatPrice(
-                          ((selectedFlights?.onward?.displayPrices?.[selectedFlights?.onward?.cabinClass] || selectedFlights?.onward?.price?.amount || 0) +
-                          (tripType === 'roundtrip' && selectedFlights?.return ? (selectedFlights.return.displayPrices?.[selectedFlights.return.cabinClass] || selectedFlights.return.price.amount || 0) : 0)),
+                    </Typography>
+                  </Box>
+                )}
+                <Divider sx={{ my: 2 }} />
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                  <Typography variant="subtitle1">Total Price</Typography>
+                  <Typography variant="subtitle1">
+                    {(selectedFlights?.onward?.isInternational || selectedFlights?.return?.isInternational) ? (
+                      <>
+                        {CURRENCY_CONFIG.formatPrice(
+                          ((selectedFlights?.onward?.displayPrices?.[selectedFlights?.onward?.cabinClass] || selectedFlights?.onward?.price?.amount || 0) * numPassengers +
+                            (tripType === 'roundtrip' && selectedFlights?.return ? (selectedFlights.return.displayPrices?.[selectedFlights.return.cabinClass] || selectedFlights.return.price.amount || 0) * numPassengers : 0)),
                           selectedFlights?.onward?.displayCurrency || 'USD'
-                        )} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})
-                      </Typography>
-                    </>
-                  ) : (
-                    <>
-                      ₹{
-                        ((selectedFlights?.onward?.price?.amount || 0) * numPassengers +
-                        (tripType === 'roundtrip' && selectedFlights?.return ? (selectedFlights.return.price.amount || 0) * numPassengers : 0))
-                        .toLocaleString()
-                      }
-                      <Typography component="span" variant="body2" color="textSecondary">
-                        (₹{
-                          ((selectedFlights?.onward?.price?.amount || 0) +
-                          (tripType === 'roundtrip' && selectedFlights?.return ? (selectedFlights.return.price.amount || 0) : 0))
-                          .toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})
-                      </Typography>
-                    </>
-                  )}
-                </Typography>
+                        )}
+                        <Typography component="span" variant="body2" color="textSecondary">
+                          ({CURRENCY_CONFIG.formatPrice(
+                            ((selectedFlights?.onward?.displayPrices?.[selectedFlights?.onward?.cabinClass] || selectedFlights?.onward?.price?.amount || 0) +
+                              (tripType === 'roundtrip' && selectedFlights?.return ? (selectedFlights.return.displayPrices?.[selectedFlights.return.cabinClass] || selectedFlights.return.price.amount || 0) : 0)),
+                            selectedFlights?.onward?.displayCurrency || 'USD'
+                          )} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})
+                        </Typography>
+                      </>
+                    ) : (
+                      <>
+                        ₹{
+                          ((selectedFlights?.onward?.price?.amount || 0) * numPassengers +
+                            (tripType === 'roundtrip' && selectedFlights?.return ? (selectedFlights.return.price.amount || 0) * numPassengers : 0))
+                            .toLocaleString()
+                        }
+                        <Typography component="span" variant="body2" color="textSecondary">
+                          (₹{
+                            ((selectedFlights?.onward?.price?.amount || 0) +
+                              (tripType === 'roundtrip' && selectedFlights?.return ? (selectedFlights.return.price.amount || 0) : 0))
+                              .toLocaleString()} x {numPassengers} passenger{numPassengers > 1 ? 's' : ''})
+                        </Typography>
+                      </>
+                    )}
+                  </Typography>
+                </Box>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  fullWidth
+                  sx={{ mt: 2 }}
+                  onClick={() => navigate('/search')}
+                >
+                  Change Flight/Cabin Class
+                </Button>
               </Box>
-              <Button
-                variant="outlined"
-                color="primary"
-                fullWidth
-                sx={{ mt: 2 }}
-                onClick={() => navigate('/search')}
-              >
-                Change Flight/Cabin Class
-              </Button>
-            </Box>
-          </Paper>
+            </Paper>
+          </Grid>
         </Grid>
-      </Grid>
 
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity}>
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
-    </Container>
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={6000}
+          onClose={handleCloseSnackbar}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        >
+          <Alert onClose={handleCloseSnackbar} severity={snackbar.severity}>
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
+      </Container>
     </>
   );
 };
