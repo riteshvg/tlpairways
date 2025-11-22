@@ -140,10 +140,11 @@ export const AuthProvider = ({ children }) => {
   }, [isAuthenticated, isLoading, isLoadingProfile]);
 
   const login = (returnTo = null) => {
-    // Store the intended destination in sessionStorage
-    if (returnTo) {
-      sessionStorage.setItem('auth_return_to', returnTo);
-    }
+    // Always save the current path or use provided returnTo
+    const pathToSave = returnTo || (window.location.pathname + window.location.search);
+
+    console.log('🔐 Login initiated, saving return path:', pathToSave);
+    sessionStorage.setItem('auth_return_to', pathToSave);
 
     loginWithRedirect({
       authorizationParams: {
