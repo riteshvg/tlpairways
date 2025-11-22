@@ -19344,6 +19344,1122 @@
         "cabin": "7 kg"
       },
       "distance": 8058
+    },
+    {
+      "id": "flight-1763815489694-obp77hzoz",
+      "flightNumber": "TP5504",
+      "origin": "HYD",
+      "originCity": "Hyderabad",
+      "destination": "DEL",
+      "destinationCity": "Delhi",
+      "departureTime": "12:00",
+      "arrivalTime": "14:05",
+      "duration": "2h 5m",
+      "durationMinutes": 125,
+      "price": 5506,
+      "aircraftType": "Boeing 737-800",
+      "stops": [],
+      "availableSeats": 6,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 1580
+    },
+    {
+      "id": "flight-1763815489694-6rgxaj44v",
+      "flightNumber": "TL6508",
+      "origin": "DEL",
+      "originCity": "Delhi",
+      "destination": "HYD",
+      "destinationCity": "Hyderabad",
+      "departureTime": "06:00",
+      "arrivalTime": "08:05",
+      "duration": "2h 5m",
+      "durationMinutes": 125,
+      "price": 5983,
+      "aircraftType": "Boeing 737 MAX",
+      "stops": [],
+      "availableSeats": 21,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 1580
+    },
+    {
+      "id": "flight-1763815489694-txdudasm5",
+      "flightNumber": "TX1844",
+      "origin": "HYD",
+      "originCity": "Hyderabad",
+      "destination": "DEL",
+      "destinationCity": "Delhi",
+      "departureTime": "09:30",
+      "arrivalTime": "11:35",
+      "duration": "2h 5m",
+      "durationMinutes": 125,
+      "price": 5964,
+      "aircraftType": "A320neo",
+      "stops": [],
+      "availableSeats": 12,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 1580
+    },
+    {
+      "id": "flight-1763815489694-tcty5phh4",
+      "flightNumber": "TX2768",
+      "origin": "DEL",
+      "originCity": "Delhi",
+      "destination": "HYD",
+      "destinationCity": "Hyderabad",
+      "departureTime": "20:30",
+      "arrivalTime": "22:35",
+      "duration": "2h 5m",
+      "durationMinutes": 125,
+      "price": 7372,
+      "aircraftType": "Boeing 737-800",
+      "stops": [],
+      "availableSeats": 20,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 1580
+    },
+    {
+      "id": "flight-1763815489694-f4x76oads",
+      "flightNumber": "TW5124",
+      "origin": "HYD",
+      "originCity": "Hyderabad",
+      "destination": "BOM",
+      "destinationCity": "Mumbai",
+      "departureTime": "18:00",
+      "arrivalTime": "19:25",
+      "duration": "1h 25m",
+      "durationMinutes": 85,
+      "price": 6594,
+      "aircraftType": "A320neo",
+      "stops": [],
+      "availableSeats": 21,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 620
+    },
+    {
+      "id": "flight-1763815489694-r0qgwhowe",
+      "flightNumber": "TW6622",
+      "origin": "BOM",
+      "originCity": "Mumbai",
+      "destination": "HYD",
+      "destinationCity": "Hyderabad",
+      "departureTime": "20:30",
+      "arrivalTime": "21:55",
+      "duration": "1h 25m",
+      "durationMinutes": 85,
+      "price": 4920,
+      "aircraftType": "Boeing 737-800",
+      "stops": [],
+      "availableSeats": 8,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 620
+    },
+    {
+      "id": "flight-1763815489694-eff62hpmd",
+      "flightNumber": "TX7870",
+      "origin": "HYD",
+      "originCity": "Hyderabad",
+      "destination": "BOM",
+      "destinationCity": "Mumbai",
+      "departureTime": "18:00",
+      "arrivalTime": "19:25",
+      "duration": "1h 25m",
+      "durationMinutes": 85,
+      "price": 6390,
+      "aircraftType": "Boeing 737 MAX",
+      "stops": [],
+      "availableSeats": 12,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 620
+    },
+    {
+      "id": "flight-1763815489694-6h1hwdrb3",
+      "flightNumber": "TP3519",
+      "origin": "BOM",
+      "originCity": "Mumbai",
+      "destination": "HYD",
+      "destinationCity": "Hyderabad",
+      "departureTime": "18:00",
+      "arrivalTime": "19:25",
+      "duration": "1h 25m",
+      "durationMinutes": 85,
+      "price": 6545,
+      "aircraftType": "A321neo",
+      "stops": [],
+      "availableSeats": 16,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 620
+    },
+    {
+      "id": "flight-1763815489694-9w9co3fei",
+      "flightNumber": "TL1243",
+      "origin": "HYD",
+      "originCity": "Hyderabad",
+      "destination": "CCU",
+      "destinationCity": "Kolkata",
+      "departureTime": "20:30",
+      "arrivalTime": "22:30",
+      "duration": "2h 0m",
+      "durationMinutes": 120,
+      "price": 6681,
+      "aircraftType": "Boeing 737 MAX",
+      "stops": [],
+      "availableSeats": 5,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 1500
+    },
+    {
+      "id": "flight-1763815489694-qfcife9uc",
+      "flightNumber": "TP7383",
+      "origin": "CCU",
+      "originCity": "Kolkata",
+      "destination": "HYD",
+      "destinationCity": "Hyderabad",
+      "departureTime": "18:00",
+      "arrivalTime": "20:00",
+      "duration": "2h 0m",
+      "durationMinutes": 120,
+      "price": 8078,
+      "aircraftType": "Boeing 737 MAX",
+      "stops": [],
+      "availableSeats": 20,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 1500
+    },
+    {
+      "id": "flight-1763815489694-gkh84p1tb",
+      "flightNumber": "TW2901",
+      "origin": "HYD",
+      "originCity": "Hyderabad",
+      "destination": "CCU",
+      "destinationCity": "Kolkata",
+      "departureTime": "20:30",
+      "arrivalTime": "22:30",
+      "duration": "2h 0m",
+      "durationMinutes": 120,
+      "price": 7372,
+      "aircraftType": "A320neo",
+      "stops": [],
+      "availableSeats": 6,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 1500
+    },
+    {
+      "id": "flight-1763815489694-fe5oiky37",
+      "flightNumber": "TP9652",
+      "origin": "CCU",
+      "originCity": "Kolkata",
+      "destination": "HYD",
+      "destinationCity": "Hyderabad",
+      "departureTime": "18:00",
+      "arrivalTime": "20:00",
+      "duration": "2h 0m",
+      "durationMinutes": 120,
+      "price": 7582,
+      "aircraftType": "A321neo",
+      "stops": [],
+      "availableSeats": 5,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 1500
+    },
+    {
+      "id": "flight-1763815489694-lnwfci1ft",
+      "flightNumber": "TX1401",
+      "origin": "HYD",
+      "originCity": "Hyderabad",
+      "destination": "COK",
+      "destinationCity": "Kochi",
+      "departureTime": "09:30",
+      "arrivalTime": "11:15",
+      "duration": "1h 45m",
+      "durationMinutes": 105,
+      "price": 6617,
+      "aircraftType": "Boeing 737 MAX",
+      "stops": [],
+      "availableSeats": 11,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 1220
+    },
+    {
+      "id": "flight-1763815489694-kft5og5r4",
+      "flightNumber": "TP2447",
+      "origin": "COK",
+      "originCity": "Kochi",
+      "destination": "HYD",
+      "destinationCity": "Hyderabad",
+      "departureTime": "06:00",
+      "arrivalTime": "07:45",
+      "duration": "1h 45m",
+      "durationMinutes": 105,
+      "price": 5835,
+      "aircraftType": "Boeing 737 MAX",
+      "stops": [],
+      "availableSeats": 13,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 1220
+    },
+    {
+      "id": "flight-1763815489694-xvtru559v",
+      "flightNumber": "TP6776",
+      "origin": "HYD",
+      "originCity": "Hyderabad",
+      "destination": "COK",
+      "destinationCity": "Kochi",
+      "departureTime": "18:00",
+      "arrivalTime": "19:45",
+      "duration": "1h 45m",
+      "durationMinutes": 105,
+      "price": 7377,
+      "aircraftType": "A321neo",
+      "stops": [],
+      "availableSeats": 11,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 1220
+    },
+    {
+      "id": "flight-1763815489694-3800g4xrg",
+      "flightNumber": "TL5656",
+      "origin": "COK",
+      "originCity": "Kochi",
+      "destination": "HYD",
+      "destinationCity": "Hyderabad",
+      "departureTime": "12:00",
+      "arrivalTime": "13:45",
+      "duration": "1h 45m",
+      "durationMinutes": 105,
+      "price": 6067,
+      "aircraftType": "Boeing 737-800",
+      "stops": [],
+      "availableSeats": 8,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 1220
+    },
+    {
+      "id": "flight-1763815489694-c0dmg59v8",
+      "flightNumber": "TX1448",
+      "origin": "HYD",
+      "originCity": "Hyderabad",
+      "destination": "AMD",
+      "destinationCity": "Ahmedabad",
+      "departureTime": "15:30",
+      "arrivalTime": "17:00",
+      "duration": "1h 30m",
+      "durationMinutes": 90,
+      "price": 6333,
+      "aircraftType": "A320neo",
+      "stops": [],
+      "availableSeats": 22,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 950
+    },
+    {
+      "id": "flight-1763815489694-zwzygkmpc",
+      "flightNumber": "TP2420",
+      "origin": "AMD",
+      "originCity": "Ahmedabad",
+      "destination": "HYD",
+      "destinationCity": "Hyderabad",
+      "departureTime": "06:00",
+      "arrivalTime": "07:30",
+      "duration": "1h 30m",
+      "durationMinutes": 90,
+      "price": 6165,
+      "aircraftType": "Boeing 737-800",
+      "stops": [],
+      "availableSeats": 14,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 950
+    },
+    {
+      "id": "flight-1763815489694-uzucbc25e",
+      "flightNumber": "TX8146",
+      "origin": "HYD",
+      "originCity": "Hyderabad",
+      "destination": "AMD",
+      "destinationCity": "Ahmedabad",
+      "departureTime": "20:30",
+      "arrivalTime": "22:00",
+      "duration": "1h 30m",
+      "durationMinutes": 90,
+      "price": 5269,
+      "aircraftType": "Boeing 737 MAX",
+      "stops": [],
+      "availableSeats": 17,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 950
+    },
+    {
+      "id": "flight-1763815489694-5kgp93aqp",
+      "flightNumber": "TL5727",
+      "origin": "AMD",
+      "originCity": "Ahmedabad",
+      "destination": "HYD",
+      "destinationCity": "Hyderabad",
+      "departureTime": "12:00",
+      "arrivalTime": "13:30",
+      "duration": "1h 30m",
+      "durationMinutes": 90,
+      "price": 5270,
+      "aircraftType": "A321neo",
+      "stops": [],
+      "availableSeats": 6,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 950
+    },
+    {
+      "id": "flight-1763815489694-isslsqorx",
+      "flightNumber": "TL3158",
+      "origin": "HYD",
+      "originCity": "Hyderabad",
+      "destination": "PNQ",
+      "destinationCity": "Pune",
+      "departureTime": "12:00",
+      "arrivalTime": "13:15",
+      "duration": "1h 15m",
+      "durationMinutes": 75,
+      "price": 4882,
+      "aircraftType": "Boeing 737 MAX",
+      "stops": [],
+      "availableSeats": 7,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 560
+    },
+    {
+      "id": "flight-1763815489694-ua4nbvuue",
+      "flightNumber": "TW9365",
+      "origin": "PNQ",
+      "originCity": "Pune",
+      "destination": "HYD",
+      "destinationCity": "Hyderabad",
+      "departureTime": "12:00",
+      "arrivalTime": "13:15",
+      "duration": "1h 15m",
+      "durationMinutes": 75,
+      "price": 6145,
+      "aircraftType": "A321neo",
+      "stops": [],
+      "availableSeats": 22,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 560
+    },
+    {
+      "id": "flight-1763815489694-9odoi9ww3",
+      "flightNumber": "TW2622",
+      "origin": "HYD",
+      "originCity": "Hyderabad",
+      "destination": "PNQ",
+      "destinationCity": "Pune",
+      "departureTime": "15:30",
+      "arrivalTime": "16:45",
+      "duration": "1h 15m",
+      "durationMinutes": 75,
+      "price": 5687,
+      "aircraftType": "Boeing 737-800",
+      "stops": [],
+      "availableSeats": 16,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 560
+    },
+    {
+      "id": "flight-1763815489694-w1zcgqvgs",
+      "flightNumber": "TP8356",
+      "origin": "PNQ",
+      "originCity": "Pune",
+      "destination": "HYD",
+      "destinationCity": "Hyderabad",
+      "departureTime": "06:00",
+      "arrivalTime": "07:15",
+      "duration": "1h 15m",
+      "durationMinutes": 75,
+      "price": 5639,
+      "aircraftType": "Boeing 737 MAX",
+      "stops": [],
+      "availableSeats": 18,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 560
+    },
+    {
+      "id": "flight-1763815489694-qvqg6no8e",
+      "flightNumber": "TX2424",
+      "origin": "HYD",
+      "originCity": "Hyderabad",
+      "destination": "GOI",
+      "destinationCity": "Goa",
+      "departureTime": "20:30",
+      "arrivalTime": "21:50",
+      "duration": "1h 20m",
+      "durationMinutes": 80,
+      "price": 5130,
+      "aircraftType": "Boeing 737-800",
+      "stops": [],
+      "availableSeats": 21,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 585
+    },
+    {
+      "id": "flight-1763815489694-n6adl4vih",
+      "flightNumber": "TX7443",
+      "origin": "GOI",
+      "originCity": "Goa",
+      "destination": "HYD",
+      "destinationCity": "Hyderabad",
+      "departureTime": "06:00",
+      "arrivalTime": "07:20",
+      "duration": "1h 20m",
+      "durationMinutes": 80,
+      "price": 5993,
+      "aircraftType": "Boeing 737 MAX",
+      "stops": [],
+      "availableSeats": 19,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 585
+    },
+    {
+      "id": "flight-1763815489694-veyzhjvs4",
+      "flightNumber": "TP4108",
+      "origin": "HYD",
+      "originCity": "Hyderabad",
+      "destination": "GOI",
+      "destinationCity": "Goa",
+      "departureTime": "15:30",
+      "arrivalTime": "16:50",
+      "duration": "1h 20m",
+      "durationMinutes": 80,
+      "price": 6074,
+      "aircraftType": "Boeing 737-800",
+      "stops": [],
+      "availableSeats": 23,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 585
+    },
+    {
+      "id": "flight-1763815489694-dhlnn0qrg",
+      "flightNumber": "TP1049",
+      "origin": "GOI",
+      "originCity": "Goa",
+      "destination": "HYD",
+      "destinationCity": "Hyderabad",
+      "departureTime": "09:30",
+      "arrivalTime": "10:50",
+      "duration": "1h 20m",
+      "durationMinutes": 80,
+      "price": 4570,
+      "aircraftType": "A320neo",
+      "stops": [],
+      "availableSeats": 6,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 585
+    },
+    {
+      "id": "flight-1763815489694-8bepssrlf",
+      "flightNumber": "TW3904",
+      "origin": "HYD",
+      "originCity": "Hyderabad",
+      "destination": "JAI",
+      "destinationCity": "Jaipur",
+      "departureTime": "06:00",
+      "arrivalTime": "07:55",
+      "duration": "1h 55m",
+      "durationMinutes": 115,
+      "price": 6913,
+      "aircraftType": "Boeing 737 MAX",
+      "stops": [],
+      "availableSeats": 18,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 1450
+    },
+    {
+      "id": "flight-1763815489694-ec4axbvt9",
+      "flightNumber": "TP4445",
+      "origin": "JAI",
+      "originCity": "Jaipur",
+      "destination": "HYD",
+      "destinationCity": "Hyderabad",
+      "departureTime": "20:30",
+      "arrivalTime": "22:25",
+      "duration": "1h 55m",
+      "durationMinutes": 115,
+      "price": 7444,
+      "aircraftType": "Boeing 737-800",
+      "stops": [],
+      "availableSeats": 6,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 1450
+    },
+    {
+      "id": "flight-1763815489694-b646g2187",
+      "flightNumber": "TX5583",
+      "origin": "HYD",
+      "originCity": "Hyderabad",
+      "destination": "JAI",
+      "destinationCity": "Jaipur",
+      "departureTime": "20:30",
+      "arrivalTime": "22:25",
+      "duration": "1h 55m",
+      "durationMinutes": 115,
+      "price": 7698,
+      "aircraftType": "A321neo",
+      "stops": [],
+      "availableSeats": 7,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 1450
+    },
+    {
+      "id": "flight-1763815489694-ha2c6pc0j",
+      "flightNumber": "TX6008",
+      "origin": "JAI",
+      "originCity": "Jaipur",
+      "destination": "HYD",
+      "destinationCity": "Hyderabad",
+      "departureTime": "20:30",
+      "arrivalTime": "22:25",
+      "duration": "1h 55m",
+      "durationMinutes": 115,
+      "price": 7878,
+      "aircraftType": "Boeing 737-800",
+      "stops": [],
+      "availableSeats": 13,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 1450
+    },
+    {
+      "id": "flight-1763815489694-77703pu2h",
+      "flightNumber": "TP9726",
+      "origin": "HYD",
+      "originCity": "Hyderabad",
+      "destination": "LKO",
+      "destinationCity": "Lucknow",
+      "departureTime": "09:30",
+      "arrivalTime": "11:20",
+      "duration": "1h 50m",
+      "durationMinutes": 110,
+      "price": 6391,
+      "aircraftType": "A320neo",
+      "stops": [],
+      "availableSeats": 15,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 1350
+    },
+    {
+      "id": "flight-1763815489694-auk9poboy",
+      "flightNumber": "TW6787",
+      "origin": "LKO",
+      "originCity": "Lucknow",
+      "destination": "HYD",
+      "destinationCity": "Hyderabad",
+      "departureTime": "06:00",
+      "arrivalTime": "07:50",
+      "duration": "1h 50m",
+      "durationMinutes": 110,
+      "price": 6329,
+      "aircraftType": "Boeing 737 MAX",
+      "stops": [],
+      "availableSeats": 9,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 1350
+    },
+    {
+      "id": "flight-1763815489694-2grl3nlia",
+      "flightNumber": "TW5542",
+      "origin": "HYD",
+      "originCity": "Hyderabad",
+      "destination": "LKO",
+      "destinationCity": "Lucknow",
+      "departureTime": "06:00",
+      "arrivalTime": "07:50",
+      "duration": "1h 50m",
+      "durationMinutes": 110,
+      "price": 7042,
+      "aircraftType": "A320neo",
+      "stops": [],
+      "availableSeats": 16,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 1350
+    },
+    {
+      "id": "flight-1763815489694-59y8k57ua",
+      "flightNumber": "TW9536",
+      "origin": "LKO",
+      "originCity": "Lucknow",
+      "destination": "HYD",
+      "destinationCity": "Hyderabad",
+      "departureTime": "18:00",
+      "arrivalTime": "19:50",
+      "duration": "1h 50m",
+      "durationMinutes": 110,
+      "price": 6494,
+      "aircraftType": "A321neo",
+      "stops": [],
+      "availableSeats": 21,
+      "cabinClass": [
+        "Economy",
+        "Business",
+        "First"
+      ],
+      "mealOptions": [
+        "Veg",
+        "Non-Veg",
+        "Vegan"
+      ],
+      "baggage": {
+        "checked": "23 kg",
+        "cabin": "7 kg"
+      },
+      "distance": 1350
     }
   ],
   "metadata": {
