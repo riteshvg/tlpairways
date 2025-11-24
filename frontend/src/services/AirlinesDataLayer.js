@@ -19,7 +19,7 @@ class AirlinesDataLayer {
       const initStartTime = performance.now();
       const initTimestamp = new Date().toISOString();
       const initTimeMs = Date.now();
-      
+
       // Initialize adobeDataLayer if it doesn't exist
       if (!window.adobeDataLayer) {
         window.adobeDataLayer = [];
@@ -28,19 +28,23 @@ class AirlinesDataLayer {
       if (!window.adobeDataLayer.getState) {
         window.adobeDataLayer.getState = () => window._adobeDataLayerState || {};
       }
-      
+
       // Initialize computed state object for current page data (separate from array)
       if (!window._adobeDataLayerState) {
         window._adobeDataLayerState = {};
       }
-      
+
       // CRITICAL: Initialize consent state IMMEDIATELY
       // This ensures defaultConsent is available when Adobe Launch loads
       this.initializeConsentState();
-      
+
+      // CRITICAL: Initialize default userData state IMMEDIATELY
+      // This ensures userData is always available for data elements
+      this.initializeDefaultUserData();
+
       const initEndTime = performance.now();
       const initDuration = initEndTime - initStartTime;
-      
+
       // Mark DataLayer as completely initialized
       window.__tlDataLayerInitTime = {
         timestamp: initTimestamp,
@@ -49,7 +53,7 @@ class AirlinesDataLayer {
         duration: initDuration,
         complete: true
       };
-      
+
       // Log with precise timestamp
       console.log('%c📊 DATALAYER INITIALIZED (COMPLETE)', 'color: #4CAF50; font-weight: bold; font-size: 14px;', {
         timestamp: initTimestamp,
@@ -59,29 +63,29 @@ class AirlinesDataLayer {
         dataLayerLength: window.adobeDataLayer.length,
         dataLayerReady: true
       });
-      
+
       // Check for overlap with Adobe Launch if it's already loaded
       this.checkLaunchOverlap(initEndTime);
-      
+
       this.log('AirlinesDataLayer initialized', {
         dataLayerLength: window.adobeDataLayer.length,
         timestamp: initTimestamp
       });
     }
   }
-  
+
   /**
    * Check for overlap between DataLayer and Adobe Launch script loading
    */
   checkLaunchOverlap(dataLayerTime) {
     if (typeof window === 'undefined') return;
-    
+
     const launchInitTime = window.__tlLaunchInitTime;
-    
+
     if (launchInitTime) {
       const timeDiff = Math.abs(dataLayerTime - launchInitTime.performanceTime);
       const overlap = timeDiff < 100; // Consider overlap if within 100ms
-      
+
       console.log('%c⚠️ DATALAYER vs LAUNCH TIMING ANALYSIS', 'color: #FF9800; font-weight: bold; font-size: 14px;', {
         dataLayerTime: `${dataLayerTime.toFixed(2)}ms`,
         launchTime: `${launchInitTime.performanceTime.toFixed(2)}ms`,
@@ -89,18 +93,18 @@ class AirlinesDataLayer {
         hasOverlap: overlap,
         dataLayerFirst: dataLayerTime < launchInitTime.performanceTime,
         launchFirst: launchInitTime.performanceTime < dataLayerTime,
-        recommendation: overlap 
+        recommendation: overlap
           ? 'Potential race condition - consider adding explicit wait logic'
           : 'No overlap detected - safe execution order'
       });
-      
+
       // Show final summary
       this.showTimingSummary();
     } else {
       console.log('%c⏳ Adobe Launch not yet loaded - will check when Launch loads', 'color: #2196F3; font-weight: bold;');
     }
   }
-  
+
   /**
    * Helper: Check if this is the user's first visit
    */
@@ -123,7 +127,7 @@ class AirlinesDataLayer {
    */
   getCookieValue(name) {
     if (typeof document === 'undefined') return null;
-    
+
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
       const cookies = document.cookie.split(';');
@@ -151,7 +155,7 @@ class AirlinesDataLayer {
         return 'out';
       }
     }
-    
+
     // Check for OneTrust cookie (if migrating from OneTrust)
     try {
       const optanonConsent = this.getCookieValue('OptanonConsent');
@@ -166,7 +170,7 @@ class AirlinesDataLayer {
     } catch (error) {
       console.warn('⚠️ Error reading OneTrust cookie:', error);
     }
-    
+
     // For first-time visitors in privacy-sensitive regions, default to 'in' (opt-in required)
     // For other regions, 'pending' allows data collection until explicit opt-out
     if (this.isFirstVisit()) {
@@ -175,31 +179,31 @@ class AirlinesDataLayer {
       console.log('👋 First visit detected - defaultConsent: "pending"');
       return 'pending';
     }
-    
+
     // Default for returning visitors with no stored consent
     return 'pending';
   }
 
   // REMOVED: Duplicate initializeConsentState() method
   // The correct implementation is at line ~285 with consent.value support
-  
+
   /**
    * Show complete timing summary for both DataLayer and Launch
    */
   showTimingSummary() {
     if (typeof window === 'undefined') return;
-    
+
     const dataLayerTime = window.__tlDataLayerInitTime;
     const launchTime = window.__tlLaunchInitTime;
-    
+
     if (!dataLayerTime || !launchTime) {
       return; // Wait for both to be ready
     }
-    
+
     const timeDiff = Math.abs(dataLayerTime.performanceTime - launchTime.performanceTime);
     const overlap = timeDiff < 100;
     const dataLayerFirst = dataLayerTime.performanceTime < launchTime.performanceTime;
-    
+
     console.log('%c📊 COMPLETE TIMING SUMMARY', 'color: #2196F3; font-weight: bold; font-size: 16px; background: #E3F2FD; padding: 10px; border-radius: 5px;');
     console.table({
       'DataLayer': {
@@ -218,7 +222,7 @@ class AirlinesDataLayer {
         'Time Difference': `${timeDiff.toFixed(2)}ms`,
         'Has Overlap': overlap ? '⚠️ YES' : '✅ NO',
         'Load Order': dataLayerFirst ? 'DataLayer → Launch' : 'Launch → DataLayer',
-        'Recommendation': overlap 
+        'Recommendation': overlap
           ? '⚠️ Potential race condition'
           : '✅ Safe execution order'
       }
@@ -231,25 +235,25 @@ class AirlinesDataLayer {
    */
   initializeConsentState() {
     if (typeof window === 'undefined') return;
-    
+
     // CRITICAL: If consent.value already exists (set by index.html), don't overwrite it
-    if (window._adobeDataLayerState?.consent?.value && 
-        window._adobeDataLayerState.consent.value !== 'pending') {
-      console.log('✅ Consent already initialized (from index.html) - skipping duplicate init:', 
+    if (window._adobeDataLayerState?.consent?.value &&
+      window._adobeDataLayerState.consent.value !== 'pending') {
+      console.log('✅ Consent already initialized (from index.html) - skipping duplicate init:',
         window._adobeDataLayerState.consent.value);
       return;
     }
-    
+
     const CONSENT_STORAGE_KEY = 'tlairways_consent_preferences';
     let consentState = null;
     let defaultConsent = 'pending'; // Safe default
     let consentValue = 'pending'; // Explicit consent value attribute
-    
+
     try {
       const stored = localStorage.getItem(CONSENT_STORAGE_KEY);
       if (stored) {
         consentState = JSON.parse(stored);
-        
+
         // Map action to consent value
         if (consentState.action === 'in' || consentState.action === 'acceptAll') {
           defaultConsent = 'in';
@@ -260,7 +264,7 @@ class AirlinesDataLayer {
         } else if (consentState.preferences) {
           // For granular saves: check if user has enabled analytics OR marketing
           const hasAnalyticsOrMarketing = consentState.preferences.analytics || consentState.preferences.marketing;
-          
+
           if (hasAnalyticsOrMarketing) {
             defaultConsent = 'in';
             consentValue = 'in';
@@ -274,7 +278,7 @@ class AirlinesDataLayer {
     } catch (error) {
       console.warn('⚠️ Failed to load consent from localStorage:', error);
     }
-    
+
     // ALWAYS set defaultConsent - even if 'pending'
     // But preserve any existing consent object properties
     const existingConsent = window._adobeDataLayerState?.consent || {};
@@ -285,14 +289,14 @@ class AirlinesDataLayer {
       ...(consentState || {}),
       categories: consentState?.preferences || existingConsent.categories || { necessary: true }
     };
-    
+
     console.log('✅ Consent initialized in data layer:', {
       value: consentValue,
       defaultConsent: defaultConsent,
       action: consentState?.action,
       hasStoredConsent: !!consentState
     });
-    
+
     // If we have stored consent, push the event too
     if (consentState && consentState.preferences) {
       window.adobeDataLayer.push({
@@ -306,6 +310,45 @@ class AirlinesDataLayer {
       });
       console.log('✅ Consent event pushed to data layer');
     }
+  }
+
+  /**
+   * Initialize default userData state
+   * This ensures userData is ALWAYS available in the data layer,
+   * even before Auth0 completes loading
+   */
+  initializeDefaultUserData() {
+    if (typeof window === 'undefined') return;
+
+    // Check if userData already exists in the state
+    if (window._adobeDataLayerState?.userData) {
+      console.log('✅ userData already initialized - skipping default init');
+      return;
+    }
+
+    // Set default anonymous user data
+    const defaultUserData = {
+      hashedUserId: null,
+      loyaltyTier: 'none',
+      registrationDate: null,
+      userSegment: 'anonymous',
+      emailDomain: null,
+      isEmailVerified: false,
+      lastLogin: null,
+      loginCount: 0,
+      isAuthenticated: false
+    };
+
+    // Set in computed state
+    window._adobeDataLayerState.userData = defaultUserData;
+
+    // Also push to data layer array for immediate availability
+    window.adobeDataLayer.push({
+      event: 'userDataInitialized',
+      userData: defaultUserData
+    });
+
+    console.log('✅ Default userData initialized in data layer:', defaultUserData);
   }
 
   /**
@@ -336,15 +379,15 @@ class AirlinesDataLayer {
    */
   ensureConsentReady() {
     if (typeof window === 'undefined') return;
-    
+
     const currentConsentValue = window._adobeDataLayerState?.consent?.value;
-    
+
     // If consent exists and is not 'pending', we're good
     if (currentConsentValue && currentConsentValue !== 'pending') {
       console.log('✅ Consent already ready:', currentConsentValue);
       return;
     }
-    
+
     // If consent not yet initialized or still pending, try to initialize it NOW
     if (!currentConsentValue) {
       console.warn('⚠️ Consent not ready - initializing now (emergency fallback)');
@@ -394,13 +437,21 @@ class AirlinesDataLayer {
    * @param {Object} userData - User information object
    */
   setUserData(userData) {
+    const enrichedUserData = {
+      ...userData,
+      isAuthenticated: true, // Mark as authenticated when setting real user data
+      timestamp: new Date().toISOString()
+    };
+
     const userDataEvent = {
       event: 'userData',
-      userData: {
-        ...userData,
-        timestamp: new Date().toISOString()
-      }
+      userData: enrichedUserData
     };
+
+    // CRITICAL: Update computed state so userData is always available
+    if (typeof window !== 'undefined' && window._adobeDataLayerState) {
+      window._adobeDataLayerState.userData = enrichedUserData;
+    }
 
     this.pushToDataLayer(userDataEvent);
     this.log('User data set', userDataEvent);
@@ -729,7 +780,7 @@ class AirlinesDataLayer {
       // In a real implementation, this would send to Adobe Edge
       // For now, we'll log the data that would be sent
       this.log('Data sent to Adobe Experience Platform', eventData);
-      
+
       // Trigger Adobe Launch rule if available
       if (window._satellite && window._satellite.track) {
         window._satellite.track('airlines-event', eventData);
@@ -758,10 +809,10 @@ class AirlinesDataLayer {
         console.warn('⚠️ Attempted to push invalid data to adobeDataLayer:', data);
         return;
       }
-      
+
       // Push event to array for history
       window.adobeDataLayer.push(data);
-      
+
       // Update computed state with latest page-specific data
       const stateUpdate = {};
       if (data.pageData) stateUpdate.pageData = data.pageData;
@@ -772,18 +823,18 @@ class AirlinesDataLayer {
       if (data.paymentDetails) stateUpdate.paymentDetails = data.paymentDetails;
       if (data.pricing) stateUpdate.pricing = data.pricing;
       if (data.ancillaryServices) stateUpdate.ancillaryServices = data.ancillaryServices;
-      
+
       if (Object.keys(stateUpdate).length > 0) {
         this.setComputedState(stateUpdate);
       }
-      
+
       // Limit array size to prevent memory issues
       if (window.adobeDataLayer.length > 50) {
         // Keep only the last 30 events
         window.adobeDataLayer.splice(0, window.adobeDataLayer.length - 30);
         this.log('Data layer pruned to prevent memory issues');
       }
-      
+
       // Automatically send to Adobe Experience Platform on key interactions
       this.sendToAdobeExperiencePlatform(data);
     }
@@ -818,14 +869,14 @@ class AirlinesDataLayer {
       if (!window._adobeDataLayerState) {
         window._adobeDataLayerState = {};
       }
-      
+
       // Merge new state, replacing old values
       window._adobeDataLayerState = {
         ...window._adobeDataLayerState,
         ...stateData,
         _lastUpdated: new Date().toISOString()
       };
-      
+
       this.log('Computed state updated', window._adobeDataLayerState);
     }
   }
@@ -843,7 +894,7 @@ class AirlinesDataLayer {
           preservedData[key] = window._adobeDataLayerState[key];
         }
       });
-      
+
       window._adobeDataLayerState = preservedData;
       this.log('Page state cleared, preserved:', keysToKeep);
     }
@@ -895,7 +946,7 @@ class AirlinesDataLayer {
     console.log('🛩️ Adobe Data Layer Debug Info:');
     console.log('Total Events:', window.adobeDataLayer ? window.adobeDataLayer.length : 0);
     console.log('All Events:', window.adobeDataLayer || []);
-    
+
     if (window.adobeDataLayer && window.adobeDataLayer.length > 0) {
       // Group events by type
       const eventTypes = {};
@@ -905,10 +956,10 @@ class AirlinesDataLayer {
         }
         eventTypes[event.event].push(event);
       });
-      
+
       console.log('Events by Type:', eventTypes);
     }
-    
+
     return window.adobeDataLayer || [];
   }
 

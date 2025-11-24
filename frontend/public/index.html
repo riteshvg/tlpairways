@@ -86,10 +86,17 @@
           window.adobeDataLayer.push = function() {
             for (var i = 0; i < arguments.length; i++) {
               var item = arguments[i];
-              if (item === null || item === undefined || typeof item !== 'object') {
-                console.error('❌ BLOCKED: Attempted to push invalid item to adobeDataLayer:', item);
+              // Allow objects AND functions (Adobe Launch uses functions for event listeners)
+              // Only block null, undefined, primitives (strings, numbers, booleans)
+              if (item === null || item === undefined) {
+                console.error('❌ BLOCKED: Attempted to push null/undefined to adobeDataLayer');
                 console.trace('Stack trace:');
-                continue; // Skip invalid items
+                continue; // Skip null/undefined
+              }
+              if (typeof item !== 'object' && typeof item !== 'function') {
+                console.error('❌ BLOCKED: Attempted to push primitive to adobeDataLayer:', item);
+                console.trace('Stack trace:');
+                continue; // Skip primitives (string, number, boolean)
               }
               originalPush.call(window.adobeDataLayer, item);
             }

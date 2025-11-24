@@ -25,14 +25,14 @@ const useHomepageDataLayer = () => {
     // CRITICAL: ALWAYS ensure consent is ready, even on re-visits
     // This must happen BEFORE any check to prevent timeout errors
     airlinesDataLayer.ensureConsentReady();
-    
+
     // Prevent duplicate pageView across component re-renders and React StrictMode
     if (homepageInitialized) {
       console.log('🏠 Homepage already initialized - skipping duplicate pageView');
       // Consent is refreshed above, but skip duplicate pageView
       return;
     }
-    
+
     // Set page data and track view in a single merged event
     // NOTE: Fire immediately without waiting for Auth0 to avoid timeout
     airlinesDataLayer.setPageDataWithView({
@@ -51,16 +51,16 @@ const useHomepageDataLayer = () => {
 
     homepageInitialized = true;
     console.log('🏠 Homepage data layer initialized');
-    
+
     // Reset flag on SPA navigation away (not just browser unload)
     const resetFlag = () => {
       homepageInitialized = false;
       console.log('🔄 Homepage flag reset');
     };
-    
+
     // Reset on browser unload
     window.addEventListener('beforeunload', resetFlag);
-    
+
     // Cleanup function - reset when component unmounts (SPA navigation)
     return () => {
       window.removeEventListener('beforeunload', resetFlag);
@@ -75,17 +75,49 @@ const useHomepageDataLayer = () => {
    */
   useEffect(() => {
     if (!homepageInitialized) return; // Only update if page is already initialized
-    
+
     // Update data layer with user context when Auth0 finishes loading
     console.log('🔄 Updating homepage data layer with Auth0 user data');
-    
-    // You could push a separate event here if needed for analytics
-    // airlinesDataLayer.pushToDataLayer({
-    //   event: 'userContextUpdated',
-    //   userAuthenticated: isAuthenticated,
-    //   userId: user?.id || null
-    // });
+
+    // Push user context update to data layer
+    if (isAuthenticated && user) {
+      // User is authenticated - update with real user data
+      airlinesDataLayer.pushToDataLayer({
+        event: 'userContextUpdated',
+        userData: {
+          isAuthenticated: true,
+          userId: user.id,
+          hashedUserId: user.id ? hashUserId(user.id) : null,
+          userSegment: 'authenticated'
+        }
+      });
+    } else {
+      // User is not authenticated - ensure anonymous state
+      airlinesDataLayer.pushToDataLayer({
+        event: 'userContextUpdated',
+        userData: {
+          isAuthenticated: false,
+          userId: null,
+          hashedUserId: null,
+          userSegment: 'anonymous'
+        }
+      });
+    }
   }, [isAuthenticated, user?.id]);
+
+  /**
+   * Simple hash function for user ID (for PII protection)
+   */
+  const hashUserId = (userId) => {
+    if (!userId) return null;
+    let hash = 0;
+    for (let i = 0; i < userId.length; i++) {
+      const char = userId.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash;
+    }
+    return Math.abs(hash).toString(36);
+  };
 
   /**
    * Track scroll depth with throttling
@@ -100,9 +132,9 @@ const useHomepageDataLayer = () => {
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
     const windowHeight = window.innerHeight;
     const documentHeight = document.documentElement.scrollHeight;
-    
+
     const scrollDepth = Math.round((scrollTop + windowHeight) / documentHeight * 100);
-    
+
     // Track milestone scroll depths (25%, 50%, 75%, 100%)
     const milestones = [25, 50, 75, 100];
     milestones.forEach(milestone => {
@@ -118,7 +150,7 @@ const useHomepageDataLayer = () => {
    */
   useEffect(() => {
     window.addEventListener('scroll', trackScrollDepth, { passive: true });
-    
+
     return () => {
       window.removeEventListener('scroll', trackScrollDepth);
     };
