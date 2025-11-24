@@ -65,7 +65,7 @@ const findAirportByCode = (code) => {
 const BookingConfirmation = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  
+
   // Build version for tracking
   const BUILD_VERSION = {
     version: '2025-10-22-v9',
@@ -89,7 +89,7 @@ const BookingConfirmation = () => {
       'Ancillary total calculation accuracy'
     ]
   };
-  
+
   // Track page view with confirmation-specific context
   usePageView({
     pageCategory: 'booking',
@@ -97,20 +97,20 @@ const BookingConfirmation = () => {
     sections: ['confirmation-details', 'booking-summary', 'next-steps'],
     bookingId: location.state?.bookingId || null
   });
-  
+
   const [error, setError] = useState('');
   const hasFiredBookingConfirmed = useRef(false);
   const hasFiredPurchaseEvent = useRef(false);
   const [totalDistance, setTotalDistance] = useState(0);
   const [treesPlanted, setTreesPlanted] = useState(0);
   const [techDetailsOpen, setTechDetailsOpen] = useState(false);
-  
+
   // State for tracking user interactions
   const [bookingReference, setBookingReference] = useState('');
   const [transactionId, setTransactionId] = useState('');
   const [emailRequested, setEmailRequested] = useState(false);
   const [smsRequested, setSmsRequested] = useState(false);
-  
+
   // State for haul types (for UI display)
   const [haulTypes, setHaulTypes] = useState({
     onward: 'short haul',
@@ -154,14 +154,14 @@ const BookingConfirmation = () => {
 
   // Use the stored PNR and ticket numbers
   const { pnr, onwardTicket, returnTicket } = bookingDetails;
-  
+
   console.log('Using PNR in BookingConfirmation:', pnr, passedPNR ? '(from SearchResults)' : '(generated as fallback)');
 
   // Calculate ancillary services total
   const calculateAncillaryTotal = () => {
     let total = 0;
     console.log('Calculating ancillary total for services:', selectedServices);
-    
+
     ['onward', 'return'].forEach(journey => {
       if (selectedServices?.[journey]) {
         // Seat costs
@@ -185,12 +185,12 @@ const BookingConfirmation = () => {
             }
           });
         }
-        
+
         // Baggage cost
         if (selectedServices[journey].baggage) {
           selectedServices[journey].baggage.forEach(baggage => {
             if (baggage && baggage !== 'included') {
-              const isInternational = journey === 'onward' ? 
+              const isInternational = journey === 'onward' ?
                 selectedFlights.onward.origin !== selectedFlights.onward.destination :
                 selectedFlights.return.origin !== selectedFlights.return.destination;
               const baggagePrice = getBaggagePrice(baggage, isInternational);
@@ -204,7 +204,7 @@ const BookingConfirmation = () => {
             }
           });
         }
-        
+
         // Priority boarding costs
         if (selectedServices[journey].priorityBoarding) {
           selectedServices[journey].priorityBoarding.forEach(priority => {
@@ -214,7 +214,7 @@ const BookingConfirmation = () => {
             }
           });
         }
-        
+
         // Lounge access costs
         if (selectedServices[journey].loungeAccess) {
           selectedServices[journey].loungeAccess.forEach(lounge => {
@@ -226,7 +226,7 @@ const BookingConfirmation = () => {
         }
       }
     });
-    
+
     console.log('Final ancillary total:', total);
     return total;
   };
@@ -252,7 +252,7 @@ const BookingConfirmation = () => {
     const convenienceFee = Math.round(baseFare * 0.02); // 2% convenience fee
     const surcharge = Math.round(baseFare * 0.01); // 1% surcharge
     const ancillaryTotal = calculateAncillaryTotal();
-    
+
     return {
       baseFare,
       taxes,
@@ -266,7 +266,7 @@ const BookingConfirmation = () => {
   // Render fee breakdown
   const renderFeeBreakdown = () => {
     const fees = calculateFeeBreakdown();
-    
+
     return (
       <Box sx={{ mt: 3 }}>
         <Typography variant="h6" gutterBottom>
@@ -331,9 +331,9 @@ const BookingConfirmation = () => {
       const minutes = minutesMatch ? parseInt(minutesMatch[1]) : 0;
       return hours + (minutes / 60);
     };
-    
+
     const durationInHours = parseDuration(duration);
-    
+
     // Short haul: distance < 4800 km OR duration < 6 hours
     // Long haul: distance >= 4800 km OR duration >= 6 hours
     if (distance >= 4800 || durationInHours >= 6) {
@@ -375,12 +375,12 @@ const BookingConfirmation = () => {
       // Inject coordinates from airports.json if missing
       const addCoordinatesIfMissing = (airportCode) => {
         if (!airportCode) return null;
-        
+
         // If it's already an object with coordinates, return it
         if (typeof airportCode === 'object' && airportCode.coordinates) {
           return airportCode;
         }
-        
+
         // If it's a string (airport code like "BOM"), get coordinates
         if (typeof airportCode === 'string') {
           const coords = getAirportWithCoordinates(airportCode);
@@ -388,7 +388,7 @@ const BookingConfirmation = () => {
             return { iata_code: airportCode, coordinates: coords };
           }
         }
-        
+
         return null;
       };
 
@@ -451,10 +451,10 @@ const BookingConfirmation = () => {
         const phi2 = toRad(lat2);
         const deltaLat = toRad(lat2 - lat1);
         const deltaLon = toRad(lon2 - lon1);
-        const a = Math.sin(deltaLat/2) * Math.sin(deltaLat/2) +
-                  Math.cos(phi1) * Math.cos(phi2) *
-                  Math.sin(deltaLon/2) * Math.sin(deltaLon/2);
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        const a = Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
+          Math.cos(phi1) * Math.cos(phi2) *
+          Math.sin(deltaLon / 2) * Math.sin(deltaLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return Math.round(R * c);
       };
       const onwardDistance = calculateDistance(
@@ -463,9 +463,9 @@ const BookingConfirmation = () => {
       );
       const returnDistance = flightsWithCoordinates.return
         ? calculateDistance(
-            flightsWithCoordinates.return.origin,
-            flightsWithCoordinates.return.destination
-          )
+          flightsWithCoordinates.return.origin,
+          flightsWithCoordinates.return.destination
+        )
         : 0;
       const total = onwardDistance + returnDistance;
       setTotalDistance(total);
@@ -478,7 +478,7 @@ const BookingConfirmation = () => {
   // Comprehensive data layer implementation for confirmation page
   useEffect(() => {
     if (!selectedFlights?.onward || !travellerDetails) return;
-    
+
     // Prevent duplicate purchase events
     if (hasFiredPurchaseEvent.current) return;
     hasFiredPurchaseEvent.current = true;
@@ -489,7 +489,7 @@ const BookingConfirmation = () => {
     const txnId = airlinesDataLayer.generateTransactionId();
     setBookingReference(bookingRef);
     setTransactionId(txnId);
-    
+
     console.log('Using consistent PNR in Adobe Data Layer:', bookingRef);
 
     // Calculate distance and sustainability first
@@ -504,8 +504,8 @@ const BookingConfirmation = () => {
         const dLat = (destination[0] - origin[0]) * Math.PI / 180;
         const dLon = (destination[1] - origin[1]) * Math.PI / 180;
         const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                  Math.cos(lat1) * Math.cos(lat2) *
-                  Math.sin(dLon / 2) * Math.sin(dLon / 2);
+          Math.cos(lat1) * Math.cos(lat2) *
+          Math.sin(dLon / 2) * Math.sin(dLon / 2);
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return R * c;
       };
@@ -520,8 +520,8 @@ const BookingConfirmation = () => {
 
       const onwardOriginCoords = getCoordinates(selectedFlights.onward?.origin);
       const onwardDestCoords = getCoordinates(selectedFlights.onward?.destination);
-      const onwardDistance = onwardOriginCoords && onwardDestCoords 
-        ? calculateFlightDistance(onwardOriginCoords, onwardDestCoords) 
+      const onwardDistance = onwardOriginCoords && onwardDestCoords
+        ? calculateFlightDistance(onwardOriginCoords, onwardDestCoords)
         : 0;
 
       const returnOriginCoords = getCoordinates(selectedFlights.return?.origin);
@@ -532,7 +532,7 @@ const BookingConfirmation = () => {
 
       calculatedDistance = onwardDistance + returnDistance;
       calculatedTrees = Math.floor(calculatedDistance / 100);
-      
+
       console.log('✅ Distance calculated:', {
         onwardDistance,
         returnDistance,
@@ -543,7 +543,7 @@ const BookingConfirmation = () => {
         returnOriginCoords,
         returnDestCoords
       });
-      
+
       // Update state for UI display
       setTotalDistance(calculatedDistance);
       setTreesPlanted(calculatedTrees);
@@ -558,18 +558,18 @@ const BookingConfirmation = () => {
       const onwardFlightDistance = calculatedDistance / (tripType === 'roundtrip' ? 2 : 1);
       console.log('🔍 Calculating Haul Type - Onward flight distance:', onwardFlightDistance);
       console.log('🔍 Onward flight duration:', selectedFlights.onward?.duration);
-      
+
       onwardHaulType = calculateHaulType(
         onwardFlightDistance,
         selectedFlights.onward?.duration
       );
       console.log('✅ Onward haul type calculated:', onwardHaulType);
-      
+
       if (tripType === 'roundtrip' && selectedFlights.return) {
         const returnFlightDistance = calculatedDistance / 2;
         console.log('🔍 Return flight distance:', returnFlightDistance);
         console.log('🔍 Return flight duration:', selectedFlights.return?.duration);
-        
+
         returnHaulType = calculateHaulType(
           returnFlightDistance,
           selectedFlights.return?.duration
@@ -581,19 +581,19 @@ const BookingConfirmation = () => {
       // Ensure defaults even if error occurs
       onwardHaulType = onwardHaulType || 'short haul';
     }
-    
+
     // Calculate overall haul type
-    const overallHaulType = returnHaulType ? 
-      (onwardHaulType === 'long haul' || returnHaulType === 'long haul' ? 'long haul' : 'short haul') : 
+    const overallHaulType = returnHaulType ?
+      (onwardHaulType === 'long haul' || returnHaulType === 'long haul' ? 'long haul' : 'short haul') :
       onwardHaulType;
-    
+
     // Set haul types for UI display
     setHaulTypes({
       onward: onwardHaulType,
       return: returnHaulType,
       overall: overallHaulType
     });
-    
+
     // Log haul type before creating purchase event
     console.log('📊 Final Haul Type Values:', {
       onward: onwardHaulType,
@@ -701,7 +701,7 @@ const BookingConfirmation = () => {
       });
       console.log('✅ Confirmation PageView event pushed to adobeDataLayer');
     }
-    
+
     // Helper to normalize airport codes for data layer
     const getAirportCode = (airport) => {
       if (!airport) return null;
@@ -714,7 +714,7 @@ const BookingConfirmation = () => {
 
     // Build products array for revenue tracking
     const products = [];
-    
+
     // Add flight products
     if (selectedFlights.onward) {
       products.push({
@@ -732,7 +732,7 @@ const BookingConfirmation = () => {
         journeyType: 'onward'
       });
     }
-    
+
     if (selectedFlights.return) {
       products.push({
         productId: 'base fare',
@@ -861,10 +861,7 @@ const BookingConfirmation = () => {
             totalAmount: feeBreakdown.total
           },
           pnr: bookingRef,
-          ticketNumber: {
-            onward: onwardTicket,
-            ...(returnTicket ? { return: returnTicket } : {})
-          },
+          ticketNumber: onwardTicket, // Simple string instead of object
           bookingId: txnId,
           passengers: numPassengers,
           tripType: tripType || 'oneWay'
@@ -879,13 +876,13 @@ const BookingConfirmation = () => {
           searchId: `search_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
           origin: selectedFlights.onward?.origin?.iata_code || null,
           destination: selectedFlights.onward?.destination?.iata_code || null,
-          originDestination: (selectedFlights.onward?.origin?.iata_code && selectedFlights.onward?.destination?.iata_code) 
+          originDestination: (selectedFlights.onward?.origin?.iata_code && selectedFlights.onward?.destination?.iata_code)
             ? `${selectedFlights.onward.origin.iata_code}-${selectedFlights.onward.destination.iata_code}`
             : null,
           departureDate: userDepartureDate ? new Date(userDepartureDate).toISOString().split('T')[0] : null,
           returnDate: userReturnDate ? new Date(userReturnDate).toISOString().split('T')[0] : null,
           travelDay: userDepartureDate ? format(new Date(userDepartureDate), 'EEEE') : null,
-          numberOfDays: userDepartureDate && userReturnDate 
+          numberOfDays: userDepartureDate && userReturnDate
             ? Math.ceil((new Date(userReturnDate) - new Date(userDepartureDate)) / (1000 * 60 * 60 * 24))
             : (userDepartureDate ? Math.ceil((new Date(userDepartureDate) - new Date()) / (1000 * 60 * 60 * 24)) : 0),
           passengers: {
@@ -907,11 +904,11 @@ const BookingConfirmation = () => {
                 description: 'Under 2 years'
               }
             },
-            summary: passengers 
+            summary: passengers
               ? Object.entries(passengers)
-                  .filter(([type, count]) => count > 0)
-                  .map(([type, count]) => `${type}: ${count}`)
-                  .join(', ')
+                .filter(([type, count]) => count > 0)
+                .map(([type, count]) => `${type}: ${count}`)
+                .join(', ')
               : `adult: ${numPassengers}`
           },
           cabinClass: selectedFlights.onward?.cabinClass || 'economy',
@@ -1026,8 +1023,8 @@ const BookingConfirmation = () => {
           haulType: {
             onward: onwardHaulType,
             ...(returnHaulType && { return: returnHaulType }),
-            overall: returnHaulType ? 
-              (onwardHaulType === 'long haul' || returnHaulType === 'long haul' ? 'long haul' : 'short haul') : 
+            overall: returnHaulType ?
+              (onwardHaulType === 'long haul' || returnHaulType === 'long haul' ? 'long haul' : 'short haul') :
               onwardHaulType
           }
         },
@@ -1053,7 +1050,7 @@ const BookingConfirmation = () => {
       } else {
         console.log('✅ Purchase Event with haulType:', JSON.stringify(purchaseEvent.eventData.booking.haulType, null, 2));
       }
-      
+
       window.adobeDataLayer.push(purchaseEvent);
       console.log('✅ Purchase event pushed to adobeDataLayer:', purchaseEvent);
       console.log('📋 Booking object in data layer:', JSON.stringify(purchaseEvent.eventData.booking, null, 2));
@@ -1073,10 +1070,10 @@ const BookingConfirmation = () => {
   const calculateSeatPrice = (seat) => {
     if (!seat) return 0;
     try {
-                  const row = parseInt(seat);
-                  const seatType = seat.slice(-1);
-                  const isPremiumRow = row <= 5;
-                  const isWindowSeat = seatType === 'W';
+      const row = parseInt(seat);
+      const seatType = seat.slice(-1);
+      const isPremiumRow = row <= 5;
+      const isWindowSeat = seatType === 'W';
       return (isPremiumRow || isWindowSeat) ? 1500 : 100;
     } catch (error) {
       console.warn('Error calculating seat price:', error);
@@ -1209,24 +1206,24 @@ const BookingConfirmation = () => {
 
   const renderFlightDetails = (flight, type) => {
     if (!flight) return null;
-    
+
     // Get assigned seats for this flight type
-    const seats = type === 'onward' 
+    const seats = type === 'onward'
       ? selectedServices?.onward?.seat?.filter(Boolean) || []
       : selectedServices?.return?.seat?.filter(Boolean) || [];
-    
+
     // Get the user-selected date for this flight
     const userSelectedDate = type === 'onward' ? userDepartureDate : userReturnDate;
-    
+
     // Combine user-selected date with flight time
     const getFlightDateTime = (flightTime, userDate) => {
       console.log('getFlightDateTime called:', { flightTime, userDate, flightTimeType: typeof flightTime });
-      
+
       if (!userDate || !flightTime) {
         console.warn('Missing userDate or flightTime:', { userDate, flightTime });
         return 'Date unavailable';
       }
-      
+
       try {
         // Ensure flightTime is a string
         if (typeof flightTime !== 'string') {
@@ -1239,20 +1236,20 @@ const BookingConfirmation = () => {
             return 'Time unavailable';
           }
         }
-        
+
         const selectedDate = new Date(userDate);
         if (isNaN(selectedDate.getTime())) {
           console.warn('Invalid userDate:', userDate);
           return 'Invalid date';
         }
-        
+
         // Split time and validate
         const timeParts = flightTime.split(':');
         if (timeParts.length !== 2) {
           console.warn('Invalid time format:', flightTime);
           return flightTime;
         }
-        
+
         const [hours, minutes] = timeParts;
         selectedDate.setHours(parseInt(hours) || 0, parseInt(minutes) || 0, 0, 0);
         const result = format(selectedDate, 'MMM dd, yyyy hh:mm a');
@@ -1267,7 +1264,7 @@ const BookingConfirmation = () => {
         return 'Error formatting date';
       }
     };
-    
+
     console.log('Rendering flight details:', {
       type,
       flight,
@@ -1277,7 +1274,7 @@ const BookingConfirmation = () => {
       departureTime: flight.departureTime,
       departureTimeType: typeof flight.departureTime
     });
-    
+
     return (
       <Box sx={{ mb: 3 }}>
         <Typography variant="h6" gutterBottom>
@@ -1313,16 +1310,16 @@ const BookingConfirmation = () => {
             <Grid item xs={6}>
               <Typography variant="caption" color="text.secondary">Flight Type</Typography>
               <Typography variant="body2">
-                <Chip 
+                <Chip
                   label={(type === 'onward' ? haulTypes.onward : haulTypes.return || 'short haul').toUpperCase()}
                   size="small"
                   color={
-                    (type === 'onward' ? haulTypes.onward : haulTypes.return) === 'long haul' 
-                      ? 'primary' 
+                    (type === 'onward' ? haulTypes.onward : haulTypes.return) === 'long haul'
+                      ? 'primary'
                       : 'success'
                   }
-                  sx={{ 
-                    height: 20, 
+                  sx={{
+                    height: 20,
                     fontSize: '0.7rem',
                     fontWeight: 600
                   }}
@@ -1377,9 +1374,9 @@ const BookingConfirmation = () => {
         <Typography variant="h6" gutterBottom>
           Additional Services
         </Typography>
-        <Box sx={{ 
-          p: 2, 
-          bgcolor: 'background.paper', 
+        <Box sx={{
+          p: 2,
+          bgcolor: 'background.paper',
           borderRadius: 1,
           boxShadow: 1
         }}>
@@ -1394,7 +1391,7 @@ const BookingConfirmation = () => {
                   <EventSeatIcon />,
                   'Seats',
                   selectedServices.onward.seat.filter(seat => seat !== null).reduce((total, seat) => total + calculateSeatPrice(seat), 0),
-                  `Selected seats: ${selectedServices.onward.seat.map((seat, index) => 
+                  `Selected seats: ${selectedServices.onward.seat.map((seat, index) =>
                     seat ? `P${index + 1}: ${seat}` : null
                   ).filter(Boolean).join(', ')}`
                 )}
@@ -1436,7 +1433,7 @@ const BookingConfirmation = () => {
                     <EventSeatIcon />,
                     'Seats',
                     selectedServices.return.seat.filter(seat => seat !== null).reduce((total, seat) => total + calculateSeatPrice(seat), 0),
-                    `Selected seats: ${selectedServices.return.seat.map((seat, index) => 
+                    `Selected seats: ${selectedServices.return.seat.map((seat, index) =>
                       seat ? `P${index + 1}: ${seat}` : null
                     ).filter(Boolean).join(', ')}`
                   )}
@@ -1475,7 +1472,7 @@ const BookingConfirmation = () => {
 
   const renderPaymentDetails = () => {
     console.log('Payment Details:', paymentDetails);
-    
+
     if (!paymentDetails) {
       console.warn('No payment details available');
       return null;
@@ -1486,10 +1483,10 @@ const BookingConfirmation = () => {
         console.warn('No payment method specified');
         return 'Not specified';
       }
-      
+
       const method = paymentDetails.method.toLowerCase();
       console.log('Payment method:', method);
-      
+
       switch (method) {
         case 'credit':
           return 'Credit Card';
@@ -1512,9 +1509,9 @@ const BookingConfirmation = () => {
         <Typography variant="h6" gutterBottom>
           Payment Details
         </Typography>
-        <Box sx={{ 
-          p: 2, 
-          bgcolor: 'background.paper', 
+        <Box sx={{
+          p: 2,
+          bgcolor: 'background.paper',
           borderRadius: 1,
           boxShadow: 1
         }}>
@@ -1577,9 +1574,9 @@ const BookingConfirmation = () => {
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <div id="booking-confirmation-content">
         {/* Success Header with Destination Image */}
-        <Paper 
-          elevation={3} 
-          sx={{ 
+        <Paper
+          elevation={3}
+          sx={{
             position: 'relative',
             overflow: 'hidden',
             mb: 3,
@@ -1607,7 +1604,7 @@ const BookingConfirmation = () => {
             className="personalization-container"
             data-target-placeholder="destination-hero-image"
           />
-          
+
           {/* Content overlay */}
           <Box sx={{ position: 'relative', zIndex: 1, textAlign: 'center', p: 4 }}>
             <CheckCircleIcon color="success" sx={{ fontSize: 80, mb: 2 }} />
@@ -1680,7 +1677,7 @@ const BookingConfirmation = () => {
                                     Seats ({selectedServices.onward.seat.filter(seat => seat !== null).length})
                                   </Typography>
                                   <Typography variant="caption" color="text.secondary">
-                                    {selectedServices.onward.seat.map((seat, index) => 
+                                    {selectedServices.onward.seat.map((seat, index) =>
                                       seat ? `P${index + 1}: ${seat}` : null
                                     ).filter(Boolean).join(', ')}
                                   </Typography>
@@ -1775,7 +1772,7 @@ const BookingConfirmation = () => {
                         </Stack>
                       </Box>
                     )}
-                    
+
                     {/* Return Services */}
                     {selectedServices.return && (
                       <Box>
@@ -1792,7 +1789,7 @@ const BookingConfirmation = () => {
                                     Seats ({selectedServices.return.seat.filter(seat => seat !== null).length})
                                   </Typography>
                                   <Typography variant="caption" color="text.secondary">
-                                    {selectedServices.return.seat.map((seat, index) => 
+                                    {selectedServices.return.seat.map((seat, index) =>
                                       seat ? `P${index + 1}: ${seat}` : null
                                     ).filter(Boolean).join(', ')}
                                   </Typography>
@@ -2073,7 +2070,7 @@ const BookingConfirmation = () => {
               component="button"
               variant="caption"
               onClick={() => setTechDetailsOpen(true)}
-              sx={{ 
+              sx={{
                 color: 'text.secondary',
                 cursor: 'pointer',
                 '&:hover': { color: 'primary.main' }
