@@ -20,6 +20,8 @@ import {
   MenuItem,
   Snackbar,
   Alert,
+  FormControlLabel,
+  Checkbox,
 } from '@mui/material';
 import { Add as AddIcon, Remove as RemoveIcon } from '@mui/icons-material';
 import { format } from 'date-fns';
@@ -159,6 +161,7 @@ const TravellerDetails = () => {
   });
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [whatsappNotification, setWhatsappNotification] = useState(true);
 
   const [validationErrors, setValidationErrors] = useState({
     email: '',
@@ -461,7 +464,8 @@ const TravellerDetails = () => {
       travellers,
       contactInfo: {
         email,
-        phone
+        phone,
+        whatsappNotification
       }
     });
     console.log('Price details at submission:', {
@@ -535,7 +539,8 @@ const TravellerDetails = () => {
           },
           contactInfo: {
             email,
-            phone
+            phone,
+            whatsappNotification
           },
           tripType: selectedFlights.return ? 'roundtrip' : 'oneway',
           timestamp: new Date().toISOString()
@@ -552,7 +557,8 @@ const TravellerDetails = () => {
           passengers: travellers,
           contactInfo: {
             email,
-            phone
+            phone,
+            whatsappNotification
           }
         };
 
@@ -626,7 +632,8 @@ const TravellerDetails = () => {
         travellerDetails: filledTravellers,
         contactInfo: {
           email,
-          phone
+          phone,
+          whatsappNotification
         },
         paymentType: bookingState?.paymentType || 'cash', // Payment mode: cash, points, cash_points
         departureDate: bookingState.departureDate || selectedFlights.onward?.departureTime,
@@ -893,6 +900,18 @@ const TravellerDetails = () => {
                         required
                       />
                     </Grid>
+                    <Grid item xs={12}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={whatsappNotification}
+                            onChange={(e) => setWhatsappNotification(e.target.checked)}
+                            color="primary"
+                          />
+                        }
+                        label="Receive booking details on WhatsApp"
+                      />
+                    </Grid>
                   </Grid>
                 </Box>
 
@@ -1150,7 +1169,7 @@ const TravellerDetails = () => {
             {snackbar.message}
           </Alert>
         </Snackbar>
-      </Container>
+      </Container >
     </>
   );
 };
