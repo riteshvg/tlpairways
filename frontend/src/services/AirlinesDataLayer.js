@@ -339,16 +339,12 @@ class AirlinesDataLayer {
       isAuthenticated: false
     };
 
-    // Set in computed state
+    // CRITICAL: Only set in computed state, do NOT push to array
+    // This ensures userData is available for data elements without creating a duplicate event
+    // The real userData event will be pushed when user authenticates via trackLoginSuccess()
     window._adobeDataLayerState.userData = defaultUserData;
 
-    // Also push to data layer array for immediate availability
-    window.adobeDataLayer.push({
-      event: 'userDataInitialized',
-      userData: defaultUserData
-    });
-
-    console.log('✅ Default userData initialized in data layer:', defaultUserData);
+    console.log('✅ Default userData initialized in computed state (no event pushed):', defaultUserData);
   }
 
   /**
