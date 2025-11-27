@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="TLAirways - Premium Air Travel Experience"
-    />
-    
-    <!-- Content Security Policy for Auth0 and Adobe Analytics -->
-    <meta http-equiv="Content-Security-Policy" content="
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="TLAirways - Premium Air Travel Experience" />
+
+  <!-- Content Security Policy for Auth0 and Adobe Analytics -->
+  <meta http-equiv="Content-Security-Policy" content="
       default-src 'self';
       script-src 'self' 'unsafe-inline' 'unsafe-eval' 
         https://dev-q6p3jrm5pbykuq23.us.auth0.com 
@@ -55,464 +54,466 @@
       base-uri 'self';
       form-action 'self' https://dev-q6p3jrm5pbykuq23.us.auth0.com;
     ">
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <title>TLAirways</title>
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <title>TLAirways</title>
 
-    <!-- Adobe Target Pre-hiding Snippet -->
-    <script>
-      (function(e,a,n,t){
-        var i=e.head;
-        if(i){
-          if(a) return;
-          var o=e.createElement("style");
-          o.id="alloy-prehiding",o.innerText=n,i.appendChild(o),setTimeout(function(){o.parentNode&&o.parentNode.removeChild(o)},t)
-        }
-      })(document, document.location.href.indexOf("adobe_authoring_enabled") !== -1, ".personalization-container { opacity: 0 !important }", 3000);
-    </script>
-    
-    <!-- CRITICAL: Initialize Consent State IMMEDIATELY (Before Adobe Launch) -->
-    <script>
-      (function() {
-        // Initialize data layer state object if not exists
-        if (!window._adobeDataLayerState) {
-          window._adobeDataLayerState = {};
-        }
-        if (!window.adobeDataLayer) {
-          window.adobeDataLayer = [];
-          
-          // CRITICAL: Intercept push() to prevent null/invalid values
-          var originalPush = window.adobeDataLayer.push;
-          window.adobeDataLayer.push = function() {
-            for (var i = 0; i < arguments.length; i++) {
-              var item = arguments[i];
-              // Allow objects AND functions (Adobe Launch uses functions for event listeners)
-              // Only block null, undefined, primitives (strings, numbers, booleans)
-              if (item === null || item === undefined) {
-                console.error('❌ BLOCKED: Attempted to push null/undefined to adobeDataLayer');
-                console.trace('Stack trace:');
-                continue; // Skip null/undefined
-              }
-              if (typeof item !== 'object' && typeof item !== 'function') {
-                console.error('❌ BLOCKED: Attempted to push primitive to adobeDataLayer:', item);
-                console.trace('Stack trace:');
-                continue; // Skip primitives (string, number, boolean)
-              }
-              originalPush.call(window.adobeDataLayer, item);
+  <!-- Adobe Target Pre-hiding Snippet -->
+  <script>
+    (function (e, a, n, t) {
+      var i = e.head;
+      if (i) {
+        if (a) return;
+        var o = e.createElement("style");
+        o.id = "alloy-prehiding", o.innerText = n, i.appendChild(o), setTimeout(function () { o.parentNode && o.parentNode.removeChild(o) }, t)
+      }
+    })(document, document.location.href.indexOf("adobe_authoring_enabled") !== -1, ".personalization-container { opacity: 0 !important }", 3000);
+  </script>
+
+  <!-- CRITICAL: Initialize Consent State IMMEDIATELY (Before Adobe Launch) -->
+  <script>
+    (function () {
+      // Initialize data layer state object if not exists
+      if (!window._adobeDataLayerState) {
+        window._adobeDataLayerState = {};
+      }
+      if (!window.adobeDataLayer) {
+        window.adobeDataLayer = [];
+
+        // CRITICAL: Intercept push() to prevent null/invalid values
+        var originalPush = window.adobeDataLayer.push;
+        window.adobeDataLayer.push = function () {
+          for (var i = 0; i < arguments.length; i++) {
+            var item = arguments[i];
+            // Allow objects AND functions (Adobe Launch uses functions for event listeners)
+            // Only block null, undefined, primitives (strings, numbers, booleans)
+            if (item === null || item === undefined) {
+              console.error('❌ BLOCKED: Attempted to push null/undefined to adobeDataLayer');
+              console.trace('Stack trace:');
+              continue; // Skip null/undefined
             }
-          };
-        }
-        
-        // Load consent from localStorage SYNCHRONOUSLY
-        var CONSENT_STORAGE_KEY = 'tlairways_consent_preferences';
-        var consentState = null;
-        var consentValue = 'pending';
-        var defaultConsent = 'pending';
-        
-        try {
-          var stored = localStorage.getItem(CONSENT_STORAGE_KEY);
-          if (stored) {
-            consentState = JSON.parse(stored);
-            
-            // Map action to consent value
-            if (consentState.action === 'in' || consentState.action === 'acceptAll') {
+            if (typeof item !== 'object' && typeof item !== 'function') {
+              console.error('❌ BLOCKED: Attempted to push primitive to adobeDataLayer:', item);
+              console.trace('Stack trace:');
+              continue; // Skip primitives (string, number, boolean)
+            }
+            originalPush.call(window.adobeDataLayer, item);
+          }
+        };
+      }
+
+      // Load consent from localStorage SYNCHRONOUSLY
+      var CONSENT_STORAGE_KEY = 'tlairways_consent_preferences';
+      var consentState = null;
+      var consentValue = 'pending';
+      var defaultConsent = 'pending';
+
+      try {
+        var stored = localStorage.getItem(CONSENT_STORAGE_KEY);
+        if (stored) {
+          consentState = JSON.parse(stored);
+
+          // Map action to consent value
+          if (consentState.action === 'in' || consentState.action === 'acceptAll') {
+            consentValue = 'in';
+            defaultConsent = 'in';
+          } else if (consentState.action === 'out' || consentState.action === 'rejectAll') {
+            consentValue = 'out';
+            defaultConsent = 'out';
+          } else if (consentState.preferences) {
+            var hasAnalyticsOrMarketing = consentState.preferences.analytics || consentState.preferences.marketing;
+            if (hasAnalyticsOrMarketing) {
               consentValue = 'in';
               defaultConsent = 'in';
-            } else if (consentState.action === 'out' || consentState.action === 'rejectAll') {
+            } else {
               consentValue = 'out';
               defaultConsent = 'out';
-            } else if (consentState.preferences) {
-              var hasAnalyticsOrMarketing = consentState.preferences.analytics || consentState.preferences.marketing;
-              if (hasAnalyticsOrMarketing) {
-                consentValue = 'in';
-                defaultConsent = 'in';
-              } else {
-                consentValue = 'out';
-                defaultConsent = 'out';
-              }
             }
           }
-        } catch (error) {
-          console.warn('⚠️ Failed to load consent from localStorage:', error);
         }
-        
-        // CRITICAL: Set consent.value IMMEDIATELY (before Adobe Launch loads)
-        window._adobeDataLayerState.consent = {
-          value: consentValue,           // For data elements
-          defaultConsent: defaultConsent, // For Web SDK
-          categories: consentState?.preferences || { necessary: true }
-        };
-        
-        console.log('✅ EARLY Consent initialized (before Adobe Launch):', {
-          value: consentValue,
-          defaultConsent: defaultConsent,
-          timestamp: new Date().toISOString()
-        });
-      })();
-    </script>
-    
-    <!-- Adobe Launch/DTM Script - Consent Managed Loading with Data Layer Wait -->
-    <script>
-      (function() {
-        var CONSENT_STORAGE_KEY = 'tlairways_consent_preferences';
-        var CUSTOM_SCRIPT_KEY = 'tlairways_adobe_script_url';
-        var CUSTOM_ATTR_KEY = 'tlairways_adobe_script_attributes';
-        var DEFAULT_SCRIPT_URL = 'https://assets.adobedtm.com/01296dd00565/26201e3c8f15/launch-2f8b80d50cb3-development.min.js';
-        var DEFAULT_ATTRIBUTES = {
-          async: true,
-          crossOrigin: 'anonymous'
-        };
-        var SCRIPT_ID = 'tlairways-adobe-launch';
-        var MAX_WAIT_TIME = 3000; // Wait up to 3 seconds for defaultConsent
-        var CHECK_INTERVAL = 50; // Check every 50ms
-        
-        var currentScript = null;
-        
-        function safeParseJSON(value) {
-          if (!value) return null;
+      } catch (error) {
+        console.warn('⚠️ Failed to load consent from localStorage:', error);
+      }
+
+      // CRITICAL: Set consent.value IMMEDIATELY (before Adobe Launch loads)
+      window._adobeDataLayerState.consent = {
+        value: consentValue,           // For data elements
+        defaultConsent: defaultConsent, // For Web SDK
+        categories: consentState?.preferences || { necessary: true }
+      };
+
+      console.log('✅ EARLY Consent initialized (before Adobe Launch):', {
+        value: consentValue,
+        defaultConsent: defaultConsent,
+        timestamp: new Date().toISOString()
+      });
+    })();
+  </script>
+
+  <!-- Adobe Launch/DTM Script - Consent Managed Loading with Data Layer Wait -->
+  <script>
+    (function () {
+      var CONSENT_STORAGE_KEY = 'tlairways_consent_preferences';
+      var CUSTOM_SCRIPT_KEY = 'tlairways_adobe_script_url';
+      var CUSTOM_ATTR_KEY = 'tlairways_adobe_script_attributes';
+      var DEFAULT_SCRIPT_URL = 'https://assets.adobedtm.com/22bf1a13013f/ba7976888d86/launch-07179a193336-development.min.js';
+      var DEFAULT_ATTRIBUTES = {
+        async: true,
+        crossOrigin: 'anonymous'
+      };
+      var SCRIPT_ID = 'tlairways-adobe-launch';
+      var MAX_WAIT_TIME = 3000; // Wait up to 3 seconds for defaultConsent
+      var CHECK_INTERVAL = 50; // Check every 50ms
+
+      var currentScript = null;
+
+      function safeParseJSON(value) {
+        if (!value) return null;
         try {
-            return JSON.parse(value);
+          return JSON.parse(value);
         } catch (e) {
-            console.warn('⚠️ Failed to parse stored JSON value:', e);
-            return null;
-          }
+          console.warn('⚠️ Failed to parse stored JSON value:', e);
+          return null;
         }
+      }
 
-        function getConsentState() {
-          try {
-            return safeParseJSON(localStorage.getItem(CONSENT_STORAGE_KEY));
-          } catch (error) {
-            console.warn('⚠️ Unable to read consent preferences:', error);
-            return null;
-          }
+      function getConsentState() {
+        try {
+          return safeParseJSON(localStorage.getItem(CONSENT_STORAGE_KEY));
+        } catch (error) {
+          console.warn('⚠️ Unable to read consent preferences:', error);
+          return null;
         }
+      }
 
-        function hasAdobeConsent(state) {
-          if (!state || !state.preferences) return false;
-          var prefs = state.preferences;
-          return !!(prefs.analytics || prefs.marketing);
-        }
+      function hasAdobeConsent(state) {
+        if (!state || !state.preferences) return false;
+        var prefs = state.preferences;
+        return !!(prefs.analytics || prefs.marketing);
+      }
 
-        /**
-         * Wait for defaultConsent to be available in data layer
-         * Returns a promise that resolves when consent is ready or times out
-         */
-        function waitForDefaultConsent() {
-          return new Promise(function(resolve) {
-            var startTime = Date.now();
-            
-            function checkConsent() {
-              // Check if _adobeDataLayerState exists and has defaultConsent
-              if (typeof window._adobeDataLayerState !== 'undefined' &&
-                  window._adobeDataLayerState.consent &&
-                  window._adobeDataLayerState.consent.defaultConsent) {
-                
-                var defaultConsent = window._adobeDataLayerState.consent.defaultConsent;
-                var validValues = ['in', 'out', 'pending'];
-                
-                if (validValues.indexOf(defaultConsent) !== -1) {
-                  console.log('✅ defaultConsent ready:', defaultConsent);
-                  resolve(defaultConsent);
-                  return;
-                }
-              }
-              
-              // Check if we've exceeded max wait time
-              var elapsed = Date.now() - startTime;
-              if (elapsed >= MAX_WAIT_TIME) {
-                console.warn('⚠️ Timeout waiting for defaultConsent - proceeding with "pending"');
-                resolve('pending');
+      /**
+       * Wait for defaultConsent to be available in data layer
+       * Returns a promise that resolves when consent is ready or times out
+       */
+      function waitForDefaultConsent() {
+        return new Promise(function (resolve) {
+          var startTime = Date.now();
+
+          function checkConsent() {
+            // Check if _adobeDataLayerState exists and has defaultConsent
+            if (typeof window._adobeDataLayerState !== 'undefined' &&
+              window._adobeDataLayerState.consent &&
+              window._adobeDataLayerState.consent.defaultConsent) {
+
+              var defaultConsent = window._adobeDataLayerState.consent.defaultConsent;
+              var validValues = ['in', 'out', 'pending'];
+
+              if (validValues.indexOf(defaultConsent) !== -1) {
+                console.log('✅ defaultConsent ready:', defaultConsent);
+                resolve(defaultConsent);
                 return;
               }
-              
-              // Continue checking
-              setTimeout(checkConsent, CHECK_INTERVAL);
             }
-            
-            checkConsent();
-          });
-        }
 
-        function getScriptConfig() {
-          var customUrl = null;
-          var customAttrs = null;
+            // Check if we've exceeded max wait time
+            var elapsed = Date.now() - startTime;
+            if (elapsed >= MAX_WAIT_TIME) {
+              console.warn('⚠️ Timeout waiting for defaultConsent - proceeding with "pending"');
+              resolve('pending');
+              return;
+            }
 
-          try {
-            customUrl = localStorage.getItem(CUSTOM_SCRIPT_KEY);
-            customAttrs = safeParseJSON(localStorage.getItem(CUSTOM_ATTR_KEY));
-          } catch (error) {
-            console.warn('⚠️ Unable to read Adobe script config:', error);
+            // Continue checking
+            setTimeout(checkConsent, CHECK_INTERVAL);
           }
 
-          return {
-            url: customUrl || DEFAULT_SCRIPT_URL,
-            attrs: { ...DEFAULT_ATTRIBUTES, ...(customAttrs || {}) }
-          };
+          checkConsent();
+        });
+      }
+
+      function getScriptConfig() {
+        var customUrl = null;
+        var customAttrs = null;
+
+        try {
+          customUrl = localStorage.getItem(CUSTOM_SCRIPT_KEY);
+          customAttrs = safeParseJSON(localStorage.getItem(CUSTOM_ATTR_KEY));
+        } catch (error) {
+          console.warn('⚠️ Unable to read Adobe script config:', error);
         }
 
-        function buildScriptElement(url, attrs) {
-        var script = document.createElement('script');
-          script.id = SCRIPT_ID;
-          script.src = url;
-          script.dataset.tlAdobeLaunch = 'true';
-
-          if (attrs.async) script.async = true;
-          if (attrs.defer) script.defer = true;
-          if (attrs.crossOrigin) script.crossOrigin = attrs.crossOrigin;
-        
-        script.onload = function() {
-            window.__tlAdobeLaunchLoaded = true;
-            console.log('✅ Adobe Launch script loaded:', url);
-            
-            // WORKAROUND: Override Adobe Launch's default action timeout
-            // This prevents 2-second timeout errors on slow networks (Railway)
-            setTimeout(function() {
-              if (typeof window._satellite !== 'undefined' && window._satellite._container) {
-                // Increase timeout for all actions to 10 seconds
-                var originalTrigger = window._satellite._container.execAction;
-                if (originalTrigger) {
-                  window._satellite._container.execAction = function(action, event, ruleId) {
-                    // Set a longer timeout for actions
-                    var originalTimeout = action.timeout;
-                    if (action.timeout && action.timeout < 10000) {
-                      action.timeout = 10000; // 10 seconds
-                      console.log('⚙️ Increased action timeout to 10s for:', action.modulePath);
-                    }
-                    return originalTrigger.call(this, action, event, ruleId);
-                  };
-                  console.log('✅ Adobe Launch action timeout override applied');
-                }
-              }
-              
-              // Check if Web SDK (alloy) initialized after Launch loads
-              if (typeof window.alloy !== 'undefined') {
-                console.log('✅ Adobe Web SDK (alloy) detected');
-              } else {
-                console.warn('⚠️ Adobe Web SDK (alloy) not found after Launch load');
-              }
-              
-              if (typeof window._satellite !== 'undefined') {
-                console.log('✅ _satellite object available');
-                console.log('📊 Available data elements:', Object.keys(window._satellite._container?.dataElements || {}));
-              }
-              
-              // Check if defaultConsent was read by Web SDK
-              console.log('📊 defaultConsent at Launch load:', window._adobeDataLayerState?.consent?.defaultConsent);
-            }, 500);
+        return {
+          url: customUrl || DEFAULT_SCRIPT_URL,
+          attrs: { ...DEFAULT_ATTRIBUTES, ...(customAttrs || {}) }
         };
-        
-        script.onerror = function() {
-            console.error('❌ Failed to load Adobe Launch script:', url);
-            if (url !== DEFAULT_SCRIPT_URL) {
-              console.log('🔄 Attempting default Adobe Launch script...');
-              if (script.parentNode) {
-                script.parentNode.removeChild(script);
+      }
+
+      function buildScriptElement(url, attrs) {
+        var script = document.createElement('script');
+        script.id = SCRIPT_ID;
+        script.src = url;
+        script.dataset.tlAdobeLaunch = 'true';
+
+        if (attrs.async) script.async = true;
+        if (attrs.defer) script.defer = true;
+        if (attrs.crossOrigin) script.crossOrigin = attrs.crossOrigin;
+
+        script.onload = function () {
+          window.__tlAdobeLaunchLoaded = true;
+          console.log('✅ Adobe Launch script loaded:', url);
+
+          // WORKAROUND: Override Adobe Launch's default action timeout
+          // This prevents 2-second timeout errors on slow networks (Railway)
+          setTimeout(function () {
+            if (typeof window._satellite !== 'undefined' && window._satellite._container) {
+              // Increase timeout for all actions to 10 seconds
+              var originalTrigger = window._satellite._container.execAction;
+              if (originalTrigger) {
+                window._satellite._container.execAction = function (action, event, ruleId) {
+                  // Set a longer timeout for actions
+                  var originalTimeout = action.timeout;
+                  if (action.timeout && action.timeout < 10000) {
+                    action.timeout = 10000; // 10 seconds
+                    console.log('⚙️ Increased action timeout to 10s for:', action.modulePath);
+                  }
+                  return originalTrigger.call(this, action, event, ruleId);
+                };
+                console.log('✅ Adobe Launch action timeout override applied');
               }
-              var fallbackScript = buildScriptElement(DEFAULT_SCRIPT_URL, DEFAULT_ATTRIBUTES);
-              currentScript = fallbackScript;
+            }
+
+            // Check if Web SDK (alloy) initialized after Launch loads
+            if (typeof window.alloy !== 'undefined') {
+              console.log('✅ Adobe Web SDK (alloy) detected');
+            } else {
+              console.warn('⚠️ Adobe Web SDK (alloy) not found after Launch load');
+            }
+
+            if (typeof window._satellite !== 'undefined') {
+              console.log('✅ _satellite object available');
+              console.log('📊 Available data elements:', Object.keys(window._satellite._container?.dataElements || {}));
+            }
+
+            // Check if defaultConsent was read by Web SDK
+            console.log('📊 defaultConsent at Launch load:', window._adobeDataLayerState?.consent?.defaultConsent);
+          }, 500);
+        };
+
+        script.onerror = function () {
+          console.error('❌ Failed to load Adobe Launch script:', url);
+          if (url !== DEFAULT_SCRIPT_URL) {
+            console.log('🔄 Attempting default Adobe Launch script...');
+            if (script.parentNode) {
+              script.parentNode.removeChild(script);
+            }
+            var fallbackScript = buildScriptElement(DEFAULT_SCRIPT_URL, DEFAULT_ATTRIBUTES);
+            currentScript = fallbackScript;
             document.head.appendChild(fallbackScript);
           }
         };
-        
-          return script;
+
+        return script;
+      }
+
+      function injectScript() {
+        if (document.getElementById(SCRIPT_ID)) {
+          console.log('ℹ️ Adobe Launch already injected.');
+          return { alreadyLoaded: true };
         }
 
-        function injectScript() {
-          if (document.getElementById(SCRIPT_ID)) {
-            console.log('ℹ️ Adobe Launch already injected.');
-            return { alreadyLoaded: true };
-          }
-
-          var config = getScriptConfig();
-          var script = buildScriptElement(config.url, config.attrs);
-          currentScript = script;
+        var config = getScriptConfig();
+        var script = buildScriptElement(config.url, config.attrs);
+        currentScript = script;
         document.head.appendChild(script);
-          return { success: true };
+        return { success: true };
+      }
+
+      function removeScript() {
+        var existing = document.getElementById(SCRIPT_ID) || document.querySelector('script[src*="adobedtm.com"]');
+        if (existing) {
+          existing.parentNode.removeChild(existing);
+          currentScript = null;
+          window.__tlAdobeLaunchLoaded = false;
+          console.log('🛑 Adobe Launch script removed pending consent.');
+        }
+      }
+
+      /**
+       * Get consent value from state (checks both value field and calculates from action/preferences)
+       */
+      function getConsentValue(consentState) {
+        if (!consentState) return 'pending';
+
+        // CRITICAL: Check stored value field first (most reliable)
+        if (consentState.value === 'in' || consentState.value === 'out') {
+          return consentState.value;
         }
 
-        function removeScript() {
-          var existing = document.getElementById(SCRIPT_ID) || document.querySelector('script[src*="adobedtm.com"]');
-          if (existing) {
-            existing.parentNode.removeChild(existing);
-            currentScript = null;
-            window.__tlAdobeLaunchLoaded = false;
-            console.log('🛑 Adobe Launch script removed pending consent.');
-          }
+        // Fallback: Calculate from action
+        if (consentState.action === 'in' || consentState.action === 'acceptAll') {
+          return 'in';
+        } else if (consentState.action === 'out' || consentState.action === 'rejectAll') {
+          return 'out';
+        } else if (consentState.preferences) {
+          // For granular saves: check if user has enabled analytics OR marketing
+          var hasAnalyticsOrMarketing = consentState.preferences.analytics || consentState.preferences.marketing;
+          return hasAnalyticsOrMarketing ? 'in' : 'out';
         }
 
-        /**
-         * Get consent value from state (checks both value field and calculates from action/preferences)
-         */
-        function getConsentValue(consentState) {
-          if (!consentState) return 'pending';
-          
-          // CRITICAL: Check stored value field first (most reliable)
-          if (consentState.value === 'in' || consentState.value === 'out') {
-            return consentState.value;
-          }
-          
-          // Fallback: Calculate from action
-          if (consentState.action === 'in' || consentState.action === 'acceptAll') {
-            return 'in';
-          } else if (consentState.action === 'out' || consentState.action === 'rejectAll') {
-            return 'out';
-          } else if (consentState.preferences) {
-            // For granular saves: check if user has enabled analytics OR marketing
-            var hasAnalyticsOrMarketing = consentState.preferences.analytics || consentState.preferences.marketing;
-            return hasAnalyticsOrMarketing ? 'in' : 'out';
-          }
-          
-          return 'pending';
-        }
+        return 'pending';
+      }
 
-        /**
-         * Initialize - Check consent value before loading Adobe Launch
-         */
-        function init() {
-          console.log('🚀 Adobe Launch consent loader initializing...');
-          
-          // CRITICAL: Check consent value - do NOT load if consent is 'out'
-          var consentState = getConsentState();
-          var consentValue = getConsentValue(consentState);
-          var hasConsent = hasAdobeConsent(consentState);
-          
-          console.log('📊 Consent state:', {
-            hasStoredConsent: !!consentState,
-            consentValue: consentValue,
-            hasAnalyticsConsent: hasConsent,
-            willLoadLaunch: consentValue !== 'out'  // Do NOT load if consent is 'out'
-          });
-          
-          // CRITICAL: Only load Adobe Launch if consent is NOT 'out'
-          // If consent is 'out', do NOT load Adobe Launch at all to prevent interact calls
-          if (consentValue === 'out') {
-            console.log('🛑 Consent is "out" - NOT loading Adobe Launch to prevent interact calls');
-            return;
-          }
-          
-          // Load Adobe Launch only if consent is 'in' or 'pending'
-          // For 'pending', Launch will load but defaultConsent will control tracking
-          injectScript();
-        }
+      /**
+       * Initialize - Check consent value before loading Adobe Launch
+       */
+      function init() {
+        console.log('🚀 Adobe Launch consent loader initializing...');
 
-        window.__tlConsentScriptLoader = {
-          loadAdobeLaunch: function(force) {
-            console.log('🔍 loadAdobeLaunch called', { force, existingScript: !!document.getElementById(SCRIPT_ID) });
-            if (!force && document.getElementById(SCRIPT_ID)) {
-              console.log('ℹ️ Adobe Launch already loaded');
-              return { alreadyLoaded: true };
-            }
-            var result = injectScript();
-            console.log('✅ Adobe Launch injection result:', result);
-            return result;
-          },
-          disableAdobeLaunch: function() {
-            console.log('🛑 disableAdobeLaunch called');
-            removeScript();
-          },
-          getConsentState: getConsentState,
-          canLoadAdobeLaunch: hasAdobeConsent
-        };
+        // CRITICAL: Check consent value - do NOT load if consent is 'out'
+        var consentState = getConsentState();
+        var consentValue = getConsentValue(consentState);
+        var hasConsent = hasAdobeConsent(consentState);
 
-        console.log('🚀 Initializing Adobe Launch consent loader...');
-        init();
-        console.log('✅ Adobe Launch consent loader initialized', {
-          blocked: window.__tlAdobeLaunchBlocked,
-          loaded: window.__tlAdobeLaunchLoaded
+        console.log('📊 Consent state:', {
+          hasStoredConsent: !!consentState,
+          consentValue: consentValue,
+          hasAnalyticsConsent: hasConsent,
+          willLoadLaunch: consentValue !== 'out'  // Do NOT load if consent is 'out'
         });
-      })();
-    </script>
 
-    <!-- Adobe Target helper utilities for SPA view tracking -->
-    <script>
-      (function (window) {
-        if (!window) {
+        // CRITICAL: Only load Adobe Launch if consent is NOT 'out'
+        // If consent is 'out', do NOT load Adobe Launch at all to prevent interact calls
+        if (consentValue === 'out') {
+          console.log('🛑 Consent is "out" - NOT loading Adobe Launch to prevent interact calls');
           return;
         }
 
-        var MAX_ATTEMPTS = 10;
-        var RETRY_DELAY = 400;
+        // Load Adobe Launch only if consent is 'in' or 'pending'
+        // For 'pending', Launch will load but defaultConsent will control tracking
+        injectScript();
+      }
 
-        window.__tlTargetPageParams = window.__tlTargetPageParams || {
-          pageName: 'home',
-          pageType: 'landing',
-          siteSection: 'homepage'
+      window.__tlConsentScriptLoader = {
+        loadAdobeLaunch: function (force) {
+          console.log('🔍 loadAdobeLaunch called', { force, existingScript: !!document.getElementById(SCRIPT_ID) });
+          if (!force && document.getElementById(SCRIPT_ID)) {
+            console.log('ℹ️ Adobe Launch already loaded');
+            return { alreadyLoaded: true };
+          }
+          var result = injectScript();
+          console.log('✅ Adobe Launch injection result:', result);
+          return result;
+        },
+        disableAdobeLaunch: function () {
+          console.log('🛑 disableAdobeLaunch called');
+          removeScript();
+        },
+        getConsentState: getConsentState,
+        canLoadAdobeLaunch: hasAdobeConsent
+      };
+
+      console.log('🚀 Initializing Adobe Launch consent loader...');
+      init();
+      console.log('✅ Adobe Launch consent loader initialized', {
+        blocked: window.__tlAdobeLaunchBlocked,
+        loaded: window.__tlAdobeLaunchLoaded
+      });
+    })();
+  </script>
+
+  <!-- Adobe Target helper utilities for SPA view tracking -->
+  <script>
+    (function (window) {
+      if (!window) {
+        return;
+      }
+
+      var MAX_ATTEMPTS = 10;
+      var RETRY_DELAY = 400;
+
+      window.__tlTargetPageParams = window.__tlTargetPageParams || {
+        pageName: 'home',
+        pageType: 'landing',
+        siteSection: 'homepage'
+      };
+
+      if (typeof window.targetPageParamsAll !== 'function') {
+        window.targetPageParamsAll = function () {
+          return window.__tlTargetPageParams || {};
         };
+      }
 
-        if (typeof window.targetPageParamsAll !== 'function') {
-          window.targetPageParamsAll = function () {
-            return window.__tlTargetPageParams || {};
-          };
-        }
+      window.TLAirwaysTarget = window.TLAirwaysTarget || {};
 
-        window.TLAirwaysTarget = window.TLAirwaysTarget || {};
+      window.TLAirwaysTarget.setPageParams = function setPageParams(params) {
+        window.__tlTargetPageParams = Object.assign(
+          {},
+          window.__tlTargetPageParams || {},
+          params || {}
+        );
 
-        window.TLAirwaysTarget.setPageParams = function setPageParams(params) {
-          window.__tlTargetPageParams = Object.assign(
-            {},
-            window.__tlTargetPageParams || {},
-            params || {}
-          );
+        return window.__tlTargetPageParams;
+      };
 
-          return window.__tlTargetPageParams;
-        };
-
-        window.TLAirwaysTarget.triggerView = function triggerView(viewName, data, attempt) {
-          if (!viewName) {
-            return false;
-          }
-
-          attempt = attempt || 0;
-          var target = window.adobe && window.adobe.target;
-
-          if (target && typeof target.triggerView === 'function') {
-            try {
-              target.triggerView(viewName, data || {});
-              console.log('✅ Adobe Target view triggered:', viewName, data || {});
-              return true;
-            } catch (error) {
-              console.error('❌ Adobe Target triggerView failed:', error);
-              return false;
-            }
-          }
-
-          if (attempt >= MAX_ATTEMPTS) {
-            console.warn('⚠️ Adobe Target triggerView unavailable for', viewName);
-            return false;
-          }
-
-          setTimeout(function () {
-            triggerView(viewName, data, attempt + 1);
-          }, RETRY_DELAY);
-
+      window.TLAirwaysTarget.triggerView = function triggerView(viewName, data, attempt) {
+        if (!viewName) {
           return false;
-        };
-
-        var onDomReady = function () {
-          var locale = window.navigator ? window.navigator.language : 'en-US';
-
-          window.TLAirwaysTarget.setPageParams({
-            language: locale
-          });
-
-          window.TLAirwaysTarget.triggerView('home', {
-            pageName: 'home',
-            siteSection: 'homepage',
-            language: locale
-          });
-        };
-
-        if (document.readyState === 'complete' || document.readyState === 'interactive') {
-          onDomReady();
-        } else {
-          document.addEventListener('DOMContentLoaded', onDomReady, { once: true });
         }
-      })(window);
-    </script>
 
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-  </body>
-</html> 
+        attempt = attempt || 0;
+        var target = window.adobe && window.adobe.target;
+
+        if (target && typeof target.triggerView === 'function') {
+          try {
+            target.triggerView(viewName, data || {});
+            console.log('✅ Adobe Target view triggered:', viewName, data || {});
+            return true;
+          } catch (error) {
+            console.error('❌ Adobe Target triggerView failed:', error);
+            return false;
+          }
+        }
+
+        if (attempt >= MAX_ATTEMPTS) {
+          console.warn('⚠️ Adobe Target triggerView unavailable for', viewName);
+          return false;
+        }
+
+        setTimeout(function () {
+          triggerView(viewName, data, attempt + 1);
+        }, RETRY_DELAY);
+
+        return false;
+      };
+
+      var onDomReady = function () {
+        var locale = window.navigator ? window.navigator.language : 'en-US';
+
+        window.TLAirwaysTarget.setPageParams({
+          language: locale
+        });
+
+        window.TLAirwaysTarget.triggerView('home', {
+          pageName: 'home',
+          siteSection: 'homepage',
+          language: locale
+        });
+      };
+
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        onDomReady();
+      } else {
+        document.addEventListener('DOMContentLoaded', onDomReady, { once: true });
+      }
+    })(window);
+  </script>
+
+</head>
+
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root"></div>
+</body>
+
+</html>

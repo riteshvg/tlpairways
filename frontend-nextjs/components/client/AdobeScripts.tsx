@@ -11,7 +11,7 @@ export default function AdobeScripts() {
     if (typeof window === 'undefined') return;
 
     // Adobe Target Pre-hiding Snippet
-    (function(e: any, a: any, n: string, t: number) {
+    (function (e: any, a: any, n: string, t: number) {
       const i = e.head;
       if (i) {
         if (a) return;
@@ -19,7 +19,7 @@ export default function AdobeScripts() {
         o.id = 'alloy-prehiding';
         o.innerText = n;
         i.appendChild(o);
-        setTimeout(function() {
+        setTimeout(function () {
           if (o.parentNode) {
             o.parentNode.removeChild(o);
           }
@@ -33,11 +33,11 @@ export default function AdobeScripts() {
     );
 
     // Adobe Launch/DTM Script - Consent Managed Loading
-    (function() {
+    (function () {
       const CONSENT_STORAGE_KEY = 'tlairways_consent_preferences';
       const CUSTOM_SCRIPT_KEY = 'tlairways_adobe_script_url';
       const CUSTOM_ATTR_KEY = 'tlairways_adobe_script_attributes';
-      const DEFAULT_SCRIPT_URL = 'https://assets.adobedtm.com/01296dd00565/26201e3c8f15/launch-2f8b80d50cb3-development.min.js';
+      const DEFAULT_SCRIPT_URL = 'https://assets.adobedtm.com/22bf1a13013f/ba7976888d86/launch-07179a193336-development.min.js';
       const DEFAULT_ATTRIBUTES = {
         async: true,
         crossOrigin: 'anonymous'
@@ -98,12 +98,12 @@ export default function AdobeScripts() {
         if (attrs.defer) script.defer = true;
         if (attrs.crossOrigin) script.crossOrigin = attrs.crossOrigin;
 
-        script.onload = function() {
+        script.onload = function () {
           (window as any).__tlAdobeLaunchLoaded = true;
           console.log('✅ Adobe Launch script loaded:', url);
         };
 
-        script.onerror = function() {
+        script.onerror = function () {
           console.error('❌ Failed to load Adobe Launch script:', url);
           if (url !== DEFAULT_SCRIPT_URL) {
             console.log('🔄 Attempting default Adobe Launch script...');
@@ -147,12 +147,12 @@ export default function AdobeScripts() {
        */
       function getConsentValue(consentState: any): string {
         if (!consentState) return 'pending';
-        
+
         // CRITICAL: Check stored value field first (most reliable)
         if (consentState.value === 'in' || consentState.value === 'out') {
           return consentState.value;
         }
-        
+
         // Fallback: Calculate from action
         if (consentState.action === 'in' || consentState.action === 'acceptAll') {
           return 'in';
@@ -163,45 +163,45 @@ export default function AdobeScripts() {
           const hasAnalyticsOrMarketing = consentState.preferences.analytics || consentState.preferences.marketing;
           return hasAnalyticsOrMarketing ? 'in' : 'out';
         }
-        
+
         return 'pending';
       }
 
       function init() {
         console.log('🚀 Adobe Launch consent loader initializing...');
-        
+
         // CRITICAL: Check consent value - do NOT load if consent is 'out'
         const consentState = getConsentState();
         const consentValue = getConsentValue(consentState);
         const hasConsent = hasAdobeConsent(consentState);
-        
+
         console.log('📊 Consent state:', {
           hasStoredConsent: !!consentState,
           consentValue: consentValue,
           hasAnalyticsConsent: hasConsent,
           willLoadLaunch: consentValue !== 'out'  // Do NOT load if consent is 'out'
         });
-        
+
         // CRITICAL: Only load Adobe Launch if consent is NOT 'out'
         // If consent is 'out', do NOT load Adobe Launch at all to prevent interact calls
         if (consentValue === 'out') {
           console.log('🛑 Consent is "out" - NOT loading Adobe Launch to prevent interact calls');
           return;
         }
-        
+
         // Load Adobe Launch only if consent is 'in' or 'pending'
         // For 'pending', Launch will load but defaultConsent will control tracking
         injectScript();
       }
 
       (window as any).__tlConsentScriptLoader = {
-        loadAdobeLaunch: function(force?: boolean) {
+        loadAdobeLaunch: function (force?: boolean) {
           if (!force && document.getElementById(SCRIPT_ID)) {
             return { alreadyLoaded: true };
           }
           return injectScript();
         },
-        disableAdobeLaunch: function() {
+        disableAdobeLaunch: function () {
           removeScript();
         },
         getConsentState: getConsentState,
@@ -212,13 +212,13 @@ export default function AdobeScripts() {
     })();
 
     // Initialize Adobe Data Layer
-    (function() {
+    (function () {
       if (!(window as any).adobeDataLayer) {
         (window as any).adobeDataLayer = [];
-        
+
         // CRITICAL: Intercept push() to prevent null/invalid values
         const originalPush = (window as any).adobeDataLayer.push;
-        (window as any).adobeDataLayer.push = function(...args: any[]) {
+        (window as any).adobeDataLayer.push = function (...args: any[]) {
           for (let i = 0; i < args.length; i++) {
             const item = args[i];
             if (item === null || item === undefined || typeof item !== 'object') {
@@ -230,13 +230,13 @@ export default function AdobeScripts() {
           }
         };
       }
-      
+
       if (!(window as any)._adobeDataLayerState) {
         (window as any)._adobeDataLayerState = {};
       }
-      
+
       // Add getState() function
-      (window as any).adobeDataLayer.getState = function() {
+      (window as any).adobeDataLayer.getState = function () {
         return (window as any)._adobeDataLayerState || {};
       };
     })();

@@ -42,7 +42,7 @@ This document outlines the **exact sequence** of script execution across all pag
    ```
    - **When**: During HTML parsing (async)
    - **What**: Dynamically loads Adobe Launch script
-   - **Default URL**: `https://assets.adobedtm.com/01296dd00565/26201e3c8f15/launch-2f8b80d50cb3-development.min.js`
+   - **Default URL**: `https://assets.adobedtm.com/22bf1a13013f/ba7976888d86/launch-07179a193336-development.min.js`
    - **Callback**: `script.onload` fires when Launch loads
 
 4. **Adobe Target Helper Utilities** (Lines 134-218)

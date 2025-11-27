@@ -10,9 +10,7 @@ const STORAGE_KEY_ATTRIBUTES = 'tlairways_adobe_script_attributes';
 
 // Default Adobe script URLs for different environments
 export const ADOBE_SCRIPT_PRESETS = {
-  development: 'https://assets.adobedtm.com/01296dd00565/26201e3c8f15/launch-2f8b80d50cb3-development.min.js',
-  staging: 'https://assets.adobedtm.com/01296dd00565/26201e3c8f15/launch-staging.min.js',
-  production: 'https://assets.adobedtm.com/01296dd00565/26201e3c8f15/launch-production.min.js',
+  development: 'https://assets.adobedtm.com/22bf1a13013f/ba7976888d86/launch-07179a193336-development.min.js'
 };
 
 // Default attributes (async and crossorigin)
@@ -75,7 +73,7 @@ export const saveAdobeScriptUrl = (input) => {
     // Save URL and attributes separately
     localStorage.setItem(STORAGE_KEY, src);
     localStorage.setItem(STORAGE_KEY_ATTRIBUTES, JSON.stringify(attributes));
-    
+
     console.log('✅ Adobe script saved:', src);
     console.log('✅ Script attributes:', attributes);
     return true;
@@ -127,12 +125,12 @@ export const loadAdobeScript = (scriptUrl) => {
     script.src = scriptUrl;
     script.async = true;
     script.crossOrigin = 'anonymous';
-    
+
     script.onload = () => {
       console.log('✅ Adobe Launch script loaded successfully:', scriptUrl);
       resolve({ success: true, url: scriptUrl });
     };
-    
+
     script.onerror = () => {
       console.error('❌ Failed to load Adobe Launch script:', scriptUrl);
       reject(new Error(`Failed to load script: ${scriptUrl}`));
@@ -175,27 +173,27 @@ export const parseScriptInput = (input) => {
   }
 
   const trimmed = input.trim();
-  
+
   // Check if input is a full script tag
   if (trimmed.startsWith('<script') && trimmed.includes('src=')) {
     try {
       // Extract src attribute
       const srcMatch = trimmed.match(/src=["']([^"']+)["']/);
       const src = srcMatch ? srcMatch[1] : '';
-      
+
       // Extract other attributes
       const attributes = {};
-      
+
       // Check for async
       if (trimmed.includes('async')) {
         attributes.async = true;
       }
-      
+
       // Check for defer
       if (trimmed.includes('defer')) {
         attributes.defer = true;
       }
-      
+
       // Check for crossorigin
       const crossoriginMatch = trimmed.match(/crossorigin=["']([^"']+)["']/);
       if (crossoriginMatch) {
@@ -203,18 +201,18 @@ export const parseScriptInput = (input) => {
       } else if (trimmed.includes('crossorigin')) {
         attributes.crossOrigin = 'anonymous';
       }
-      
+
       return { src, attributes };
     } catch (error) {
       console.error('Error parsing script tag:', error);
       return { src: '', attributes: {} };
     }
   }
-  
+
   // If it's just a URL, default to async
-  return { 
-    src: trimmed, 
-    attributes: { async: true, crossOrigin: 'anonymous' } 
+  return {
+    src: trimmed,
+    attributes: { async: true, crossOrigin: 'anonymous' }
   };
 };
 
@@ -230,7 +228,7 @@ export const validateAdobeScriptUrl = (input) => {
 
   // Parse input to get URL
   const { src } = parseScriptInput(input);
-  
+
   if (!src) {
     return { isValid: false, error: 'Could not extract URL from input' };
   }
