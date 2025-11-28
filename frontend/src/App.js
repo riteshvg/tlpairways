@@ -15,6 +15,7 @@ import LoginPage from './pages/LoginPage';
 import UserProfilePage from './pages/UserProfilePage';
 import MyBookingsPage from './pages/MyBookingsPage';
 import SettingsPage from './pages/SettingsPage';
+import ScriptManagerPage from './pages/ScriptManagerPage';
 import FlightSearch from './components/FlightSearch';
 import SearchResults from './components/SearchResults';
 import TravellerDetails from './components/TravellerDetails';
@@ -80,6 +81,8 @@ function App() {
                       </ProtectedRoute>
                     }
                   />
+                  {/* Script Manager - public access */}
+                  <Route path="/script-manager" element={<ScriptManagerPage />} />
                   {/* Booking flow - guest access allowed */}
                   <Route path="/traveller-details" element={<TravellerDetails />} />
                   <Route path="/ancillary-services" element={<AncillaryServices />} />
