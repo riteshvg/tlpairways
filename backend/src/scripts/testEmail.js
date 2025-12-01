@@ -31,17 +31,73 @@ async function testEmailSend(email) {
   console.log(`\n📧 Testing Email Send to ${email}...\n`);
 
   const testData = {
+    // Passenger Information
     passengerName: 'Test User',
     email: email,
+    phone: '+91 9876543210',
+    
+    // Booking Reference
     bookingId: 'TEST123456',
-    route: 'DEL-BOM',
-    travelDate: '2025-01-25',
-    passengers: '1 Adult',
-    from: 'Delhi',
-    to: 'Mumbai',
+    pnr: 'TEST123456',
+    bookingDate: new Date().toISOString(),
+    bookingStatus: 'Confirmed',
+    tripType: 'oneway',
+    
+    // Flight Details
     flightNumber: 'TL101',
+    airline: 'TLP Airways',
+    aircraftType: 'Boeing 737-800',
+    
+    // Route Information
+    from: 'DEL',
+    fromCity: 'Delhi',
+    fromAirport: 'Indira Gandhi International Airport',
+    fromTerminal: 'Terminal 3',
+    to: 'BOM',
+    toCity: 'Mumbai',
+    toAirport: 'Chhatrapati Shivaji Maharaj International Airport',
+    toTerminal: 'Terminal 2',
+    route: 'DEL-BOM',
+    
+    // Timing
+    travelDate: '2025-01-25',
+    departureTime: '10:30',
+    arrivalTime: '12:45',
+    duration: '2h 15m',
+    
+    // Passengers (must be array for email template)
     adults: 1,
-    children: 0
+    children: 0,
+    infants: 0,
+    totalPassengers: 1,
+    passengers: [
+      {
+        name: 'Test User',
+        type: 'Adult',
+        age: 28,
+        seatNumber: null,
+        mealPreference: null
+      }
+    ],
+    
+    // Class & Fare
+    travelClass: 'Economy',
+    fareType: 'Regular',
+    
+    // Pricing
+    baseFare: 4000,
+    taxes: 1450,
+    totalAmount: 5450,
+    currency: 'INR',
+    paymentMethod: 'Credit Card',
+    paymentStatus: 'Paid',
+    
+    // Baggage
+    cabinBaggage: '7 kg',
+    checkinBaggage: '15 kg',
+    
+    // Return Flight (null for one-way)
+    returnFlight: null
   };
 
   console.log('Request Data:');
