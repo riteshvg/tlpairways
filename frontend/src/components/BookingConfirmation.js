@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import usePageView from '../hooks/usePageView';
 import airlinesDataLayer from '../services/AirlinesDataLayer';
+import { sendBookingConfirmationWhatsApp } from '../services/whatsappService';
+import { sendBookingConfirmationEmail } from '../services/emailService';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import {
@@ -110,6 +112,12 @@ const BookingConfirmation = () => {
   const [transactionId, setTransactionId] = useState('');
   const [emailRequested, setEmailRequested] = useState(false);
   const [smsRequested, setSmsRequested] = useState(false);
+  const [whatsappSent, setWhatsappSent] = useState(false);
+  const [whatsappSending, setWhatsappSending] = useState(false);
+  const hasSentWhatsApp = useRef(false);
+  const [emailSent, setEmailSent] = useState(false);
+  const [emailSending, setEmailSending] = useState(false);
+  const hasSentEmail = useRef(false);
 
   // State for haul types (for UI display)
   const [haulTypes, setHaulTypes] = useState({
@@ -476,6 +484,367 @@ const BookingConfirmation = () => {
   }, [selectedFlights, tripType, passengers, selectedServices, navigate, pnr, onwardTicket, returnTicket, paymentDetails, location.state]);
 
   // Comprehensive data layer implementation for confirmation page
+  // Send WhatsApp message if user opted in
+  useEffect(() => {
+    // Only send if WhatsApp notification is enabled and we haven't sent yet
+    if (
+      hasSentWhatsApp.current ||
+      !contactInfo?.whatsappNotification ||
+      !contactInfo?.phone ||
+      !selectedFlights?.onward ||
+      !pnr
+    ) {
+      return;
+    }
+
+    // Wait a bit for booking confirmation to complete
+    const sendWhatsApp = async () => {
+      hasSentWhatsApp.current = true;
+      setWhatsappSending(true);
+
+      try {
+        // Format phone number - add country code if missing (default to 91 for India)
+        let phoneNumber = contactInfo.phone.replace(/[+\s-]/g, '');
+        if (!phoneNumber.startsWith('91') && phoneNumber.length === 10) {
+          phoneNumber = '91' + phoneNumber; // Add India country code
+        }
+
+        // Get primary passenger name
+        const primaryPassenger = travellerDetails?.[0];
+        const passengerName = primaryPassenger
+          ? `${primaryPassenger.firstName || ''} ${primaryPassenger.lastName || ''}`.trim()
+          : 'Guest';
+
+        // Format dates
+        const formatDate = (dateStr) => {
+          if (!dateStr) return 'N/A';
+          try {
+            const date = typeof dateStr === 'string' ? parseISO(dateStr) : dateStr;
+            return isValid(date) ? format(date, 'MMM dd, yyyy') : dateStr;
+          } catch {
+            return dateStr;
+          }
+        };
+
+        const formatTime = (dateStr) => {
+          if (!dateStr) return 'N/A';
+          try {
+            const date = typeof dateStr === 'string' ? parseISO(dateStr) : dateStr;
+            return isValid(date) ? format(date, 'HH:mm') : dateStr;
+          } catch {
+            return dateStr;
+          }
+        };
+
+        // Calculate total amount
+        const baseFare = (selectedFlights.onward.price.amount * numPassengers) + (selectedFlights.return?.price.amount ? selectedFlights.return.price.amount * numPassengers : 0);
+        const taxes = Math.round(baseFare * 0.05);
+        const convenienceFee = Math.round(baseFare * 0.02);
+        const surcharge = Math.round(baseFare * 0.01);
+        const ancillaryTotal = calculateAncillaryTotal();
+        const totalAmount = baseFare + taxes + convenienceFee + surcharge + ancillaryTotal;
+
+        // Format travel date for template (YYYY-MM-DD format)
+        const formatTravelDate = (dateStr) => {
+          if (!dateStr) return 'N/A';
+          try {
+            const date = typeof dateStr === 'string' ? parseISO(dateStr) : dateStr;
+            return isValid(date) ? format(date, 'yyyy-MM-dd') : dateStr;
+          } catch {
+            return dateStr;
+          }
+        };
+
+        // Extract origin and destination airport codes
+        // Handle multiple data structure formats
+        const getAirportCode = (airport) => {
+          if (!airport) return null;
+          // If it's a string, return it directly
+          if (typeof airport === 'string') return airport;
+          // If it's an object, try different property names
+          if (typeof airport === 'object') {
+            return airport.iata_code || airport.code || airport.originCode || airport.destinationCode || null;
+          }
+          return null;
+        };
+
+        const originCode = getAirportCode(selectedFlights.onward.origin) || 
+                          selectedFlights.onward.originCode || 
+                          'N/A';
+        const destinationCode = getAirportCode(selectedFlights.onward.destination) || 
+                               selectedFlights.onward.destinationCode || 
+                               'N/A';
+
+        console.log('🔍 WhatsApp Route Debug:', {
+          origin: selectedFlights.onward.origin,
+          destination: selectedFlights.onward.destination,
+          originCode,
+          destinationCode,
+          route: `${originCode}-${destinationCode}`
+        });
+
+        // Prepare booking data according to template structure
+        const bookingData = {
+          phoneNumber: phoneNumber,
+          pnr: pnr,
+          passengerName: passengerName,
+          email: contactInfo?.email || travellerDetails?.[0]?.email || 'N/A',
+          passengersCount: numPassengers,
+          flight: {
+            flightNumber: selectedFlights.onward.flightNumber,
+            origin: originCode,
+            destination: destinationCode,
+            originCode: originCode, // Also pass as originCode for service
+            destinationCode: destinationCode, // Also pass as destinationCode for service
+            departureDate: formatTravelDate(selectedFlights.onward.departureTime || userDepartureDate),
+            departureTime: formatTime(selectedFlights.onward.departureTime || userDepartureDate)
+          },
+          totalAmount: totalAmount
+        };
+
+        // Add return flight if exists
+        const returnFlight = selectedFlights.return ? {
+          flightNumber: selectedFlights.return.flightNumber,
+          origin: selectedFlights.return.origin?.iata_code || selectedFlights.return.originCode,
+          destination: selectedFlights.return.destination?.iata_code || selectedFlights.return.destinationCode,
+          departureDate: formatDate(selectedFlights.return.departureTime || userReturnDate),
+          departureTime: formatTime(selectedFlights.return.departureTime || userReturnDate)
+        } : null;
+
+        const result = await sendBookingConfirmationWhatsApp(bookingData, returnFlight);
+
+        if (result.success) {
+          setWhatsappSent(true);
+          console.log('✅ WhatsApp message sent successfully:', result.messageId);
+        } else {
+          console.error('❌ Failed to send WhatsApp:', result.error);
+          // Don't set error state - just log it, as WhatsApp is optional
+        }
+      } catch (error) {
+        console.error('❌ Error sending WhatsApp:', error);
+        // Don't set error state - just log it
+      } finally {
+        setWhatsappSending(false);
+      }
+    };
+
+    // Delay sending to ensure booking is fully confirmed
+    const timer = setTimeout(sendWhatsApp, 2000);
+    return () => clearTimeout(timer);
+  }, [contactInfo, selectedFlights, pnr, travellerDetails, userDepartureDate, userReturnDate]);
+
+  // Send booking confirmation email
+  useEffect(() => {
+    // Only send if we haven't sent yet and have required data
+    if (
+      hasSentEmail.current ||
+      !contactInfo?.email ||
+      !selectedFlights?.onward ||
+      !pnr
+    ) {
+      return;
+    }
+
+    // Wait a bit for booking confirmation to complete
+    const sendEmail = async () => {
+      hasSentEmail.current = true;
+      setEmailSending(true);
+
+      try {
+        // Get primary passenger name
+        const primaryPassenger = travellerDetails?.[0];
+        const passengerName = primaryPassenger
+          ? `${primaryPassenger.firstName || ''} ${primaryPassenger.lastName || ''}`.trim()
+          : 'Guest';
+
+        // Extract origin and destination
+        const getAirportCode = (airport) => {
+          if (!airport) return null;
+          if (typeof airport === 'string') return airport;
+          if (typeof airport === 'object') {
+            return airport.iata_code || airport.code || airport.originCode || airport.destinationCode || null;
+          }
+          return null;
+        };
+
+        const originCode = getAirportCode(selectedFlights.onward.origin) || 
+                          selectedFlights.onward.originCode || 
+                          '';
+        const destinationCode = getAirportCode(selectedFlights.onward.destination) || 
+                               selectedFlights.onward.destinationCode || 
+                               '';
+        const route = originCode && destinationCode ? `${originCode}-${destinationCode}` : 'N/A';
+
+        // Format travel date
+        const formatTravelDate = (dateStr) => {
+          if (!dateStr) return 'N/A';
+          try {
+            const date = typeof dateStr === 'string' ? parseISO(dateStr) : dateStr;
+            return isValid(date) ? format(date, 'yyyy-MM-dd') : dateStr;
+          } catch {
+            return dateStr;
+          }
+        };
+
+        const travelDate = formatTravelDate(selectedFlights.onward.departureTime || userDepartureDate);
+
+        // Format passengers string
+        const formatPassengers = () => {
+          if (passengers) {
+            const parts = [];
+            if (passengers.adult) parts.push(`${passengers.adult} Adult${passengers.adult > 1 ? 's' : ''}`);
+            if (passengers.child) parts.push(`${passengers.child} Child${passengers.child > 1 ? 'ren' : ''}`);
+            if (passengers.infant) parts.push(`${passengers.infant} Infant${passengers.infant > 1 ? 's' : ''}`);
+            return parts.join(', ') || '1';
+          }
+          return String(numPassengers);
+        };
+
+        // Get airport details helper
+        const getAirportDetails = (airport) => {
+          if (!airport) return { code: '', city: '', name: '', terminal: 'TBD' };
+          if (typeof airport === 'string') {
+            return { code: airport, city: airport, name: '', terminal: 'TBD' };
+          }
+          return {
+            code: airport.iata_code || airport.code || '',
+            city: airport.city || '',
+            name: airport.name || airport.airportName || '',
+            terminal: airport.terminal || 'TBD'
+          };
+        };
+
+        const originDetails = getAirportDetails(selectedFlights.onward.origin);
+        const destDetails = getAirportDetails(selectedFlights.onward.destination);
+
+        // Calculate pricing breakdown
+        const fees = calculateFeeBreakdown();
+
+        // Format time from datetime
+        const formatTimeFromDate = (dateStr) => {
+          if (!dateStr) return '10:30';
+          try {
+            const date = typeof dateStr === 'string' ? parseISO(dateStr) : dateStr;
+            if (isValid(date)) {
+              return format(date, 'HH:mm');
+            }
+            // Try parsing as time string
+            if (typeof dateStr === 'string' && dateStr.includes(':')) {
+              return dateStr.split(':').slice(0, 2).join(':');
+            }
+            return '10:30';
+          } catch {
+            return '10:30';
+          }
+        };
+
+        // Get departure and arrival times
+        const departureTimeStr = formatTimeFromDate(selectedFlights.onward.departureTime || userDepartureDate);
+        const arrivalTimeStr = selectedFlights.onward.arrivalTime 
+          ? formatTimeFromDate(selectedFlights.onward.arrivalTime)
+          : null; // Will be calculated on backend if not provided
+
+        // Build passengers array with details
+        const passengersArray = travellerDetails?.map((traveller, index) => ({
+          name: `${traveller.firstName || ''} ${traveller.lastName || ''}`.trim() || 'Guest',
+          type: index === 0 ? 'Adult' : (traveller.age && traveller.age < 18 ? 'Child' : 'Adult'),
+          age: traveller.age || null,
+          seatNumber: selectedServices?.onward?.seat?.[index] || null,
+          mealPreference: selectedServices?.onward?.meal?.[index] || null
+        })) || [];
+
+        // Prepare comprehensive email data
+        const emailData = {
+          // Passenger Information
+          passengerName: passengerName,
+          email: contactInfo.email,
+          phone: contactInfo?.phone || 'Not provided',
+          
+          // Booking Reference
+          bookingId: pnr,
+          pnr: pnr,
+          bookingDate: new Date().toISOString(),
+          bookingStatus: 'Confirmed',
+          
+          // Flight Details
+          flightNumber: selectedFlights.onward.flightNumber || 'N/A',
+          airline: selectedFlights.onward.airline || 'TLP Airways',
+          aircraftType: 'Boeing 737-800', // Default, can be enhanced
+          
+          // Route Information
+          from: originCode,
+          fromCity: originDetails.city || selectedFlights.onward.originCity || '',
+          fromAirport: originDetails.name || '',
+          fromTerminal: originDetails.terminal,
+          to: destinationCode,
+          toCity: destDetails.city || selectedFlights.onward.destinationCity || '',
+          toAirport: destDetails.name || '',
+          toTerminal: destDetails.terminal,
+          route: route,
+          
+          // Timing
+          travelDate: travelDate,
+          departureTime: departureTimeStr,
+          arrivalTime: arrivalTimeStr,
+          duration: selectedFlights.onward.duration || null, // Will be calculated if not provided
+          
+          // Passengers
+          adults: passengers?.adult || numPassengers,
+          children: passengers?.child || 0,
+          infants: passengers?.infant || 0,
+          totalPassengers: numPassengers,
+          passengers: passengersArray,
+          
+          // Class & Fare
+          travelClass: selectedFlights.onward.cabinClass || 'Economy',
+          fareType: 'Regular',
+          
+          // Pricing
+          baseFare: fees.baseFare,
+          taxes: fees.taxes + fees.convenienceFee + fees.surcharge,
+          totalAmount: fees.total,
+          currency: 'INR',
+          paymentMethod: paymentType || 'Credit Card',
+          paymentStatus: 'Paid',
+          
+          // Baggage
+          cabinBaggage: '7 kg',
+          checkinBaggage: '15 kg', // Can be enhanced based on selected services
+          
+          // Check-in Information (will be calculated on backend)
+          webCheckinOpens: null,
+          reportingTime: null,
+          gateClosingTime: null,
+          
+          // Links
+          bookingUrl: null,
+          checkinUrl: null,
+          eTicketUrl: null,
+          manageBookingUrl: null
+        };
+
+        const result = await sendBookingConfirmationEmail(emailData);
+
+        if (result.success) {
+          setEmailSent(true);
+          console.log('✅ Booking confirmation email sent successfully:', result.messageId);
+        } else {
+          console.error('❌ Failed to send email:', result.error);
+          // Don't set error state - just log it, as email is optional
+        }
+      } catch (error) {
+        console.error('❌ Error sending email:', error);
+        // Don't set error state - just log it
+      } finally {
+        setEmailSending(false);
+      }
+    };
+
+    // Delay sending to ensure booking is fully confirmed
+    const timer = setTimeout(sendEmail, 1500);
+    return () => clearTimeout(timer);
+  }, [contactInfo, selectedFlights, pnr, travellerDetails, userDepartureDate, passengers, numPassengers]);
+
   useEffect(() => {
     if (!selectedFlights?.onward || !travellerDetails) return;
 

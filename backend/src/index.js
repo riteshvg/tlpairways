@@ -39,6 +39,8 @@ app.use(helmet({
       ],
       connectSrc: [
         "'self'",
+        "http://localhost:3001",
+        "http://localhost:5000",
         "https://dev-q6p3jrm5pbykuq23.us.auth0.com",
         "https://*.auth0.com",
         "https://assets.adobedtm.com",
@@ -105,6 +107,8 @@ app.get('/health', (req, res) => {
 app.use('/api/flights', require('./routes/flights'));
 app.use('/api/airports', require('./routes/airports'));
 app.use('/api/user-location', require('./routes/userLocation'));
+app.use('/api/whatsapp', require('./routes/whatsapp'));
+app.use('/api/email', require('./routes/email'));
 
 // Serve static files from the React app in production
 if (process.env.NODE_ENV === 'production') {
