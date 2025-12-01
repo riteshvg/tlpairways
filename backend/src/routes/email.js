@@ -1,14 +1,53 @@
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const router = express.Router();
 const { sendBookingConfirmationEmail, getEmailServiceStatus } = require('../services/emailService');
+const { validateBookingData: validateBookingDataUtil } = require('../utils/validators');
+const { logValidationSummary } = require('../services/loggerService');
+
+// Rate limiting: 10 requests per minute per IP
+const emailLimiter = rateLimit({
+  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 60 * 1000, // 1 minute
+  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 10, // Max 10 requests
+  message: {
+    success: false,
+    error: 'Too many email requests, please try again later'
+  },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
+/**
+ * Validation middleware for booking data
+ */
+function validateBookingData(req, res, next) {
+  const validationResult = validateBookingDataUtil(req.body);
+  
+  logValidationSummary(validationResult);
+  
+  if (!validationResult.valid) {
+    return res.status(400).json({
+      success: false,
+      errors: validationResult.errors
+    });
+  }
+  
+  next();
+}
 
 /**
  * POST /api/email/send-booking-confirmation
- * Send booking confirmation email with comprehensive booking data
+ * Send booking confirmation email with comprehensive booking data and weather personalization
  * 
  * Body: See complete data structure in documentation/EMAIL_INTEGRATION_GUIDE.md
+ * 
+ * Rate Limited: 10 requests per minute per IP
+ * Validated: All required fields and formats are validated
  */
-router.post('/send-booking-confirmation', async (req, res) => {
+router.post('/send-booking-confirmation', 
+  emailLimiter,           // Rate limiting
+  validateBookingData,    // Validation middleware
+  async (req, res) => {
   try {
     const {
       // Passenger Information
@@ -83,30 +122,7 @@ router.post('/send-booking-confirmation', async (req, res) => {
       manageBookingUrl
     } = req.body;
 
-    // Validate required fields
-    if (!email) {
-      return res.status(400).json({
-        success: false,
-        error: 'Email address is required'
-      });
-    }
-
-    if (!bookingId) {
-      return res.status(400).json({
-        success: false,
-        error: 'Booking ID is required'
-      });
-    }
-
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({
-        success: false,
-        error: 'Invalid email address format'
-      });
-    }
-
+    // Data is already validated by middleware
     // Prepare comprehensive booking data
     const bookingData = {
       // Passenger Information
@@ -188,7 +204,8 @@ router.post('/send-booking-confirmation', async (req, res) => {
       res.json({
         success: true,
         message: 'Booking confirmation email sent successfully',
-        messageId: result.messageId
+        messageId: result.messageId,
+        weatherIncluded: result.weatherIncluded || false
       });
     } else {
       res.status(500).json({

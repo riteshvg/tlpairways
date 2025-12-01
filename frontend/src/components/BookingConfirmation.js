@@ -703,13 +703,28 @@ const BookingConfirmation = () => {
         // Get airport details helper
         const getAirportDetails = (airport) => {
           if (!airport) return { code: '', city: '', name: '', terminal: 'TBD' };
+          
+          // Get airport code
+          const code = typeof airport === 'string' 
+            ? airport 
+            : (airport.iata_code || airport.code || '');
+          
+          // Look up city name from airports.json using findAirportByCode
+          const airportData = code ? findAirportByCode(code) : null;
+          
           if (typeof airport === 'string') {
-            return { code: airport, city: airport, name: '', terminal: 'TBD' };
+            return {
+              code: code,
+              city: airportData?.city || code, // Use city from lookup, fallback to code
+              name: airportData?.name || '',
+              terminal: 'TBD'
+            };
           }
+          
           return {
-            code: airport.iata_code || airport.code || '',
-            city: airport.city || '',
-            name: airport.name || airport.airportName || '',
+            code: code,
+            city: airport.city || airportData?.city || '', // Prefer airport.city, then lookup, then empty
+            name: airport.name || airport.airportName || airportData?.name || '',
             terminal: airport.terminal || 'TBD'
           };
         };

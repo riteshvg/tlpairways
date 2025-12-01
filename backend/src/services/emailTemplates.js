@@ -183,7 +183,7 @@ function generateBookingConfirmationEmail(bookingData) {
     <tr>
       <td align="center" style="padding: 40px 20px;">
         <!-- Main Container -->
-        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="max-width: 600px; margin: 0 auto; background-color: #FFFFFF; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(20, 184, 166, 0.1);">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="800" style="max-width: 800px; margin: 0 auto; background-color: #FFFFFF; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(20, 184, 166, 0.1);">
           
           <!-- SECTION 1: HEADER -->
           <tr>
@@ -389,116 +389,126 @@ function generateBookingConfirmationEmail(bookingData) {
           </tr>
           ` : ''}
 
-          <!-- SECTION 3: PASSENGER DETAILS -->
+          <!-- SECTION 3 & 4: PASSENGER DETAILS & BOOKING INFORMATION (Side by Side) -->
           <tr>
             <td style="padding: 0 30px 30px 30px; background-color: #FFFFFF;">
-              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #FFFFFF; border: 1px solid #CCFBF1; border-radius: 8px;">
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
                 <tr>
-                  <td style="padding: 25px;">
-                    <h3 style="margin: 0 0 15px 0; font-size: 18px; font-weight: bold; color: #134E4A; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;">
-                      Passenger Details
-                    </h3>
-                    ${passengersHTML}
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-
-          <!-- SECTION 4: BOOKING INFORMATION -->
-          <tr>
-            <td style="padding: 0 30px 30px 30px; background-color: #FFFFFF;">
-              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #FFFFFF; border: 1px solid #CCFBF1; border-radius: 8px;">
-                <tr>
-                  <td style="padding: 25px;">
-                    <h3 style="margin: 0 0 15px 0; font-size: 18px; font-weight: bold; color: #134E4A; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;">
-                      Booking Information
-                    </h3>
-                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                  <!-- Passenger Details (Left Column) -->
+                  <td style="width: 48%; padding-right: 15px; vertical-align: top;">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #FFFFFF; border: 1px solid #CCFBF1; border-radius: 8px;">
                       <tr>
-                        <td style="color: #6B7280; width: 40%; padding: 8px 0; font-size: 14px;">Booking ID / PNR:</td>
-                        <td style="color: #134E4A; font-weight: bold; padding: 8px 0; font-size: 14px;">${bookingId}</td>
-                      </tr>
-                      <tr>
-                        <td style="color: #6B7280; padding: 8px 0; font-size: 14px;">Booked On:</td>
-                        <td style="color: #134E4A; padding: 8px 0; font-size: 14px;">${formattedBookingDate}</td>
-                      </tr>
-                      <tr>
-                        <td style="color: #6B7280; padding: 8px 0; font-size: 14px;">Total Passengers:</td>
-                        <td style="color: #134E4A; padding: 8px 0; font-size: 14px;">${totalPassengers}</td>
-                      </tr>
-                      <tr>
-                        <td style="color: #6B7280; padding: 8px 0; font-size: 14px;">Contact Email:</td>
-                        <td style="color: #134E4A; padding: 8px 0; font-size: 14px;">${email}</td>
-                      </tr>
-                      <tr>
-                        <td style="color: #6B7280; padding: 8px 0; font-size: 14px;">Contact Phone:</td>
-                        <td style="color: #134E4A; padding: 8px 0; font-size: 14px;">${phone}</td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-
-          <!-- SECTION 5: PAYMENT SUMMARY -->
-          <tr>
-            <td style="padding: 0 30px 30px 30px; background-color: #FFFFFF;">
-              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #F0FDFA; border-left: 4px solid #F97316; border-radius: 8px;">
-                <tr>
-                  <td style="padding: 25px;">
-                    <h3 style="margin: 0 0 15px 0; font-size: 18px; font-weight: bold; color: #134E4A; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;">
-                      Payment Summary
-                    </h3>
-                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-                      <tr>
-                        <td style="color: #6B7280; padding: 8px 0; font-size: 14px;">Base Fare</td>
-                        <td style="color: #134E4A; text-align: right; padding: 8px 0; font-size: 14px;">${formatCurrency(baseFare)}</td>
-                      </tr>
-                      <tr>
-                        <td style="color: #6B7280; padding: 8px 0; font-size: 14px;">Taxes & Fees</td>
-                        <td style="color: #134E4A; text-align: right; padding: 8px 0; font-size: 14px;">${formatCurrency(taxes)}</td>
-                      </tr>
-                      <tr>
-                        <td style="border-top: 2px solid #CCFBF1; color: #134E4A; font-weight: bold; padding: 12px 0 0 0; font-size: 18px;">Total Amount Paid</td>
-                        <td style="border-top: 2px solid #CCFBF1; color: #134E4A; font-weight: bold; text-align: right; padding: 12px 0 0 0; font-size: 18px;">${formatCurrency(totalAmount)}</td>
-                      </tr>
-                      <tr>
-                        <td style="color: #6B7280; padding: 8px 0; font-size: 14px;">Payment Method</td>
-                        <td style="color: #10B981; text-align: right; padding: 8px 0; font-size: 14px;">✓ ${paymentMethod} (${paymentStatus})</td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-
-          <!-- SECTION 6: BAGGAGE ALLOWANCE -->
-          <tr>
-            <td style="padding: 0 30px 30px 30px; background-color: #FFFFFF;">
-              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #FFFFFF; border: 1px solid #CCFBF1; border-radius: 8px;">
-                <tr>
-                  <td style="padding: 25px;">
-                    <h3 style="margin: 0 0 15px 0; font-size: 18px; font-weight: bold; color: #134E4A; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;">
-                      🧳 Baggage Allowance
-                    </h3>
-                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-                      <tr>
-                        <td style="width: 50%; padding-right: 10px;">
-                          <div style="background: #F9FAFB; padding: 15px; border-radius: 6px; text-align: center;">
-                            <div style="font-size: 32px; margin-bottom: 10px;">👜</div>
-                            <div style="color: #6B7280; font-size: 14px; margin-bottom: 5px;">Cabin Baggage</div>
-                            <div style="color: #134E4A; font-weight: bold; font-size: 18px;">${cabinBaggage}</div>
-                          </div>
+                        <td style="padding: 25px;">
+                          <h3 style="margin: 0 0 15px 0; font-size: 18px; font-weight: bold; color: #134E4A; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;">
+                            Passenger Details
+                          </h3>
+                          ${passengersHTML}
                         </td>
-                        <td style="width: 50%; padding-left: 10px;">
-                          <div style="background: #F9FAFB; padding: 15px; border-radius: 6px; text-align: center;">
-                            <div style="font-size: 32px; margin-bottom: 10px;">🧳</div>
-                            <div style="color: #6B7280; font-size: 14px; margin-bottom: 5px;">Check-in Baggage</div>
-                            <div style="color: #134E4A; font-weight: bold; font-size: 18px;">${checkinBaggage}</div>
-                          </div>
+                      </tr>
+                    </table>
+                  </td>
+                  
+                  <!-- Booking Information (Right Column) -->
+                  <td style="width: 48%; padding-left: 15px; vertical-align: top;">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #FFFFFF; border: 1px solid #CCFBF1; border-radius: 8px;">
+                      <tr>
+                        <td style="padding: 25px;">
+                          <h3 style="margin: 0 0 15px 0; font-size: 18px; font-weight: bold; color: #134E4A; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;">
+                            Booking Information
+                          </h3>
+                          <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                            <tr>
+                              <td style="color: #6B7280; width: 45%; padding: 8px 0; font-size: 14px;">Booking ID / PNR:</td>
+                              <td style="color: #134E4A; font-weight: bold; padding: 8px 0; font-size: 14px;">${bookingId}</td>
+                            </tr>
+                            <tr>
+                              <td style="color: #6B7280; padding: 8px 0; font-size: 14px;">Booked On:</td>
+                              <td style="color: #134E4A; padding: 8px 0; font-size: 14px;">${formattedBookingDate}</td>
+                            </tr>
+                            <tr>
+                              <td style="color: #6B7280; padding: 8px 0; font-size: 14px;">Total Passengers:</td>
+                              <td style="color: #134E4A; padding: 8px 0; font-size: 14px;">${totalPassengers}</td>
+                            </tr>
+                            <tr>
+                              <td style="color: #6B7280; padding: 8px 0; font-size: 14px;">Contact Email:</td>
+                              <td style="color: #134E4A; padding: 8px 0; font-size: 14px;">${email}</td>
+                            </tr>
+                            <tr>
+                              <td style="color: #6B7280; padding: 8px 0; font-size: 14px;">Contact Phone:</td>
+                              <td style="color: #134E4A; padding: 8px 0; font-size: 14px;">${phone}</td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- SECTION 5 & 6: PAYMENT SUMMARY & BAGGAGE ALLOWANCE (Side by Side) -->
+          <tr>
+            <td style="padding: 0 30px 30px 30px; background-color: #FFFFFF;">
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                <tr>
+                  <!-- Payment Summary (Left Column) -->
+                  <td style="width: 48%; padding-right: 15px; vertical-align: top;">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #F0FDFA; border-left: 4px solid #F97316; border-radius: 8px;">
+                      <tr>
+                        <td style="padding: 25px;">
+                          <h3 style="margin: 0 0 15px 0; font-size: 18px; font-weight: bold; color: #134E4A; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;">
+                            Payment Summary
+                          </h3>
+                          <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                            <tr>
+                              <td style="color: #6B7280; padding: 8px 0; font-size: 14px;">Base Fare</td>
+                              <td style="color: #134E4A; text-align: right; padding: 8px 0; font-size: 14px;">${formatCurrency(baseFare)}</td>
+                            </tr>
+                            <tr>
+                              <td style="color: #6B7280; padding: 8px 0; font-size: 14px;">Taxes & Fees</td>
+                              <td style="color: #134E4A; text-align: right; padding: 8px 0; font-size: 14px;">${formatCurrency(taxes)}</td>
+                            </tr>
+                            <tr>
+                              <td style="border-top: 2px solid #CCFBF1; color: #134E4A; font-weight: bold; padding: 12px 0 0 0; font-size: 18px;">Total Amount Paid</td>
+                              <td style="border-top: 2px solid #CCFBF1; color: #134E4A; font-weight: bold; text-align: right; padding: 12px 0 0 0; font-size: 18px;">${formatCurrency(totalAmount)}</td>
+                            </tr>
+                            <tr>
+                              <td style="color: #6B7280; padding: 8px 0; font-size: 14px;">Payment Method</td>
+                              <td style="color: #10B981; text-align: right; padding: 8px 0; font-size: 14px;">✓ ${paymentMethod} (${paymentStatus})</td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  
+                  <!-- Baggage Allowance (Right Column) -->
+                  <td style="width: 48%; padding-left: 15px; vertical-align: top;">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #FFFFFF; border: 1px solid #CCFBF1; border-radius: 8px;">
+                      <tr>
+                        <td style="padding: 25px;">
+                          <h3 style="margin: 0 0 15px 0; font-size: 18px; font-weight: bold; color: #134E4A; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;">
+                            🧳 Baggage Allowance
+                          </h3>
+                          <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                            <tr>
+                              <td style="width: 50%; padding-right: 10px;">
+                                <div style="background: #F9FAFB; padding: 15px; border-radius: 6px; text-align: center;">
+                                  <div style="font-size: 32px; margin-bottom: 10px;">👜</div>
+                                  <div style="color: #6B7280; font-size: 14px; margin-bottom: 5px;">Cabin Baggage</div>
+                                  <div style="color: #134E4A; font-weight: bold; font-size: 18px;">${cabinBaggage}</div>
+                                </div>
+                              </td>
+                              <td style="width: 50%; padding-left: 10px;">
+                                <div style="background: #F9FAFB; padding: 15px; border-radius: 6px; text-align: center;">
+                                  <div style="font-size: 32px; margin-bottom: 10px;">🧳</div>
+                                  <div style="color: #6B7280; font-size: 14px; margin-bottom: 5px;">Check-in Baggage</div>
+                                  <div style="color: #134E4A; font-weight: bold; font-size: 18px;">${checkinBaggage}</div>
+                                </div>
+                              </td>
+                            </tr>
+                          </table>
                         </td>
                       </tr>
                     </table>
@@ -540,7 +550,82 @@ function generateBookingConfirmationEmail(bookingData) {
             </td>
           </tr>
 
-          <!-- SECTION 8: QUICK ACTIONS -->
+          <!-- SECTION 8: WEATHER INFORMATION (Conditional) -->
+          ${bookingData.hasWeather && bookingData.weatherData ? `
+          <tr>
+            <td style="padding: 0 30px 30px 30px; background-color: #FFFFFF;">
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background: linear-gradient(135deg, #0EA5E9 0%, #0284C7 100%); border-radius: 8px; overflow: hidden;">
+                <tr>
+                  <td style="padding: 25px; text-align: center;">
+                    <h3 style="color: #FFFFFF; margin: 0 0 15px 0; font-size: 20px; font-weight: bold; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;">
+                      ${bookingData.weatherData.icon || '🌤️'} Weather in ${bookingData.weatherData.city || toCity}
+                    </h3>
+                    
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: 20px 0;">
+                      <tr>
+                        <td style="width: 50%; text-align: center; padding: 0 10px;">
+                          <div style="text-align: center;">
+                            <div style="color: #E0F2FE; font-size: 14px; margin-bottom: 5px; font-weight: 500;">
+                              Temperature
+                            </div>
+                            <div style="color: #FFFFFF; font-size: 36px; font-weight: bold; margin: 10px 0;">
+                              ${bookingData.weatherData.temperatureCelsius}°C
+                            </div>
+                            <div style="color: #BAE6FD; font-size: 12px;">
+                              ${bookingData.weatherData.temperatureFahrenheit}°F
+                            </div>
+                          </div>
+                        </td>
+                        <td style="width: 50%; text-align: center; padding: 0 10px;">
+                          <div style="text-align: center;">
+                            <div style="color: #E0F2FE; font-size: 14px; margin-bottom: 5px; font-weight: 500;">
+                              Condition
+                            </div>
+                            <div style="color: #FFFFFF; font-size: 18px; font-weight: bold; text-transform: capitalize; margin: 10px 0;">
+                              ${bookingData.weatherData.weather || 'N/A'}
+                            </div>
+                            <div style="color: #BAE6FD; font-size: 12px;">
+                              Humidity: ${bookingData.weatherData.humidity}%
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                    
+                    ${bookingData.weatherData.sunrise || bookingData.weatherData.sunset ? `
+                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
+                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                        <tr>
+                          ${bookingData.weatherData.sunrise ? `
+                          <td style="text-align: center; padding: 0 10px;">
+                            <div style="color: #E0F2FE; font-size: 14px;">
+                              🌅 Sunrise: ${bookingData.weatherData.sunrise}
+                            </div>
+                          </td>
+                          ` : ''}
+                          ${bookingData.weatherData.sunset ? `
+                          <td style="text-align: center; padding: 0 10px;">
+                            <div style="color: #E0F2FE; font-size: 14px;">
+                              🌇 Sunset: ${bookingData.weatherData.sunset}
+                            </div>
+                          </td>
+                          ` : ''}
+                        </tr>
+                      </table>
+                    </div>
+                    ` : ''}
+                    
+                    <p style="color: #BAE6FD; font-size: 12px; margin: 15px 0 0 0; font-style: italic;">
+                      Current weather at your destination
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          ` : ''}
+
+          <!-- SECTION 9: QUICK ACTIONS -->
           <tr>
             <td style="padding: 0 30px 30px 30px; text-align: center; background-color: #FFFFFF;">
               <h3 style="color: #134E4A; margin: 0 0 20px 0; font-size: 18px; font-weight: bold;">Quick Actions</h3>
@@ -566,7 +651,7 @@ function generateBookingConfirmationEmail(bookingData) {
             </td>
           </tr>
 
-          <!-- SECTION 9: IMPORTANT INFORMATION -->
+          <!-- SECTION 10: IMPORTANT INFORMATION -->
           <tr>
             <td style="padding: 0 30px 30px 30px; background-color: #FFFFFF;">
               <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #FFFBEB; border-left: 4px solid #FBBF24; border-radius: 8px;">
@@ -589,7 +674,7 @@ function generateBookingConfirmationEmail(bookingData) {
             </td>
           </tr>
 
-          <!-- SECTION 10: FOOTER -->
+          <!-- SECTION 11: FOOTER -->
           <tr>
             <td style="background-color: #F9FAFB; border-top: 1px solid #CCFBF1; padding: 30px; text-align: center;">
               <p style="color: #134E4A; font-size: 16px; margin: 0 0 20px 0; font-weight: 500;">

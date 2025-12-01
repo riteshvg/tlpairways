@@ -1,10 +1,13 @@
 /**
  * Email Service using Brevo (SendinBlue) API
- * Handles sending transactional emails for TLP Airways
+ * Handles sending transactional emails for TLP Airways with weather personalization
  */
 
 const brevo = require('@getbrevo/brevo');
 const { generateBookingConfirmationEmail, generateBookingConfirmationEmailText } = require('./emailTemplates');
+const { getWeatherForCity } = require('./weatherService');
+const { sanitizeString } = require('../utils/validators');
+const { logEmailSent, logEmailFailed } = require('./loggerService');
 
 // Initialize Brevo API client
 function getBrevoClient() {
@@ -49,12 +52,53 @@ async function sendBookingConfirmationEmail(bookingData) {
       throw new Error('SENDER_EMAIL is not configured');
     }
 
+    // Sanitize all string inputs to prevent XSS
+    const sanitizedData = {
+      ...bookingData,
+      passengerName: sanitizeString(bookingData.passengerName || ''),
+      email: bookingData.email, // Email is validated separately
+      bookingId: sanitizeString(bookingData.bookingId || ''),
+      route: sanitizeString(bookingData.route || ''),
+      fromCity: sanitizeString(bookingData.fromCity || ''),
+      toCity: sanitizeString(bookingData.toCity || ''),
+      flightNumber: sanitizeString(bookingData.flightNumber || ''),
+      airline: sanitizeString(bookingData.airline || '')
+    };
+
+    // Fetch weather data for destination city (non-blocking)
+    let weatherData = null;
+    let weatherIncluded = false;
+    
+    // Normalize city name (handles airport codes, variations, etc.)
+    const { normalizeCityName } = require('../utils/cityMapper');
+    const cityForWeather = normalizeCityName(sanitizedData.toCity || sanitizedData.to || '');
+    
+    if (cityForWeather) {
+      try {
+        weatherData = await getWeatherForCity(cityForWeather);
+        if (weatherData) {
+          weatherIncluded = true;
+          // Add weather data to booking data for template
+          sanitizedData.weatherData = weatherData;
+          sanitizedData.hasWeather = true;
+        } else {
+          // Log for debugging (only if city was provided)
+          if (sanitizedData.toCity || sanitizedData.to) {
+            console.log(`⚠️ Weather data not found for city: ${cityForWeather} (from: ${sanitizedData.toCity || sanitizedData.to})`);
+          }
+        }
+      } catch (weatherError) {
+        // Don't block email sending if weather fetch fails
+        console.warn('⚠️ Weather fetch failed, sending email without weather:', weatherError.message);
+      }
+    }
+
     // Initialize Brevo client
     const apiInstance = getBrevoClient();
 
-    // Generate email content
-    const htmlContent = generateBookingConfirmationEmail(bookingData);
-    const textContent = generateBookingConfirmationEmailText(bookingData);
+    // Generate email content (with weather if available)
+    const htmlContent = generateBookingConfirmationEmail(sanitizedData);
+    const textContent = generateBookingConfirmationEmailText(sanitizedData);
 
     // Prepare email data
     const sendSmtpEmail = new brevo.SendSmtpEmail();
@@ -83,19 +127,16 @@ async function sendBookingConfirmationEmail(bookingData) {
     // Send email via Brevo API
     const result = await apiInstance.sendTransacEmail(sendSmtpEmail);
 
-    console.log('✅ Booking confirmation email sent successfully:', {
-      messageId: result.messageId,
-      to: bookingData.email,
-      bookingId: bookingData.bookingId
-    });
+    logEmailSent(sanitizedData.bookingId, sanitizedData.email, weatherIncluded);
 
     return {
       success: true,
       messageId: result.messageId,
-      message: 'Email sent successfully'
+      message: 'Email sent successfully',
+      weatherIncluded: weatherIncluded
     };
   } catch (error) {
-    console.error('❌ Error sending booking confirmation email:', error);
+    logEmailFailed(bookingData.bookingId || 'unknown', error);
     
     // Extract error message
     let errorMessage = 'Failed to send email';
