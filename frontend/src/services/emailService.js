@@ -3,7 +3,18 @@
  * Handles sending booking confirmation emails via backend API
  */
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
+// Get API URL from environment variable or use default
+// In production, REACT_APP_API_URL should be set to the Railway backend URL
+// Example: REACT_APP_API_URL=https://tlpairways.up.railway.app/api
+const API_BASE_URL = (() => {
+  // If REACT_APP_API_URL is explicitly set, use it
+  if (process.env.REACT_APP_API_URL) {
+    return process.env.REACT_APP_API_URL;
+  }
+  
+  // Development fallback
+  return 'http://localhost:3001/api';
+})();
 
 /**
  * Send booking confirmation email
