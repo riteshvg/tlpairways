@@ -30,6 +30,7 @@ function generateBookingConfirmationEmail(bookingData) {
     pnr = 'N/A',
     bookingDate = new Date().toISOString(),
     bookingStatus = 'Confirmed',
+    tripType = 'oneway', // oneway or roundtrip
     
     // Flight Details
     flightNumber = 'N/A',
@@ -52,6 +53,9 @@ function generateBookingConfirmationEmail(bookingData) {
     departureTime = '10:30',
     arrivalTime = '12:45',
     duration = '2h 15m',
+    
+    // Return Flight (for round trips)
+    returnFlight = null,
     
     // Passengers
     adults = 1,
@@ -296,6 +300,94 @@ function generateBookingConfirmationEmail(bookingData) {
               </table>
             </td>
           </tr>
+
+          ${returnFlight ? `
+          <!-- RETURN FLIGHT SUMMARY (Round Trip) -->
+          <tr>
+            <td style="padding: 0 30px 30px 30px; background-color: #FFFFFF;">
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #F0FDFA; border-left: 4px solid #F97316; border-radius: 8px; box-shadow: 0 1px 3px rgba(249, 115, 22, 0.1);">
+                <tr>
+                  <td style="padding: 25px;">
+                    <h2 style="margin: 0 0 20px 0; font-size: 20px; font-weight: bold; color: #134E4A; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;">
+                      Return Flight
+                    </h2>
+                    
+                    <!-- Flight Number & Date -->
+                    <div style="margin-bottom: 20px;">
+                      <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 24px; font-weight: bold; color: #134E4A;">
+                          ${returnFlight.flightNumber || 'N/A'}
+                        </span>
+                        <span style="color: #6B7280; font-size: 14px;">
+                          ${formatDate(returnFlight.travelDate)}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <!-- Route Timeline -->
+                    <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 15px;">
+                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                        <tr>
+                          <td style="width: 35%; text-align: left;">
+                            <div style="font-size: 28px; font-weight: bold; color: #134E4A;">
+                              ${extractTime(returnFlight.departureTime)}
+                            </div>
+                            <div style="color: #6B7280; font-size: 14px; margin-top: 5px;">
+                              ${returnFlight.fromCity || returnFlight.from} (${returnFlight.from})
+                            </div>
+                            <div style="color: #9CA3AF; font-size: 12px;">
+                              ${returnFlight.fromTerminal || 'TBD'}
+                            </div>
+                          </td>
+                          
+                          <td style="width: 30%; text-align: center;">
+                            <div style="color: #9CA3AF; font-size: 12px; margin-bottom: 5px;">
+                              ${returnFlight.duration || calculateDuration(returnFlight.departureTime, returnFlight.arrivalTime)}
+                            </div>
+                            <div style="border-top: 2px solid #F97316; position: relative; margin: 0 10px;">
+                              <div style="background: #F97316; width: 8px; height: 8px; border-radius: 50%; position: absolute; right: -4px; top: -5px;"></div>
+                            </div>
+                            <div style="color: #9CA3AF; font-size: 12px; margin-top: 5px;">
+                              Direct Flight
+                            </div>
+                          </td>
+                          
+                          <td style="width: 35%; text-align: right;">
+                            <div style="font-size: 28px; font-weight: bold; color: #134E4A;">
+                              ${extractTime(returnFlight.arrivalTime)}
+                            </div>
+                            <div style="color: #6B7280; font-size: 14px; margin-top: 5px;">
+                              ${returnFlight.toCity || returnFlight.to} (${returnFlight.to})
+                            </div>
+                            <div style="color: #9CA3AF; font-size: 12px;">
+                              ${returnFlight.toTerminal || 'TBD'}
+                            </div>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                    
+                    <!-- Class & Status -->
+                    <div style="display: flex; gap: 10px;">
+                      <div style="background: white; padding: 10px 15px; border-radius: 6px; flex: 1;">
+                        <span style="color: #6B7280; font-size: 12px;">Class</span>
+                        <div style="color: #134E4A; font-weight: bold; font-size: 14px;">
+                          ${returnFlight.travelClass || travelClass}
+                        </div>
+                      </div>
+                      <div style="background: white; padding: 10px 15px; border-radius: 6px; flex: 1;">
+                        <span style="color: #6B7280; font-size: 12px;">Status</span>
+                        <div style="color: #10B981; font-weight: bold; font-size: 14px;">
+                          ✓ ${bookingStatus}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          ` : ''}
 
           <!-- SECTION 3: PASSENGER DETAILS -->
           <tr>

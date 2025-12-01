@@ -738,11 +738,45 @@ const BookingConfirmation = () => {
           }
         };
 
-        // Get departure and arrival times
+        // Get departure and arrival times for onward flight
         const departureTimeStr = formatTimeFromDate(selectedFlights.onward.departureTime || userDepartureDate);
         const arrivalTimeStr = selectedFlights.onward.arrivalTime 
           ? formatTimeFromDate(selectedFlights.onward.arrivalTime)
           : null; // Will be calculated on backend if not provided
+
+        // Get return flight details if round trip
+        let returnFlightData = null;
+        if (tripType === 'roundtrip' && selectedFlights.return) {
+          const returnOriginCode = getAirportCode(selectedFlights.return.origin) || 
+                                  selectedFlights.return.originCode || '';
+          const returnDestCode = getAirportCode(selectedFlights.return.destination) || 
+                                selectedFlights.return.destinationCode || '';
+          const returnOriginDetails = getAirportDetails(selectedFlights.return.origin);
+          const returnDestDetails = getAirportDetails(selectedFlights.return.destination);
+          const returnTravelDate = formatTravelDate(selectedFlights.return.departureTime || userReturnDate);
+          const returnDepartureTime = formatTimeFromDate(selectedFlights.return.departureTime || userReturnDate);
+          const returnArrivalTime = selectedFlights.return.arrivalTime 
+            ? formatTimeFromDate(selectedFlights.return.arrivalTime)
+            : null;
+
+          returnFlightData = {
+            flightNumber: selectedFlights.return.flightNumber || 'N/A',
+            from: returnOriginCode,
+            fromCity: returnOriginDetails.city || selectedFlights.return.originCity || '',
+            fromAirport: returnOriginDetails.name || '',
+            fromTerminal: returnOriginDetails.terminal,
+            to: returnDestCode,
+            toCity: returnDestDetails.city || selectedFlights.return.destinationCity || '',
+            toAirport: returnDestDetails.name || '',
+            toTerminal: returnDestDetails.terminal,
+            route: returnOriginCode && returnDestCode ? `${returnOriginCode}-${returnDestCode}` : 'N/A',
+            travelDate: returnTravelDate,
+            departureTime: returnDepartureTime,
+            arrivalTime: returnArrivalTime,
+            duration: selectedFlights.return.duration || null,
+            travelClass: selectedFlights.return.cabinClass || 'Economy'
+          };
+        }
 
         // Build passengers array with details
         const passengersArray = travellerDetails?.map((traveller, index) => ({
@@ -765,13 +799,14 @@ const BookingConfirmation = () => {
           pnr: pnr,
           bookingDate: new Date().toISOString(),
           bookingStatus: 'Confirmed',
+          tripType: tripType || 'oneway', // oneway or roundtrip
           
-          // Flight Details
+          // Onward Flight Details
           flightNumber: selectedFlights.onward.flightNumber || 'N/A',
           airline: selectedFlights.onward.airline || 'TLP Airways',
           aircraftType: 'Boeing 737-800', // Default, can be enhanced
           
-          // Route Information
+          // Onward Route Information
           from: originCode,
           fromCity: originDetails.city || selectedFlights.onward.originCity || '',
           fromAirport: originDetails.name || '',
@@ -782,11 +817,14 @@ const BookingConfirmation = () => {
           toTerminal: destDetails.terminal,
           route: route,
           
-          // Timing
+          // Onward Timing
           travelDate: travelDate,
           departureTime: departureTimeStr,
           arrivalTime: arrivalTimeStr,
           duration: selectedFlights.onward.duration || null, // Will be calculated if not provided
+          
+          // Return Flight Details (if round trip)
+          returnFlight: returnFlightData,
           
           // Passengers
           adults: passengers?.adult || numPassengers,
@@ -843,7 +881,7 @@ const BookingConfirmation = () => {
     // Delay sending to ensure booking is fully confirmed
     const timer = setTimeout(sendEmail, 1500);
     return () => clearTimeout(timer);
-  }, [contactInfo, selectedFlights, pnr, travellerDetails, userDepartureDate, passengers, numPassengers]);
+  }, [contactInfo, selectedFlights, pnr, travellerDetails, userDepartureDate, userReturnDate, passengers, numPassengers, tripType, paymentType, selectedServices]);
 
   useEffect(() => {
     if (!selectedFlights?.onward || !travellerDetails) return;

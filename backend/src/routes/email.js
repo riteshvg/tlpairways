@@ -44,6 +44,10 @@ router.post('/send-booking-confirmation', async (req, res) => {
       arrivalTime,
       duration,
       
+      // Trip Type & Return Flight
+      tripType,
+      returnFlight,
+      
       // Passengers
       adults,
       children,
@@ -137,6 +141,10 @@ router.post('/send-booking-confirmation', async (req, res) => {
       departureTime: departureTime || '10:30',
       arrivalTime: arrivalTime || '12:45',
       duration: duration || null, // Will be calculated if not provided
+      
+      // Trip Type & Return Flight
+      tripType: tripType || 'oneway',
+      returnFlight: returnFlight || null,
       
       // Passengers
       adults: adults || 1,
