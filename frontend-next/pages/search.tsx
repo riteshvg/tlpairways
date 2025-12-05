@@ -280,7 +280,7 @@ export default function SearchPage() {
                     <form onSubmit={handleSearch}>
                         <Grid container spacing={3}>
                             {/* First Row - Origin, Destination, Departure Date, Return Date */}
-                            <Grid item xs={12} md={2}>
+                            <Grid item xs={12} md={2.5}>
                                 <Autocomplete
                                     options={getUniqueLocations()}
                                     getOptionLabel={(option) => option.label}
@@ -300,7 +300,7 @@ export default function SearchPage() {
                                     isOptionEqualToValue={(option, value) => option.iata_code === value.iata_code}
                                 />
                             </Grid>
-                            <Grid item xs={12} md={2}>
+                            <Grid item xs={12} md={2.5}>
                                 <Autocomplete
                                     options={getAvailableDestinations()}
                                     getOptionLabel={(option) => option.label}
