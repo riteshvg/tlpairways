@@ -37,7 +37,8 @@ const AdobeDataLayer: React.FC<AdobeDataLayerProps> = ({ pageData }) => {
             event: 'pageView'
         });
 
-    }, [pageData]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [JSON.stringify(pageData)]);
 
     return null;
 };
