@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import {
     Container,
@@ -10,84 +11,346 @@ import {
     Grid,
     Chip,
     Divider,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    IconButton,
+    Alert,
 } from '@mui/material';
 import Head from 'next/head';
 import FlightIcon from '@mui/icons-material/Flight';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
+import CloseIcon from '@mui/icons-material/Close';
+import AirlineSeatReclineNormalIcon from '@mui/icons-material/AirlineSeatReclineNormal';
+import LuggageIcon from '@mui/icons-material/Luggage';
+import { format } from 'date-fns';
+import flightsData from '../data/flights.json';
+import airports from '../data/airports.json';
 
-/**
- * Results Page - MPA Version
- * 
- * Displays mock flight search results based on URL parameters
- */
+// Helper function to find airport by code
+const findAirportByCode = (code: string) => {
+    for (const cityData of airports.airports) {
+        const airport = cityData.airports.find((a: any) => a.code === code);
+        if (airport) {
+            return {
+                ...airport,
+                city: cityData.city,
+                country: cityData.country
+            };
+        }
+    }
+    return null;
+};
+
+interface Flight {
+    id: string;
+    flightNumber: string;
+    origin: string;
+    originCity: string;
+    destination: string;
+    destinationCity: string;
+    departureTime: string;
+    arrivalTime: string;
+    duration: string;
+    durationMinutes: number;
+    price: number;
+    aircraftType: string;
+    stops: any[];
+    availableSeats: number;
+    cabinClass: string[];
+    mealOptions: string[];
+    baggage: {
+        checked: string;
+        cabin: string;
+    };
+    distance: number;
+    prices?: {
+        economy: number;
+        premium_economy: number;
+        business: number;
+        first: number;
+    };
+    currentPrice?: number;
+    departureDateTime?: Date;
+    arrivalDateTime?: Date;
+}
+
+interface SearchParams {
+    originCode: string;
+    destinationCode: string;
+    date: Date;
+    returnDate?: Date;
+    passengers: number;
+    tripType: string;
+    cabinClass: string;
+    paymentType?: string;
+    travelPurpose?: string;
+}
+
 export default function ResultsPage() {
     const router = useRouter();
-    const { from, to, departDate, passengers = '1', tripType } = router.query;
+    const { originCode, destinationCode, date, returnDate, passengers = '1', tripType = 'oneway', cabinClass = 'economy', paymentType, travelPurpose } = router.query;
 
-    // Mock flight data
-    const mockFlights = [
-        {
-            id: 1,
-            airline: 'TL Airways',
-            flightNumber: 'TL101',
-            departure: '06:00',
-            arrival: '08:30',
-            duration: '2h 30m',
-            price: 3499,
-            stops: 'Non-stop',
-        },
-        {
-            id: 2,
-            airline: 'TL Airways',
-            flightNumber: 'TL203',
-            departure: '10:15',
-            arrival: '12:45',
-            duration: '2h 30m',
-            price: 2999,
-            stops: 'Non-stop',
-        },
-        {
-            id: 3,
-            airline: 'TL Airways',
-            flightNumber: 'TL305',
-            departure: '14:30',
-            arrival: '17:00',
-            duration: '2h 30m',
-            price: 3299,
-            stops: 'Non-stop',
-        },
-        {
-            id: 4,
-            airline: 'TL Airways',
-            flightNumber: 'TL407',
-            departure: '18:45',
-            arrival: '21:15',
-            duration: '2h 30m',
-            price: 3799,
-            stops: 'Non-stop',
-        },
-    ];
+    const [searchParams, setSearchParams] = useState<SearchParams | null>(null);
+    const [onwardFlights, setOnwardFlights] = useState<Flight[]>([]);
+    const [returnFlights, setReturnFlights] = useState<Flight[]>([]);
+    const [selectedOnwardFlight, setSelectedOnwardFlight] = useState<Flight | null>(null);
+    const [selectedReturnFlight, setSelectedReturnFlight] = useState<Flight | null>(null);
+    const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isReturnModal, setIsReturnModal] = useState(false);
 
-    const cityNames: Record<string, string> = {
-        BOM: 'Mumbai',
-        DEL: 'Delhi',
-        BLR: 'Bangalore',
-        HYD: 'Hyderabad',
-        MAA: 'Chennai',
-        CCU: 'Kolkata',
-        PNQ: 'Pune',
-        AMD: 'Ahmedabad',
+    // Initialize search parameters from URL
+    useEffect(() => {
+        if (originCode && destinationCode && date) {
+            const params: SearchParams = {
+                originCode: originCode as string,
+                destinationCode: destinationCode as string,
+                date: new Date(date as string),
+                returnDate: returnDate ? new Date(returnDate as string) : undefined,
+                passengers: parseInt(passengers as string) || 1,
+                tripType: tripType as string,
+                cabinClass: cabinClass as string,
+                paymentType: paymentType as string,
+                travelPurpose: travelPurpose as string,
+            };
+            setSearchParams(params);
+        }
+    }, [originCode, destinationCode, date, returnDate, passengers, tripType, cabinClass, paymentType, travelPurpose]);
+
+    // Get matching flights from data
+    const getMatchingFlights = (origin: string, destination: string, searchDate: Date, cabin: string): Flight[] => {
+        if (!origin || !destination || !searchDate || !cabin) return [];
+
+        try {
+            const allFlights = (flightsData as any).flights || [];
+
+            return allFlights
+                .filter((flight: any) => flight.origin === origin && flight.destination === destination)
+                .map((flight: any) => {
+                    // Calculate prices for different cabin classes
+                    const basePrice = flight.price;
+                    const prices = {
+                        economy: basePrice,
+                        premium_economy: Math.round(basePrice * 1.3),
+                        business: Math.round(basePrice * 1.7),
+                        first: Math.round(basePrice * 2.2)
+                    };
+
+                    // Create departure and arrival DateTimes
+                    const departureDateTime = new Date(searchDate);
+                    const [depHours, depMinutes] = flight.departureTime.split(':');
+                    departureDateTime.setHours(parseInt(depHours), parseInt(depMinutes), 0, 0);
+
+                    const arrivalDateTime = new Date(searchDate);
+                    const [arrHours, arrMinutes] = flight.arrivalTime.split(':');
+                    arrivalDateTime.setHours(parseInt(arrHours), parseInt(arrMinutes), 0, 0);
+
+                    // If arrival is before departure, it's next day
+                    if (arrivalDateTime < departureDateTime) {
+                        arrivalDateTime.setDate(arrivalDateTime.getDate() + 1);
+                    }
+
+                    return {
+                        ...flight,
+                        prices,
+                        currentPrice: (prices as any)[cabin] || basePrice,
+                        departureDateTime,
+                        arrivalDateTime,
+                    };
+                });
+        } catch (err) {
+            console.error('Error getting matching flights:', err);
+            return [];
+        }
     };
 
-    const fromCity = cityNames[from as string] || from;
-    const toCity = cityNames[to as string] || to;
+    // Update flights when search parameters change
+    useEffect(() => {
+        if (searchParams) {
+            const onward = getMatchingFlights(
+                searchParams.originCode,
+                searchParams.destinationCode,
+                searchParams.date,
+                searchParams.cabinClass
+            );
+            setOnwardFlights(onward);
+
+            if (searchParams.tripType === 'roundtrip' && searchParams.returnDate) {
+                const returnFlts = getMatchingFlights(
+                    searchParams.destinationCode,
+                    searchParams.originCode,
+                    searchParams.returnDate,
+                    searchParams.cabinClass
+                );
+                setReturnFlights(returnFlts);
+            } else {
+                setReturnFlights([]);
+            }
+        }
+    }, [searchParams]);
+
+    const handleSelectFlight = (flight: Flight, isReturn: boolean = false) => {
+        setSelectedFlight(flight);
+        setIsReturnModal(isReturn);
+        setIsModalOpen(true);
+    };
+
+    const handleConfirmSelection = () => {
+        if (selectedFlight) {
+            if (isReturnModal) {
+                setSelectedReturnFlight(selectedFlight);
+            } else {
+                setSelectedOnwardFlight(selectedFlight);
+            }
+        }
+        setIsModalOpen(false);
+        setSelectedFlight(null);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setSelectedFlight(null);
+    };
+
+    const handleProceedToBooking = () => {
+        if (!selectedOnwardFlight) {
+            alert('Please select an onward flight');
+            return;
+        }
+
+        if (searchParams?.tripType === 'roundtrip' && !selectedReturnFlight) {
+            alert('Please select a return flight');
+            return;
+        }
+
+        // Navigate to traveller details page with full page reload
+        const queryParams = new URLSearchParams({
+            onwardFlightId: selectedOnwardFlight.id,
+            returnFlightId: selectedReturnFlight?.id || '',
+            originCode: searchParams?.originCode || '',
+            destinationCode: searchParams?.destinationCode || '',
+            date: searchParams?.date.toISOString() || '',
+            returnDate: searchParams?.returnDate?.toISOString() || '',
+            passengers: searchParams?.passengers.toString() || '1',
+            cabinClass: searchParams?.cabinClass || 'economy',
+            tripType: searchParams?.tripType || 'oneway',
+        });
+
+        window.location.href = `/traveller-details?${queryParams.toString()}`;
+    };
+
+    const handleModifySearch = () => {
+        window.location.href = '/search';
+    };
+
+    const originAirport = searchParams ? findAirportByCode(searchParams.originCode) : null;
+    const destAirport = searchParams ? findAirportByCode(searchParams.destinationCode) : null;
+
+    const renderFlightCard = (flight: Flight, isReturn: boolean = false) => {
+        const isSelected = isReturn
+            ? selectedReturnFlight?.id === flight.id
+            : selectedOnwardFlight?.id === flight.id;
+
+        return (
+            <Card
+                key={flight.id}
+                sx={{
+                    mb: 2,
+                    cursor: 'pointer',
+                    border: isSelected ? '2px solid #00695c' : '1px solid #e0e0e0',
+                    '&:hover': {
+                        boxShadow: 3,
+                        borderColor: '#00695c',
+                    }
+                }}
+                onClick={() => handleSelectFlight(flight, isReturn)}
+            >
+                <CardContent>
+                    <Grid container spacing={2} alignItems="center">
+                        {/* Airline & Flight Number */}
+                        <Grid size={{ xs: 12, md: 2 }}>
+                            <Typography variant="subtitle1" fontWeight="bold">
+                                TL Airways
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                {flight.flightNumber}
+                            </Typography>
+                        </Grid>
+
+                        {/* Departure */}
+                        <Grid size={{ xs: 4, md: 2 }}>
+                            <Typography variant="h6">{flight.departureTime}</Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                {flight.originCity}
+                            </Typography>
+                        </Grid>
+
+                        {/* Duration */}
+                        <Grid size={{ xs: 4, md: 2 }}>
+                            <Box sx={{ textAlign: 'center' }}>
+                                <AccessTimeIcon color="action" sx={{ fontSize: 20 }} />
+                                <Typography variant="body2">{flight.duration}</Typography>
+                                <Typography variant="caption" color="text.secondary">
+                                    {flight.stops.length === 0 ? 'Non-stop' : `${flight.stops.length} stop(s)`}
+                                </Typography>
+                            </Box>
+                        </Grid>
+
+                        {/* Arrival */}
+                        <Grid size={{ xs: 4, md: 2 }}>
+                            <Typography variant="h6">{flight.arrivalTime}</Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                {flight.destinationCity}
+                            </Typography>
+                        </Grid>
+
+                        {/* Price */}
+                        <Grid size={{ xs: 6, md: 2 }}>
+                            <Box sx={{ textAlign: { md: 'right' } }}>
+                                <Typography variant="h5" color="primary" fontWeight="bold">
+                                    ₹{flight.currentPrice?.toLocaleString()}
+                                </Typography>
+                                <Typography variant="caption" color="text.secondary">
+                                    per person
+                                </Typography>
+                            </Box>
+                        </Grid>
+
+                        {/* Select Button */}
+                        <Grid size={{ xs: 6, md: 2 }}>
+                            <Button
+                                variant={isSelected ? "contained" : "outlined"}
+                                color="primary"
+                                fullWidth
+                            >
+                                {isSelected ? 'Selected' : 'Select'}
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </CardContent>
+            </Card>
+        );
+    };
+
+    if (!searchParams) {
+        return (
+            <Container maxWidth="lg" sx={{ mt: 4, mb: 8 }}>
+                <Typography>Loading search results...</Typography>
+            </Container>
+        );
+    }
+
+    const totalPrice = (selectedOnwardFlight?.currentPrice || 0) + (selectedReturnFlight?.currentPrice || 0);
+    const canProceed = selectedOnwardFlight && (searchParams.tripType === 'oneway' || selectedReturnFlight);
 
     return (
         <>
             <Head>
-                <title>Search Results - {fromCity} to {toCity} - TLAirways</title>
-                <meta name="description" content={`Flights from ${fromCity} to ${toCity}`} />
+                <title>Search Results - {originAirport?.city} to {destAirport?.city} - TLAirways</title>
+                <meta name="description" content={`Flights from ${originAirport?.city} to ${destAirport?.city}`} />
             </Head>
 
             <Container maxWidth="lg" sx={{ mt: 4, mb: 8 }}>
@@ -97,19 +360,20 @@ export default function ResultsPage() {
                         <Grid size={{ xs: 12, md: 8 }}>
                             <Typography variant="h5" gutterBottom>
                                 <FlightIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
-                                {fromCity} ({from}) → {toCity} ({to})
+                                {originAirport?.city} ({searchParams.originCode}) → {destAirport?.city} ({searchParams.destinationCode})
                             </Typography>
-                            <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-                                <Chip label={`${departDate}`} size="small" />
-                                <Chip label={`${passengers} Passenger${Number(passengers) > 1 ? 's' : ''}`} size="small" />
-                                <Chip label={tripType === 'round-trip' ? 'Round Trip' : 'One Way'} size="small" color="primary" />
+                            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                                <Chip label={format(searchParams.date, 'MMM dd, yyyy')} size="small" />
+                                <Chip label={`${searchParams.passengers} Passenger${searchParams.passengers > 1 ? 's' : ''}`} size="small" />
+                                <Chip label={searchParams.tripType === 'roundtrip' ? 'Round Trip' : 'One Way'} size="small" color="primary" />
+                                <Chip label={searchParams.cabinClass.charAt(0).toUpperCase() + searchParams.cabinClass.slice(1)} size="small" />
                             </Box>
                         </Grid>
                         <Grid size={{ xs: 12, md: 4 }} sx={{ textAlign: { md: 'right' } }}>
                             <Button
-                                component="a"
-                                href="/search"
                                 variant="outlined"
+                                onClick={handleModifySearch}
+                                startIcon={<FlightIcon />}
                             >
                                 Modify Search
                             </Button>
@@ -117,118 +381,304 @@ export default function ResultsPage() {
                     </Grid>
                 </Paper>
 
-                {/* Results Header */}
-                <Box sx={{ mb: 3 }}>
-                    <Typography variant="h6" gutterBottom>
-                        Available Flights ({mockFlights.length})
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        Showing flights for {departDate}
-                    </Typography>
-                </Box>
+                {/* Main Content Grid: Flights (left) + Booking Summary (right) */}
+                <Grid container spacing={4}>
+                    {/* Left Column - Flight Lists */}
+                    <Grid size={{ xs: 12, md: 8 }}>
+                        {/* Onward Flights */}
+                        <Paper sx={{ p: 3, mb: 4 }}>
+                            <Typography variant="h6" gutterBottom sx={{ color: '#00695c', fontWeight: 600 }}>
+                                {searchParams.tripType === 'roundtrip' ? 'Onward Journey' : 'Available Flights'}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary" gutterBottom>
+                                {onwardFlights.length} flights found
+                            </Typography>
+                            <Divider sx={{ my: 2 }} />
+                            {onwardFlights.length === 0 ? (
+                                <Alert severity="info">No flights found for this route. Please try different dates.</Alert>
+                            ) : (
+                                onwardFlights.map(flight => renderFlightCard(flight, false))
+                            )}
+                        </Paper>
 
-                {/* Flight Cards */}
-                {mockFlights.map((flight) => (
-                    <Card key={flight.id} sx={{ mb: 2 }}>
-                        <CardContent>
-                            <Grid container spacing={2} alignItems="center">
-                                {/* Airline & Flight Number */}
-                                <Grid size={{ xs: 12, md: 2 }}>
-                                    <Typography variant="subtitle1" fontWeight="bold">
-                                        {flight.airline}
+                        {/* Return Flights */}
+                        {searchParams.tripType === 'roundtrip' && returnFlights.length > 0 && (
+                            <Paper sx={{ p: 3, mb: 4 }}>
+                                <Typography variant="h6" gutterBottom sx={{ color: '#00695c', fontWeight: 600 }}>
+                                    Return Journey
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary" gutterBottom>
+                                    {returnFlights.length} flights found
+                                </Typography>
+                                <Divider sx={{ my: 2 }} />
+                                {returnFlights.map(flight => renderFlightCard(flight, true))}
+                            </Paper>
+                        )}
+                    </Grid>
+
+                    {/* Right Column - Sticky Booking Summary */}
+                    <Grid size={{ xs: 12, md: 4 }}>
+                        <Paper sx={{ p: 3, position: 'sticky', top: 20 }}>
+                            <Typography variant="h6" gutterBottom>
+                                Selected Flights
+                            </Typography>
+
+                            {/* Onward Flight Summary */}
+                            {selectedOnwardFlight && (
+                                <Box sx={{ mb: 2, p: 2, bgcolor: 'action.hover', borderRadius: 1 }}>
+                                    <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                                        Onward Flight
                                     </Typography>
+                                    <Divider sx={{ mb: 1.5 }} />
+                                    <Grid container spacing={1}>
+                                        <Grid size={{ xs: 6 }}>
+                                            <Typography variant="caption" color="text.secondary">Airline</Typography>
+                                            <Typography variant="body2" fontWeight="medium">TL Airways</Typography>
+                                        </Grid>
+                                        <Grid size={{ xs: 6 }}>
+                                            <Typography variant="caption" color="text.secondary">Flight</Typography>
+                                            <Typography variant="body2" fontWeight="medium">{selectedOnwardFlight.flightNumber}</Typography>
+                                        </Grid>
+                                        <Grid size={{ xs: 12 }}>
+                                            <Typography variant="caption" color="text.secondary">Route</Typography>
+                                            <Typography variant="body2" fontWeight="medium">
+                                                {selectedOnwardFlight.originCity} ({selectedOnwardFlight.origin}) → {selectedOnwardFlight.destinationCity} ({selectedOnwardFlight.destination})
+                                            </Typography>
+                                        </Grid>
+                                        <Grid size={{ xs: 6 }}>
+                                            <Typography variant="caption" color="text.secondary">Date</Typography>
+                                            <Typography variant="body2">
+                                                {selectedOnwardFlight.departureDateTime && format(selectedOnwardFlight.departureDateTime, 'MMM dd, yyyy')}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid size={{ xs: 6 }}>
+                                            <Typography variant="caption" color="text.secondary">Time</Typography>
+                                            <Typography variant="body2">
+                                                {selectedOnwardFlight.departureTime} - {selectedOnwardFlight.arrivalTime}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid size={{ xs: 6 }}>
+                                            <Typography variant="caption" color="text.secondary">Duration</Typography>
+                                            <Typography variant="body2">{selectedOnwardFlight.duration}</Typography>
+                                        </Grid>
+                                        <Grid size={{ xs: 6 }}>
+                                            <Typography variant="caption" color="text.secondary">Cabin</Typography>
+                                            <Typography variant="body2">
+                                                {searchParams.cabinClass.charAt(0).toUpperCase() + searchParams.cabinClass.slice(1)}
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                    <Typography variant="h6" color="primary" sx={{ mt: 1 }}>
+                                        ₹{((selectedOnwardFlight.currentPrice || 0) * searchParams.passengers).toLocaleString()}
+                                    </Typography>
+                                </Box>
+                            )}
+
+                            {/* Return Flight Summary */}
+                            {selectedReturnFlight && (
+                                <Box sx={{ mb: 2, p: 2, bgcolor: 'action.hover', borderRadius: 1 }}>
+                                    <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                                        Return Flight
+                                    </Typography>
+                                    <Divider sx={{ mb: 1.5 }} />
+                                    <Grid container spacing={1}>
+                                        <Grid size={{ xs: 6 }}>
+                                            <Typography variant="caption" color="text.secondary">Airline</Typography>
+                                            <Typography variant="body2" fontWeight="medium">TL Airways</Typography>
+                                        </Grid>
+                                        <Grid size={{ xs: 6 }}>
+                                            <Typography variant="caption" color="text.secondary">Flight</Typography>
+                                            <Typography variant="body2" fontWeight="medium">{selectedReturnFlight.flightNumber}</Typography>
+                                        </Grid>
+                                        <Grid size={{ xs: 12 }}>
+                                            <Typography variant="caption" color="text.secondary">Route</Typography>
+                                            <Typography variant="body2" fontWeight="medium">
+                                                {selectedReturnFlight.originCity} ({selectedReturnFlight.origin}) → {selectedReturnFlight.destinationCity} ({selectedReturnFlight.destination})
+                                            </Typography>
+                                        </Grid>
+                                        <Grid size={{ xs: 6 }}>
+                                            <Typography variant="caption" color="text.secondary">Date</Typography>
+                                            <Typography variant="body2">
+                                                {selectedReturnFlight.departureDateTime && format(selectedReturnFlight.departureDateTime, 'MMM dd, yyyy')}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid size={{ xs: 6 }}>
+                                            <Typography variant="caption" color="text.secondary">Time</Typography>
+                                            <Typography variant="body2">
+                                                {selectedReturnFlight.departureTime} - {selectedReturnFlight.arrivalTime}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid size={{ xs: 6 }}>
+                                            <Typography variant="caption" color="text.secondary">Duration</Typography>
+                                            <Typography variant="body2">{selectedReturnFlight.duration}</Typography>
+                                        </Grid>
+                                        <Grid size={{ xs: 6 }}>
+                                            <Typography variant="caption" color="text.secondary">Cabin</Typography>
+                                            <Typography variant="body2">
+                                                {searchParams.cabinClass.charAt(0).toUpperCase() + searchParams.cabinClass.slice(1)}
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                    <Typography variant="h6" color="primary" sx={{ mt: 1 }}>
+                                        ₹{((selectedReturnFlight.currentPrice || 0) * searchParams.passengers).toLocaleString()}
+                                    </Typography>
+                                </Box>
+                            )}
+
+                            {/* Total Price */}
+                            {(selectedOnwardFlight || selectedReturnFlight) && (
+                                <Box sx={{ mt: 2, pt: 2, borderTop: '1px solid #e0e0e0' }}>
+                                    <Typography variant="h6" gutterBottom>
+                                        Total Price
+                                    </Typography>
+                                    <Typography variant="h5" color="primary">
+                                        ₹{(totalPrice * searchParams.passengers).toLocaleString()}
+                                    </Typography>
+                                    <Typography variant="caption" color="text.secondary">
+                                        for {searchParams.passengers} passenger{searchParams.passengers > 1 ? 's' : ''}
+                                    </Typography>
+                                </Box>
+                            )}
+
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                fullWidth
+                                disabled={!canProceed}
+                                onClick={handleProceedToBooking}
+                                sx={{
+                                    mt: 2,
+                                    py: 1.5,
+                                    textTransform: 'none',
+                                    fontWeight: 600,
+                                }}
+                            >
+                                Continue to Traveller Details
+                            </Button>
+
+                            {/* Empty state message */}
+                            {!selectedOnwardFlight && !selectedReturnFlight && (
+                                <Box sx={{ mt: 2, textAlign: 'center' }}>
                                     <Typography variant="body2" color="text.secondary">
-                                        {flight.flightNumber}
+                                        Select flights to see booking summary
                                     </Typography>
-                                </Grid>
+                                </Box>
+                            )}
+                        </Paper>
+                    </Grid>
+                </Grid>
 
-                                {/* Departure */}
-                                <Grid size={{ xs: 4, md: 2 }}>
-                                    <Typography variant="h6">{flight.departure}</Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        {from}
-                                    </Typography>
-                                </Grid>
+                {/* Flight Details Modal */}
+                <Dialog open={isModalOpen} onClose={handleCloseModal} maxWidth="md" fullWidth>
+                    <DialogTitle>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <Typography variant="h6">Flight Details</Typography>
+                            <IconButton onClick={handleCloseModal}>
+                                <CloseIcon />
+                            </IconButton>
+                        </Box>
+                    </DialogTitle>
+                    <DialogContent dividers>
+                        {selectedFlight && (
+                            <Box>
+                                <Grid container spacing={3}>
+                                    <Grid size={{ xs: 12 }}>
+                                        <Typography variant="h6" gutterBottom>
+                                            {selectedFlight.flightNumber} - TL Airways
+                                        </Typography>
+                                        <Chip label={selectedFlight.aircraftType} size="small" sx={{ mr: 1 }} />
+                                        <Chip
+                                            label={selectedFlight.stops.length === 0 ? 'Non-stop' : `${selectedFlight.stops.length} stop(s)`}
+                                            size="small"
+                                            color={selectedFlight.stops.length === 0 ? 'success' : 'default'}
+                                        />
+                                    </Grid>
 
-                                {/* Duration */}
-                                <Grid size={{ xs: 4, md: 2 }}>
-                                    <Box sx={{ textAlign: 'center' }}>
-                                        <AccessTimeIcon color="action" sx={{ fontSize: 20 }} />
-                                        <Typography variant="body2">{flight.duration}</Typography>
+                                    <Grid size={{ xs: 12, md: 6 }}>
+                                        <Typography variant="subtitle2" color="text.secondary">Departure</Typography>
+                                        <Typography variant="h5">{selectedFlight.departureTime}</Typography>
+                                        <Typography variant="body1">{selectedFlight.originCity} ({selectedFlight.origin})</Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            {selectedFlight.departureDateTime && format(selectedFlight.departureDateTime, 'MMM dd, yyyy')}
+                                        </Typography>
+                                    </Grid>
+
+                                    <Grid size={{ xs: 12, md: 6 }}>
+                                        <Typography variant="subtitle2" color="text.secondary">Arrival</Typography>
+                                        <Typography variant="h5">{selectedFlight.arrivalTime}</Typography>
+                                        <Typography variant="body1">{selectedFlight.destinationCity} ({selectedFlight.destination})</Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            {selectedFlight.arrivalDateTime && format(selectedFlight.arrivalDateTime, 'MMM dd, yyyy')}
+                                        </Typography>
+                                    </Grid>
+
+                                    <Grid size={{ xs: 12 }}>
+                                        <Divider sx={{ my: 2 }} />
+                                    </Grid>
+
+                                    <Grid size={{ xs: 12, md: 4 }}>
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                            <AccessTimeIcon color="action" />
+                                            <Box>
+                                                <Typography variant="subtitle2" color="text.secondary">Duration</Typography>
+                                                <Typography variant="body1">{selectedFlight.duration}</Typography>
+                                            </Box>
+                                        </Box>
+                                    </Grid>
+
+                                    <Grid size={{ xs: 12, md: 4 }}>
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                            <LuggageIcon color="action" />
+                                            <Box>
+                                                <Typography variant="subtitle2" color="text.secondary">Baggage</Typography>
+                                                <Typography variant="body2">Cabin: {selectedFlight.baggage.cabin}</Typography>
+                                                <Typography variant="body2">Checked: {selectedFlight.baggage.checked}</Typography>
+                                            </Box>
+                                        </Box>
+                                    </Grid>
+
+                                    <Grid size={{ xs: 12, md: 4 }}>
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                            <AirlineSeatReclineNormalIcon color="action" />
+                                            <Box>
+                                                <Typography variant="subtitle2" color="text.secondary">Available Seats</Typography>
+                                                <Typography variant="body1">{selectedFlight.availableSeats}</Typography>
+                                            </Box>
+                                        </Box>
+                                    </Grid>
+
+                                    <Grid size={{ xs: 12 }}>
+                                        <Typography variant="subtitle2" color="text.secondary" gutterBottom>Meal Options</Typography>
+                                        <Box sx={{ display: 'flex', gap: 1 }}>
+                                            {selectedFlight.mealOptions.map(meal => (
+                                                <Chip key={meal} label={meal} size="small" variant="outlined" />
+                                            ))}
+                                        </Box>
+                                    </Grid>
+
+                                    <Grid size={{ xs: 12 }}>
+                                        <Divider sx={{ my: 2 }} />
+                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <Typography variant="h6">Total Fare</Typography>
+                                            <Typography variant="h4" color="primary" fontWeight="bold">
+                                                ₹{selectedFlight.currentPrice?.toLocaleString()}
+                                            </Typography>
+                                        </Box>
                                         <Typography variant="caption" color="text.secondary">
-                                            {flight.stops}
+                                            Price per person for {searchParams.cabinClass} class
                                         </Typography>
-                                    </Box>
+                                    </Grid>
                                 </Grid>
-
-                                {/* Arrival */}
-                                <Grid size={{ xs: 4, md: 2 }}>
-                                    <Typography variant="h6">{flight.arrival}</Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        {to}
-                                    </Typography>
-                                </Grid>
-
-                                {/* Price */}
-                                <Grid size={{ xs: 6, md: 2 }}>
-                                    <Box sx={{ textAlign: { md: 'right' } }}>
-                                        <Typography variant="h5" color="primary" fontWeight="bold">
-                                            ₹{flight.price.toLocaleString()}
-                                        </Typography>
-                                        <Typography variant="caption" color="text.secondary">
-                                            per person
-                                        </Typography>
-                                    </Box>
-                                </Grid>
-
-                                {/* Book Button */}
-                                <Grid size={{ xs: 6, md: 2 }}>
-                                    <Button
-                                        variant="contained"
-                                        fullWidth
-                                        onClick={() => {
-                                            // In real app, would navigate to booking
-                                            alert(`Booking ${flight.flightNumber} - ₹${flight.price * Number(passengers)}`);
-                                        }}
-                                    >
-                                        Book Now
-                                    </Button>
-                                </Grid>
-                            </Grid>
-                        </CardContent>
-                    </Card>
-                ))}
-
-                {/* No Results Message */}
-                {mockFlights.length === 0 && (
-                    <Paper sx={{ p: 6, textAlign: 'center' }}>
-                        <Typography variant="h6" gutterBottom>
-                            No flights found
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" paragraph>
-                            Try adjusting your search criteria
-                        </Typography>
-                        <Button component="a" href="/search" variant="contained">
-                            New Search
+                            </Box>
+                        )}
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCloseModal}>Cancel</Button>
+                        <Button onClick={handleConfirmSelection} variant="contained" color="primary">
+                            Select This Flight
                         </Button>
-                    </Paper>
-                )}
-
-                {/* MPA Info */}
-                <Paper sx={{ p: 3, mt: 4, bgcolor: 'success.light' }}>
-                    <Typography variant="subtitle1" gutterBottom fontWeight="bold">
-                        ✅ MPA Advantage: SEO & Sharing
-                    </Typography>
-                    <Typography variant="body2">
-                        Notice the URL contains all search parameters. This page is:
-                    </Typography>
-                    <Box component="ul" sx={{ mt: 1, mb: 0 }}>
-                        <li><Typography variant="body2">✅ Shareable (copy URL to share search)</Typography></li>
-                        <li><Typography variant="body2">✅ Bookmarkable (save for later)</Typography></li>
-                        <li><Typography variant="body2">✅ SEO-friendly (search engines can index)</Typography></li>
-                        <li><Typography variant="body2">✅ Adobe tracking works perfectly (no race conditions)</Typography></li>
-                    </Box>
-                </Paper>
+                    </DialogActions>
+                </Dialog>
             </Container>
         </>
     );
