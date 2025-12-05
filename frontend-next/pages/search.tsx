@@ -253,8 +253,7 @@ export default function SearchPage() {
             <Container maxWidth="lg" sx={{ mt: 4, mb: 8 }}>
                 {/* Full-Width Search Widget */}
                 <Paper elevation={3} sx={{ p: 4, mb: 4 }} id="search-form">
-                    <Typography variant="h4" gutterBottom align="center" sx={{ mb: 4 }}>
-                        <FlightIcon sx={{ fontSize: 40, verticalAlign: 'middle', mr: 2 }} />
+                    <Typography variant="h4" gutterBottom align="center" sx={{ mb: 4, fontWeight: 500 }}>
                         Search Flights
                     </Typography>
 
@@ -264,7 +263,7 @@ export default function SearchPage() {
                             variant={tripType === 'oneway' ? 'contained' : 'outlined'}
                             onClick={() => setTripType('oneway')}
                             size="large"
-                            sx={{ minWidth: 120 }}
+                            sx={{ minWidth: 140, textTransform: 'none', fontSize: '1rem' }}
                         >
                             One Way
                         </Button>
@@ -272,7 +271,7 @@ export default function SearchPage() {
                             variant={tripType === 'roundtrip' ? 'contained' : 'outlined'}
                             onClick={() => setTripType('roundtrip')}
                             size="large"
-                            sx={{ minWidth: 120 }}
+                            sx={{ minWidth: 140, textTransform: 'none', fontSize: '1rem' }}
                         >
                             Round Trip
                         </Button>
@@ -281,7 +280,7 @@ export default function SearchPage() {
                     <form onSubmit={handleSearch}>
                         <Grid container spacing={3}>
                             {/* First Row - Origin, Destination, Departure Date, Return Date */}
-                            <Grid item xs={12} md={3}>
+                            <Grid item xs={12} sm={6} md={3}>
                                 <Autocomplete
                                     options={getUniqueLocations()}
                                     getOptionLabel={(option) => option.label}
