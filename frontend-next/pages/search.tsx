@@ -280,7 +280,7 @@ export default function SearchPage() {
                     <form onSubmit={handleSearch}>
                         <Grid container spacing={3}>
                             {/* First Row - Origin, Destination, Departure Date, Return Date */}
-                            <Grid item xs={12} sm={6} md={3}>
+                            <Grid item xs={12} md={3}>
                                 <Autocomplete
                                     options={getUniqueLocations()}
                                     getOptionLabel={(option) => option.label}
