@@ -94,20 +94,24 @@ export default function ConfirmationPage() {
 
         ['onward', 'return'].forEach(type => {
             if (!anc[type]) return;
+
+            // Access selections for this specific passenger index
+            const paxSelection = anc[type][idx];
+            if (!paxSelection) return;
+
             const prefix = type === 'onward' ? 'Onward' : 'Return';
 
             // Meal
-            if (anc[type].meals && anc[type].meals[idx]) {
-                services.push(`${prefix} Meal: ${anc[type].meals[idx]}`);
+            if (paxSelection.meal) {
+                services.push(`${prefix} Meal: ${paxSelection.meal}`);
             }
             // Baggage
-            if (anc[type].baggage && anc[type].baggage[idx] && anc[type].baggage[idx] !== 'included') {
-                // Baggage value is like "20" (weight) or similar, handled in ancillary page
-                services.push(`${prefix} Baggage: +${anc[type].baggage[idx]}kg`);
+            if (paxSelection.baggage && paxSelection.baggage > 0) {
+                services.push(`${prefix} Baggage: +${paxSelection.baggage}kg`);
             }
             // Seat
-            if (anc[type].seat && anc[type].seat[idx]) {
-                services.push(`${prefix} Seat: ${anc[type].seat[idx]}`);
+            if (paxSelection.seatType && paxSelection.seatType !== 'standard') {
+                services.push(`${prefix} Seat: ${paxSelection.seatType.replace('_', ' ')}`);
             }
         });
         return services;
