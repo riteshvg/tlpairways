@@ -280,7 +280,7 @@ export default function SearchPage() {
                     <form onSubmit={handleSearch}>
                         <Grid container spacing={3}>
                             {/* First Row - Origin, Destination, Departure Date, Return Date */}
-                            <Grid item xs={12} md={3}>
+                            <Grid size={{ xs: 12, md: 3 }}>
                                 <Autocomplete
                                     options={getUniqueLocations()}
                                     getOptionLabel={(option) => option.label}
@@ -300,7 +300,7 @@ export default function SearchPage() {
                                     isOptionEqualToValue={(option, value) => option.iata_code === value.iata_code}
                                 />
                             </Grid>
-                            <Grid item xs={12} md={3}>
+                            <Grid size={{ xs: 12, md: 3 }}>
                                 <Autocomplete
                                     options={getAvailableDestinations()}
                                     getOptionLabel={(option) => option.label}
@@ -319,7 +319,7 @@ export default function SearchPage() {
                                     disabled={!origin}
                                 />
                             </Grid>
-                            <Grid item xs={12} md={3}>
+                            <Grid size={{ xs: 12, md: 3 }}>
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <DatePicker
                                         label="Departure Date"
@@ -335,7 +335,7 @@ export default function SearchPage() {
                                     />
                                 </LocalizationProvider>
                             </Grid>
-                            <Grid item xs={12} md={3}>
+                            <Grid size={{ xs: 12, md: 3 }}>
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <DatePicker
                                         label="Return Date"
@@ -355,14 +355,14 @@ export default function SearchPage() {
                             </Grid>
 
                             {/* Second Row - Passengers, Class, Payment, Purpose */}
-                            <Grid item xs={12} md={3}>
+                            <Grid size={{ xs: 12, md: 3 }}>
                                 <PassengerSelector
                                     passengerCounts={passengerCounts}
                                     onPassengerCountsChange={setPassengerCounts}
                                 />
                             </Grid>
 
-                            <Grid item xs={12} md={3}>
+                            <Grid size={{ xs: 12, md: 3 }}>
                                 <FormControl fullWidth required>
                                     <InputLabel>Cabin Class</InputLabel>
                                     <Select
@@ -379,7 +379,7 @@ export default function SearchPage() {
                                 </FormControl>
                             </Grid>
 
-                            <Grid item xs={12} md={3}>
+                            <Grid size={{ xs: 12, md: 3 }}>
                                 <FormControl fullWidth required>
                                     <InputLabel>Payment Type</InputLabel>
                                     <Select
@@ -396,7 +396,7 @@ export default function SearchPage() {
                                 </FormControl>
                             </Grid>
 
-                            <Grid item xs={12} md={3}>
+                            <Grid size={{ xs: 12, md: 3 }}>
                                 <FormControl fullWidth required size="medium">
                                     <InputLabel>Travel Purpose</InputLabel>
                                     <Select
@@ -414,15 +414,26 @@ export default function SearchPage() {
                             </Grid>
 
                             {/* Search Button */}
-                            <Grid item xs={12}>
-                                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+                            <Grid size={{ xs: 12 }}>
+                                <Box sx={{ mt: 3, display: 'flex', justifyContent: 'center' }}>
                                     <Button
                                         type="submit"
                                         variant="contained"
                                         color="primary"
                                         size="large"
                                         disabled={!origin || !destination || !date || !paymentType || (tripType === 'roundtrip' && !returnDate) || passengerCounts.adult < 1}
-                                        sx={{ px: 6, py: 1.5, fontSize: '1.1rem' }}
+                                        sx={{
+                                            px: 8,
+                                            py: 1.5,
+                                            fontSize: '1rem',
+                                            textTransform: 'none',
+                                            fontWeight: 500,
+                                            minWidth: 200,
+                                            backgroundColor: '#00695c',
+                                            '&:hover': {
+                                                backgroundColor: '#004d40',
+                                            }
+                                        }}
                                     >
                                         Search Flights
                                     </Button>
@@ -432,12 +443,13 @@ export default function SearchPage() {
                     </form>
                 </Paper>
 
-                {/* Quick Booking Carousel */}
-                <Paper elevation={2} sx={{ p: 4 }}>
+                {/* Quick Bookings Section */}
+                <Paper elevation={2} sx={{ p: 4, mt: 4 }}>
+                    <Typography variant="h5" component="h2" gutterBottom sx={{ color: '#004d40', fontWeight: 600, mb: 3 }}>
+                        Quick Bookings
+                    </Typography>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                        <Typography variant="h5" gutterBottom>
-                            Quick Bookings
-                        </Typography>
+                        <Box /> {/* Empty box to push controls to the right if needed, or remove if not */}
                         <Box sx={{ display: 'flex', gap: 1 }}>
                             <IconButton onClick={prevCarousel}>
                                 <ChevronLeft />
@@ -450,7 +462,7 @@ export default function SearchPage() {
 
                     <Grid container spacing={3}>
                         {quickBookings.slice(currentCarouselIndex, currentCarouselIndex + 3).map((booking) => (
-                            <Grid item xs={12} md={4} key={booking.id}>
+                            <Grid key={booking.id} size={{ xs: 12, md: 4 }}>
                                 <Card
                                     sx={{
                                         cursor: 'pointer',
