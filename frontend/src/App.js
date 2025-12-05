@@ -24,6 +24,7 @@ import Payment from './components/Payment';
 import BookingConfirmation from './components/BookingConfirmation';
 import ProtectedRoute from './components/protected/ProtectedRoute';
 import globalClickTracker from './services/GlobalClickTracker';
+import BuildInfoModal from './components/BuildInfoModal';
 // Page View Tracker Component - REMOVED
 // Individual pages now handle their own page view tracking
 
@@ -90,6 +91,8 @@ function App() {
                   <Route path="/confirmation" element={<BookingConfirmation />} />
                 </Routes>
               </Router>
+              {/* Build Info Modal - Shows commit hash and deployment info */}
+              <BuildInfoModal />
             </ThemeProvider>
           </ConsentProvider>
         </BookingTimerProvider>

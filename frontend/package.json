@@ -25,7 +25,9 @@
   },
   "scripts": {
     "start": "PORT=3002 react-scripts start",
+    "prebuild": "bash scripts/generate-build-info.sh",
     "build": "CI=false react-scripts build",
+    "prebuild:production": "bash scripts/generate-build-info.sh",
     "build:production": "CI=false GENERATE_SOURCEMAP=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
