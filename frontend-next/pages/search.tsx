@@ -358,6 +358,9 @@ export default function SearchPage() {
                                 </LocalizationProvider>
                             </Grid>
 
+                            {/* Force new row after 4 fields */}
+                            <Grid item xs={12} sx={{ display: { xs: 'none', md: 'block' }, height: 0 }} />
+
                             {/* Second Row - Passengers, Class, Payment, Purpose */}
                             <Grid item xs={12} md={3}>
                                 <PassengerSelector
