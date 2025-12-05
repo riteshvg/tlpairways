@@ -1,10 +1,15 @@
-import { Html, Head, Main, NextScript } from 'next/document';
+import React from 'react';
+import { Html, Head, Main, NextScript, DocumentContext, DocumentInitialProps } from 'next/document';
+import createEmotionServer from '@emotion/server/create-instance';
+import createEmotionCache from '../utils/createEmotionCache';
 
 /**
  * Custom Document Component
  * 
  * This is where we initialize Adobe Data Layer BEFORE the page loads.
  * In MPA, this ensures data is ready when Adobe Launch fires - no race conditions!
+ * 
+ * Also extracts MUI emotion styles for SSR to prevent hydration mismatches.
  */
 export default function Document() {
   return (
@@ -151,3 +156,36 @@ export default function Document() {
     </Html>
   );
 }
+
+// Extract emotion styles on server to prevent hydration mismatches
+Document.getInitialProps = async (ctx: DocumentContext): Promise<DocumentInitialProps> => {
+  const originalRenderPage = ctx.renderPage;
+  const cache = createEmotionCache();
+  const { extractCriticalToChunks } = createEmotionServer(cache);
+
+  ctx.renderPage = () =>
+    originalRenderPage({
+      enhanceApp: (App: any) =>
+        function EnhanceApp(props) {
+          return <App emotionCache={cache} {...props} />;
+        },
+    });
+
+  const initialProps = await ctx.defaultGetInitialProps(ctx);
+  const emotionStyles = extractCriticalToChunks(initialProps.html);
+  const emotionStyleTags = emotionStyles.styles.map((style) => (
+    <style
+      data-emotion={`${style.key} ${style.ids.join(' ')}`}
+      key={style.key}
+      dangerouslySetInnerHTML={{ __html: style.css }}
+    />
+  ));
+
+  return {
+    ...initialProps,
+    styles: [
+      ...React.Children.toArray(initialProps.styles),
+      ...emotionStyleTags,
+    ],
+  };
+};
