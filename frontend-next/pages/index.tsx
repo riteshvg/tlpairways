@@ -1,111 +1,242 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
-import { Container, Typography, Button, Box, Paper, Avatar } from '@mui/material';
+import {
+    Container,
+    Typography,
+    Button,
+    Box,
+    Paper,
+    Grid,
+    Card,
+    CardContent,
+    CardActions,
+    Chip
+} from '@mui/material';
 import Head from 'next/head';
+import Link from 'next/link';
+import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
+import SearchIcon from '@mui/icons-material/Search';
+import PersonIcon from '@mui/icons-material/Person';
 
 /**
- * Homepage - Test page for Auth0 integration
+ * Homepage - MPA Version
  * 
- * This page demonstrates:
- * - Auth0 login/logout
- * - User session management
+ * Demonstrates:
+ * - Server-side Adobe pageView (already pushed in _document.tsx)
  * - Material-UI theming
+ * - Auth0 integration
+ * - Navigation to other pages
  */
 export default function Home() {
-    const { user, error, isLoading } = useUser();
+    const { user, isLoading } = useUser();
 
-    if (isLoading) {
-        return (
-            <Container maxWidth="md" sx={{ mt: 8, textAlign: 'center' }}>
-                <Typography variant="h4">Loading...</Typography>
-            </Container>
-        );
-    }
-
-    if (error) {
-        return (
-            <Container maxWidth="md" sx={{ mt: 8 }}>
-                <Paper sx={{ p: 4, bgcolor: 'error.light' }}>
-                    <Typography variant="h5" color="error">
-                        Error: {error.message}
-                    </Typography>
-                </Paper>
-            </Container>
-        );
-    }
+    // Featured destinations
+    const destinations = [
+        { city: 'Mumbai', code: 'BOM', image: '🏙️', price: '₹3,499' },
+        { city: 'Delhi', code: 'DEL', image: '🏛️', price: '₹4,299' },
+        { city: 'Bangalore', code: 'BLR', image: '🌳', price: '₹3,999' },
+        { city: 'Hyderabad', code: 'HYD', image: '🏰', price: '₹3,799' },
+    ];
 
     return (
         <>
             <Head>
-                <title>TLAirways - MPA Test</title>
-                <meta name="description" content="TLAirways Multi-Page Application" />
+                <title>TLAirways - Book Flights Across India</title>
+                <meta name="description" content="Book affordable flights across India with TLAirways" />
             </Head>
 
-            <Container maxWidth="md" sx={{ mt: 8 }}>
-                <Paper elevation={3} sx={{ p: 4 }}>
-                    <Typography variant="h3" component="h1" gutterBottom color="primary">
-                        🚀 TLAirways MPA
-                    </Typography>
-
-                    <Typography variant="h5" gutterBottom sx={{ mb: 4 }}>
-                        Phase 0 - Authentication Test
-                    </Typography>
-
-                    {user ? (
-                        <Box>
-                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                                <Avatar
-                                    src={user.picture}
-                                    alt={user.name}
-                                    sx={{ width: 64, height: 64, mr: 2 }}
-                                />
-                                <Box>
-                                    <Typography variant="h6">{user.name}</Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        {user.email}
-                                    </Typography>
-                                </Box>
-                            </Box>
-
-                            <Box sx={{ mt: 3, p: 2, bgcolor: 'background.default', borderRadius: 2 }}>
-                                <Typography variant="subtitle2" gutterBottom>
-                                    User Info:
-                                </Typography>
-                                <pre style={{ fontSize: '12px', overflow: 'auto' }}>
-                                    {JSON.stringify(user, null, 2)}
-                                </pre>
-                            </Box>
-
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                href="/api/auth/logout"
-                                sx={{ mt: 3 }}
-                            >
-                                Logout
-                            </Button>
-                        </Box>
-                    ) : (
-                        <Box>
-                            <Typography variant="body1" paragraph>
-                                Welcome to TLAirways MPA! Please login to continue.
-                            </Typography>
-
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                size="large"
-                                href="/api/auth/login"
-                            >
-                                Login with Auth0
-                            </Button>
-                        </Box>
-                    )}
-
-                    <Box sx={{ mt: 4, pt: 3, borderTop: 1, borderColor: 'divider' }}>
-                        <Typography variant="caption" color="text.secondary">
-                            ✅ Next.js 16 | ✅ Material-UI | ✅ Auth0 | ✅ TypeScript
+            {/* Hero Section */}
+            <Box
+                sx={{
+                    background: 'linear-gradient(135deg, #00695C 0%, #26A69A 100%)',
+                    color: 'white',
+                    py: 8,
+                    mb: 6,
+                }}
+            >
+                <Container maxWidth="lg">
+                    <Box sx={{ textAlign: 'center' }}>
+                        <FlightTakeoffIcon sx={{ fontSize: 60, mb: 2 }} />
+                        <Typography variant="h2" component="h1" gutterBottom>
+                            Welcome to TLAirways
                         </Typography>
+                        <Typography variant="h5" sx={{ mb: 4, opacity: 0.9 }}>
+                            Your Journey Begins Here
+                        </Typography>
+
+                        {user ? (
+                            <Box>
+                                <Typography variant="h6" sx={{ mb: 2 }}>
+                                    Welcome back, {user.name}!
+                                </Typography>
+                                <Button
+                                    component={Link}
+                                    href="/search"
+                                    variant="contained"
+                                    size="large"
+                                    sx={{
+                                        bgcolor: 'white',
+                                        color: 'primary.main',
+                                        '&:hover': { bgcolor: 'grey.100' },
+                                        mr: 2,
+                                    }}
+                                    startIcon={<SearchIcon />}
+                                >
+                                    Search Flights
+                                </Button>
+                                <Button
+                                    component={Link}
+                                    href="/profile"
+                                    variant="outlined"
+                                    size="large"
+                                    sx={{
+                                        borderColor: 'white',
+                                        color: 'white',
+                                        '&:hover': { borderColor: 'grey.100', bgcolor: 'rgba(255,255,255,0.1)' },
+                                    }}
+                                    startIcon={<PersonIcon />}
+                                >
+                                    My Profile
+                                </Button>
+                            </Box>
+                        ) : (
+                            <Box>
+                                <Button
+                                    component={Link}
+                                    href="/api/auth/login"
+                                    variant="contained"
+                                    size="large"
+                                    sx={{
+                                        bgcolor: 'white',
+                                        color: 'primary.main',
+                                        '&:hover': { bgcolor: 'grey.100' },
+                                        mr: 2,
+                                    }}
+                                >
+                                    Login to Book
+                                </Button>
+                                <Button
+                                    component={Link}
+                                    href="/search"
+                                    variant="outlined"
+                                    size="large"
+                                    sx={{
+                                        borderColor: 'white',
+                                        color: 'white',
+                                        '&:hover': { borderColor: 'grey.100', bgcolor: 'rgba(255,255,255,0.1)' },
+                                    }}
+                                >
+                                    Browse Flights
+                                </Button>
+                            </Box>
+                        )}
                     </Box>
+                </Container>
+            </Box>
+
+            {/* Featured Destinations */}
+            <Container maxWidth="lg" sx={{ mb: 8 }}>
+                <Typography variant="h4" component="h2" gutterBottom sx={{ mb: 4 }}>
+                    ✈️ Popular Destinations
+                </Typography>
+
+                <Grid container spacing={3}>
+                    {destinations.map((dest) => (
+                        <Grid item xs={12} sm={6} md={3} key={dest.code}>
+                            <Card
+                                sx={{
+                                    height: '100%',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    transition: 'transform 0.2s',
+                                    '&:hover': {
+                                        transform: 'translateY(-4px)',
+                                        boxShadow: 4,
+                                    },
+                                }}
+                            >
+                                <CardContent sx={{ flexGrow: 1, textAlign: 'center' }}>
+                                    <Typography variant="h1" sx={{ fontSize: '4rem', mb: 2 }}>
+                                        {dest.image}
+                                    </Typography>
+                                    <Typography variant="h5" component="h3" gutterBottom>
+                                        {dest.city}
+                                    </Typography>
+                                    <Chip label={dest.code} size="small" sx={{ mb: 2 }} />
+                                    <Typography variant="h6" color="primary">
+                                        Starting from {dest.price}
+                                    </Typography>
+                                </CardContent>
+                                <CardActions sx={{ justifyContent: 'center', pb: 2 }}>
+                                    <Button
+                                        component={Link}
+                                        href={`/search?to=${dest.code}`}
+                                        variant="contained"
+                                        size="small"
+                                    >
+                                        Search Flights
+                                    </Button>
+                                </CardActions>
+                            </Card>
+                        </Grid>
+                    ))}
+                </Grid>
+            </Container>
+
+            {/* Why Choose Us */}
+            <Box sx={{ bgcolor: 'background.default', py: 8, mb: 6 }}>
+                <Container maxWidth="lg">
+                    <Typography variant="h4" component="h2" gutterBottom sx={{ mb: 4, textAlign: 'center' }}>
+                        Why Choose TLAirways?
+                    </Typography>
+
+                    <Grid container spacing={4}>
+                        <Grid item xs={12} md={4}>
+                            <Paper sx={{ p: 3, textAlign: 'center', height: '100%' }}>
+                                <Typography variant="h2" sx={{ mb: 2 }}>💰</Typography>
+                                <Typography variant="h6" gutterBottom>Best Prices</Typography>
+                                <Typography variant="body2" color="text.secondary">
+                                    Competitive fares and exclusive deals on flights across India
+                                </Typography>
+                            </Paper>
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                            <Paper sx={{ p: 3, textAlign: 'center', height: '100%' }}>
+                                <Typography variant="h2" sx={{ mb: 2 }}>⚡</Typography>
+                                <Typography variant="h6" gutterBottom>Fast Booking</Typography>
+                                <Typography variant="body2" color="text.secondary">
+                                    Book your flight in minutes with our streamlined process
+                                </Typography>
+                            </Paper>
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                            <Paper sx={{ p: 3, textAlign: 'center', height: '100%' }}>
+                                <Typography variant="h2" sx={{ mb: 2 }}>🛡️</Typography>
+                                <Typography variant="h6" gutterBottom>Secure &amp; Safe</Typography>
+                                <Typography variant="body2" color="text.secondary">
+                                    Your data is protected with industry-standard security
+                                </Typography>
+                            </Paper>
+                        </Grid>
+                    </Grid>
+                </Container>
+            </Box>
+
+            {/* MPA Demo Info */}
+            <Container maxWidth="lg" sx={{ mb: 6 }}>
+                <Paper sx={{ p: 4, bgcolor: 'info.light', color: 'info.contrastText' }}>
+                    <Typography variant="h5" gutterBottom>
+                        🚀 MPA Demo - Adobe Analytics
+                    </Typography>
+                    <Typography variant="body1" paragraph>
+                        This is a Multi-Page Application (MPA) built with Next.js. The Adobe Data Layer
+                        is initialized server-side, eliminating race conditions!
+                    </Typography>
+                    <Typography variant="body2">
+                        ✅ pageView pushed BEFORE Adobe Launch loads<br />
+                        ✅ No timeout errors<br />
+                        ✅ 100% reliable tracking<br />
+                        ✅ Check your browser console for Adobe logs
+                    </Typography>
                 </Paper>
             </Container>
         </>
