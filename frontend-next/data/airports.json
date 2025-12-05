@@ -1,0 +1,1118 @@
+{
+  "airports": [
+    {
+      "country": "India",
+      "city": "Delhi",
+      "airports": [
+        {
+          "code": "DEL",
+          "name": "Indira Gandhi International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 28.5562,
+            "longitude": 77.1
+          }
+        }
+      ]
+    },
+    {
+      "country": "India",
+      "city": "Mumbai",
+      "airports": [
+        {
+          "code": "BOM",
+          "name": "Chhatrapati Shivaji Maharaj International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 19.0896,
+            "longitude": 72.8656
+          }
+        }
+      ]
+    },
+    {
+      "country": "India",
+      "city": "Bengaluru",
+      "airports": [
+        {
+          "code": "BLR",
+          "name": "Kempegowda International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 13.1986,
+            "longitude": 77.7066
+          }
+        }
+      ]
+    },
+    {
+      "country": "India",
+      "city": "Chennai",
+      "airports": [
+        {
+          "code": "MAA",
+          "name": "Chennai International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 12.9941,
+            "longitude": 80.1709
+          }
+        }
+      ]
+    },
+    {
+      "country": "India",
+      "city": "Hyderabad",
+      "airports": [
+        {
+          "code": "HYD",
+          "name": "Rajiv Gandhi International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 17.2403,
+            "longitude": 78.4294
+          }
+        }
+      ]
+    },
+    {
+      "country": "India",
+      "city": "Kolkata",
+      "airports": [
+        {
+          "code": "CCU",
+          "name": "Netaji Subhas Chandra Bose International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 22.6547,
+            "longitude": 88.4467
+          }
+        }
+      ]
+    },
+    {
+      "country": "India",
+      "city": "Kochi",
+      "airports": [
+        {
+          "code": "COK",
+          "name": "Cochin International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 10.152,
+            "longitude": 76.4019
+          }
+        }
+      ]
+    },
+    {
+      "country": "India",
+      "city": "Ahmedabad",
+      "airports": [
+        {
+          "code": "AMD",
+          "name": "Sardar Vallabhbhai Patel International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 23.0732,
+            "longitude": 72.6266
+          }
+        }
+      ]
+    },
+    {
+      "country": "India",
+      "city": "Pune",
+      "airports": [
+        {
+          "code": "PNQ",
+          "name": "Pune Airport",
+          "type": "Domestic/International",
+          "coordinates": {
+            "latitude": 18.5821,
+            "longitude": 73.9197
+          }
+        }
+      ]
+    },
+    {
+      "country": "India",
+      "city": "Goa",
+      "airports": [
+        {
+          "code": "GOI",
+          "name": "Goa International Airport (Dabolim)",
+          "type": "International",
+          "coordinates": {
+            "latitude": 15.3808,
+            "longitude": 73.8314
+          }
+        },
+        {
+          "code": "GOX",
+          "name": "Manohar International Airport (Mopa)",
+          "type": "International",
+          "coordinates": {
+            "latitude": 15.7297,
+            "longitude": 73.8558
+          }
+        }
+      ]
+    },
+    {
+      "country": "India",
+      "city": "Jaipur",
+      "airports": [
+        {
+          "code": "JAI",
+          "name": "Jaipur International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 26.8242,
+            "longitude": 75.8012
+          }
+        }
+      ]
+    },
+    {
+      "country": "India",
+      "city": "Lucknow",
+      "airports": [
+        {
+          "code": "LKO",
+          "name": "Chaudhary Charan Singh International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 26.7606,
+            "longitude": 80.8893
+          }
+        }
+      ]
+    },
+    {
+      "country": "India",
+      "city": "Amritsar",
+      "airports": [
+        {
+          "code": "ATQ",
+          "name": "Sri Guru Ram Dass Jee International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 31.7096,
+            "longitude": 74.7973
+          }
+        }
+      ]
+    },
+    {
+      "country": "India",
+      "city": "Guwahati",
+      "airports": [
+        {
+          "code": "GAU",
+          "name": "Lokpriya Gopinath Bordoloi International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 26.1061,
+            "longitude": 91.5859
+          }
+        }
+      ]
+    },
+    {
+      "country": "India",
+      "city": "Chandigarh",
+      "airports": [
+        {
+          "code": "IXC",
+          "name": "Chandigarh International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 30.6735,
+            "longitude": 76.7885
+          }
+        }
+      ]
+    },
+    {
+      "country": "India",
+      "city": "Varanasi",
+      "airports": [
+        {
+          "code": "VNS",
+          "name": "Lal Bahadur Shastri International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 25.4484,
+            "longitude": 82.8594
+          }
+        }
+      ]
+    },
+    {
+      "country": "India",
+      "city": "Bhubaneswar",
+      "airports": [
+        {
+          "code": "BBI",
+          "name": "Biju Patnaik International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 20.2444,
+            "longitude": 85.8178
+          }
+        }
+      ]
+    },
+    {
+      "country": "India",
+      "city": "Surat",
+      "airports": [
+        {
+          "code": "STV",
+          "name": "Surat Airport",
+          "type": "Domestic",
+          "coordinates": {
+            "latitude": 21.1141,
+            "longitude": 72.7418
+          }
+        }
+      ]
+    },
+    {
+      "country": "India",
+      "city": "Indore",
+      "airports": [
+        {
+          "code": "IDR",
+          "name": "Devi Ahilya Bai Holkar Airport",
+          "type": "Domestic/International",
+          "coordinates": {
+            "latitude": 22.7218,
+            "longitude": 75.8011
+          }
+        }
+      ]
+    },
+    {
+      "country": "India",
+      "city": "Tiruchirappalli",
+      "airports": [
+        {
+          "code": "TRZ",
+          "name": "Tiruchirappalli International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 10.7654,
+            "longitude": 78.7097
+          }
+        }
+      ]
+    },
+    {
+      "country": "United Arab Emirates",
+      "city": "Dubai",
+      "airports": [
+        {
+          "code": "DXB",
+          "name": "Dubai International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 25.2532,
+            "longitude": 55.3657
+          }
+        },
+        {
+          "code": "DWC",
+          "name": "Al Maktoum International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 24.8964,
+            "longitude": 55.1614
+          }
+        }
+      ]
+    },
+    {
+      "country": "United Arab Emirates",
+      "city": "Abu Dhabi",
+      "airports": [
+        {
+          "code": "AUH",
+          "name": "Abu Dhabi International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 24.4330,
+            "longitude": 54.6511
+          }
+        }
+      ]
+    },
+    {
+      "country": "Qatar",
+      "city": "Doha",
+      "airports": [
+        {
+          "code": "DOH",
+          "name": "Hamad International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 25.2731,
+            "longitude": 51.6081
+          }
+        }
+      ]
+    },
+    {
+      "country": "Kuwait",
+      "city": "Kuwait City",
+      "airports": [
+        {
+          "code": "KWI",
+          "name": "Kuwait International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 29.2267,
+            "longitude": 47.9689
+          }
+        }
+      ]
+    },
+    {
+      "country": "Bahrain",
+      "city": "Manama",
+      "airports": [
+        {
+          "code": "BAH",
+          "name": "Bahrain International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 26.2708,
+            "longitude": 50.6336
+          }
+        }
+      ]
+    },
+    {
+      "country": "Saudi Arabia",
+      "city": "Riyadh",
+      "airports": [
+        {
+          "code": "RUH",
+          "name": "King Khalid International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 24.9578,
+            "longitude": 46.6988
+          }
+        }
+      ]
+    },
+    {
+      "country": "Saudi Arabia",
+      "city": "Jeddah",
+      "airports": [
+        {
+          "code": "JED",
+          "name": "King Abdulaziz International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 21.6796,
+            "longitude": 39.1565
+          }
+        }
+      ]
+    },
+    {
+      "country": "Saudi Arabia",
+      "city": "Dammam",
+      "airports": [
+        {
+          "code": "DMM",
+          "name": "King Fahd International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 26.4712,
+            "longitude": 49.7979
+          }
+        }
+      ]
+    },
+    {
+      "country": "Singapore",
+      "city": "Singapore",
+      "airports": [
+        {
+          "code": "SIN",
+          "name": "Singapore Changi Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 1.3644,
+            "longitude": 103.9915
+          }
+        }
+      ]
+    },
+    {
+      "country": "Malaysia",
+      "city": "Kuala Lumpur",
+      "airports": [
+        {
+          "code": "KUL",
+          "name": "Kuala Lumpur International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 2.7456,
+            "longitude": 101.7072
+          }
+        }
+      ]
+    },
+    {
+      "country": "Thailand",
+      "city": "Bangkok",
+      "airports": [
+        {
+          "code": "BKK",
+          "name": "Suvarnabhumi Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 13.69,
+            "longitude": 100.7501
+          }
+        },
+        {
+          "code": "DMK",
+          "name": "Don Mueang International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 13.9126,
+            "longitude": 100.6068
+          }
+        }
+      ]
+    },
+    {
+      "country": "Thailand",
+      "city": "Phuket",
+      "airports": [
+        {
+          "code": "HKT",
+          "name": "Phuket International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 8.1132,
+            "longitude": 98.3169
+          }
+        }
+      ]
+    },
+    {
+      "country": "Hong Kong",
+      "city": "Hong Kong",
+      "airports": [
+        {
+          "code": "HKG",
+          "name": "Hong Kong International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 22.308,
+            "longitude": 113.9185
+          }
+        }
+      ]
+    },
+    {
+      "country": "Indonesia",
+      "city": "Jakarta",
+      "airports": [
+        {
+          "code": "CGK",
+          "name": "Soekarno-Hatta International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": -6.1256,
+            "longitude": 106.6558
+          }
+        }
+      ]
+    },
+    {
+      "country": "Philippines",
+      "city": "Manila",
+      "airports": [
+        {
+          "code": "MNL",
+          "name": "Ninoy Aquino International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 14.5086,
+            "longitude": 121.0196
+          }
+        }
+      ]
+    },
+    {
+      "country": "Vietnam",
+      "city": "Ho Chi Minh City",
+      "airports": [
+        {
+          "code": "SGN",
+          "name": "Tan Son Nhat International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 10.8188,
+            "longitude": 106.6519
+          }
+        }
+      ]
+    },
+    {
+      "country": "Sri Lanka",
+      "city": "Colombo",
+      "airports": [
+        {
+          "code": "CMB",
+          "name": "Bandaranaike International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 7.1808,
+            "longitude": 79.8842
+          }
+        }
+      ]
+    },
+    {
+      "country": "Japan",
+      "city": "Tokyo",
+      "airports": [
+        {
+          "code": "HND",
+          "name": "Tokyo Haneda Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 35.5494,
+            "longitude": 139.7798
+          }
+        },
+        {
+          "code": "NRT",
+          "name": "Narita International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 35.7720,
+            "longitude": 140.3928
+          }
+        }
+      ]
+    },
+    {
+      "country": "South Korea",
+      "city": "Seoul",
+      "airports": [
+        {
+          "code": "ICN",
+          "name": "Incheon International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 37.4602,
+            "longitude": 126.4407
+          }
+        },
+        {
+          "code": "GMP",
+          "name": "Gimpo International Airport",
+          "type": "Domestic/International",
+          "coordinates": {
+            "latitude": 37.5583,
+            "longitude": 126.7906
+          }
+        }
+      ]
+    },
+    {
+      "country": "United Kingdom",
+      "city": "London",
+      "airports": [
+        {
+          "code": "LHR",
+          "name": "London Heathrow Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 51.47,
+            "longitude": -0.4543
+          }
+        },
+        {
+          "code": "LGW",
+          "name": "London Gatwick Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 51.1481,
+            "longitude": -0.1903
+          }
+        },
+        {
+          "code": "STN",
+          "name": "London Stansted Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 51.8860,
+            "longitude": 0.2389
+          }
+        }
+      ]
+    },
+    {
+      "country": "France",
+      "city": "Paris",
+      "airports": [
+        {
+          "code": "CDG",
+          "name": "Paris Charles de Gaulle Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 49.0097,
+            "longitude": 2.5479
+          }
+        },
+        {
+          "code": "ORY",
+          "name": "Paris Orly Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 48.7233,
+            "longitude": 2.3794
+          }
+        }
+      ]
+    },
+    {
+      "country": "Germany",
+      "city": "Frankfurt",
+      "airports": [
+        {
+          "code": "FRA",
+          "name": "Frankfurt Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 50.0379,
+            "longitude": 8.5622
+          }
+        }
+      ]
+    },
+    {
+      "country": "Germany",
+      "city": "Munich",
+      "airports": [
+        {
+          "code": "MUC",
+          "name": "Munich Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 48.3538,
+            "longitude": 11.7861
+          }
+        }
+      ]
+    },
+    {
+      "country": "Netherlands",
+      "city": "Amsterdam",
+      "airports": [
+        {
+          "code": "AMS",
+          "name": "Amsterdam Airport Schiphol",
+          "type": "International",
+          "coordinates": {
+            "latitude": 52.3105,
+            "longitude": 4.7683
+          }
+        }
+      ]
+    },
+    {
+      "country": "Italy",
+      "city": "Rome",
+      "airports": [
+        {
+          "code": "FCO",
+          "name": "Leonardo da Vinci-Fiumicino Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 41.8003,
+            "longitude": 12.2389
+          }
+        }
+      ]
+    },
+    {
+      "country": "Italy",
+      "city": "Milan",
+      "airports": [
+        {
+          "code": "MXP",
+          "name": "Milan Malpensa Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 45.6306,
+            "longitude": 8.7281
+          }
+        },
+        {
+          "code": "LIN",
+          "name": "Milan Linate Airport",
+          "type": "Domestic/International",
+          "coordinates": {
+            "latitude": 45.4451,
+            "longitude": 9.2767
+          }
+        }
+      ]
+    },
+    {
+      "country": "Switzerland",
+      "city": "Zurich",
+      "airports": [
+        {
+          "code": "ZRH",
+          "name": "Zurich Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 47.4581,
+            "longitude": 8.5555
+          }
+        }
+      ]
+    },
+    {
+      "country": "Spain",
+      "city": "Madrid",
+      "airports": [
+        {
+          "code": "MAD",
+          "name": "Adolfo Suárez Madrid-Barajas Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 40.4839,
+            "longitude": -3.568
+          }
+        }
+      ]
+    },
+    {
+      "country": "Spain",
+      "city": "Barcelona",
+      "airports": [
+        {
+          "code": "BCN",
+          "name": "Josep Tarradellas Barcelona-El Prat Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 41.2974,
+            "longitude": 2.0833
+          }
+        }
+      ]
+    },
+    {
+      "country": "Austria",
+      "city": "Vienna",
+      "airports": [
+        {
+          "code": "VIE",
+          "name": "Vienna International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 48.1103,
+            "longitude": 16.5697
+          }
+        }
+      ]
+    },
+    {
+      "country": "Denmark",
+      "city": "Copenhagen",
+      "airports": [
+        {
+          "code": "CPH",
+          "name": "Copenhagen Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 55.6179,
+            "longitude": 12.6560
+          }
+        }
+      ]
+    },
+    {
+      "country": "Sweden",
+      "city": "Stockholm",
+      "airports": [
+        {
+          "code": "ARN",
+          "name": "Stockholm Arlanda Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 59.6519,
+            "longitude": 17.9186
+          }
+        }
+      ]
+    },
+    {
+      "country": "United States",
+      "city": "New York",
+      "airports": [
+        {
+          "code": "JFK",
+          "name": "John F. Kennedy International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 40.6413,
+            "longitude": -73.7781
+          }
+        },
+        {
+          "code": "EWR",
+          "name": "Newark Liberty International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 40.6895,
+            "longitude": -74.1745
+          }
+        },
+        {
+          "code": "LGA",
+          "name": "LaGuardia Airport",
+          "type": "Domestic",
+          "coordinates": {
+            "latitude": 40.7769,
+            "longitude": -73.8740
+          }
+        }
+      ]
+    },
+    {
+      "country": "United States",
+      "city": "San Francisco",
+      "airports": [
+        {
+          "code": "SFO",
+          "name": "San Francisco International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 37.6213,
+            "longitude": -122.379
+          }
+        }
+      ]
+    },
+    {
+      "country": "United States",
+      "city": "Los Angeles",
+      "airports": [
+        {
+          "code": "LAX",
+          "name": "Los Angeles International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 33.9416,
+            "longitude": -118.4085
+          }
+        }
+      ]
+    },
+    {
+      "country": "United States",
+      "city": "Chicago",
+      "airports": [
+        {
+          "code": "ORD",
+          "name": "O'Hare International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 41.9742,
+            "longitude": -87.9073
+          }
+        },
+        {
+          "code": "MDW",
+          "name": "Chicago Midway International Airport",
+          "type": "Domestic",
+          "coordinates": {
+            "latitude": 41.7868,
+            "longitude": -87.7522
+          }
+        }
+      ]
+    },
+    {
+      "country": "United States",
+      "city": "Washington D.C.",
+      "airports": [
+        {
+          "code": "IAD",
+          "name": "Washington Dulles International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 38.9531,
+            "longitude": -77.4565
+          }
+        },
+        {
+          "code": "DCA",
+          "name": "Ronald Reagan Washington National Airport",
+          "type": "Domestic",
+          "coordinates": {
+            "latitude": 38.8521,
+            "longitude": -77.0377
+          }
+        }
+      ]
+    },
+    {
+      "country": "United States",
+      "city": "Boston",
+      "airports": [
+        {
+          "code": "BOS",
+          "name": "Boston Logan International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 42.3656,
+            "longitude": -71.0096
+          }
+        }
+      ]
+    },
+    {
+      "country": "United States",
+      "city": "Dallas",
+      "airports": [
+        {
+          "code": "DFW",
+          "name": "Dallas/Fort Worth International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 32.8968,
+            "longitude": -97.0380
+          }
+        }
+      ]
+    },
+    {
+      "country": "United States",
+      "city": "Seattle",
+      "airports": [
+        {
+          "code": "SEA",
+          "name": "Seattle-Tacoma International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 47.4502,
+            "longitude": -122.3088
+          }
+        }
+      ]
+    },
+    {
+      "country": "Canada",
+      "city": "Toronto",
+      "airports": [
+        {
+          "code": "YYZ",
+          "name": "Toronto Pearson International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 43.6777,
+            "longitude": -79.6248
+          }
+        }
+      ]
+    },
+    {
+      "country": "Canada",
+      "city": "Vancouver",
+      "airports": [
+        {
+          "code": "YVR",
+          "name": "Vancouver International Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": 49.1967,
+            "longitude": -123.1815
+          }
+        }
+      ]
+    },
+    {
+      "country": "Australia",
+      "city": "Sydney",
+      "airports": [
+        {
+          "code": "SYD",
+          "name": "Sydney Kingsford Smith Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": -33.9399,
+            "longitude": 151.1753
+          }
+        }
+      ]
+    },
+    {
+      "country": "Australia",
+      "city": "Melbourne",
+      "airports": [
+        {
+          "code": "MEL",
+          "name": "Melbourne Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": -37.6733,
+            "longitude": 144.8433
+          }
+        }
+      ]
+    },
+    {
+      "country": "Australia",
+      "city": "Perth",
+      "airports": [
+        {
+          "code": "PER",
+          "name": "Perth Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": -31.9403,
+            "longitude": 115.9669
+          }
+        }
+      ]
+    },
+    {
+      "country": "New Zealand",
+      "city": "Auckland",
+      "airports": [
+        {
+          "code": "AKL",
+          "name": "Auckland Airport",
+          "type": "International",
+          "coordinates": {
+            "latitude": -37.0082,
+            "longitude": 174.7850
+          }
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "total_countries": 24,
+    "total_cities": 78,
+    "total_airports": 92,
+    "last_updated": "2025-09-29",
+    "data_source": "Air India route network and major international airports"
+  }
+}
