@@ -276,7 +276,7 @@ export default function TravellerDetailsPage() {
             travellers: JSON.stringify(travellers),
         });
 
-        window.location.href = `/payment?${queryParams.toString()}`;
+        window.location.href = `/ancillary-services?${queryParams.toString()}`;
     };
 
     const renderFlightPreview = (flight: any, isReturn: boolean = false) => {
@@ -420,7 +420,7 @@ export default function TravellerDetailsPage() {
                             </Box>
                         </Box>
 
-                        <form onSubmit={handleSubmit}>
+                        <form id="traveller-form" onSubmit={handleSubmit}>
                             {/* Contact Details */}
                             <Paper sx={{ p: 3, mb: 3 }}>
                                 <Typography variant="h6" gutterBottom>
@@ -520,16 +520,7 @@ export default function TravellerDetailsPage() {
                                 </Paper>
                             ))}
 
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                color="primary"
-                                size="large"
-                                fullWidth
-                                sx={{ py: 1.5 }}
-                            >
-                                Continue to Payment
-                            </Button>
+                            {/* Submit button moved to sidebar */}
                         </form>
                     </Grid>
 
@@ -605,6 +596,18 @@ export default function TravellerDetailsPage() {
                                     </Box>
                                 </Box>
                             </Box>
+
+                            <Button
+                                type="submit"
+                                form="traveller-form"
+                                variant="contained"
+                                color="primary"
+                                size="large"
+                                fullWidth
+                                sx={{ mt: 3, py: 1.5 }}
+                            >
+                                Continue to Add-ons
+                            </Button>
                         </Paper>
                     </Grid>
                 </Grid>
