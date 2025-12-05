@@ -31,20 +31,27 @@ export default function ConfirmationPage() {
         if (storedData) {
             try {
                 const parsedData = JSON.parse(storedData);
-                // Generate PNR if not exists
-                if (!parsedData.pnr) {
-                    parsedData.pnr = `TL${Math.floor(Math.random() * 100000).toString().padStart(6, '0').toUpperCase()}`;
-                }
-                setBookingData(parsedData);
 
-                // Clear storage to prevent re-reading on refresh (optional, maybe keep for a bit)
-                // sessionStorage.removeItem('temp_confirmation_data'); 
+                // Generate PNR if not exists (Persistent for this session)
+                if (!parsedData.pnr) {
+                    parsedData.pnr = `TL${Math.floor(Math.random() * 900000 + 100000).toString().toUpperCase()}`;
+
+                    // Generate Ticket Numbers for each traveller
+                    if (parsedData.travellers) {
+                        parsedData.travellers = parsedData.travellers.map((t: any) => ({
+                            ...t,
+                            ticketNumber: t.ticketNumber || `176${Math.floor(Math.random() * 9000000000 + 1000000000)}`
+                        }));
+                    }
+
+                    // Save back to storage so it doesn't change on refresh
+                    sessionStorage.setItem('temp_confirmation_data', JSON.stringify(parsedData));
+                }
+
+                setBookingData(parsedData);
             } catch (e) {
                 console.error("Failed to parse booking data", e);
             }
-        } else {
-            // Fallback or redirect if no data
-            // router.push('/');
         }
         setLoading(false);
     }, []);
@@ -60,7 +67,7 @@ export default function ConfirmationPage() {
                             id: bookingData.paymentData?.transactionId || 'TXN_UNKNOWN',
                             affiliation: 'Online Store',
                             revenue: bookingData.paymentData?.amount || 0,
-                            tax: 0, // Should calculate if possible
+                            tax: 0,
                             shipping: 0,
                             coupon: ''
                         },
@@ -73,23 +80,38 @@ export default function ConfirmationPage() {
                                 category: 'Flight',
                                 variant: bookingData.query?.cabinClass || 'economy',
                                 quantity: bookingData.travellers?.length || 1
-                            },
-                            // Add return flight if exists
-                            ...(bookingData.returnFlight ? [{
-                                name: `${bookingData.returnFlight.origin} to ${bookingData.returnFlight.destination}`,
-                                id: bookingData.returnFlight.id,
-                                price: bookingData.returnFlight.currentPrice,
-                                brand: 'TL Airways',
-                                category: 'Flight',
-                                variant: bookingData.query?.cabinClass || 'economy',
-                                quantity: bookingData.travellers?.length || 1
-                            }] : [])
+                            }
                         ]
                     }
                 }
             });
         }
     }, [bookingData]);
+
+    const getAncillariesForPassenger = (idx: number) => {
+        const services: string[] = [];
+        const anc = bookingData?.ancillaryServices || {};
+
+        ['onward', 'return'].forEach(type => {
+            if (!anc[type]) return;
+            const prefix = type === 'onward' ? 'Onward' : 'Return';
+
+            // Meal
+            if (anc[type].meals && anc[type].meals[idx]) {
+                services.push(`${prefix} Meal: ${anc[type].meals[idx]}`);
+            }
+            // Baggage
+            if (anc[type].baggage && anc[type].baggage[idx] && anc[type].baggage[idx] !== 'included') {
+                // Baggage value is like "20" (weight) or similar, handled in ancillary page
+                services.push(`${prefix} Baggage: +${anc[type].baggage[idx]}kg`);
+            }
+            // Seat
+            if (anc[type].seat && anc[type].seat[idx]) {
+                services.push(`${prefix} Seat: ${anc[type].seat[idx]}`);
+            }
+        });
+        return services;
+    };
 
     if (loading) {
         return <Container><Box sx={{ mt: 4, textAlign: 'center' }}><CircularProgress /></Box></Container>;
@@ -214,12 +236,31 @@ export default function ConfirmationPage() {
                             <Divider sx={{ mb: 2 }} />
                             <Stack spacing={2}>
                                 {travellers.map((p: any, i: number) => (
-                                    <Box key={i} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                        <Box>
-                                            <Typography fontWeight="medium">{p.firstName} {p.lastName}</Typography>
-                                            <Typography variant="caption" color="text.secondary">{p.gender}, {p.nationality}</Typography>
+                                    <Box key={i} sx={{ border: '1px solid #eee', borderRadius: 1, p: 2 }}>
+                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                                            <Box>
+                                                <Typography fontWeight="bold">{p.firstName} {p.lastName}</Typography>
+                                                <Typography variant="caption" color="text.secondary">{p.gender}, {p.nationality}</Typography>
+                                            </Box>
+                                            <Chip label="Confirmed" color="success" size="small" variant="outlined" />
                                         </Box>
-                                        <Chip label="Confirmed" color="success" size="small" variant="outlined" />
+
+                                        <Box sx={{ mb: 1 }}>
+                                            <Typography variant="caption" color="text.secondary">Ticket Number</Typography>
+                                            <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>{p.ticketNumber}</Typography>
+                                        </Box>
+
+                                        {/* Ancillary Services Summary */}
+                                        {getAncillariesForPassenger(i).length > 0 && (
+                                            <Box sx={{ mt: 1, pt: 1, borderTop: '1px dashed #eee' }}>
+                                                <Typography variant="caption" fontWeight="bold" color="text.secondary">Add-ons:</Typography>
+                                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mt: 0.5 }}>
+                                                    {getAncillariesForPassenger(i).map((service, sIdx) => (
+                                                        <Chip key={sIdx} label={service} size="small" sx={{ fontSize: '0.7rem' }} />
+                                                    ))}
+                                                </Box>
+                                            </Box>
+                                        )}
                                     </Box>
                                 ))}
                             </Stack>
