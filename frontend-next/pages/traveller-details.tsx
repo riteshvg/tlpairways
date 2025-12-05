@@ -21,6 +21,7 @@ import {
 import Head from 'next/head';
 import { format } from 'date-fns';
 import flightsData from '../data/flights.json';
+import BookingSteps from '../components/BookingSteps';
 
 interface Traveller {
     firstName: string;
@@ -52,7 +53,120 @@ export default function TravellerDetailsPage() {
     const [travellers, setTravellers] = useState<Traveller[]>([]);
     const [contactEmail, setContactEmail] = useState('');
     const [contactPhone, setContactPhone] = useState('');
+    const [showLoginBanner, setShowLoginBanner] = useState(true);
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' as 'info' | 'success' | 'error' });
+
+    // Random data generators
+    const generateRandomName = () => {
+        const firstNames = [
+            'Aarav', 'Aditya', 'Akshay', 'Arjun', 'Deepak', 'Gaurav', 'Harsh', 'Karan', 'Manish', 'Nikhil',
+            'Priya', 'Sneha', 'Anita', 'Kavya', 'Meera', 'Pooja', 'Riya', 'Sakshi', 'Tanya', 'Vidya'
+        ];
+        const lastNames = [
+            'Sharma', 'Patel', 'Singh', 'Kumar', 'Gupta', 'Verma', 'Jain', 'Agarwal', 'Malhotra', 'Chopra',
+            'Reddy', 'Nair', 'Iyer', 'Menon', 'Pillai', 'Rao', 'Joshi', 'Mehta', 'Agarwal', 'Bansal'
+        ];
+        return {
+            firstName: firstNames[Math.floor(Math.random() * firstNames.length)],
+            lastName: lastNames[Math.floor(Math.random() * lastNames.length)]
+        };
+    };
+
+    const generateRandomEmail = (firstName: string, lastName: string) => {
+        const domains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'rediffmail.com'];
+        const domain = domains[Math.floor(Math.random() * domains.length)];
+        return `${firstName.toLowerCase()}.${lastName.toLowerCase()}${Math.floor(Math.random() * 100)}@${domain}`;
+    };
+
+    const generateRandomPhone = () => {
+        const prefixes = ['6', '7', '8', '9'];
+        const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+        const remaining = Math.floor(Math.random() * 100000000).toString().padStart(8, '0');
+        return prefix + remaining;
+    };
+
+    const generateRandomDateOfBirth = () => {
+        const start = new Date(1950, 0, 1);
+        const end = new Date(2005, 11, 31);
+        const randomDate = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+        return format(randomDate, 'yyyy-MM-dd');
+    };
+
+    const generateRandomGender = () => {
+        const genders = ['male', 'female', 'other'];
+        return genders[Math.floor(Math.random() * genders.length)];
+    };
+
+    const generateRandomNationality = () => {
+        const nationalities = [
+            'Indian', 'American', 'British', 'Canadian', 'Australian', 'German', 'French', 'Italian', 'Spanish', 'Japanese'
+        ];
+        return nationalities[Math.floor(Math.random() * nationalities.length)];
+    };
+
+    const generateRandomPassportNumber = () => {
+        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const numbers = '0123456789';
+        let passport = '';
+        for (let i = 0; i < 2; i++) {
+            passport += letters[Math.floor(Math.random() * letters.length)];
+        }
+        for (let i = 0; i < 7; i++) {
+            passport += numbers[Math.floor(Math.random() * numbers.length)];
+        }
+        return passport;
+    };
+
+    const handleFillRandomDetails = () => {
+        const updatedTravellers = travellers.map(() => {
+            const { firstName, lastName } = generateRandomName();
+            return {
+                firstName,
+                lastName,
+                email: generateRandomEmail(firstName, lastName),
+                phone: generateRandomPhone(),
+                dateOfBirth: generateRandomDateOfBirth(),
+                gender: generateRandomGender(),
+                passportNumber: generateRandomPassportNumber(),
+                nationality: generateRandomNationality(),
+            };
+        });
+
+        setTravellers(updatedTravellers);
+
+        const { firstName, lastName } = generateRandomName();
+        setContactEmail(generateRandomEmail(firstName, lastName));
+        setContactPhone(generateRandomPhone());
+
+        setSnackbar({
+            open: true,
+            message: `Filled random details for ${travellers.length} passenger${travellers.length > 1 ? 's' : ''}`,
+            severity: 'success'
+        });
+    };
+
+    const handleClearAllDetails = () => {
+        const clearedTravellers = travellers.map(() => ({
+            firstName: '',
+            lastName: '',
+            email: '',
+            phone: '',
+            dateOfBirth: '',
+            gender: '',
+            passportNumber: '',
+            nationality: '',
+        }));
+
+        setTravellers(clearedTravellers);
+        setContactEmail('');
+        setContactPhone('');
+
+        setSnackbar({
+            open: true,
+            message: 'Cleared all passenger details',
+            severity: 'info'
+        });
+    };
 
     // Load flights from data
     useEffect(() => {
@@ -240,7 +354,32 @@ export default function TravellerDetailsPage() {
                 <meta name="description" content="Enter traveller details for your booking" />
             </Head>
 
+            <BookingSteps activeStep={0} />
+
             <Container maxWidth="xl" sx={{ mt: 4, mb: 8 }}>
+                {/* Optional Login Banner - Subtle & Dismissible */}
+                {showLoginBanner && (
+                    <Alert
+                        severity="info"
+                        onClose={() => setShowLoginBanner(false)}
+                        sx={{ mb: 3 }}
+                        action={
+                            <Button
+                                color="inherit"
+                                size="small"
+                                href="/profile" // Placeholder for login
+                                sx={{ fontWeight: 'bold' }}
+                            >
+                                Sign In
+                            </Button>
+                        }
+                    >
+                        <Typography variant="body2">
+                            <strong>Save time on future bookings!</strong> Sign in to auto-fill traveler details and earn loyalty points.
+                        </Typography>
+                    </Alert>
+                )}
+
                 <Typography variant="h4" gutterBottom>
                     Traveller Details
                 </Typography>
@@ -248,6 +387,31 @@ export default function TravellerDetailsPage() {
                 <Grid container spacing={4}>
                     {/* Left Column - Forms */}
                     <Grid size={{ xs: 12, md: 8 }}>
+                        {/* Quick Fill Section */}
+                        <Box sx={{ mb: 4, p: 2, border: '1px solid #e0e0e0', borderRadius: 1, backgroundColor: '#f5f5f5' }}>
+                            <Typography variant="h6" gutterBottom>
+                                Quick Fill
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                                Fill all passenger details with random data for testing
+                            </Typography>
+                            <Box sx={{ display: 'flex', gap: 2 }}>
+                                <Button
+                                    variant="contained"
+                                    color="secondary"
+                                    onClick={handleFillRandomDetails}
+                                >
+                                    Fill Random Details
+                                </Button>
+                                <Button
+                                    variant="outlined"
+                                    onClick={handleClearAllDetails}
+                                >
+                                    Clear All
+                                </Button>
+                            </Box>
+                        </Box>
+
                         <form onSubmit={handleSubmit}>
                             {/* Traveller Details */}
                             {travellers.map((traveller, index) => (
@@ -363,7 +527,7 @@ export default function TravellerDetailsPage() {
 
                     {/* Right Column - Flight Summary */}
                     <Grid size={{ xs: 12, md: 4 }}>
-                        <Paper sx={{ p: 3, position: 'sticky', top: 20 }}>
+                        <Paper sx={{ p: 3, position: 'sticky', top: 180 }}>
                             <Typography variant="h6" gutterBottom>
                                 Flight Summary
                             </Typography>
