@@ -94,7 +94,7 @@ export default function ResultsPage() {
                 {/* Search Summary */}
                 <Paper sx={{ p: 3, mb: 4 }}>
                     <Grid container spacing={2} alignItems="center">
-                        <Grid item xs={12} md={8}>
+                        <Grid size={{ xs: 12, md: 8 }}>
                             <Typography variant="h5" gutterBottom>
                                 <FlightIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
                                 {fromCity} ({from}) → {toCity} ({to})
@@ -105,7 +105,7 @@ export default function ResultsPage() {
                                 <Chip label={tripType === 'round-trip' ? 'Round Trip' : 'One Way'} size="small" color="primary" />
                             </Box>
                         </Grid>
-                        <Grid item xs={12} md={4} sx={{ textAlign: { md: 'right' } }}>
+                        <Grid size={{ xs: 12, md: 4 }} sx={{ textAlign: { md: 'right' } }}>
                             <Button
                                 component="a"
                                 href="/search"
@@ -133,7 +133,7 @@ export default function ResultsPage() {
                         <CardContent>
                             <Grid container spacing={2} alignItems="center">
                                 {/* Airline & Flight Number */}
-                                <Grid item xs={12} md={2}>
+                                <Grid size={{ xs: 12, md: 2 }}>
                                     <Typography variant="subtitle1" fontWeight="bold">
                                         {flight.airline}
                                     </Typography>
@@ -143,7 +143,7 @@ export default function ResultsPage() {
                                 </Grid>
 
                                 {/* Departure */}
-                                <Grid item xs={4} md={2}>
+                                <Grid size={{ xs: 4, md: 2 }}>
                                     <Typography variant="h6">{flight.departure}</Typography>
                                     <Typography variant="body2" color="text.secondary">
                                         {from}
@@ -151,7 +151,7 @@ export default function ResultsPage() {
                                 </Grid>
 
                                 {/* Duration */}
-                                <Grid item xs={4} md={2}>
+                                <Grid size={{ xs: 4, md: 2 }}>
                                     <Box sx={{ textAlign: 'center' }}>
                                         <AccessTimeIcon color="action" sx={{ fontSize: 20 }} />
                                         <Typography variant="body2">{flight.duration}</Typography>
@@ -162,7 +162,7 @@ export default function ResultsPage() {
                                 </Grid>
 
                                 {/* Arrival */}
-                                <Grid item xs={4} md={2}>
+                                <Grid size={{ xs: 4, md: 2 }}>
                                     <Typography variant="h6">{flight.arrival}</Typography>
                                     <Typography variant="body2" color="text.secondary">
                                         {to}
@@ -170,7 +170,7 @@ export default function ResultsPage() {
                                 </Grid>
 
                                 {/* Price */}
-                                <Grid item xs={6} md={2}>
+                                <Grid size={{ xs: 6, md: 2 }}>
                                     <Box sx={{ textAlign: { md: 'right' } }}>
                                         <Typography variant="h5" color="primary" fontWeight="bold">
                                             ₹{flight.price.toLocaleString()}
@@ -182,7 +182,7 @@ export default function ResultsPage() {
                                 </Grid>
 
                                 {/* Book Button */}
-                                <Grid item xs={6} md={2}>
+                                <Grid size={{ xs: 6, md: 2 }}>
                                     <Button
                                         variant="contained"
                                         fullWidth
