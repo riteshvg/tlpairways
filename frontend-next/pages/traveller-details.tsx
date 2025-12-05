@@ -537,16 +537,65 @@ export default function TravellerDetailsPage() {
 
                             <Divider sx={{ my: 2 }} />
 
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                                <Typography variant="body1">Passengers:</Typography>
-                                <Typography variant="body1">{passengers}</Typography>
-                            </Box>
-
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-                                <Typography variant="h6">Total:</Typography>
-                                <Typography variant="h6" color="primary">
-                                    ₹{(totalPrice * parseInt(passengers as string)).toLocaleString()}
+                            <Box sx={{ mt: 3 }}>
+                                <Typography variant="h6" gutterBottom>
+                                    Price Summary
                                 </Typography>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                                    <Box>
+                                        <Typography fontWeight="medium">Onward Flight</Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            {onwardFlight?.airline} {onwardFlight?.flightNumber}
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            {(cabinClass as string).charAt(0).toUpperCase() + (cabinClass as string).slice(1)} Class
+                                        </Typography>
+                                    </Box>
+                                    <Box sx={{ textAlign: 'right' }}>
+                                        <Typography>
+                                            ₹{(onwardFlight?.currentPrice * parseInt(passengers as string)).toLocaleString()}
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            (₹{onwardFlight?.currentPrice?.toLocaleString()} x {passengers} passenger{parseInt(passengers as string) > 1 ? 's' : ''})
+                                        </Typography>
+                                    </Box>
+                                </Box>
+
+                                {returnFlight && (
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1, mt: 2 }}>
+                                        <Box>
+                                            <Typography fontWeight="medium">Return Flight</Typography>
+                                            <Typography variant="body2" color="text.secondary">
+                                                {returnFlight?.airline} {returnFlight?.flightNumber}
+                                            </Typography>
+                                            <Typography variant="body2" color="text.secondary">
+                                                {(cabinClass as string).charAt(0).toUpperCase() + (cabinClass as string).slice(1)} Class
+                                            </Typography>
+                                        </Box>
+                                        <Box sx={{ textAlign: 'right' }}>
+                                            <Typography>
+                                                ₹{(returnFlight?.currentPrice * parseInt(passengers as string)).toLocaleString()}
+                                            </Typography>
+                                            <Typography variant="body2" color="text.secondary">
+                                                (₹{returnFlight?.currentPrice?.toLocaleString()} x {passengers} passenger{parseInt(passengers as string) > 1 ? 's' : ''})
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+                                )}
+
+                                <Divider sx={{ my: 2 }} />
+
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                                    <Typography variant="subtitle1" fontWeight="bold">Total Price</Typography>
+                                    <Box sx={{ textAlign: 'right' }}>
+                                        <Typography variant="subtitle1" color="primary" fontWeight="bold">
+                                            ₹{(totalPrice * parseInt(passengers as string)).toLocaleString()}
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            (₹{totalPrice?.toLocaleString()} x {passengers} passenger{parseInt(passengers as string) > 1 ? 's' : ''})
+                                        </Typography>
+                                    </Box>
+                                </Box>
                             </Box>
                         </Paper>
                     </Grid>
