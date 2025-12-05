@@ -194,6 +194,14 @@ export default function ResultsPage() {
     }, [searchParams]);
 
     const handleSelectFlight = (flight: Flight, isReturn: boolean = false) => {
+        if (isReturn) {
+            setSelectedReturnFlight(flight);
+        } else {
+            setSelectedOnwardFlight(flight);
+        }
+    };
+
+    const handleViewDetails = (flight: Flight, isReturn: boolean = false) => {
         setSelectedFlight(flight);
         setIsReturnModal(isReturn);
         setIsModalOpen(true);
@@ -260,14 +268,12 @@ export default function ResultsPage() {
                 key={flight.id}
                 sx={{
                     mb: 2,
-                    cursor: 'pointer',
                     border: isSelected ? '2px solid #00695c' : '1px solid #e0e0e0',
                     '&:hover': {
                         boxShadow: 3,
                         borderColor: '#00695c',
                     }
                 }}
-                onClick={() => handleSelectFlight(flight, isReturn)}
             >
                 <CardContent>
                     <Grid container spacing={2} alignItems="center">
@@ -326,9 +332,20 @@ export default function ResultsPage() {
                                 variant={isSelected ? "contained" : "outlined"}
                                 color="primary"
                                 fullWidth
+                                onClick={() => handleSelectFlight(flight, isReturn)}
                             >
                                 {isSelected ? 'Selected' : 'Select'}
                             </Button>
+                            <Box sx={{ textAlign: 'center', mt: 1 }}>
+                                <Typography
+                                    variant="caption"
+                                    color="primary"
+                                    sx={{ cursor: 'pointer', textDecoration: 'underline' }}
+                                    onClick={() => handleViewDetails(flight, isReturn)}
+                                >
+                                    View More
+                                </Typography>
+                            </Box>
                         </Grid>
                     </Grid>
                 </CardContent>
