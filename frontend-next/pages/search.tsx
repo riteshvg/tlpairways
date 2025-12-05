@@ -280,7 +280,7 @@ export default function SearchPage() {
                     <form onSubmit={handleSearch}>
                         <Grid container spacing={3}>
                             {/* First Row - Origin, Destination, Departure Date, Return Date */}
-                            <Grid item xs={12} md={3}>
+                            <Grid item xs={12} md={2}>
                                 <Autocomplete
                                     options={getUniqueLocations()}
                                     getOptionLabel={(option) => option.label}
@@ -295,13 +295,12 @@ export default function SearchPage() {
                                             label="From"
                                             required
                                             fullWidth
-                                            size="medium"
                                         />
                                     )}
                                     isOptionEqualToValue={(option, value) => option.iata_code === value.iata_code}
                                 />
                             </Grid>
-                            <Grid item xs={12} md={3}>
+                            <Grid item xs={12} md={2}>
                                 <Autocomplete
                                     options={getAvailableDestinations()}
                                     getOptionLabel={(option) => option.label}
@@ -314,14 +313,13 @@ export default function SearchPage() {
                                             required
                                             fullWidth
                                             disabled={!origin}
-                                            size="medium"
                                         />
                                     )}
                                     isOptionEqualToValue={(option, value) => option.iata_code === value.iata_code}
                                     disabled={!origin}
                                 />
                             </Grid>
-                            <Grid item xs={12} md={3}>
+                            <Grid item xs={12} md={2.5}>
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <DatePicker
                                         label="Departure Date"
@@ -332,13 +330,12 @@ export default function SearchPage() {
                                             textField: {
                                                 fullWidth: true,
                                                 required: true,
-                                                size: 'medium',
                                             }
                                         }}
                                     />
                                 </LocalizationProvider>
                             </Grid>
-                            <Grid item xs={12} md={3}>
+                            <Grid item xs={12} md={2.5}>
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <DatePicker
                                         label="Return Date"
@@ -351,26 +348,22 @@ export default function SearchPage() {
                                                 fullWidth: true,
                                                 required: tripType === 'roundtrip',
                                                 disabled: tripType === 'oneway',
-                                                size: 'medium',
                                             }
                                         }}
                                     />
                                 </LocalizationProvider>
                             </Grid>
 
-                            {/* Force new row after 4 fields */}
-                            <Grid item xs={12} sx={{ display: { xs: 'none', md: 'block' }, height: 0 }} />
-
                             {/* Second Row - Passengers, Class, Payment, Purpose */}
-                            <Grid item xs={12} md={3}>
+                            <Grid item xs={12} md={1.5}>
                                 <PassengerSelector
                                     passengerCounts={passengerCounts}
                                     onPassengerCountsChange={setPassengerCounts}
                                 />
                             </Grid>
 
-                            <Grid item xs={12} md={3}>
-                                <FormControl fullWidth required size="medium">
+                            <Grid item xs={12} md={1.5}>
+                                <FormControl fullWidth required>
                                     <InputLabel>Cabin Class</InputLabel>
                                     <Select
                                         value={cabinClass}
@@ -386,8 +379,8 @@ export default function SearchPage() {
                                 </FormControl>
                             </Grid>
 
-                            <Grid item xs={12} md={3}>
-                                <FormControl fullWidth required size="medium">
+                            <Grid item xs={12} md={1.5}>
+                                <FormControl fullWidth required>
                                     <InputLabel>Payment Type</InputLabel>
                                     <Select
                                         value={paymentType}
@@ -403,7 +396,7 @@ export default function SearchPage() {
                                 </FormControl>
                             </Grid>
 
-                            <Grid item xs={12} md={3}>
+                            <Grid item xs={12} md={1.5}>
                                 <FormControl fullWidth required size="medium">
                                     <InputLabel>Travel Purpose</InputLabel>
                                     <Select
