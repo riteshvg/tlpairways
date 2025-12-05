@@ -12,7 +12,6 @@ import {
     Chip
 } from '@mui/material';
 import Head from 'next/head';
-import Link from 'next/link';
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
 import SearchIcon from '@mui/icons-material/Search';
 import PersonIcon from '@mui/icons-material/Person';
@@ -69,7 +68,7 @@ export default function Home() {
                                     Welcome back, {user.name}!
                                 </Typography>
                                 <Button
-                                    component={Link}
+                                    component="a"
                                     href="/search"
                                     variant="contained"
                                     size="large"
@@ -84,7 +83,7 @@ export default function Home() {
                                     Search Flights
                                 </Button>
                                 <Button
-                                    component={Link}
+                                    component="a"
                                     href="/profile"
                                     variant="outlined"
                                     size="large"
@@ -101,7 +100,7 @@ export default function Home() {
                         ) : (
                             <Box>
                                 <Button
-                                    component={Link}
+                                    component="a"
                                     href="/api/auth/login"
                                     variant="contained"
                                     size="large"
@@ -115,7 +114,7 @@ export default function Home() {
                                     Login to Book
                                 </Button>
                                 <Button
-                                    component={Link}
+                                    component="a"
                                     href="/search"
                                     variant="outlined"
                                     size="large"
@@ -168,7 +167,7 @@ export default function Home() {
                                 </CardContent>
                                 <CardActions sx={{ justifyContent: 'center', pb: 2 }}>
                                     <Button
-                                        component={Link}
+                                        component="a"
                                         href={`/search?to=${dest.code}`}
                                         variant="contained"
                                         size="small"

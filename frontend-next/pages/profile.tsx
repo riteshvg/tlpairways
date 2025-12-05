@@ -11,7 +11,6 @@ import {
     Divider,
 } from '@mui/material';
 import Head from 'next/head';
-import Link from 'next/link';
 
 /**
  * Profile Page - MPA Version
@@ -91,10 +90,10 @@ function ProfilePage() {
 
                     {/* Actions */}
                     <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
-                        <Button component={Link} href="/" variant="outlined">
+                        <Button component="a" href="/" variant="outlined">
                             Back to Home
                         </Button>
-                        <Button component={Link} href="/search" variant="contained">
+                        <Button component="a" href="/search" variant="contained">
                             Search Flights
                         </Button>
                         <Button href="/api/auth/logout" variant="outlined" color="error">

@@ -12,7 +12,6 @@ import {
     Divider,
 } from '@mui/material';
 import Head from 'next/head';
-import Link from 'next/link';
 import FlightIcon from '@mui/icons-material/Flight';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
@@ -108,7 +107,7 @@ export default function ResultsPage() {
                         </Grid>
                         <Grid item xs={12} md={4} sx={{ textAlign: { md: 'right' } }}>
                             <Button
-                                component={Link}
+                                component="a"
                                 href="/search"
                                 variant="outlined"
                             >
@@ -209,7 +208,7 @@ export default function ResultsPage() {
                         <Typography variant="body2" color="text.secondary" paragraph>
                             Try adjusting your search criteria
                         </Typography>
-                        <Button component={Link} href="/search" variant="contained">
+                        <Button component="a" href="/search" variant="contained">
                             New Search
                         </Button>
                     </Paper>

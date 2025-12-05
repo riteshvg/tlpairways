@@ -70,8 +70,8 @@ export default function SearchPage() {
             params.append('returnDate', searchData.returnDate);
         }
 
-        // Navigate to results page
-        router.push(`/results?${params.toString()}`);
+        // MPA: Full page reload (not client-side navigation)
+        window.location.href = `/results?${params.toString()}`;
     };
 
     const isValid = searchData.from && searchData.to && searchData.departDate;
