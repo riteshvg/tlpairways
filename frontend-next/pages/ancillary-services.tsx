@@ -31,6 +31,7 @@ import BookingSteps from '../components/BookingSteps';
 import flightsData from '../data/flights.json';
 import mealsData from '../data/ancillary/meals.json';
 import baggageRules from '../data/ancillary/baggage_rules.json';
+import AdobeDataLayer from '../components/AdobeDataLayer';
 
 // --- Interfaces ---
 interface Flight {
@@ -333,6 +334,13 @@ export default function AncillaryServicesPage() {
             <Head>
                 <title>Ancillary Services - TLAirways</title>
             </Head>
+
+            <AdobeDataLayer pageData={{
+                pageType: 'booking',
+                pageName: 'Ancillary Services',
+                pageSection: 'booking',
+                pageSubSection: 'ancillary'
+            }} />
 
             <BookingSteps activeStep={1} />
 

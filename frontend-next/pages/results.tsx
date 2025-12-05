@@ -28,6 +28,7 @@ import LuggageIcon from '@mui/icons-material/Luggage';
 import { format } from 'date-fns';
 import flightsData from '../data/flights.json';
 import airports from '../data/airports.json';
+import AdobeDataLayer from '../components/AdobeDataLayer';
 
 // Helper function to find airport by code
 const findAirportByCode = (code: string) => {
@@ -352,6 +353,13 @@ export default function ResultsPage() {
                 <title>Search Results - {originAirport?.city} to {destAirport?.city} - TLAirways</title>
                 <meta name="description" content={`Flights from ${originAirport?.city} to ${destAirport?.city}`} />
             </Head>
+
+            <AdobeDataLayer pageData={{
+                pageType: 'search-results',
+                pageName: 'Search Results',
+                pageSection: 'booking',
+                pageSubSection: 'search'
+            }} />
 
             <Container maxWidth="lg" sx={{ mt: 4, mb: 8 }}>
                 {/* Search Summary */}

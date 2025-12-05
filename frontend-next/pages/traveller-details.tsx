@@ -22,6 +22,7 @@ import Head from 'next/head';
 import { format } from 'date-fns';
 import flightsData from '../data/flights.json';
 import BookingSteps from '../components/BookingSteps';
+import AdobeDataLayer from '../components/AdobeDataLayer';
 
 interface Traveller {
     firstName: string;
@@ -353,6 +354,13 @@ export default function TravellerDetailsPage() {
                 <title>Traveller Details - TLAirways</title>
                 <meta name="description" content="Enter traveller details for your booking" />
             </Head>
+
+            <AdobeDataLayer pageData={{
+                pageType: 'booking',
+                pageName: 'Traveller Details',
+                pageSection: 'booking',
+                pageSubSection: 'traveller-details'
+            }} />
 
             <BookingSteps activeStep={0} />
 
