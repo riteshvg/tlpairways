@@ -413,6 +413,35 @@ export default function TravellerDetailsPage() {
                         </Box>
 
                         <form onSubmit={handleSubmit}>
+                            {/* Contact Details */}
+                            <Paper sx={{ p: 3, mb: 3 }}>
+                                <Typography variant="h6" gutterBottom>
+                                    Contact Information
+                                </Typography>
+                                <Grid container spacing={2}>
+                                    <Grid size={{ xs: 12, md: 6 }}>
+                                        <TextField
+                                            fullWidth
+                                            label="Email"
+                                            type="email"
+                                            required
+                                            value={contactEmail}
+                                            onChange={(e) => setContactEmail(e.target.value)}
+                                        />
+                                    </Grid>
+                                    <Grid size={{ xs: 12, md: 6 }}>
+                                        <TextField
+                                            fullWidth
+                                            label="Phone"
+                                            type="tel"
+                                            required
+                                            value={contactPhone}
+                                            onChange={(e) => setContactPhone(e.target.value)}
+                                        />
+                                    </Grid>
+                                </Grid>
+                            </Paper>
+
                             {/* Traveller Details */}
                             {travellers.map((traveller, index) => (
                                 <Paper key={index} sx={{ p: 3, mb: 3 }}>
@@ -482,35 +511,6 @@ export default function TravellerDetailsPage() {
                                     </Grid>
                                 </Paper>
                             ))}
-
-                            {/* Contact Details */}
-                            <Paper sx={{ p: 3, mb: 3 }}>
-                                <Typography variant="h6" gutterBottom>
-                                    Contact Information
-                                </Typography>
-                                <Grid container spacing={2}>
-                                    <Grid size={{ xs: 12, md: 6 }}>
-                                        <TextField
-                                            fullWidth
-                                            label="Email"
-                                            type="email"
-                                            required
-                                            value={contactEmail}
-                                            onChange={(e) => setContactEmail(e.target.value)}
-                                        />
-                                    </Grid>
-                                    <Grid size={{ xs: 12, md: 6 }}>
-                                        <TextField
-                                            fullWidth
-                                            label="Phone"
-                                            type="tel"
-                                            required
-                                            value={contactPhone}
-                                            onChange={(e) => setContactPhone(e.target.value)}
-                                        />
-                                    </Grid>
-                                </Grid>
-                            </Paper>
 
                             <Button
                                 type="submit"
