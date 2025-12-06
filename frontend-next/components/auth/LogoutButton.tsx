@@ -7,7 +7,7 @@ interface LogoutButtonProps extends Omit<ButtonProps, 'onClick'> {
 
 export default function LogoutButton(props: LogoutButtonProps) {
     const handleLogout = () => {
-        window.location.href = '/api/auth/logout';
+        window.location.href = '/auth/logout';
     };
 
     return (
