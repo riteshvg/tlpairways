@@ -205,10 +205,10 @@ export function pushUserContext(userData: {
             userId: userData.userId,
             hashedUserId: userData.hashedUserId || null,
             userSegment: userData.userSegment || (userData.isAuthenticated ? 'registered' : 'anonymous'),
-            ...userData
         }
     });
 }
+
 
 /**
  * Push search context event
@@ -236,8 +236,7 @@ export function pushSearchContext(searchData: {
             passengers: searchData.passengers,
             tripType: searchData.tripType,
             cabinClass: searchData.cabinClass,
-            immediate: true,
-            ...searchData
+            immediate: true
         },
         timing: {
             immediate: true,
@@ -267,8 +266,7 @@ export function pushBookingContext(bookingData: {
             bookingStep: bookingData.bookingStep,
             bookingStepNumber: bookingData.bookingStepNumber,
             totalSteps: bookingData.totalSteps,
-            bookingStartTime: new Date().toISOString(),
-            ...bookingData
+            bookingStartTime: new Date().toISOString()
         }
     });
 }
@@ -296,8 +294,7 @@ export function pushPurchase(purchaseData: {
                 bookingReference: purchaseData.bookingReference,
                 paymentMethod: purchaseData.paymentMethod,
                 paymentStatus: 'completed',
-                timestamp: new Date().toISOString(),
-                ...purchaseData
+                timestamp: new Date().toISOString()
             }
         },
         timestamp: new Date().toISOString()
