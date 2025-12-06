@@ -1,31 +1,30 @@
 #!/bin/bash
 
-echo "--- Starting Railway Build Process ---"
+echo "--- Starting Railway Build Process (MPA) ---"
 echo "Build timestamp: $(date)"
 
 # 1. Clean previous builds
 echo "Cleaning previous frontend build artifacts..."
-rm -rf frontend/build
-rm -rf frontend/node_modules/.cache
-echo "Previous build artifacts and cache removed."
+rm -rf frontend-next/.next
+echo "Previous build artifacts removed."
 
-# 2. Install all dependencies
-echo "Installing all dependencies (backend and frontend)..."
-npm run install:all || { echo "npm install:all failed"; exit 1; }
-echo "All dependencies installed."
+# 2. Install dependencies
+echo "Installing dependencies..."
+cd frontend-next
+npm install --legacy-peer-deps || { echo "npm install failed"; exit 1; }
+echo "Dependencies installed."
 
-# 3. Build the frontend
-echo "Building frontend for production..."
-npm run build:frontend || { echo "Frontend build failed"; exit 1; }
+# 3. Build the frontend (Next.js)
+echo "Building frontend-next for production..."
+npm run build || { echo "Frontend build failed"; exit 1; }
 echo "Frontend build completed."
 
 # 4. Verify build output
 echo "Verifying frontend build output..."
-if [ -d "frontend/build" ] && [ "$(ls -A frontend/build/static/js/)" ]; then
-  echo "Frontend build directory and JS files found."
-  ls -la frontend/build/static/js/
+if [ -d ".next" ]; then
+  echo "Next.js build directory (.next) found."
 else
-  echo "ERROR: Frontend build output not found or is empty."
+  echo "ERROR: Frontend build output not found."
   exit 1
 fi
 

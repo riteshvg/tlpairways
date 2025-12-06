@@ -3,12 +3,7 @@ nixPkgs = ["nodejs_20"]
 
 [phases.install]
 cmds = [
-  "echo 'Installing backend dependencies...'",
-  "npm install --production --prefix backend",
-  "echo 'Backend dependencies installed'",
-  "echo 'Installing frontend dependencies...'",
-  "npm install --prefix frontend",
-  "echo 'Frontend dependencies installed'"
+  "echo 'Installing dependencies handled by build script...'"
 ]
 
 [phases.build]
@@ -18,4 +13,4 @@ cmds = [
 ]
 
 [start]
-cmd = "echo 'Starting backend server...' && npm start --prefix backend"
+cmd = "cd frontend-next && npm run start"
