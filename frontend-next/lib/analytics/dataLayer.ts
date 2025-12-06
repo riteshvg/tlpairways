@@ -156,6 +156,39 @@ export function pushPageView(
 }
 
 /**
+ * Push login event
+ */
+export function pushLoginEvent(user: any) {
+    pushToDataLayer({
+        event: 'login',
+        userData: {
+            isAuthenticated: true,
+            userId: user.sub,
+            userEmail: user.email,
+            userSegment: 'registered',
+            loginMethod: 'auth0',
+            timestamp: new Date().toISOString()
+        }
+    });
+}
+
+/**
+ * Push logout event
+ */
+export function pushLogoutEvent(userId: string) {
+    pushToDataLayer({
+        event: 'logout',
+        userData: {
+            isAuthenticated: false,
+            userId: userId,
+            logoutReason: 'manual',
+            timestamp: new Date().toISOString()
+        }
+    });
+}
+
+
+/**
  * Push user context updated event
  */
 export function pushUserContext(userData: {

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useUser } from '@auth0/nextjs-auth0/client';
 import {
     AppBar,
     Toolbar,
@@ -11,13 +12,18 @@ import {
     MenuItem,
     useTheme,
     useMediaQuery,
+    CircularProgress,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import LoginButton from './auth/LoginButton';
+import ProfileDropdown from './auth/ProfileDropdown';
+
 
 const Navbar = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const { user, isLoading } = useUser();
 
     const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -84,19 +90,15 @@ const Navbar = () => {
                         </Box>
                     )}
 
-                    {/* Authentication Section - Placeholder for now */}
+                    {/* Authentication Section */}
                     <Box sx={{ ml: { xs: 'auto', md: 2 }, display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Button
-                            component="a"
-                            href="/profile"
-                            variant="outlined"
-                            size="small"
-                            sx={{
-                                textTransform: 'none',
-                            }}
-                        >
-                            Sign In
-                        </Button>
+                        {isLoading ? (
+                            <CircularProgress size={24} />
+                        ) : user ? (
+                            <ProfileDropdown />
+                        ) : (
+                            <LoginButton size="small" sx={{ textTransform: 'none' }} />
+                        )}
                     </Box>
 
                     {/* Mobile Menu */}
