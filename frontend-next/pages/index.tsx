@@ -65,8 +65,8 @@ export default function Home() {
     return (
         <>
             <Head>
-                <title>TLAirways - Book Flights Across India</title>
-                <meta name="description" content="Book affordable flights across India with TLAirways" />
+                <title>TLP Airways | NEXT - Premium Air Travel</title>
+                <meta name="description" content="Book affordable flights across India with TLP Airways" />
             </Head>
 
             {/* Hero Section */}
