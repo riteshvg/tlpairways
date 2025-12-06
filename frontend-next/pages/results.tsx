@@ -28,6 +28,8 @@ import LuggageIcon from '@mui/icons-material/Luggage';
 import { format } from 'date-fns';
 import flightsData from '../data/flights.json';
 import airports from '../data/airports.json';
+import { usePageView, useAnalytics } from '../lib/analytics/useAnalytics';
+
 
 
 // Helper function to find airport by code
@@ -92,7 +94,20 @@ interface SearchParams {
 
 export default function ResultsPage() {
     const router = useRouter();
-    const { originCode, destinationCode, date, returnDate, passengers = '1', tripType = 'oneway', cabinClass = 'economy', paymentType, travelPurpose } = router.query;
+    const {
+        originCode,
+        destinationCode,
+        date,
+        returnDate,
+        adults = '1',
+        children = '0',
+        infants = '0',
+        passengers = '1',
+        tripType = 'oneway',
+        cabinClass = 'economy',
+        paymentType,
+        travelPurpose
+    } = router.query;
 
     const [searchParams, setSearchParams] = useState<SearchParams | null>(null);
     const [onwardFlights, setOnwardFlights] = useState<Flight[]>([]);
@@ -102,6 +117,86 @@ export default function ResultsPage() {
     const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isReturnModal, setIsReturnModal] = useState(false);
+    const [searchContext, setSearchContext] = useState<any>(null);
+
+    const { trackSearch, trackPageView } = useAnalytics();
+
+    // Build search context when URL params are available
+    useEffect(() => {
+        if (originCode && destinationCode && date) {
+            const originAirport = findAirportByCode(originCode as string);
+            const destAirport = findAirportByCode(destinationCode as string);
+
+            // Format dates as YYYY-MM-DD
+            const formatDate = (dateStr: string) => {
+                const d = new Date(dateStr);
+                return d.toISOString().split('T')[0];
+            };
+
+            // Get passenger counts from URL params
+            const adultCount = parseInt(adults as string) || 1;
+            const childCount = parseInt(children as string) || 0;
+            const infantCount = parseInt(infants as string) || 0;
+
+            const context = {
+                searchId: `search_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`,
+                origin: originCode as string,
+                destination: destinationCode as string,
+                originDestination: `${originCode}-${destinationCode}`,
+                departureDate: formatDate(date as string),
+                returnDate: returnDate ? formatDate(returnDate as string) : undefined,
+                passengers: {
+                    total: adultCount + childCount + infantCount,
+                    breakdown: {
+                        adults: {
+                            count: adultCount,
+                            type: 'adult',
+                            description: '12+ years'
+                        },
+                        children: {
+                            count: childCount,
+                            type: 'child',
+                            description: '2-11 years'
+                        },
+                        infants: {
+                            count: infantCount,
+                            type: 'infant',
+                            description: 'Under 2 years'
+                        }
+                    },
+                    summary: `${adultCount} Adult${adultCount > 1 ? 's' : ''}${childCount > 0 ? `, ${childCount} Child${childCount > 1 ? 'ren' : ''}` : ''}${infantCount > 0 ? `, ${infantCount} Infant${infantCount > 1 ? 's' : ''}` : ''}`
+                },
+                tripType: tripType as string,
+                cabinClass: cabinClass as string,
+                travelPurpose: travelPurpose as string,
+                paymentType: paymentType as string,
+                immediate: true,
+                originAirportName: originAirport?.name || 'Unknown Airport',
+                destinationAirportName: destAirport?.name || 'Unknown Airport',
+                originCity: originAirport?.city || 'Unknown',
+                destinationCity: destAirport?.city || 'Unknown'
+            };
+
+            setSearchContext(context);
+        }
+    }, [originCode, destinationCode, date, returnDate, adults, children, infants, tripType, cabinClass, travelPurpose, paymentType]);
+
+    // Track page view with search context once it's available
+    useEffect(() => {
+        if (searchContext) {
+            trackPageView(
+                {
+                    pageType: 'searchResults',
+                    pageName: 'Search Results',
+                    pageCategory: 'booking',
+                    searchType: 'flightResults',
+                    sections: ['resultsList', 'filters', 'sorting']
+                },
+                { searchContext }
+            );
+        }
+    }, [searchContext, trackPageView]);
+
 
     // Initialize search parameters from URL
     useEffect(() => {

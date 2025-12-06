@@ -101,20 +101,10 @@ export default function Document() {
                   pageDataObj.pageSubSection = pageSubSection;
                 }
                 
-                // Push initial state (standard ACDL pattern)
-                adobeDataLayer.push({
-                  consent: {
-                    value: consentValue
-                  },
-                  pageData: pageDataObj
-                });
+                // Consent is now handled by ConsentContext (only on homepage)
+                // PageView events are pushed client-side by usePageView hook
                 
-                // Push pageView event
-                adobeDataLayer.push({
-                  event: 'pageView'
-                });
-                
-                console.log('✅ MPA: Data layer initialized with pageData before Adobe Launch');
+                console.log('✅ MPA: Data layer initialized before Adobe Launch');
               })();
             `,
           }}

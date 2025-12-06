@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { useUser } from '@auth0/nextjs-auth0/client';
 import {
     Container,
     Paper,
@@ -26,7 +27,8 @@ import Head from 'next/head';
 import { format } from 'date-fns';
 import flightsData from '../data/flights.json';
 import BookingSteps from '../components/BookingSteps';
-import AdobeDataLayer from '../components/AdobeDataLayer';
+import { useAnalytics } from '../lib/analytics/useAnalytics';
+import { hashSensitiveData } from '../lib/analytics/dataLayer';
 
 // Constants matching SPA
 const CURRENCY_CONFIG = {
@@ -41,6 +43,8 @@ const CURRENCY_CONFIG = {
 
 export default function PaymentPage() {
     const router = useRouter();
+    const { user, isLoading } = useUser();
+    const { trackPageView } = useAnalytics();
     const query = router.query;
 
     // --- State ---
@@ -118,6 +122,140 @@ export default function PaymentPage() {
         }
 
     }, [router.isReady, router.query]);
+
+    // Track page view with comprehensive payment data
+    useEffect(() => {
+        if (!onwardFlight || travellers.length === 0) return;
+
+        let hasTracked = false; // Prevent duplicate tracking
+
+        const buildPaymentTracking = async () => {
+            if (hasTracked) return;
+            hasTracked = true;
+
+            const { buildAncillaryServicesBreakdown } = await import('../lib/analytics/buildPaymentTracking');
+
+            const formatDate = (dateStr: string) => {
+                const d = new Date(dateStr);
+                return d.toISOString();
+            };
+
+            const numPassengers = travellers.length;
+            const flightTotal = ((onwardFlight?.currentPrice || 0) * numPassengers) +
+                ((returnFlight?.currentPrice || 0) * numPassengers);
+
+            const ancillaryBreakdown = buildAncillaryServicesBreakdown(
+                ancillaryServices,
+                travellers,
+                onwardFlight,
+                returnFlight
+            );
+
+            const bookingId = `booking_${Date.now()}_${Math.random().toString(36).substring(2, 15).toUpperCase()}`;
+            const pnr = Array.from({ length: 6 }, () =>
+                'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.charAt(Math.floor(Math.random() * 36))
+            ).join('');
+
+            // Hash sensitive data
+            const contactEmail = query.contactEmail as string || travellers[0]?.email || '';
+            const contactPhone = query.contactPhone as string || travellers[0]?.phone || '';
+
+            const hashedEmail = await hashSensitiveData(contactEmail);
+            const hashedPhone = await hashSensitiveData(contactPhone);
+
+            const bookingContext = {
+                bookingId,
+                pnr,
+                bookingStep: 'payment',
+                bookingStepNumber: 3,
+                totalSteps: 4,
+                selectedFlights: {
+                    onward: {
+                        flightNumber: onwardFlight.flightNumber,
+                        airline: onwardFlight.airline,
+                        origin: onwardFlight.origin,
+                        originCity: onwardFlight.originCity,
+                        destination: onwardFlight.destination,
+                        destinationCity: onwardFlight.destinationCity,
+                        departureTime: query.date ? formatDate(query.date as string) : null,
+                        price: onwardFlight.currentPrice * numPassengers,
+                        cabinClass: onwardFlight.cabinClass || query.cabinClass,
+                        perPassengerPrice: onwardFlight.currentPrice
+                    },
+                    ...(returnFlight ? {
+                        return: {
+                            flightNumber: returnFlight.flightNumber,
+                            airline: returnFlight.airline,
+                            origin: returnFlight.origin,
+                            originCity: returnFlight.originCity,
+                            destination: returnFlight.destination,
+                            destinationCity: returnFlight.destinationCity,
+                            departureTime: query.returnDate ? formatDate(query.returnDate as string) : null,
+                            price: returnFlight.currentPrice * numPassengers,
+                            cabinClass: returnFlight.cabinClass || query.cabinClass,
+                            perPassengerPrice: returnFlight.currentPrice
+                        }
+                    } : {})
+                },
+                ancillaryServices: ancillaryBreakdown,
+                pricing: {
+                    flightTotal,
+                    ancillaryTotal: ancillaryBreakdown.totalAncillaryCost,
+                    totalAmount: flightTotal + ancillaryBreakdown.totalAncillaryCost,
+                    currency: 'INR',
+                    breakdown: {
+                        baseFare: flightTotal,
+                        ancillaryFare: ancillaryBreakdown.totalAncillaryCost,
+                        totalFare: flightTotal + ancillaryBreakdown.totalAncillaryCost,
+                        passengers: numPassengers,
+                        perPassengerFlightFare: Math.round(flightTotal / numPassengers),
+                        perPassengerTotalFare: Math.round((flightTotal + ancillaryBreakdown.totalAncillaryCost) / numPassengers)
+                    }
+                },
+                passengersBreakdown: {
+                    totalPassengers: numPassengers,
+                    adults: parseInt(query.adults as string) || numPassengers,
+                    children: parseInt(query.children as string) || 0,
+                    infants: parseInt(query.infants as string) || 0,
+                    passengerDetails: travellers.map(t => ({
+                        firstName: t.firstName,
+                        lastName: t.lastName,
+                        email: t.email,
+                        phone: t.phone
+                    }))
+                },
+                customer: {
+                    userId: contactEmail,
+                    email: contactEmail,
+                    phone: contactPhone,
+                    loyaltyTier: 'standard',
+                    userIdHash: hashedEmail,
+                    phoneHash: hashedPhone,
+                    hashingTimestamp: new Date().toISOString(),
+                    hashingAlgorithm: 'SHA256'
+                },
+                tripType: query.tripType || (returnFlight ? 'roundtrip' : 'oneway')
+            };
+
+            trackPageView(
+                {
+                    pageType: 'booking',
+                    pageName: 'Payment',
+                    pageTitle: 'Payment - TLP Airways',
+                    pageCategory: 'booking',
+                    bookingStep: 'payment',
+                    bookingStepNumber: 3,
+                    totalBookingSteps: 4,
+                    sections: ['paymentMethods', 'pricingSummary', 'bookingDetails'],
+                    user: user
+                },
+                { bookingContext }
+            );
+        };
+
+        buildPaymentTracking();
+    }, [onwardFlight, returnFlight, ancillaryServices, travellers, query, user, trackPageView]);
+
 
     // --- Calculations ---
     const calculateAncillaryTotal = () => {
@@ -225,13 +363,6 @@ export default function PaymentPage() {
             <Head>
                 <title>Payment - TLAirways</title>
             </Head>
-
-            <AdobeDataLayer pageData={{
-                pageType: 'booking',
-                pageName: 'Payment',
-                pageSection: 'booking',
-                pageSubSection: 'payment'
-            }} />
 
             <BookingSteps activeStep={2} />
 

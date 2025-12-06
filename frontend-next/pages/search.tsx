@@ -26,6 +26,7 @@ import Head from 'next/head';
 import FlightIcon from '@mui/icons-material/Flight';
 import PassengerSelector from '../components/PassengerSelector';
 import airportsData from '../data/airports.json';
+import { usePageView } from '../lib/analytics/useAnalytics';
 
 interface Airport {
     value: string;
@@ -178,6 +179,17 @@ export default function SearchPage() {
     const [travelPurpose, setTravelPurpose] = useState('personal');
     const [currentCarouselIndex, setCurrentCarouselIndex] = useState(0);
 
+    // Track page view
+    usePageView({
+        pageType: 'search',
+        pageName: 'Flight Search',
+        pageTitle: 'Search Flights - TLP Airways',
+        pageDescription: 'Search for flights to your desired destination with TLP Airways.',
+        pageCategory: 'booking',
+        searchType: 'flight',
+        sections: ['search-form', 'filters', 'quick-actions']
+    });
+
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -197,6 +209,9 @@ export default function SearchPage() {
             originCode: origin.iata_code,
             destinationCode: destination.iata_code,
             date: date.toISOString(),
+            adults: passengerCounts.adult.toString(),
+            children: passengerCounts.child.toString(),
+            infants: passengerCounts.infant.toString(),
             passengers: totalPassengers.toString(),
             paymentType,
             tripType,
@@ -252,7 +267,7 @@ export default function SearchPage() {
 
             <Container maxWidth="lg" sx={{ mt: 4, mb: 8 }}>
                 {/* Full-Width Search Widget */}
-                <Paper elevation={3} sx={{ p: 4, mb: 4 }} id="search-form">
+                <Paper elevation={3} sx={{ p: 4, mb: 4 }} id="search-form" suppressHydrationWarning>
                     <Typography variant="h4" gutterBottom align="center" sx={{ mb: 4, fontWeight: 500 }}>
                         Search Flights
                     </Typography>
@@ -319,7 +334,7 @@ export default function SearchPage() {
                                     disabled={!origin}
                                 />
                             </Grid>
-                            <Grid size={{ xs: 12, md: 3 }}>
+                            <Grid size={{ xs: 12, md: 3 }} suppressHydrationWarning>
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <DatePicker
                                         label="Departure Date"
@@ -335,7 +350,7 @@ export default function SearchPage() {
                                     />
                                 </LocalizationProvider>
                             </Grid>
-                            <Grid size={{ xs: 12, md: 3 }}>
+                            <Grid size={{ xs: 12, md: 3 }} suppressHydrationWarning>
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <DatePicker
                                         label="Return Date"

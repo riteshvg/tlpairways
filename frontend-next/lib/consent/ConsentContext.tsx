@@ -31,6 +31,8 @@ const ConsentContext = createContext<ConsentContextValue | null>(null);
  * Sync consent state to window objects
  * This makes consent available to Adobe Launch and other scripts
  */
+let consentEventPushed = false; // Flag to prevent duplicate events
+
 function syncWindowState(state: ConsentState): void {
     if (typeof window === 'undefined') return;
 
@@ -52,8 +54,11 @@ function syncWindowState(state: ConsentState): void {
         categories: state.preferences
     };
 
-    // Push to adobeDataLayer array if it exists and consent is not pending
-    if ((window as any).adobeDataLayer && state.action !== 'pending') {
+    // Only push consent event on homepage
+    const isHomepage = typeof window !== 'undefined' && (window.location.pathname === '/' || window.location.pathname === '/index');
+
+    // Push to adobeDataLayer array only once per page load
+    if ((window as any).adobeDataLayer && state.action !== 'pending' && !consentEventPushed && isHomepage) {
         (window as any).adobeDataLayer.push({
             event: 'consentPreferencesUpdated',
             consent: {
@@ -63,6 +68,7 @@ function syncWindowState(state: ConsentState): void {
                 categories: state.preferences
             }
         });
+        consentEventPushed = true; // Mark as pushed
     }
 }
 

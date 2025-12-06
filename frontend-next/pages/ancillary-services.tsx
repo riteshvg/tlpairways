@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { useUser } from '@auth0/nextjs-auth0/client';
 import {
     Container,
     Paper,
@@ -39,7 +40,7 @@ import flightsData from '../data/flights.json';
 import mealsData from '../data/ancillary/meals.json';
 import baggageRules from '../data/ancillary/baggage_rules.json';
 import seatConfigurations from '../data/ancillary/seat_configurations.json';
-import AdobeDataLayer from '../components/AdobeDataLayer';
+import { useAnalytics } from '../lib/analytics/useAnalytics';
 import SeatMap from '../components/SeatMap';
 
 // --- Interfaces ---
@@ -105,15 +106,26 @@ const getAircraftConfigKey = (aircraftType: string = '') => {
 
 export default function AncillaryServicesPage() {
     const router = useRouter();
+    const { user, isLoading } = useUser();
+    const { trackPageView } = useAnalytics();
     const {
         onwardFlightId,
         returnFlightId,
         passengers = '1',
+        adults = '1',
+        children = '0',
+        infants = '0',
         cabinClass = 'economy',
         travellers: travellersJson,
         contactEmail,
         contactPhone,
-        tripType
+        tripType,
+        date,
+        returnDate,
+        travelPurpose,
+        paymentType,
+        originCode,
+        destinationCode
     } = router.query;
 
     const [activeTab, setActiveTab] = useState(0);
@@ -165,6 +177,110 @@ export default function AncillaryServicesPage() {
             }
         }
     }, [onwardFlightId, returnFlightId, cabinClass]);
+
+    // Track page view with booking context
+    useEffect(() => {
+        if (onwardFlight && date) {
+            const formatDate = (dateStr: string) => {
+                const d = new Date(dateStr);
+                return d.toISOString().split('T')[0];
+            };
+
+            const adultCount = parseInt(adults as string) || 1;
+            const childCount = parseInt(children as string) || 0;
+            const infantCount = parseInt(infants as string) || 0;
+
+            const generatePNR = () => {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                let pnr = '';
+                for (let i = 0; i < 6; i++) {
+                    pnr += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                return pnr;
+            };
+
+            const pnr = generatePNR();
+            const searchId = `search_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
+
+            const bookingContext = {
+                searchId,
+                pnr,
+                selectedFlights: {
+                    onward: {
+                        flightNumber: onwardFlight.flightNumber,
+                        airline: onwardFlight.airline,
+                        origin: onwardFlight.origin,
+                        originCity: onwardFlight.originCity,
+                        destination: onwardFlight.destination,
+                        destinationCity: onwardFlight.destinationCity,
+                        departureTime: onwardFlight.departureTime,
+                        arrivalTime: onwardFlight.arrivalTime,
+                        duration: onwardFlight.duration,
+                        departureDate: formatDate(date as string),
+                        cabinClass: cabinClass as string,
+                        price: {
+                            currency: 'INR',
+                            amount: onwardFlight.currentPrice
+                        }
+                    },
+                    ...(returnFlight && returnDate ? {
+                        return: {
+                            flightNumber: returnFlight.flightNumber,
+                            airline: returnFlight.airline,
+                            origin: returnFlight.origin,
+                            originCity: returnFlight.originCity,
+                            destination: returnFlight.destination,
+                            destinationCity: returnFlight.destinationCity,
+                            departureTime: returnFlight.departureTime,
+                            arrivalTime: returnFlight.arrivalTime,
+                            duration: returnFlight.duration,
+                            departureDate: formatDate(returnDate as string),
+                            cabinClass: cabinClass as string,
+                            price: {
+                                currency: 'INR',
+                                amount: returnFlight.currentPrice
+                            }
+                        }
+                    } : {})
+                },
+                totalPrice: (onwardFlight?.currentPrice || 0) + (returnFlight?.currentPrice || 0),
+                tripType: tripType as string,
+                passengers: {
+                    total: adultCount + childCount + infantCount,
+                    breakdown: {
+                        adults: adultCount,
+                        children: childCount,
+                        infants: infantCount
+                    }
+                },
+                cabinClass: cabinClass as string,
+                travelPurpose: travelPurpose as string,
+                paymentType: paymentType as string,
+                ancillaryServices: {
+                    meals: [],
+                    baggage: [],
+                    seats: [],
+                    priorityBoarding: []
+                }
+            };
+
+            trackPageView(
+                {
+                    pageType: 'booking',
+                    pageName: 'Ancillary Services',
+                    pageTitle: 'Add-ons & Services - TLP Airways',
+                    pageCategory: 'booking',
+                    bookingStep: 'ancillary-services',
+                    bookingStepNumber: 2,
+                    totalBookingSteps: 4,
+                    sections: ['meals', 'baggage', 'seats', 'priorityBoarding'],
+                    user: user
+                },
+                { bookingContext }
+            );
+        }
+    }, [onwardFlight, returnFlight, date, returnDate, adults, children, infants, cabinClass, tripType, travelPurpose, paymentType, user, trackPageView]);
+
 
     // Initialize selections for new travellers
     useEffect(() => {
@@ -504,13 +620,6 @@ export default function AncillaryServicesPage() {
             <Head>
                 <title>Ancillary Services - TLAirways</title>
             </Head>
-
-            <AdobeDataLayer pageData={{
-                pageType: 'booking',
-                pageName: 'Ancillary Services',
-                pageSection: 'booking',
-                pageSubSection: 'ancillary'
-            }} />
 
             <BookingSteps activeStep={1} />
 

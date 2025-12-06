@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Button, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { useConsent } from '../../lib/consent/ConsentContext';
 
@@ -8,8 +8,14 @@ export default function ConsentBanner() {
     const { isBannerVisible, acceptAll, rejectAll, openManager } = useConsent();
     const theme = useTheme();
     const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
+    const [isMounted, setIsMounted] = useState(false);
 
-    if (!isBannerVisible) {
+    // Only render on client-side to avoid hydration mismatch
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    if (!isMounted || !isBannerVisible) {
         return null;
     }
 

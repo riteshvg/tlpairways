@@ -15,18 +15,44 @@ import Head from 'next/head';
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
 import SearchIcon from '@mui/icons-material/Search';
 import PersonIcon from '@mui/icons-material/Person';
+import { usePageView } from '../lib/analytics/useAnalytics';
+import { useEffect } from 'react';
+import { pushUserContext } from '../lib/analytics/dataLayer';
 
 /**
  * Homepage - MPA Version
  * 
  * Demonstrates:
  * - Server-side Adobe pageView (already pushed in _document.tsx)
+ * - Client-side enhanced pageView with full data
  * - Material-UI theming
  * - Auth0 integration
  * - Navigation to other pages
  */
 export default function Home() {
     const { user, isLoading } = useUser();
+
+    // Track page view with enhanced data
+    usePageView({
+        pageType: 'home',
+        pageName: 'Homepage',
+        pageTitle: 'TLAirways - Book Flights Across India',
+        pageDescription: 'Book affordable flights across India with TLAirways',
+        pageCategory: 'landing',
+        sections: ['hero', 'destinations', 'features', 'cta'],
+        user: user
+    });
+
+    // Track user context when user state changes
+    useEffect(() => {
+        if (!isLoading) {
+            pushUserContext({
+                isAuthenticated: !!user,
+                userId: user?.sub || null,
+                userSegment: user ? 'registered' : 'anonymous'
+            });
+        }
+    }, [user, isLoading]);
 
     // Featured destinations
     const destinations = [
