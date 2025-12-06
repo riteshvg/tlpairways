@@ -53,21 +53,21 @@ function ProfilePage() {
 
                     {/* User Details */}
                     <Grid container spacing={3}>
-                        <Grid item xs={12} sm={6}>
+                        <Grid size={{ xs: 12, sm: 6 }}>
                             <Typography variant="subtitle2" color="text.secondary">
                                 Name
                             </Typography>
                             <Typography variant="body1">{user.name}</Typography>
                         </Grid>
 
-                        <Grid item xs={12} sm={6}>
+                        <Grid size={{ xs: 12, sm: 6 }}>
                             <Typography variant="subtitle2" color="text.secondary">
                                 Email
                             </Typography>
                             <Typography variant="body1">{user.email}</Typography>
                         </Grid>
 
-                        <Grid item xs={12} sm={6}>
+                        <Grid size={{ xs: 12, sm: 6 }}>
                             <Typography variant="subtitle2" color="text.secondary">
                                 Email Verified
                             </Typography>
@@ -76,7 +76,7 @@ function ProfilePage() {
                             </Typography>
                         </Grid>
 
-                        <Grid item xs={12} sm={6}>
+                        <Grid size={{ xs: 12, sm: 6 }}>
                             <Typography variant="subtitle2" color="text.secondary">
                                 User ID
                             </Typography>
