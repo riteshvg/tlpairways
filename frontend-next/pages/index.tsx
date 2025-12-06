@@ -140,7 +140,7 @@ export default function Home() {
 
                 <Grid container spacing={3}>
                     {destinations.map((dest) => (
-                        <Grid item xs={12} sm={6} md={3} key={dest.code}>
+                        <Grid size={{ xs: 12, sm: 6, md: 3 }} key={dest.code}>
                             <Card
                                 sx={{
                                     height: '100%',
@@ -189,7 +189,7 @@ export default function Home() {
                     </Typography>
 
                     <Grid container spacing={4}>
-                        <Grid item xs={12} md={4}>
+                        <Grid size={{ xs: 12, md: 4 }}>
                             <Paper sx={{ p: 3, textAlign: 'center', height: '100%' }}>
                                 <Typography variant="h2" sx={{ mb: 2 }}>💰</Typography>
                                 <Typography variant="h6" gutterBottom>Best Prices</Typography>
@@ -198,7 +198,7 @@ export default function Home() {
                                 </Typography>
                             </Paper>
                         </Grid>
-                        <Grid item xs={12} md={4}>
+                        <Grid size={{ xs: 12, md: 4 }}>
                             <Paper sx={{ p: 3, textAlign: 'center', height: '100%' }}>
                                 <Typography variant="h2" sx={{ mb: 2 }}>⚡</Typography>
                                 <Typography variant="h6" gutterBottom>Fast Booking</Typography>
@@ -207,7 +207,7 @@ export default function Home() {
                                 </Typography>
                             </Paper>
                         </Grid>
-                        <Grid item xs={12} md={4}>
+                        <Grid size={{ xs: 12, md: 4 }}>
                             <Paper sx={{ p: 3, textAlign: 'center', height: '100%' }}>
                                 <Typography variant="h2" sx={{ mb: 2 }}>🛡️</Typography>
                                 <Typography variant="h6" gutterBottom>Secure &amp; Safe</Typography>
