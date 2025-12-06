@@ -22,16 +22,25 @@ import {
     AccordionSummary,
     AccordionDetails,
     Chip,
-    Stack
+    Stack,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    IconButton,
+    FormControlLabel,
+    Checkbox
 } from '@mui/material';
 import Head from 'next/head';
-import { ExpandMore as ExpandMoreIcon, FlightTakeoff, FlightLand, Restaurant, Luggage, AirlineSeatReclineNormal } from '@mui/icons-material';
+import { ExpandMore as ExpandMoreIcon, FlightTakeoff, FlightLand, Restaurant, Luggage, AirlineSeatReclineNormal, PriorityHigh, Close as CloseIcon } from '@mui/icons-material';
 import { format } from 'date-fns';
 import BookingSteps from '../components/BookingSteps';
 import flightsData from '../data/flights.json';
 import mealsData from '../data/ancillary/meals.json';
 import baggageRules from '../data/ancillary/baggage_rules.json';
+import seatConfigurations from '../data/ancillary/seat_configurations.json';
 import AdobeDataLayer from '../components/AdobeDataLayer';
+import SeatMap from '../components/SeatMap';
 
 // --- Interfaces ---
 interface Flight {
@@ -48,6 +57,7 @@ interface Flight {
     stops: any[];
     currentPrice: number;
     cabinClass?: string;
+    aircraftType?: string;
 }
 
 interface Traveller {
@@ -61,6 +71,9 @@ interface AncillarySelection {
     baggage: number; // additional kg
     seatType: string; // 'standard', 'window', 'aisle', 'extra_legroom'
     seatPrice: number;
+    seatNumber?: string;
+    priorityBoarding: boolean;
+    priorityBoardingPrice: number;
 }
 
 interface PassengerServices {
@@ -72,18 +85,22 @@ interface FlightServices {
     return?: PassengerServices;
 }
 
-const SEAT_PRICES: Record<string, number> = {
-    standard: 0,
-    window: 250,
-    aisle: 250,
-    extra_legroom: 800
-};
-
 const BAGGAGE_PRICES = {
     5: 1500,
     10: 2800,
     15: 4000,
     20: 5000
+};
+
+const PRIORITY_BOARDING_PRICE = 400;
+
+// Helper: Map API aircraft names to our config keys
+const getAircraftConfigKey = (aircraftType: string = '') => {
+    if (aircraftType.includes('737')) return 'B737';
+    if (aircraftType.includes('A320') || aircraftType.includes('A321')) return 'A320';
+    if (aircraftType.includes('777')) return 'B777';
+    if (aircraftType.includes('787')) return 'B787';
+    return 'B737'; // Default
 };
 
 export default function AncillaryServicesPage() {
@@ -110,6 +127,10 @@ export default function AncillaryServicesPage() {
         return: {}
     });
 
+    // Seat Map State (now tracks which specific map is open inline)
+    const [openSeatMapId, setOpenSeatMapId] = useState<string | null>(null); // Format: "direction-pIndex"
+    const [tempOccupiedSeats, setTempOccupiedSeats] = useState<string[]>([]);
+
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' as 'info' | 'success' | 'error' });
 
     // --- Initialization ---
@@ -129,7 +150,6 @@ export default function AncillaryServicesPage() {
         if (onwardFlightId) {
             const f = allFlights.find((x: any) => x.id === onwardFlightId);
             if (f) {
-                // simple price logic again for display
                 const basePrice = f.price;
                 const multiplier = cabinClass === 'business' ? 1.7 : cabinClass === 'first' ? 2.2 : 1;
                 setOnwardFlight({ ...f, currentPrice: Math.round(basePrice * multiplier), cabinClass: cabinClass as string });
@@ -153,12 +173,22 @@ export default function AncillaryServicesPage() {
                 const nextOnward: PassengerServices = { ...prev.onward };
                 const nextReturn: PassengerServices = { ...(prev.return || {}) };
 
+                const defaultSelection = {
+                    meal: '',
+                    baggage: 0,
+                    seatType: 'standard',
+                    seatPrice: 0,
+                    seatNumber: '',
+                    priorityBoarding: false,
+                    priorityBoardingPrice: 0
+                };
+
                 travellers.forEach((_, idx) => {
                     if (!nextOnward[idx]) {
-                        nextOnward[idx] = { meal: '', baggage: 0, seatType: 'standard', seatPrice: 0 };
+                        nextOnward[idx] = { ...defaultSelection };
                     }
                     if (returnFlightId && !nextReturn[idx]) {
-                        nextReturn[idx] = { meal: '', baggage: 0, seatType: 'standard', seatPrice: 0 };
+                        nextReturn[idx] = { ...defaultSelection };
                     }
                 });
 
@@ -166,6 +196,20 @@ export default function AncillaryServicesPage() {
             });
         }
     }, [travellers, returnFlightId]);
+
+    // Mock Occupied Seats based on context (just deterministic random for demo)
+    const generateOccupiedSeats = (flightId: string) => {
+        // Simple deterministic pseudo-random logic
+        const occupied = [];
+        const seed = flightId.charCodeAt(0) + flightId.charCodeAt(flightId.length - 1);
+        const rows = 30;
+        for (let r = 1; r <= rows; r++) {
+            if ((r + seed) % 3 === 0) occupied.push(`${r}A`);
+            if ((r * seed) % 5 === 0) occupied.push(`${r}C`);
+            if ((r + seed) % 7 === 0) occupied.push(`${r}D`);
+        }
+        return occupied;
+    };
 
     // --- Handlers ---
     const handleServiceChange = (
@@ -180,9 +224,9 @@ export default function AncillaryServicesPage() {
 
             let updatedSelection = { ...currentPaxSelection, [field]: value };
 
-            // Special handling for seat price
-            if (field === 'seatType') {
-                updatedSelection.seatPrice = SEAT_PRICES[value as string] || 0;
+            // Special handling for priority boarding price
+            if (field === 'priorityBoarding') {
+                updatedSelection.priorityBoardingPrice = value ? PRIORITY_BOARDING_PRICE : 0;
             }
 
             return {
@@ -195,6 +239,45 @@ export default function AncillaryServicesPage() {
         });
     };
 
+    const toggleSeatMap = (direction: 'onward' | 'return', pIndex: number) => {
+        const mapId = `${direction}-${pIndex}`;
+
+        if (openSeatMapId === mapId) {
+            setOpenSeatMapId(null); // Close if already open
+        } else {
+            // Open new one
+            const flight = direction === 'onward' ? onwardFlight : returnFlight;
+            if (flight) {
+                setTempOccupiedSeats(generateOccupiedSeats(flight.id));
+            }
+            setOpenSeatMapId(mapId);
+        }
+    };
+
+    const handleSeatSelect = (seat: { number: string, type: string, price: number }, direction: 'onward' | 'return', pIndex: number) => {
+        setSelections(prev => {
+            const currentDirSelections = prev[direction] || {};
+            const currentPaxSelection = currentDirSelections[pIndex];
+
+            return {
+                ...prev,
+                [direction]: {
+                    ...currentDirSelections,
+                    [pIndex]: {
+                        ...currentPaxSelection,
+                        seatNumber: seat.number,
+                        seatType: seat.type,
+                        seatPrice: seat.price
+                    }
+                }
+            };
+        });
+
+        // Don't close immediately, let them see selection
+        // setOpenSeatMapId(null); 
+        setSnackbar({ open: true, message: `Seat ${seat.number} selected`, severity: 'success' });
+    };
+
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         setActiveTab(newValue);
     };
@@ -202,20 +285,16 @@ export default function AncillaryServicesPage() {
     const calculateAncillaryTotal = () => {
         let total = 0;
 
-        // Onward
-        Object.values(selections.onward).forEach(sel => {
-            total += (BAGGAGE_PRICES[sel.baggage as keyof typeof BAGGAGE_PRICES] || 0);
-            total += sel.seatPrice;
-            // Meals are free in this demo, but could start charging
-        });
-
-        // Return
-        if (selections.return) {
-            Object.values(selections.return).forEach(sel => {
+        const sumServices = (services: PassengerServices) => {
+            Object.values(services).forEach(sel => {
                 total += (BAGGAGE_PRICES[sel.baggage as keyof typeof BAGGAGE_PRICES] || 0);
                 total += sel.seatPrice;
+                total += sel.priorityBoardingPrice;
             });
-        }
+        };
+
+        if (selections.onward) sumServices(selections.onward);
+        if (selections.return) sumServices(selections.return);
 
         return total;
     };
@@ -239,10 +318,54 @@ export default function AncillaryServicesPage() {
         const currentSelections = selections[direction];
         if (!currentSelections || travellers.length === 0) return null;
 
+        const currentFlight = direction === 'onward' ? onwardFlight : returnFlight;
+        const aircraftConfigKey = getAircraftConfigKey(currentFlight?.aircraftType);
+        const seatConfig = (seatConfigurations.configurations as any)[aircraftConfigKey];
+
         return (
             <Box>
+                <Card variant="outlined" sx={{ mb: 3, bgcolor: '#f5faff', borderColor: '#cfe8fc' }}>
+                    <CardContent sx={{ pb: '16px !important' }}>
+                        <Grid container alignItems="center" spacing={2}>
+                            <Grid size={{ xs: 12, md: 2 }}>
+                                <Typography variant="subtitle2" color="text.secondary">Flight</Typography>
+                                <Typography variant="h6">{currentFlight?.flightNumber}</Typography>
+                            </Grid>
+                            <Grid size={{ xs: 12, md: 3 }}>
+                                <Typography variant="subtitle2" color="text.secondary">Departure</Typography>
+                                <Typography variant="body1" fontWeight="medium">
+                                    {currentFlight?.departureTime} <Box component="span" sx={{ color: 'text.secondary', fontSize: '0.8em' }}>({currentFlight?.origin})</Box>
+                                </Typography>
+                            </Grid>
+                            <Grid size={{ xs: 12, md: 3 }}>
+                                <Typography variant="subtitle2" color="text.secondary">Arrival</Typography>
+                                <Typography variant="body1" fontWeight="medium">
+                                    {currentFlight?.arrivalTime} <Box component="span" sx={{ color: 'text.secondary', fontSize: '0.8em' }}>({currentFlight?.destination})</Box>
+                                </Typography>
+                            </Grid>
+                            <Grid size={{ xs: 12, md: 2 }}>
+                                <Typography variant="subtitle2" color="text.secondary">Duration</Typography>
+                                <Typography variant="body2">{currentFlight?.duration}</Typography>
+                            </Grid>
+                            <Grid size={{ xs: 12, md: 2 }}>
+                                <Chip label={currentFlight?.cabinClass?.toUpperCase()} size="small" color="primary" variant="outlined" />
+                            </Grid>
+                        </Grid>
+                    </CardContent>
+                </Card>
+
                 {travellers.map((traveller, idx) => {
-                    const sel = currentSelections[idx] || { meal: '', baggage: 0, seatType: 'standard', seatPrice: 0 };
+                    const sel = currentSelections[idx] || {
+                        meal: '',
+                        baggage: 0,
+                        seatType: 'standard',
+                        seatPrice: 0,
+                        seatNumber: '',
+                        priorityBoarding: false,
+                        priorityBoardingPrice: 0
+                    };
+
+                    const isSeatMapOpen = openSeatMapId === `${direction}-${idx}`;
 
                     return (
                         <Accordion key={idx} defaultExpanded={idx === 0}>
@@ -253,14 +376,15 @@ export default function AncillaryServicesPage() {
                                 <Stack direction="row" spacing={1} sx={{ ml: 2 }}>
                                     {sel.meal && <Chip size="small" icon={<Restaurant sx={{ fontSize: 16 }} />} label={sel.meal} color="primary" variant="outlined" />}
                                     {sel.baggage > 0 && <Chip size="small" icon={<Luggage sx={{ fontSize: 16 }} />} label={`+${sel.baggage}kg`} color="secondary" variant="outlined" />}
-                                    {sel.seatType !== 'standard' && <Chip size="small" icon={<AirlineSeatReclineNormal sx={{ fontSize: 16 }} />} label={sel.seatType.replace('_', ' ')} color="info" variant="outlined" />}
+                                    {sel.seatNumber && <Chip size="small" icon={<AirlineSeatReclineNormal sx={{ fontSize: 16 }} />} label={`${sel.seatNumber}`} color="info" variant="outlined" />}
+                                    {sel.priorityBoarding && <Chip size="small" icon={<PriorityHigh sx={{ fontSize: 16 }} />} label="Priority" color="warning" variant="outlined" />}
                                 </Stack>
                             </AccordionSummary>
                             <AccordionDetails>
                                 <Grid container spacing={3}>
                                     {/* Meal Selection */}
                                     <Grid size={{ xs: 12, md: 4 }}>
-                                        <FormControl fullWidth>
+                                        <FormControl fullWidth size="small">
                                             <InputLabel>Meal Preference</InputLabel>
                                             <Select
                                                 value={sel.meal}
@@ -279,14 +403,14 @@ export default function AncillaryServicesPage() {
 
                                     {/* Baggage Selection */}
                                     <Grid size={{ xs: 12, md: 4 }}>
-                                        <FormControl fullWidth>
+                                        <FormControl fullWidth size="small">
                                             <InputLabel>Extra Baggage</InputLabel>
                                             <Select
                                                 value={sel.baggage}
                                                 label="Extra Baggage"
                                                 onChange={(e) => handleServiceChange(direction, idx, 'baggage', e.target.value as number)}
                                             >
-                                                <MenuItem value={0}>Standard Allowance (15kg)</MenuItem>
+                                                <MenuItem value={0}>Standard (15kg)</MenuItem>
                                                 <MenuItem value={5}>+5kg (₹1,500)</MenuItem>
                                                 <MenuItem value={10}>+10kg (₹2,800)</MenuItem>
                                                 <MenuItem value={15}>+15kg (₹4,000)</MenuItem>
@@ -295,22 +419,68 @@ export default function AncillaryServicesPage() {
                                         </FormControl>
                                     </Grid>
 
-                                    {/* Seat Selection */}
+                                    {/* Priority Boarding */}
                                     <Grid size={{ xs: 12, md: 4 }}>
-                                        <FormControl fullWidth>
-                                            <InputLabel>Seat Preference</InputLabel>
-                                            <Select
-                                                value={sel.seatType}
-                                                label="Seat Preference"
-                                                onChange={(e) => handleServiceChange(direction, idx, 'seatType', e.target.value)}
-                                            >
-                                                <MenuItem value="standard">Standard (Free)</MenuItem>
-                                                <MenuItem value="window">Window (₹250)</MenuItem>
-                                                <MenuItem value="aisle">Aisle (₹250)</MenuItem>
-                                                <MenuItem value="extra_legroom">Extra Legroom (₹800)</MenuItem>
-                                            </Select>
-                                        </FormControl>
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    checked={sel.priorityBoarding}
+                                                    onChange={(e) => handleServiceChange(direction, idx, 'priorityBoarding', e.target.checked)}
+                                                    color="warning"
+                                                />
+                                            }
+                                            label={
+                                                <Typography variant="body2">
+                                                    {`Priority Boarding (+₹${PRIORITY_BOARDING_PRICE})`}
+                                                </Typography>
+                                            }
+                                            sx={{ border: '1px solid #e0e0e0', borderRadius: 1, pr: 2, m: 0, width: '100%', height: '100%' }}
+                                        />
                                     </Grid>
+
+                                    {/* Seat Selection Button */}
+                                    <Grid size={{ xs: 12 }}>
+                                        <Box sx={{ border: '1px solid #c4c4c4', borderRadius: 1, p: 0.5, pl: 2, pr: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '100%' }}>
+                                            <Box>
+                                                <Typography variant="caption" color="text.secondary" display="block">Seat</Typography>
+                                                <Typography variant="body2" fontWeight="bold">
+                                                    {sel.seatNumber ? sel.seatNumber : 'Not Selected'}
+                                                </Typography>
+                                            </Box>
+                                            <Button
+                                                variant={isSeatMapOpen ? "contained" : "outlined"}
+                                                size="small"
+                                                onClick={() => toggleSeatMap(direction, idx)}
+                                                startIcon={<AirlineSeatReclineNormal />}
+                                            >
+                                                {sel.seatNumber ? 'Change' : 'Select'}
+                                            </Button>
+                                        </Box>
+                                    </Grid>
+
+                                    {/* Inline Seat Map */}
+                                    {isSeatMapOpen && seatConfig && (
+                                        <Grid size={{ xs: 12 }}>
+                                            <Paper variant="outlined" sx={{ p: 2, mt: 1, bgcolor: '#f8f9fa' }}>
+                                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                                                    <Typography variant="subtitle1" fontWeight="bold">
+                                                        Select Seat for {traveller.firstName}
+                                                    </Typography>
+                                                    <IconButton size="small" onClick={() => toggleSeatMap(direction, idx)}>
+                                                        <CloseIcon />
+                                                    </IconButton>
+                                                </Box>
+
+                                                <SeatMap
+                                                    config={seatConfig}
+                                                    cabinClass={cabinClass as string}
+                                                    selectedSeat={sel.seatNumber || null}
+                                                    occupiedSeats={tempOccupiedSeats}
+                                                    onSeatSelect={(seat) => handleSeatSelect(seat, direction, idx)}
+                                                />
+                                            </Paper>
+                                        </Grid>
+                                    )}
                                 </Grid>
                             </AccordionDetails>
                         </Accordion>
@@ -349,7 +519,7 @@ export default function AncillaryServicesPage() {
                     Add-on Services
                 </Typography>
                 <Typography variant="body1" color="text.secondary" paragraph>
-                    Enhance your journey with meals, extra baggage, and seat selection.
+                    Customize your flight experience.
                 </Typography>
 
                 <Grid container spacing={4}>
@@ -442,12 +612,32 @@ export default function AncillaryServicesPage() {
                             </Box>
 
                             {/* Seats */}
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
                                 <Typography variant="body2">Seat Selection</Typography>
                                 <Typography variant="body2">
                                     ₹{Object.values(selections.onward).concat(Object.values(selections.return || {}))
                                         .reduce((acc, curr) => acc + curr.seatPrice, 0)
                                         .toLocaleString()}
+                                </Typography>
+                            </Box>
+
+                            {/* Priority Boarding */}
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+                                <Typography variant="body2">Priority Boarding</Typography>
+                                <Typography variant="body2">
+                                    ₹{Object.values(selections.onward).concat(Object.values(selections.return || {}))
+                                        .reduce((acc, curr) => acc + (curr.priorityBoardingPrice || 0), 0)
+                                        .toLocaleString()}
+                                </Typography>
+                            </Box>
+
+                            <Divider sx={{ my: 1, borderStyle: 'dashed' }} />
+
+                            {/* Ancillaries Total */}
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+                                <Typography variant="subtitle1" fontWeight="medium" color="text.primary">Ancillaries Total</Typography>
+                                <Typography variant="subtitle1" fontWeight="medium" color="text.primary">
+                                    ₹{ancillaryTotal.toLocaleString()}
                                 </Typography>
                             </Box>
 
@@ -462,6 +652,18 @@ export default function AncillaryServicesPage() {
                         </Paper>
                     </Grid>
                 </Grid>
+
+                <Snackbar
+                    open={snackbar.open}
+                    autoHideDuration={4000}
+                    onClose={() => setSnackbar({ ...snackbar, open: false })}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                >
+                    <Alert severity={snackbar.severity} sx={{ width: '100%' }}>
+                        {snackbar.message}
+                    </Alert>
+                </Snackbar>
+
             </Container>
         </>
     );

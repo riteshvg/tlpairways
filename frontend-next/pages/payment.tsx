@@ -135,7 +135,9 @@ export default function PaymentPage() {
                 if (sel.seatPrice) {
                     total += sel.seatPrice;
                 }
-                // Priority/Lounge not implemented in previous step yet
+                if (sel.priorityBoardingPrice) {
+                    total += sel.priorityBoardingPrice;
+                }
             });
         });
         return total;

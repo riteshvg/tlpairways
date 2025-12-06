@@ -75,11 +75,30 @@ export default function Document() {
                   pageType = 'search';
                   pageName = 'Flight Search';
                 } else if (pathname.startsWith('/results')) {
-                  pageType = 'search';
+                  pageType = 'search-results';
                   pageName = 'Search Results';
+                  // Add specific section data for results page
+                  var pageSection = 'booking';
+                  var pageSubSection = 'search';
                 } else if (pathname.startsWith('/profile')) {
                   pageType = 'profile';
                   pageName = 'User Profile';
+                }
+                
+                // Construct page data object
+                var pageDataObj = {
+                  pageType: pageType,
+                  pageName: pageName,
+                  pageURL: window.location.href,
+                  referrer: document.referrer || 'direct'
+                };
+                
+                // Add optional fields if they exist
+                if (typeof pageSection !== 'undefined') {
+                  pageDataObj.pageSection = pageSection;
+                }
+                if (typeof pageSubSection !== 'undefined') {
+                  pageDataObj.pageSubSection = pageSubSection;
                 }
                 
                 // Push initial state (standard ACDL pattern)
@@ -87,12 +106,7 @@ export default function Document() {
                   consent: {
                     value: consentValue
                   },
-                  pageData: {
-                    pageType: pageType,
-                    pageName: pageName,
-                    pageURL: window.location.href,
-                    referrer: document.referrer || 'direct'
-                  }
+                  pageData: pageDataObj
                 });
                 
                 // Push pageView event

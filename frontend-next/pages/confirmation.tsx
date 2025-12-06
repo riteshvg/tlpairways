@@ -110,8 +110,14 @@ export default function ConfirmationPage() {
                 services.push(`${prefix} Baggage: +${paxSelection.baggage}kg`);
             }
             // Seat
-            if (paxSelection.seatType && paxSelection.seatType !== 'standard') {
+            if (paxSelection.seatNumber) {
+                services.push(`${prefix} Seat: ${paxSelection.seatNumber} (${paxSelection.seatType.replace('_', ' ')})`);
+            } else if (paxSelection.seatType && paxSelection.seatType !== 'standard') {
                 services.push(`${prefix} Seat: ${paxSelection.seatType.replace('_', ' ')}`);
+            }
+            // Priority Boarding
+            if (paxSelection.priorityBoarding) {
+                services.push(`${prefix} Priority Boarding`);
             }
         });
         return services;
