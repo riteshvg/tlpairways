@@ -1,12 +1,11 @@
-import { handleAuth } from '@auth0/nextjs-auth0';
+// Temporarily disabled for Railway deployment
+// Auth0 authentication will be configured after successful deployment
 
-/**
- * Auth0 Authentication Handler
- * 
- * This creates the following routes automatically:
- * - /api/auth/login - Redirects to Auth0 login
- * - /api/auth/logout - Logs out and redirects
- * - /api/auth/callback - Handles Auth0 callback
- * - /api/auth/me - Returns current user info
- */
-export default handleAuth();
+import type { NextApiRequest, NextApiResponse } from 'next';
+
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
+    res.status(503).json({
+        error: 'Auth0 authentication temporarily disabled',
+        message: 'This will be enabled after deployment configuration'
+    });
+}
