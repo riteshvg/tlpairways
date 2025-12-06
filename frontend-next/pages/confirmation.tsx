@@ -11,11 +11,17 @@ import {
     Alert,
     CircularProgress,
     Stack,
-    Chip
+    Chip,
+    Card,
+    CardContent
 } from '@mui/material';
 import Head from 'next/head';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import FlightIcon from '@mui/icons-material/Flight';
+import RestaurantIcon from '@mui/icons-material/Restaurant';
+import LuggageIcon from '@mui/icons-material/Luggage';
+import AirlineSeatReclineNormalIcon from '@mui/icons-material/AirlineSeatReclineNormal';
+import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import { format } from 'date-fns';
 import AdobeDataLayer from '../components/AdobeDataLayer';
 
@@ -89,13 +95,12 @@ export default function ConfirmationPage() {
     }, [bookingData]);
 
     const getAncillariesForPassenger = (idx: number) => {
-        const services: string[] = [];
+        const services: any[] = [];
         const anc = bookingData?.ancillaryServices || {};
 
         ['onward', 'return'].forEach(type => {
             if (!anc[type]) return;
 
-            // Access selections for this specific passenger index
             const paxSelection = anc[type][idx];
             if (!paxSelection) return;
 
@@ -103,24 +108,87 @@ export default function ConfirmationPage() {
 
             // Meal
             if (paxSelection.meal) {
-                services.push(`${prefix} Meal: ${paxSelection.meal}`);
+                services.push({
+                    type: 'meal',
+                    icon: RestaurantIcon,
+                    label: paxSelection.meal,
+                    direction: prefix,
+                    color: 'primary'
+                });
             }
             // Baggage
             if (paxSelection.baggage && paxSelection.baggage > 0) {
-                services.push(`${prefix} Baggage: +${paxSelection.baggage}kg`);
+                services.push({
+                    type: 'baggage',
+                    icon: LuggageIcon,
+                    label: `+${paxSelection.baggage}kg`,
+                    direction: prefix,
+                    color: 'secondary'
+                });
             }
             // Seat
             if (paxSelection.seatNumber) {
-                services.push(`${prefix} Seat: ${paxSelection.seatNumber} (${paxSelection.seatType.replace('_', ' ')})`);
-            } else if (paxSelection.seatType && paxSelection.seatType !== 'standard') {
-                services.push(`${prefix} Seat: ${paxSelection.seatType.replace('_', ' ')}`);
+                services.push({
+                    type: 'seat',
+                    icon: AirlineSeatReclineNormalIcon,
+                    label: paxSelection.seatNumber,
+                    direction: prefix,
+                    color: 'info'
+                });
             }
             // Priority Boarding
             if (paxSelection.priorityBoarding) {
-                services.push(`${prefix} Priority Boarding`);
+                services.push({
+                    type: 'priority',
+                    icon: PriorityHighIcon,
+                    label: 'Priority Boarding',
+                    direction: prefix,
+                    color: 'warning'
+                });
             }
         });
         return services;
+    };
+
+    const calculatePriceBreakdown = () => {
+        const BAGGAGE_PRICES = { 5: 1500, 10: 2800, 15: 4000, 20: 5000 };
+        const breakdown = {
+            flightTotal: 0,
+            baggageTotal: 0,
+            seatTotal: 0,
+            priorityBoardingTotal: 0,
+            ancillaryTotal: 0,
+            taxesAndFees: 0,
+            grandTotal: 0
+        };
+
+        const numPassengers = travellers?.length || 1;
+        breakdown.flightTotal = ((onwardFlight?.currentPrice || 0) * numPassengers) +
+            ((returnFlight?.currentPrice || 0) * numPassengers);
+
+        const anc = bookingData?.ancillaryServices || {};
+        ['onward', 'return'].forEach(direction => {
+            const services = anc[direction];
+            if (!services) return;
+
+            Object.values(services).forEach((sel: any) => {
+                if (sel.baggage) {
+                    breakdown.baggageTotal += (BAGGAGE_PRICES[sel.baggage as keyof typeof BAGGAGE_PRICES] || 0);
+                }
+                if (sel.seatPrice) {
+                    breakdown.seatTotal += sel.seatPrice;
+                }
+                if (sel.priorityBoardingPrice) {
+                    breakdown.priorityBoardingTotal += sel.priorityBoardingPrice;
+                }
+            });
+        });
+
+        breakdown.ancillaryTotal = breakdown.baggageTotal + breakdown.seatTotal + breakdown.priorityBoardingTotal;
+        breakdown.taxesAndFees = Math.round((breakdown.flightTotal + breakdown.ancillaryTotal) * 0.05); // 5% taxes
+        breakdown.grandTotal = breakdown.flightTotal + breakdown.ancillaryTotal + breakdown.taxesAndFees;
+
+        return breakdown;
     };
 
     if (loading) {
@@ -260,15 +328,34 @@ export default function ConfirmationPage() {
                                             <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>{p.ticketNumber}</Typography>
                                         </Box>
 
-                                        {/* Ancillary Services Summary */}
+                                        {/* Ancillary Services Summary - Visual */}
                                         {getAncillariesForPassenger(i).length > 0 && (
-                                            <Box sx={{ mt: 1, pt: 1, borderTop: '1px dashed #eee' }}>
-                                                <Typography variant="caption" fontWeight="bold" color="text.secondary">Add-ons:</Typography>
-                                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mt: 0.5 }}>
-                                                    {getAncillariesForPassenger(i).map((service, sIdx) => (
-                                                        <Chip key={sIdx} label={service} size="small" sx={{ fontSize: '0.7rem' }} />
-                                                    ))}
-                                                </Box>
+                                            <Box sx={{ mt: 2, pt: 2, borderTop: '1px dashed #eee' }}>
+                                                <Typography variant="caption" fontWeight="bold" color="text.secondary" sx={{ mb: 1, display: 'block' }}>Add-ons:</Typography>
+                                                <Grid container spacing={1}>
+                                                    {getAncillariesForPassenger(i).map((service, sIdx) => {
+                                                        const IconComponent = service.icon;
+                                                        return (
+                                                            <Grid key={sIdx} size={{ xs: 6, sm: 6 }}>
+                                                                <Card variant="outlined" sx={{ height: '100%' }}>
+                                                                    <CardContent sx={{ p: 1.5, '&:last-child': { pb: 1.5 } }}>
+                                                                        <Stack direction="row" spacing={1} alignItems="center">
+                                                                            <IconComponent color={service.color} sx={{ fontSize: 20 }} />
+                                                                            <Box sx={{ minWidth: 0, flex: 1 }}>
+                                                                                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', lineHeight: 1.2 }}>
+                                                                                    {service.direction}
+                                                                                </Typography>
+                                                                                <Typography variant="body2" fontWeight="medium" sx={{ lineHeight: 1.3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                                                                    {service.label}
+                                                                                </Typography>
+                                                                            </Box>
+                                                                        </Stack>
+                                                                    </CardContent>
+                                                                </Card>
+                                                            </Grid>
+                                                        );
+                                                    })}
+                                                </Grid>
                                             </Box>
                                         )}
                                     </Box>
@@ -284,7 +371,7 @@ export default function ConfirmationPage() {
 
                             <Box sx={{ mb: 2 }}>
                                 <Typography variant="caption" color="text.secondary">Transaction ID</Typography>
-                                <Typography variant="body2">{paymentData.transactionId}</Typography>
+                                <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>{paymentData.transactionId}</Typography>
                             </Box>
 
                             <Box sx={{ mb: 2 }}>
@@ -294,9 +381,57 @@ export default function ConfirmationPage() {
                                 </Typography>
                             </Box>
 
-                            <Box sx={{ mt: 3, p: 2, bgcolor: '#f5f5f5', borderRadius: 1 }}>
+                            <Divider sx={{ my: 2 }} />
+
+                            {/* Price Breakdown */}
+                            <Stack spacing={1} sx={{ mb: 2 }}>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    <Typography variant="body2" color="text.secondary">Flight Total</Typography>
+                                    <Typography variant="body2" fontWeight="medium">₹{calculatePriceBreakdown().flightTotal.toLocaleString()}</Typography>
+                                </Box>
+
+                                {calculatePriceBreakdown().baggageTotal > 0 && (
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                        <Typography variant="body2" color="text.secondary">Extra Baggage</Typography>
+                                        <Typography variant="body2">₹{calculatePriceBreakdown().baggageTotal.toLocaleString()}</Typography>
+                                    </Box>
+                                )}
+
+                                {calculatePriceBreakdown().seatTotal > 0 && (
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                        <Typography variant="body2" color="text.secondary">Seat Selection</Typography>
+                                        <Typography variant="body2">₹{calculatePriceBreakdown().seatTotal.toLocaleString()}</Typography>
+                                    </Box>
+                                )}
+
+                                {calculatePriceBreakdown().priorityBoardingTotal > 0 && (
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                        <Typography variant="body2" color="text.secondary">Priority Boarding</Typography>
+                                        <Typography variant="body2">₹{calculatePriceBreakdown().priorityBoardingTotal.toLocaleString()}</Typography>
+                                    </Box>
+                                )}
+
+                                {calculatePriceBreakdown().ancillaryTotal > 0 && (
+                                    <>
+                                        <Divider sx={{ my: 0.5, borderStyle: 'dashed' }} />
+                                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                            <Typography variant="body2" fontWeight="medium">Ancillaries Total</Typography>
+                                            <Typography variant="body2" fontWeight="medium">₹{calculatePriceBreakdown().ancillaryTotal.toLocaleString()}</Typography>
+                                        </Box>
+                                    </>
+                                )}
+
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    <Typography variant="body2" color="text.secondary">Taxes & Fees</Typography>
+                                    <Typography variant="body2">₹{calculatePriceBreakdown().taxesAndFees.toLocaleString()}</Typography>
+                                </Box>
+                            </Stack>
+
+                            <Divider sx={{ my: 2 }} />
+
+                            <Box sx={{ p: 2, bgcolor: '#e8f5e9', borderRadius: 1 }}>
                                 <Typography variant="subtitle2" color="text.secondary">Amount Paid</Typography>
-                                <Typography variant="h5" color="primary">₹{paymentData.amount.toLocaleString()}</Typography>
+                                <Typography variant="h5" color="success.main" fontWeight="bold">₹{paymentData.amount.toLocaleString()}</Typography>
                             </Box>
                         </Paper>
                     </Grid>
