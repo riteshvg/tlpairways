@@ -23,17 +23,21 @@ import RestaurantIcon from '@mui/icons-material/Restaurant';
 import LuggageIcon from '@mui/icons-material/Luggage';
 import AirlineSeatReclineNormalIcon from '@mui/icons-material/AirlineSeatReclineNormal';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
-import { format } from 'date-fns';
+import { format, parseISO, isValid } from 'date-fns';
 import { useAnalytics } from '../lib/analytics/useAnalytics';
 import { hashSensitiveData } from '../lib/analytics/dataLayer';
+import { sendBookingConfirmationEmail } from '../lib/services/emailService';
 
 export default function ConfirmationPage() {
     const router = useRouter();
     const { user } = useUser();
     const { trackPurchase, trackPageView } = useAnalytics();
     const pageViewTracked = useRef(false); // Prevent duplicate page views
+    const hasSentEmail = useRef(false); // Prevent duplicate emails
     const [bookingData, setBookingData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [emailSending, setEmailSending] = useState(false);
+    const [emailSent, setEmailSent] = useState(false);
 
     useEffect(() => {
         // Try to retrieve data from sessionStorage
@@ -325,6 +329,180 @@ export default function ConfirmationPage() {
                 console.log('✅ Purchase event tracked:', purchaseEvent);
             }
 
+            // 3. Send booking confirmation email
+            if (!hasSentEmail.current && contactEmail) {
+                hasSentEmail.current = true;
+                setEmailSending(true);
+
+                // Delay email sending slightly to ensure all tracking is complete
+                setTimeout(async () => {
+                    try {
+                        // Get primary passenger name
+                        const primaryPassenger = bookingData.travellers?.[0];
+                        const passengerName = primaryPassenger
+                            ? `${primaryPassenger.firstName || ''} ${primaryPassenger.lastName || ''}`.trim()
+                            : 'Guest';
+
+                        // Format dates and times
+                        const formatTravelDate = (dateStr: string) => {
+                            if (!dateStr) return 'N/A';
+                            try {
+                                const date = typeof dateStr === 'string' ? parseISO(dateStr) : dateStr;
+                                return isValid(date) ? format(date, 'yyyy-MM-dd') : dateStr;
+                            } catch {
+                                return dateStr;
+                            }
+                        };
+
+                        const formatTimeFromDate = (dateStr: string) => {
+                            if (!dateStr) return '10:30';
+                            try {
+                                const date = typeof dateStr === 'string' ? parseISO(dateStr) : dateStr;
+                                if (isValid(date)) {
+                                    return format(date, 'HH:mm');
+                                }
+                                if (typeof dateStr === 'string' && dateStr.includes(':')) {
+                                    return dateStr.split(':').slice(0, 2).join(':');
+                                }
+                                return '10:30';
+                            } catch {
+                                return '10:30';
+                            }
+                        };
+
+                        const travelDate = formatTravelDate(bookingData.query?.date || bookingData.onwardFlight?.departureTime);
+                        const departureTimeStr = formatTimeFromDate(bookingData.onwardFlight?.departureTime || bookingData.query?.date);
+                        const arrivalTimeStr = bookingData.onwardFlight?.arrivalTime
+                            ? formatTimeFromDate(bookingData.onwardFlight.arrivalTime)
+                            : null;
+
+                        // Get return flight details if round trip
+                        let returnFlightData = null;
+                        if (bookingData.query?.tripType === 'roundtrip' && bookingData.returnFlight) {
+                            const returnTravelDate = formatTravelDate(bookingData.query?.returnDate || bookingData.returnFlight.departureTime);
+                            const returnDepartureTime = formatTimeFromDate(bookingData.returnFlight.departureTime || bookingData.query?.returnDate);
+                            const returnArrivalTime = bookingData.returnFlight.arrivalTime
+                                ? formatTimeFromDate(bookingData.returnFlight.arrivalTime)
+                                : null;
+
+                            returnFlightData = {
+                                flightNumber: bookingData.returnFlight.flightNumber || 'N/A',
+                                from: bookingData.returnFlight.origin || '',
+                                fromCity: bookingData.returnFlight.originCity || '',
+                                fromAirport: '',
+                                fromTerminal: 'TBD',
+                                to: bookingData.returnFlight.destination || '',
+                                toCity: bookingData.returnFlight.destinationCity || '',
+                                toAirport: '',
+                                toTerminal: 'TBD',
+                                route: `${bookingData.returnFlight.origin}-${bookingData.returnFlight.destination}`,
+                                travelDate: returnTravelDate,
+                                departureTime: returnDepartureTime,
+                                arrivalTime: returnArrivalTime,
+                                duration: bookingData.returnFlight.duration || null,
+                                travelClass: bookingData.returnFlight.cabinClass || 'Economy'
+                            };
+                        }
+
+                        // Build passengers array with details
+                        const passengersArray = bookingData.travellers?.map((traveller: any, index: number) => ({
+                            name: `${traveller.firstName || ''} ${traveller.lastName || ''}`.trim() || 'Guest',
+                            type: index === 0 ? 'Adult' : (traveller.age && traveller.age < 18 ? 'Child' : 'Adult'),
+                            age: traveller.age || null,
+                            seatNumber: bookingData.ancillaryServices?.onward?.[index]?.seatNumber || null,
+                            mealPreference: bookingData.ancillaryServices?.onward?.[index]?.meal || null
+                        })) || [];
+
+                        // Prepare comprehensive email data
+                        const emailData = {
+                            // Passenger Information
+                            passengerName: passengerName,
+                            email: contactEmail,
+                            phone: contactPhone || 'Not provided',
+
+                            // Booking Reference
+                            bookingId: pnr,
+                            pnr: pnr,
+                            bookingDate: new Date().toISOString(),
+                            bookingStatus: 'Confirmed',
+                            tripType: bookingData.query?.tripType || 'oneway',
+
+                            // Onward Flight Details
+                            flightNumber: bookingData.onwardFlight?.flightNumber || 'N/A',
+                            airline: bookingData.onwardFlight?.airline || 'TLP Airways',
+                            aircraftType: 'Boeing 737-800',
+
+                            // Onward Route Information
+                            from: bookingData.onwardFlight?.origin || '',
+                            fromCity: bookingData.onwardFlight?.originCity || '',
+                            fromAirport: '',
+                            fromTerminal: 'TBD',
+                            to: bookingData.onwardFlight?.destination || '',
+                            toCity: bookingData.onwardFlight?.destinationCity || '',
+                            toAirport: '',
+                            toTerminal: 'TBD',
+                            route: `${bookingData.onwardFlight?.origin}-${bookingData.onwardFlight?.destination}`,
+
+                            // Onward Timing
+                            travelDate: travelDate,
+                            departureTime: departureTimeStr,
+                            arrivalTime: arrivalTimeStr,
+                            duration: bookingData.onwardFlight?.duration || null,
+
+                            // Return Flight Details (if round trip)
+                            returnFlight: returnFlightData,
+
+                            // Passengers
+                            adults: parseInt(bookingData.query?.adults || numPassengers),
+                            children: parseInt(bookingData.query?.children || 0),
+                            infants: parseInt(bookingData.query?.infants || 0),
+                            totalPassengers: numPassengers,
+                            passengers: passengersArray,
+
+                            // Class & Fare
+                            travelClass: bookingData.onwardFlight?.cabinClass || 'Economy',
+                            fareType: 'Regular',
+
+                            // Pricing
+                            baseFare: baseFare,
+                            taxes: taxes + convenienceFee + surcharge,
+                            totalAmount: totalAmount,
+                            currency: 'INR',
+                            paymentMethod: bookingData.query?.paymentType || 'Credit Card',
+                            paymentStatus: 'Paid',
+
+                            // Baggage
+                            cabinBaggage: '7 kg',
+                            checkinBaggage: '15 kg',
+
+                            // Check-in Information (will be calculated on backend)
+                            webCheckinOpens: null,
+                            reportingTime: null,
+                            gateClosingTime: null,
+
+                            // Links
+                            bookingUrl: null,
+                            checkinUrl: null,
+                            eTicketUrl: null,
+                            manageBookingUrl: null
+                        };
+
+                        const result = await sendBookingConfirmationEmail(emailData);
+
+                        if (result.success) {
+                            setEmailSent(true);
+                            console.log('✅ Booking confirmation email sent successfully:', result.messageId);
+                        } else {
+                            console.error('❌ Failed to send email:', result.error);
+                        }
+                    } catch (error) {
+                        console.error('❌ Error sending email:', error);
+                    } finally {
+                        setEmailSending(false);
+                    }
+                }, 1500); // 1.5 second delay to match SPA
+            }
+
             // Mark as tracked
             pageViewTracked.current = true;
         };
@@ -465,7 +643,22 @@ export default function ConfirmationPage() {
                         Your booking reference number is <strong>{pnr}</strong>
                     </Typography>
                     <Typography color="text.secondary">
-                        A confirmation email has been sent to <strong>{bookingData.query?.contactEmail || travellers[0]?.email}</strong>
+                        {emailSending && (
+                            <Box display="inline-flex" alignItems="center" gap={1}>
+                                <CircularProgress size={16} />
+                                Sending confirmation email to <strong>{bookingData.query?.contactEmail || travellers[0]?.email}</strong>...
+                            </Box>
+                        )}
+                        {emailSent && !emailSending && (
+                            <>
+                                ✅ Confirmation email sent to <strong>{bookingData.query?.contactEmail || travellers[0]?.email}</strong>
+                            </>
+                        )}
+                        {!emailSending && !emailSent && (
+                            <>
+                                A confirmation email will be sent to <strong>{bookingData.query?.contactEmail || travellers[0]?.email}</strong>
+                            </>
+                        )}
                     </Typography>
                 </Paper>
 
