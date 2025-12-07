@@ -31,9 +31,10 @@ const ConsentContext = createContext<ConsentContextValue | null>(null);
  * Sync consent state to window objects
  * This makes consent available to Adobe Launch and other scripts
  */
-let consentEventPushed = false; // Flag to prevent duplicate events
+let initialConsentPushed = false; // Flag to track initial consent push
+let consentUpdatePushed = false; // Flag to prevent duplicate update events
 
-function syncWindowState(state: ConsentState): void {
+function syncWindowState(state: ConsentState, isInitialLoad: boolean = false): void {
     if (typeof window === 'undefined') return;
 
     const consentValue = calculateConsentValue(state);
@@ -54,21 +55,40 @@ function syncWindowState(state: ConsentState): void {
         categories: state.preferences
     };
 
-    // Only push consent event on homepage
+    // Only push consent events on homepage
     const isHomepage = typeof window !== 'undefined' && (window.location.pathname === '/' || window.location.pathname === '/index');
 
-    // Push to adobeDataLayer array only once per page load
-    if ((window as any).adobeDataLayer && state.action !== 'pending' && !consentEventPushed && isHomepage) {
-        (window as any).adobeDataLayer.push({
-            event: 'consentPreferencesUpdated',
-            consent: {
-                value: consentValue,
-                defaultConsent: consentValue,
-                ...state,
-                categories: state.preferences
-            }
-        });
-        consentEventPushed = true; // Mark as pushed
+    if ((window as any).adobeDataLayer && isHomepage) {
+        // Push initial userConsent object on first load (even if pending)
+        if (isInitialLoad && !initialConsentPushed) {
+            (window as any).adobeDataLayer.push({
+                userConsent: {
+                    value: consentValue,
+                    defaultConsent: consentValue,
+                    status: state.action || 'pending',
+                    categories: state.preferences,
+                    timestamp: new Date().toISOString()
+                }
+            });
+            initialConsentPushed = true;
+            console.log('✅ Initial userConsent pushed:', consentValue);
+        }
+
+        // Push userConsentUpdated event when user makes a choice (not pending)
+        if (!isInitialLoad && state.action !== 'pending' && !consentUpdatePushed) {
+            (window as any).adobeDataLayer.push({
+                event: 'userConsentUpdated',
+                userConsent: {
+                    value: consentValue,
+                    defaultConsent: consentValue,
+                    status: state.action,
+                    categories: state.preferences,
+                    timestamp: new Date().toISOString()
+                }
+            });
+            consentUpdatePushed = true;
+            console.log('✅ userConsentUpdated event pushed:', consentValue);
+        }
     }
 }
 
@@ -96,8 +116,8 @@ export function ConsentProvider({ children }: { children: React.ReactNode }) {
             action: 'pending'
         };
 
-        // Sync to window objects immediately
-        syncWindowState(state);
+        // Sync to window objects immediately - mark as initial load
+        syncWindowState(state, true);
 
         return state;
     });
@@ -147,8 +167,8 @@ export function ConsentProvider({ children }: { children: React.ReactNode }) {
             value: consentValue
         };
 
-        // Sync synchronously before state update
-        syncWindowState(nextState);
+        // Sync synchronously before state update - mark as update (not initial load)
+        syncWindowState(nextState, false);
 
         setConsentState(nextState);
         persistConsentState(nextState);
