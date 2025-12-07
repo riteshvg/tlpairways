@@ -150,12 +150,6 @@ export default function ConfirmationPage() {
                         phone: contactPhone,
                         loyaltyTier: 'standard'
                     },
-                    userData: {
-                        isAuthenticated: !!user,
-                        userId: user?.sub || null,
-                        userEmail: user?.email || null,
-                        userSegment: user ? 'registered' : 'anonymous'
-                    },
                     booking: {
                         tripType: bookingData.query?.tripType || 'oneway',
                         cabinClass: bookingData.query?.cabinClass || 'economy',
