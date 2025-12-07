@@ -342,16 +342,20 @@ export default function PaymentPage() {
         // and just pass a reference or rely on the fact that we are in the browser?
         // Let's try passing what we can, but use sessionStorage for the heavy JSONs to be safe like the SPA does for restored state.
 
-        sessionStorage.setItem('temp_confirmation_data', JSON.stringify({
-            onwardFlight,
-            returnFlight,
-            travellers,
-            ancillaryServices,
-            paymentData,
-            query: router.query
+        // Store sensitive/complex data in session storage for the review page
+        sessionStorage.setItem('tempPaymentDetails', JSON.stringify({
+            method: paymentMethod,
+            vendor: paymentVendor,
+            cardNumber: cardNumber ? `**** **** **** ${cardNumber.slice(-4)}` : undefined, // Only store last 4 for review
+            amount: totalAmount,
+            billingName
         }));
 
-        window.location.href = '/confirmation?source=storage';
+        // Navigate to Review Page
+        router.push({
+            pathname: '/review',
+            query: router.query // Pass forward all flight/traveller query params
+        });
     };
 
     if (!onwardFlight) {
@@ -364,7 +368,7 @@ export default function PaymentPage() {
                 <title>Payment - TLAirways</title>
             </Head>
 
-            <BookingSteps activeStep={2} />
+            <BookingSteps currentStep="payment" />
 
             <Container maxWidth="xl" sx={{ mt: 4, mb: 10 }}>
                 <Grid container spacing={4}>

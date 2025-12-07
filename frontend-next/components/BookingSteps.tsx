@@ -2,18 +2,28 @@ import { Box, Stepper, Step, StepLabel, useTheme, useMediaQuery } from '@mui/mat
 import { CheckCircle } from '@mui/icons-material';
 
 interface BookingStepsProps {
-    activeStep: number;
+    currentStep?: 'details' | 'addons' | 'payment' | 'review';
+    activeStep?: number; // Legacy support
 }
 
-const BookingSteps = ({ activeStep }: BookingStepsProps) => {
+const BookingSteps = ({ currentStep, activeStep: legacyStep }: BookingStepsProps) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
     const steps = [
-        { label: 'Traveller Details', short: 'Details' },
-        { label: 'Add-ons', short: 'Add-ons' },
-        { label: 'Payment', short: 'Payment' }
+        { label: 'Traveller Details', short: 'Details', id: 'details' },
+        { label: 'Add-ons', short: 'Add-ons', id: 'addons' },
+        { label: 'Payment', short: 'Payment', id: 'payment' },
+        { label: 'Review', short: 'Review', id: 'review' }
     ];
+
+    // Determine active step index
+    let activeStep = 0;
+    if (currentStep) {
+        activeStep = steps.findIndex(s => s.id === currentStep);
+    } else if (typeof legacyStep === 'number') {
+        activeStep = legacyStep;
+    }
 
     return (
         <Box
@@ -104,3 +114,4 @@ const CheckCircleIcon = (props: any) => {
 };
 
 export default BookingSteps;
+
