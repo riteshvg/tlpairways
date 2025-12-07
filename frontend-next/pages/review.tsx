@@ -241,15 +241,19 @@ export default function ReviewPage() {
 
     const handleConfirmBooking = () => {
         setLoading(true);
+
+        // Store complete booking data in sessionStorage for confirmation page
+        sessionStorage.setItem('temp_confirmation_data', JSON.stringify({
+            onwardFlight,
+            returnFlight,
+            travellers,
+            ancillaryServices,
+            paymentData: paymentDetails,
+            query: router.query
+        }));
+
         // Navigate to confirmation page
-        // Pass a flag to indicate confirmed
-        router.push({
-            pathname: '/confirmation',
-            query: {
-                ...query,
-                bookingConfirmed: 'true'
-            }
-        });
+        window.location.href = '/confirmation?source=storage';
     };
 
     const handleCancel = () => {
@@ -274,12 +278,13 @@ export default function ReviewPage() {
                 <BookingSteps currentStep="review" />
 
                 <Box sx={{ mb: 3 }}>
+
                     <Typography variant="h4" component="h1" gutterBottom fontWeight="bold">
                         Review Your Booking
                     </Typography>
                     <Typography variant="body1" color="text.secondary">
                         Please review your flight selection, passenger details, and additional services carefully.
-                        Once confirmed, your booking will be finalized and the payment processed.
+                        Once confirmed, your booking will be finalized.
                     </Typography>
                 </Box>
 
