@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import {
@@ -45,6 +45,7 @@ export default function PaymentPage() {
     const router = useRouter();
     const { user, isLoading } = useUser();
     const { trackPageView } = useAnalytics();
+    const pageViewTracked = useRef(false); // Prevent duplicate page views
     const query = router.query;
 
     // --- State ---
@@ -125,14 +126,9 @@ export default function PaymentPage() {
 
     // Track page view with comprehensive payment data
     useEffect(() => {
-        if (!onwardFlight || travellers.length === 0) return;
-
-        let hasTracked = false; // Prevent duplicate tracking
+        if (!onwardFlight || travellers.length === 0 || pageViewTracked.current) return;
 
         const buildPaymentTracking = async () => {
-            if (hasTracked) return;
-            hasTracked = true;
-
             const { buildAncillaryServicesBreakdown } = await import('../lib/analytics/buildPaymentTracking');
 
             const formatDate = (dateStr: string) => {
@@ -151,17 +147,14 @@ export default function PaymentPage() {
                 returnFlight
             );
 
-            const bookingId = `booking_${Date.now()}_${Math.random().toString(36).substring(2, 15).toUpperCase()}`;
-            const pnr = Array.from({ length: 6 }, () =>
-                'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.charAt(Math.floor(Math.random() * 36))
-            ).join('');
-
-            // Hash sensitive data
             const contactEmail = query.contactEmail as string || travellers[0]?.email || '';
             const contactPhone = query.contactPhone as string || travellers[0]?.phone || '';
 
             const hashedEmail = await hashSensitiveData(contactEmail);
             const hashedPhone = await hashSensitiveData(contactPhone);
+
+            const bookingId = `booking_${Date.now()}_${Math.random().toString(36).substring(2, 15).toUpperCase()}`;
+            const pnr = `${Math.random().toString(36).substring(2, 4).toUpperCase()}${Math.random().toString(36).substring(2, 4).toUpperCase()}${Math.floor(Math.random() * 90) + 10}`;
 
             const bookingContext = {
                 bookingId,
@@ -178,7 +171,7 @@ export default function PaymentPage() {
                         destination: onwardFlight.destination,
                         destinationCity: onwardFlight.destinationCity,
                         departureTime: query.date ? formatDate(query.date as string) : null,
-                        price: onwardFlight.currentPrice * numPassengers,
+                        price: onwardFlight.currentPrice,
                         cabinClass: onwardFlight.cabinClass || query.cabinClass,
                         perPassengerPrice: onwardFlight.currentPrice
                     },
@@ -191,7 +184,7 @@ export default function PaymentPage() {
                             destination: returnFlight.destination,
                             destinationCity: returnFlight.destinationCity,
                             departureTime: query.returnDate ? formatDate(query.returnDate as string) : null,
-                            price: returnFlight.currentPrice * numPassengers,
+                            price: returnFlight.currentPrice,
                             cabinClass: returnFlight.cabinClass || query.cabinClass,
                             perPassengerPrice: returnFlight.currentPrice
                         }
@@ -251,10 +244,13 @@ export default function PaymentPage() {
                 },
                 { bookingContext }
             );
+
+            // Mark as tracked
+            pageViewTracked.current = true;
         };
 
         buildPaymentTracking();
-    }, [onwardFlight, returnFlight, ancillaryServices, travellers, query, user, trackPageView]);
+    }, [onwardFlight, travellers]); // Simplified dependencies - only track when flight and traveller data is ready
 
 
     // --- Calculations ---
