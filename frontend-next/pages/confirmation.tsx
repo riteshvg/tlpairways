@@ -156,98 +156,6 @@ export default function ConfirmationPage() {
                         userEmail: user?.email || null,
                         userSegment: user ? 'registered' : 'anonymous'
                     },
-                    searchContext: {
-                        searchId: `search_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`,
-                        origin: bookingData.onwardFlight?.origin || null,
-                        destination: bookingData.onwardFlight?.destination || null,
-                        originDestination: bookingData.onwardFlight ? `${bookingData.onwardFlight.origin}-${bookingData.onwardFlight.destination}` : null,
-                        originCity: bookingData.onwardFlight?.originCity || null,
-                        destinationCity: bookingData.onwardFlight?.destinationCity || null,
-                        departureDate: bookingData.query?.date ? new Date(bookingData.query.date).toISOString().split('T')[0] : null,
-                        returnDate: bookingData.query?.returnDate ? new Date(bookingData.query.returnDate).toISOString().split('T')[0] : null,
-                        travelDay: bookingData.query?.date ? new Date(bookingData.query.date).toLocaleDateString('en-US', { weekday: 'long' }) : null,
-                        numberOfDays: bookingData.query?.returnDate && bookingData.query?.date ?
-                            Math.ceil((new Date(bookingData.query.returnDate).getTime() - new Date(bookingData.query.date).getTime()) / (1000 * 60 * 60 * 24)) : null,
-                        passengers: {
-                            total: numPassengers,
-                            breakdown: {
-                                adults: {
-                                    count: parseInt(bookingData.query?.adults || numPassengers),
-                                    type: 'adult',
-                                    description: '12+ years'
-                                },
-                                children: {
-                                    count: parseInt(bookingData.query?.children || 0),
-                                    type: 'child',
-                                    description: '2-11 years'
-                                },
-                                infants: {
-                                    count: parseInt(bookingData.query?.infants || 0),
-                                    type: 'infant',
-                                    description: 'Under 2 years'
-                                }
-                            },
-                            summary: `adult: ${numPassengers}`
-                        },
-                        cabinClass: bookingData.query?.cabinClass || 'economy',
-                        tripType: bookingData.query?.tripType || 'oneway',
-                        travelPurpose: bookingData.query?.travelPurpose || 'personal',
-                        searchDateTime: new Date().toISOString().split('T')[0],
-                        searchCriteria: {
-                            originAirport: bookingData.onwardFlight?.origin || null,
-                            originAirportName: bookingData.onwardFlight?.originCity || null,
-                            originCity: bookingData.onwardFlight?.originCity || null,
-                            originCountry: null,
-                            destinationAirport: bookingData.onwardFlight?.destination || null,
-                            destinationAirportName: bookingData.onwardFlight?.destinationCity || null,
-                            destinationCity: bookingData.onwardFlight?.destinationCity || null,
-                            destinationCountry: null,
-                            departureDate: bookingData.query?.date ? new Date(bookingData.query.date).toISOString().split('T')[0] : null,
-                            returnDate: bookingData.query?.returnDate ? new Date(bookingData.query.returnDate).toISOString().split('T')[0] : null,
-                            tripType: bookingData.query?.tripType || 'oneway',
-                            passengers: {
-                                adults: parseInt(bookingData.query?.adults || numPassengers),
-                                children: parseInt(bookingData.query?.children || 0),
-                                infants: parseInt(bookingData.query?.infants || 0),
-                                total: numPassengers
-                            },
-                            cabinClass: bookingData.query?.cabinClass || 'economy',
-                            travelPurpose: bookingData.query?.travelPurpose || 'personal',
-                            searchDateTime: new Date().toISOString().split('T')[0],
-                            flexibleDates: false,
-                            directFlightsOnly: false
-                        },
-                        distanceKm: 268, // Default, should be calculated
-                        specialDays: {
-                            onward: { is_special: false, special_day: null, special_type: null, country: null },
-                            return: { is_special: false, special_day: null, special_type: null, country: null },
-                            hasSpecialDays: false
-                        },
-                        revenueData: {
-                            potential_revenue: totalAmount,
-                            avg_revenue_per_user: Math.round(totalAmount / numPassengers),
-                            booking_probability_score: 1,
-                            estimated_conversion_value: totalAmount,
-                            revenue_bucket: totalAmount > 50000 ? 'high_value' : totalAmount > 20000 ? 'medium_value' : 'low_value',
-                            currency: { code: 'INR', symbol: '₹', name: 'Indian Rupee' }
-                        },
-                        geography: {
-                            userLocation: {
-                                country: 'India',
-                                state: 'Unknown',
-                                city: 'Unknown',
-                                timezone: 'Asia/Calcutta',
-                                ipCountry: 'India',
-                                currency: 'INR',
-                                language: 'en-US'
-                            }
-                        },
-                        searchPerformance: {
-                            searchDurationMs: 0,
-                            resultsLoadedAt: new Date().toISOString(),
-                            searchAbandoned: false
-                        }
-                    },
                     booking: {
                         tripType: bookingData.query?.tripType || 'oneway',
                         cabinClass: bookingData.query?.cabinClass || 'economy',
@@ -290,6 +198,17 @@ export default function ConfirmationPage() {
         const numPassengers = bookingData.travellers?.length || 1;
         const flightTotal = ((bookingData.onwardFlight?.currentPrice || 0) * numPassengers) +
             ((bookingData.returnFlight?.currentPrice || 0) * numPassengers);
+
+        // Calculate total amount for revenue data
+        const products = bookingData.products || [];
+        const ancillaryTotal = products
+            .filter((p: any) => p.category === 'ancillary')
+            .reduce((sum: number, p: any) => sum + (p.price * p.quantity), 0);
+        const baseFare = flightTotal;
+        const taxes = Math.round(baseFare * 0.05);
+        const convenienceFee = Math.round(baseFare * 0.02);
+        const surcharge = Math.round(baseFare * 0.01);
+        const totalAmount = baseFare + ancillaryTotal + taxes + convenienceFee + surcharge;
 
         trackPageView(
             {
@@ -342,6 +261,98 @@ export default function ConfirmationPage() {
                         }
                     },
                     cabinClass: bookingData.query?.cabinClass || 'economy'
+                },
+                searchContext: {
+                    searchId: `search_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`,
+                    origin: bookingData.onwardFlight?.origin || null,
+                    destination: bookingData.onwardFlight?.destination || null,
+                    originDestination: bookingData.onwardFlight ? `${bookingData.onwardFlight.origin}-${bookingData.onwardFlight.destination}` : null,
+                    originCity: bookingData.onwardFlight?.originCity || null,
+                    destinationCity: bookingData.onwardFlight?.destinationCity || null,
+                    departureDate: bookingData.query?.date ? new Date(bookingData.query.date).toISOString().split('T')[0] : null,
+                    returnDate: bookingData.query?.returnDate ? new Date(bookingData.query.returnDate).toISOString().split('T')[0] : null,
+                    travelDay: bookingData.query?.date ? new Date(bookingData.query.date).toLocaleDateString('en-US', { weekday: 'long' }) : null,
+                    numberOfDays: bookingData.query?.returnDate && bookingData.query?.date ?
+                        Math.ceil((new Date(bookingData.query.returnDate).getTime() - new Date(bookingData.query.date).getTime()) / (1000 * 60 * 60 * 24)) : null,
+                    passengers: {
+                        total: numPassengers,
+                        breakdown: {
+                            adults: {
+                                count: parseInt(bookingData.query?.adults || numPassengers),
+                                type: 'adult',
+                                description: '12+ years'
+                            },
+                            children: {
+                                count: parseInt(bookingData.query?.children || 0),
+                                type: 'child',
+                                description: '2-11 years'
+                            },
+                            infants: {
+                                count: parseInt(bookingData.query?.infants || 0),
+                                type: 'infant',
+                                description: 'Under 2 years'
+                            }
+                        },
+                        summary: `adult: ${numPassengers}`
+                    },
+                    cabinClass: bookingData.query?.cabinClass || 'economy',
+                    tripType: bookingData.query?.tripType || 'oneway',
+                    travelPurpose: bookingData.query?.travelPurpose || 'personal',
+                    searchDateTime: new Date().toISOString().split('T')[0],
+                    searchCriteria: {
+                        originAirport: bookingData.onwardFlight?.origin || null,
+                        originAirportName: bookingData.onwardFlight?.originCity || null,
+                        originCity: bookingData.onwardFlight?.originCity || null,
+                        originCountry: null,
+                        destinationAirport: bookingData.onwardFlight?.destination || null,
+                        destinationAirportName: bookingData.onwardFlight?.destinationCity || null,
+                        destinationCity: bookingData.onwardFlight?.destinationCity || null,
+                        destinationCountry: null,
+                        departureDate: bookingData.query?.date ? new Date(bookingData.query.date).toISOString().split('T')[0] : null,
+                        returnDate: bookingData.query?.returnDate ? new Date(bookingData.query.returnDate).toISOString().split('T')[0] : null,
+                        tripType: bookingData.query?.tripType || 'oneway',
+                        passengers: {
+                            adults: parseInt(bookingData.query?.adults || numPassengers),
+                            children: parseInt(bookingData.query?.children || 0),
+                            infants: parseInt(bookingData.query?.infants || 0),
+                            total: numPassengers
+                        },
+                        cabinClass: bookingData.query?.cabinClass || 'economy',
+                        travelPurpose: bookingData.query?.travelPurpose || 'personal',
+                        searchDateTime: new Date().toISOString().split('T')[0],
+                        flexibleDates: false,
+                        directFlightsOnly: false
+                    },
+                    distanceKm: 268, // Default, should be calculated
+                    specialDays: {
+                        onward: { is_special: false, special_day: null, special_type: null, country: null },
+                        return: { is_special: false, special_day: null, special_type: null, country: null },
+                        hasSpecialDays: false
+                    },
+                    revenueData: {
+                        potential_revenue: totalAmount,
+                        avg_revenue_per_user: Math.round(totalAmount / numPassengers),
+                        booking_probability_score: 1,
+                        estimated_conversion_value: totalAmount,
+                        revenue_bucket: totalAmount > 50000 ? 'high_value' : totalAmount > 20000 ? 'medium_value' : 'low_value',
+                        currency: { code: 'INR', symbol: '₹', name: 'Indian Rupee' }
+                    },
+                    geography: {
+                        userLocation: {
+                            country: 'India',
+                            state: 'Unknown',
+                            city: 'Unknown',
+                            timezone: 'Asia/Calcutta',
+                            ipCountry: 'India',
+                            currency: 'INR',
+                            language: 'en-US'
+                        }
+                    },
+                    searchPerformance: {
+                        searchDurationMs: 0,
+                        resultsLoadedAt: new Date().toISOString(),
+                        searchAbandoned: false
+                    }
                 }
             }
         );
