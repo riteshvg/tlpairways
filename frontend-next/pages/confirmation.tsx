@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import {
@@ -30,7 +30,8 @@ import { hashSensitiveData } from '../lib/analytics/dataLayer';
 export default function ConfirmationPage() {
     const router = useRouter();
     const { user } = useUser();
-    const { trackPurchase } = useAnalytics();
+    const { trackPurchase, trackPageView } = useAnalytics();
+    const pageViewTracked = useRef(false); // Prevent duplicate page views
     const [bookingData, setBookingData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 
@@ -280,6 +281,72 @@ export default function ConfirmationPage() {
         trackComprehensivePurchase();
     }, [bookingData]);
 
+    // Track page view for confirmation page
+    useEffect(() => {
+        if (!bookingData || pageViewTracked.current) return;
+
+        const numPassengers = bookingData.travellers?.length || 1;
+        const flightTotal = ((bookingData.onwardFlight?.currentPrice || 0) * numPassengers) +
+            ((bookingData.returnFlight?.currentPrice || 0) * numPassengers);
+
+        trackPageView(
+            {
+                pageType: 'confirmation',
+                pageName: 'Booking Confirmation',
+                pageTitle: 'Booking Confirmed - TLP Airways',
+                pageCategory: 'booking',
+                bookingStep: 'confirmation',
+                bookingStepNumber: 5,
+                totalBookingSteps: 5,
+                sections: ['bookingDetails', 'flightInfo', 'passengerInfo', 'paymentSummary'],
+                user: user
+            },
+            {
+                bookingContext: {
+                    pnr: bookingData.pnr,
+                    bookingStatus: 'confirmed',
+                    selectedFlights: {
+                        onward: bookingData.onwardFlight ? {
+                            flightNumber: bookingData.onwardFlight.flightNumber,
+                            origin: bookingData.onwardFlight.origin,
+                            originCity: bookingData.onwardFlight.originCity,
+                            destination: bookingData.onwardFlight.destination,
+                            destinationCity: bookingData.onwardFlight.destinationCity,
+                            departureTime: bookingData.onwardFlight.departureTime,
+                            price: bookingData.onwardFlight.currentPrice,
+                            cabinClass: bookingData.onwardFlight.cabinClass
+                        } : null,
+                        ...(bookingData.returnFlight ? {
+                            return: {
+                                flightNumber: bookingData.returnFlight.flightNumber,
+                                origin: bookingData.returnFlight.origin,
+                                originCity: bookingData.returnFlight.originCity,
+                                destination: bookingData.returnFlight.destination,
+                                destinationCity: bookingData.returnFlight.destinationCity,
+                                departureTime: bookingData.returnFlight.departureTime,
+                                price: bookingData.returnFlight.currentPrice,
+                                cabinClass: bookingData.returnFlight.cabinClass
+                            }
+                        } : {})
+                    },
+                    totalPrice: flightTotal,
+                    tripType: bookingData.query?.tripType || (bookingData.returnFlight ? 'roundtrip' : 'oneway'),
+                    passengers: {
+                        total: numPassengers,
+                        breakdown: {
+                            adults: parseInt(bookingData.query?.adults || numPassengers),
+                            children: parseInt(bookingData.query?.children || 0),
+                            infants: parseInt(bookingData.query?.infants || 0)
+                        }
+                    },
+                    cabinClass: bookingData.query?.cabinClass || 'economy'
+                }
+            }
+        );
+
+        // Mark as tracked
+        pageViewTracked.current = true;
+    }, [bookingData, user, trackPageView]);
 
     const getAncillariesForPassenger = (idx: number) => {
         const services: any[] = [];
