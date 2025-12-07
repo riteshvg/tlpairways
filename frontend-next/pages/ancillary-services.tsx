@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import {
@@ -108,6 +108,7 @@ export default function AncillaryServicesPage() {
     const router = useRouter();
     const { user, isLoading } = useUser();
     const { trackPageView } = useAnalytics();
+    const pageViewTracked = useRef(false); // Prevent duplicate page views
     const {
         onwardFlightId,
         returnFlightId,
@@ -180,7 +181,7 @@ export default function AncillaryServicesPage() {
 
     // Track page view with booking context
     useEffect(() => {
-        if (onwardFlight && date) {
+        if (onwardFlight && date && !pageViewTracked.current) {
             const formatDate = (dateStr: string) => {
                 const d = new Date(dateStr);
                 return d.toISOString().split('T')[0];
@@ -278,8 +279,11 @@ export default function AncillaryServicesPage() {
                 },
                 { bookingContext }
             );
+
+            // Mark as tracked
+            pageViewTracked.current = true;
         }
-    }, [onwardFlight, returnFlight, date, returnDate, adults, children, infants, cabinClass, tripType, travelPurpose, paymentType, user, trackPageView]);
+    }, [onwardFlight, date]); // Simplified dependencies - only track when flight data is ready
 
 
     // Initialize selections for new travellers
