@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import {
@@ -50,6 +50,7 @@ export default function TravellerDetailsPage() {
     const router = useRouter();
     const { user, isLoading } = useUser();
     const { trackPageView } = useAnalytics();
+    const pageViewTracked = useRef(false); // Prevent duplicate page views
     const {
         onwardFlightId,
         returnFlightId,
@@ -248,7 +249,7 @@ export default function TravellerDetailsPage() {
 
     // Track page view with booking context
     useEffect(() => {
-        if (onwardFlight && date) {
+        if (onwardFlight && date && !pageViewTracked.current) {
             const formatDate = (dateStr: string) => {
                 const d = new Date(dateStr);
                 return d.toISOString().split('T')[0];
@@ -268,7 +269,6 @@ export default function TravellerDetailsPage() {
                 selectedFlights: {
                     onward: {
                         flightNumber: onwardFlight.flightNumber,
-                        airline: onwardFlight.airline,
                         origin: onwardFlight.origin,
                         originCity: onwardFlight.originCity,
                         destination: onwardFlight.destination,
@@ -283,10 +283,9 @@ export default function TravellerDetailsPage() {
                             amount: onwardFlight.currentPrice
                         }
                     },
-                    ...(returnFlight && returnDate ? {
+                    ...(returnFlight ? {
                         return: {
                             flightNumber: returnFlight.flightNumber,
-                            airline: returnFlight.airline,
                             origin: returnFlight.origin,
                             originCity: returnFlight.originCity,
                             destination: returnFlight.destination,
@@ -336,8 +335,11 @@ export default function TravellerDetailsPage() {
                 },
                 { bookingContext }
             );
+
+            // Mark as tracked
+            pageViewTracked.current = true;
         }
-    }, [onwardFlight, returnFlight, date, returnDate, adults, children, infants, cabinClass, tripType, travelPurpose, paymentType, user, passengers, trackPageView]);
+    }, [onwardFlight, date]); // Simplified dependencies - only track when flight data is ready
 
     const handleTravellerChange = (index: number, field: keyof Traveller, value: string) => {
         const newTravellers = [...travellers];
