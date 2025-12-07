@@ -161,6 +161,8 @@ export default function ConfirmationPage() {
                         origin: bookingData.onwardFlight?.origin || null,
                         destination: bookingData.onwardFlight?.destination || null,
                         originDestination: bookingData.onwardFlight ? `${bookingData.onwardFlight.origin}-${bookingData.onwardFlight.destination}` : null,
+                        originCity: bookingData.onwardFlight?.originCity || null,
+                        destinationCity: bookingData.onwardFlight?.destinationCity || null,
                         departureDate: bookingData.query?.date ? new Date(bookingData.query.date).toISOString().split('T')[0] : null,
                         returnDate: bookingData.query?.returnDate ? new Date(bookingData.query.returnDate).toISOString().split('T')[0] : null,
                         travelDay: bookingData.query?.date ? new Date(bookingData.query.date).toLocaleDateString('en-US', { weekday: 'long' }) : null,
