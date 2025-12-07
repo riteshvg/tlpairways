@@ -123,12 +123,11 @@ export default function ReviewPage() {
             pageTitle: 'Review Booking | TLP Airways',
             bookingStep: 'review',
             bookingStepNumber: 4,
-            totalBookingSteps: 4,
             user
         });
     }, [onwardFlight, trackPageView, user]);
 
-    // Helper to get ancillaries for a specific passenger (Replicated from Confirmation Page)
+    // Helper to get ancillaries for a specific passenger (Adapted for Review Page State)
     const getAncillariesForPassenger = (idx: number) => {
         const services: any[] = [];
         const anc = ancillaryServices || {};
@@ -136,52 +135,53 @@ export default function ReviewPage() {
         ['onward', 'return'].forEach(type => {
             if (!anc[type]) return;
 
-            // In review page, the structure from URL params might be slightly different than final bookingData
-            // The previous logic assumed anc[type] is an object where keys are passenger indices.
-            // Let's ensure we access it correctly. 
-            // ancillaryServices state in review.tsx is { onward: { '0': {...} }, return: { '0': {...} } }
-
-            const paxSelection = anc[type][idx.toString()];
+            // In review page, the structure comes directly from ancillary-services.tsx state
+            const paxSelection = anc[type][idx.toString()] || anc[type][idx];
             if (!paxSelection) return;
 
             const prefix = type === 'onward' ? 'Onward' : 'Return';
 
-            // Meals (can be array or single object depending on selection flow)
-            if (paxSelection.meals && Object.keys(paxSelection.meals).length > 0) {
-                Object.values(paxSelection.meals).forEach((m: any) => {
-                    services.push({
-                        type: 'meal',
-                        icon: RestaurantIcon,
-                        label: m.name,
-                        direction: prefix,
-                        color: 'primary'
-                    });
+            // Meal (String)
+            if (paxSelection.meal) {
+                services.push({
+                    type: 'meal',
+                    icon: RestaurantIcon,
+                    label: paxSelection.meal,
+                    direction: prefix,
+                    color: 'primary'
                 });
             }
 
-            // Baggage
-            if (paxSelection.baggage && Object.keys(paxSelection.baggage).length > 0) {
-                Object.values(paxSelection.baggage).forEach((b: any) => {
-                    services.push({
-                        type: 'baggage',
-                        icon: LuggageIcon,
-                        label: `+ ${b.weight} kg`,
-                        direction: prefix,
-                        color: 'secondary'
-                    });
+            // Baggage (Number)
+            if (paxSelection.baggage && paxSelection.baggage > 0) {
+                services.push({
+                    type: 'baggage',
+                    icon: LuggageIcon,
+                    label: `+ ${paxSelection.baggage} kg`,
+                    direction: prefix,
+                    color: 'secondary'
                 });
             }
 
-            // Seats
-            if (paxSelection.seats && Object.keys(paxSelection.seats).length > 0) {
-                Object.values(paxSelection.seats).forEach((s: any) => {
-                    services.push({
-                        type: 'seat',
-                        icon: AirlineSeatReclineNormalIcon,
-                        label: `Seat ${s.number}`,
-                        direction: prefix,
-                        color: 'info'
-                    });
+            // Seat (String)
+            if (paxSelection.seatNumber) {
+                services.push({
+                    type: 'seat',
+                    icon: AirlineSeatReclineNormalIcon,
+                    label: `Seat ${paxSelection.seatNumber}`,
+                    direction: prefix,
+                    color: 'info'
+                });
+            }
+
+            // Priority Boarding
+            if (paxSelection.priorityBoarding) {
+                services.push({
+                    type: 'priority',
+                    icon: PriorityHighIcon,
+                    label: 'Priority Boarding',
+                    direction: prefix,
+                    color: 'warning'
                 });
             }
         });
@@ -197,18 +197,24 @@ export default function ReviewPage() {
         if (returnFlight) baseFare += returnFlight.currentPrice * numPassengers;
 
         // Ancillaries
+        // BAGGAGE_PRICES must match ancillary-services.tsx
+        const BAGGAGE_PRICES: { [key: number]: number } = { 5: 1500, 10: 2800, 15: 4000, 20: 5000 };
+
         const calculateAncillaryTotal = (services: any) => {
             let sum = 0;
             if (!services) return 0;
-            Object.values(services).forEach((passengerServices: any) => {
-                if (passengerServices.meals) {
-                    Object.values(passengerServices.meals).forEach((m: any) => sum += (m.price || 0));
+            Object.values(services).forEach((sel: any) => {
+                // Baggage
+                if (sel.baggage) {
+                    sum += (BAGGAGE_PRICES[sel.baggage] || 0);
                 }
-                if (passengerServices.baggage) {
-                    Object.values(passengerServices.baggage).forEach((b: any) => sum += (b.price || 0));
+                // Seat
+                if (sel.seatPrice) {
+                    sum += (sel.seatPrice || 0);
                 }
-                if (passengerServices.seats) {
-                    Object.values(passengerServices.seats).forEach((s: any) => sum += (s.price || 0));
+                // Priority Boarding
+                if (sel.priorityBoardingPrice) {
+                    sum += (sel.priorityBoardingPrice || 0);
                 }
             });
             return sum;
