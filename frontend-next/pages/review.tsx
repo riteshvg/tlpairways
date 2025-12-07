@@ -128,12 +128,12 @@ export default function ReviewPage() {
 
 
     const calculateTotal = () => {
-        let total = 0;
         const numPassengers = travellers.length;
+        let baseFare = 0;
 
         // Flight Base
-        if (onwardFlight) total += onwardFlight.currentPrice * numPassengers;
-        if (returnFlight) total += returnFlight.currentPrice * numPassengers;
+        if (onwardFlight) baseFare += onwardFlight.currentPrice * numPassengers;
+        if (returnFlight) baseFare += returnFlight.currentPrice * numPassengers;
 
         // Ancillaries
         const calculateAncillaryTotal = (services: any) => {
@@ -153,10 +153,23 @@ export default function ReviewPage() {
             return sum;
         };
 
-        total += calculateAncillaryTotal(ancillaryServices.onward);
-        total += calculateAncillaryTotal(ancillaryServices.return);
+        const ancillaryCost = calculateAncillaryTotal(ancillaryServices.onward) +
+            calculateAncillaryTotal(ancillaryServices.return);
 
-        return total;
+        // Taxes & Fees
+        const taxes = Math.round(baseFare * 0.05); // 5% Taxes
+        const surcharge = Math.round(baseFare * 0.01); // 1% Surcharge
+        const fees = Math.round(baseFare * 0.02); // 2% Convenience Fee
+
+        const grandTotal = baseFare + taxes + surcharge + fees + ancillaryCost;
+
+        return {
+            baseFare,
+            taxes: taxes + surcharge,
+            fees,
+            ancillary: ancillaryCost,
+            grandTotal
+        };
     };
 
     const handleConfirmBooking = () => {
@@ -193,7 +206,17 @@ export default function ReviewPage() {
             <Container maxWidth="lg">
                 <BookingSteps currentStep="review" />
 
-                <Grid container spacing={3} sx={{ mt: 2 }}>
+                <Box sx={{ mb: 3 }}>
+                    <Typography variant="h4" component="h1" gutterBottom fontWeight="bold">
+                        Review Your Booking
+                    </Typography>
+                    <Typography variant="body1" color="text.secondary">
+                        Please review your flight selection, passenger details, and additional services carefully.
+                        Once confirmed, your booking will be finalized and the payment processed.
+                    </Typography>
+                </Box>
+
+                <Grid container spacing={3} sx={{ mt: 1 }}>
                     <Grid size={{ xs: 12, md: 8 }}>
                         <Stack spacing={3}>
                             {/* Flights Summary */}
@@ -216,6 +239,7 @@ export default function ReviewPage() {
 
                                 {returnFlight && (
                                     <Box sx={{ mt: 2 }}>
+                                        <Divider sx={{ my: 2, borderStyle: 'dashed' }} />
                                         <Typography variant="subtitle1" fontWeight="bold">Return Journey</Typography>
                                         <Typography variant="body2">{returnFlight.airline} • {returnFlight.flightNumber}</Typography>
                                         <Typography variant="body1">
@@ -248,6 +272,72 @@ export default function ReviewPage() {
                                 </Grid>
                             </Paper>
 
+                            {/* Ancillary Services Summary */}
+                            <Paper sx={{ p: 3, borderRadius: 2 }}>
+                                <Typography variant="h6" gutterBottom display="flex" alignItems="center" gap={1}>
+                                    <LuggageIcon color="primary" /> Ancillary Services
+                                </Typography>
+                                <Divider sx={{ mb: 2 }} />
+
+                                {['onward', 'return'].map((journey) => {
+                                    if (journey === 'return' && !returnFlight) return null;
+                                    const services = ancillaryServices[journey as 'onward' | 'return'];
+
+                                    // Check if any services exist
+                                    const hasServices = services && Object.values(services).some((s: any) =>
+                                        s.meals || s.baggage || s.seats
+                                    );
+
+                                    return (
+                                        <Box key={journey} sx={{ mb: 3 }}>
+                                            <Typography variant="subtitle2" sx={{ mb: 1, textTransform: 'capitalize', color: 'primary.main' }}>
+                                                {journey} Journey
+                                            </Typography>
+
+                                            {!hasServices ? (
+                                                <Typography variant="body2" color="text.secondary" fontStyle="italic">
+                                                    No additional services selected.
+                                                </Typography>
+                                            ) : (
+                                                <Grid container spacing={2}>
+                                                    {Object.entries(services || {}).map(([travelerId, details]: [string, any]) => {
+                                                        const traveler = travellers.find((t, i) => i.toString() === travelerId);
+                                                        const name = traveler ? `${traveler.firstName}` : `Passenger ${parseInt(travelerId) + 1}`;
+
+                                                        return (
+                                                            <Grid size={{ xs: 12, sm: 6 }} key={travelerId}>
+                                                                <Box sx={{ p: 1.5, border: '1px solid #eee', borderRadius: 1 }}>
+                                                                    <Typography variant="body2" fontWeight="bold" gutterBottom>{name}</Typography>
+
+                                                                    {details.seats && (
+                                                                        <Box display="flex" alignItems="center" gap={1}>
+                                                                            <ChairIcon fontSize="small" color="action" />
+                                                                            <Typography variant="caption">Seat: {Object.values(details.seats).map((s: any) => s.number).join(', ')}</Typography>
+                                                                        </Box>
+                                                                    )}
+                                                                    {details.meals && (
+                                                                        <Box display="flex" alignItems="center" gap={1}>
+                                                                            <RestaurantIcon fontSize="small" color="action" />
+                                                                            <Typography variant="caption">Meals: {Object.values(details.meals).map((m: any) => m.name).join(', ')}</Typography>
+                                                                        </Box>
+                                                                    )}
+                                                                    {details.baggage && (
+                                                                        <Box display="flex" alignItems="center" gap={1}>
+                                                                            <LuggageIcon fontSize="small" color="action" />
+                                                                            <Typography variant="caption">Baggage: {Object.values(details.baggage).map((b: any) => `${b.weight}kg`).join(', ')}</Typography>
+                                                                        </Box>
+                                                                    )}
+                                                                </Box>
+                                                            </Grid>
+                                                        );
+                                                    })}
+                                                </Grid>
+                                            )}
+                                        </Box>
+                                    );
+                                })}
+                            </Paper>
+
                             {/* Payment Summary */}
                             <Paper sx={{ p: 3, borderRadius: 2 }}>
                                 <Typography variant="h6" gutterBottom display="flex" alignItems="center" gap={1}>
@@ -263,6 +353,9 @@ export default function ReviewPage() {
                                             {paymentDetails.vendor}
                                             {paymentDetails.cardNumber && ` •••• ${paymentDetails.cardNumber.slice(-4)}`}
                                         </Typography>
+                                        <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                                            Billed to: {paymentDetails.billingName}
+                                        </Typography>
                                     </Box>
                                 ) : (
                                     <Typography color="error">No payment details found</Typography>
@@ -277,12 +370,33 @@ export default function ReviewPage() {
                             <Typography variant="h6" gutterBottom>Fare Summary</Typography>
                             <Divider sx={{ mb: 2 }} />
 
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                                <Typography>Base Fare ({travellers.length} travellers)</Typography>
-                                <Typography variant="h6" color="primary">
-                                    {CURRENCY_CONFIG.formatPrice(calculateTotal())}
-                                </Typography>
-                            </Box>
+                            <Stack spacing={1.5}>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    <Typography variant="body2">Base Fare</Typography>
+                                    <Typography variant="body2">{CURRENCY_CONFIG.formatPrice(calculateTotal().baseFare)}</Typography>
+                                </Box>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    <Typography variant="body2">Taxes & Surcharges (6%)</Typography>
+                                    <Typography variant="body2">{CURRENCY_CONFIG.formatPrice(calculateTotal().taxes)}</Typography>
+                                </Box>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    <Typography variant="body2">Convenience Fee (2%)</Typography>
+                                    <Typography variant="body2">{CURRENCY_CONFIG.formatPrice(calculateTotal().fees)}</Typography>
+                                </Box>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    <Typography variant="body2">Ancillaries</Typography>
+                                    <Typography variant="body2">{CURRENCY_CONFIG.formatPrice(calculateTotal().ancillary)}</Typography>
+                                </Box>
+
+                                <Divider sx={{ my: 1 }} />
+
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <Typography variant="h6">Total Amount</Typography>
+                                    <Typography variant="h6" color="primary">
+                                        {CURRENCY_CONFIG.formatPrice(calculateTotal().grandTotal)}
+                                    </Typography>
+                                </Box>
+                            </Stack>
 
                             <Box sx={{ mt: 4, display: 'flex', flexDirection: 'column', gap: 2 }}>
                                 <Button
