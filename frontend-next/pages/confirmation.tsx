@@ -34,6 +34,7 @@ export default function ConfirmationPage() {
     const { trackPurchase, trackPageView } = useAnalytics();
     const pageViewTracked = useRef(false); // Prevent duplicate page views
     const hasSentEmail = useRef(false); // Prevent duplicate emails
+    const hasPushedPurchase = useRef(false); // Prevent duplicate purchase events
     const [bookingData, setBookingData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [emailSending, setEmailSending] = useState(false);
@@ -323,8 +324,9 @@ export default function ConfirmationPage() {
                 timestamp: new Date().toISOString()
             };
 
-            // Push purchase event to data layer
-            if (typeof window !== 'undefined' && (window as any).adobeDataLayer) {
+            // 2. Then, push the purchase event directly to data layer (only once)
+            if (typeof window !== 'undefined' && (window as any).adobeDataLayer && !hasPushedPurchase.current) {
+                hasPushedPurchase.current = true;
                 (window as any).adobeDataLayer.push(purchaseEvent);
                 console.log('✅ Purchase event tracked:', purchaseEvent);
             }
