@@ -138,6 +138,16 @@ export default function ResultsPage() {
             const childCount = parseInt(children as string) || 0;
             const infantCount = parseInt(infants as string) || 0;
 
+            // Calculate numberOfDays (days between booking date and travel date)
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Reset time to midnight for accurate day calculation
+            const travelDate = new Date(date as string);
+            travelDate.setHours(0, 0, 0, 0);
+            const numberOfDays = Math.ceil((travelDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+            // Get travelDay (day of week for departure date)
+            const travelDay = travelDate.toLocaleDateString('en-US', { weekday: 'long' });
+
             const context = {
                 searchId: `search_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`,
                 origin: originCode as string,
@@ -145,6 +155,8 @@ export default function ResultsPage() {
                 originDestination: `${originCode}-${destinationCode}`,
                 departureDate: formatDate(date as string),
                 returnDate: returnDate ? formatDate(returnDate as string) : undefined,
+                numberOfDays, // Days between booking and travel
+                travelDay, // Day of week for travel date
                 passengers: {
                     total: adultCount + childCount + infantCount,
                     breakdown: {
