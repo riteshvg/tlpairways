@@ -29,6 +29,8 @@ import LuggageIcon from '@mui/icons-material/Luggage';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import ChairIcon from '@mui/icons-material/EventSeat';
 import PaymentIcon from '@mui/icons-material/Payment';
+import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
+import AirlineSeatReclineNormalIcon from '@mui/icons-material/AirlineSeatReclineNormal';
 
 const CURRENCY_CONFIG = {
     formatPrice: (amount: number, currency = 'INR') => {
@@ -126,6 +128,65 @@ export default function ReviewPage() {
         });
     }, [onwardFlight, trackPageView, user]);
 
+    // Helper to get ancillaries for a specific passenger (Replicated from Confirmation Page)
+    const getAncillariesForPassenger = (idx: number) => {
+        const services: any[] = [];
+        const anc = ancillaryServices || {};
+
+        ['onward', 'return'].forEach(type => {
+            if (!anc[type]) return;
+
+            // In review page, the structure from URL params might be slightly different than final bookingData
+            // The previous logic assumed anc[type] is an object where keys are passenger indices.
+            // Let's ensure we access it correctly. 
+            // ancillaryServices state in review.tsx is { onward: { '0': {...} }, return: { '0': {...} } }
+
+            const paxSelection = anc[type][idx.toString()];
+            if (!paxSelection) return;
+
+            const prefix = type === 'onward' ? 'Onward' : 'Return';
+
+            // Meals (can be array or single object depending on selection flow)
+            if (paxSelection.meals && Object.keys(paxSelection.meals).length > 0) {
+                Object.values(paxSelection.meals).forEach((m: any) => {
+                    services.push({
+                        type: 'meal',
+                        icon: RestaurantIcon,
+                        label: m.name,
+                        direction: prefix,
+                        color: 'primary'
+                    });
+                });
+            }
+
+            // Baggage
+            if (paxSelection.baggage && Object.keys(paxSelection.baggage).length > 0) {
+                Object.values(paxSelection.baggage).forEach((b: any) => {
+                    services.push({
+                        type: 'baggage',
+                        icon: LuggageIcon,
+                        label: `+ ${b.weight} kg`,
+                        direction: prefix,
+                        color: 'secondary'
+                    });
+                });
+            }
+
+            // Seats
+            if (paxSelection.seats && Object.keys(paxSelection.seats).length > 0) {
+                Object.values(paxSelection.seats).forEach((s: any) => {
+                    services.push({
+                        type: 'seat',
+                        icon: AirlineSeatReclineNormalIcon,
+                        label: `Seat ${s.number}`,
+                        direction: prefix,
+                        color: 'info'
+                    });
+                });
+            }
+        });
+        return services;
+    };
 
     const calculateTotal = () => {
         const numPassengers = travellers.length;
@@ -252,91 +313,85 @@ export default function ReviewPage() {
                                 )}
                             </Paper>
 
-                            {/* Travellers Summary */}
-                            <Paper sx={{ p: 3, borderRadius: 2 }}>
+                            {/* Consolidated Traveller & Services Tickets */}
+                            <Box>
                                 <Typography variant="h6" gutterBottom display="flex" alignItems="center" gap={1}>
-                                    <PersonIcon color="primary" /> Travellers ({travellers.length})
-                                </Typography>
-                                <Divider sx={{ mb: 2 }} />
-                                <Grid container spacing={2}>
-                                    {travellers.map((t, idx) => (
-                                        <Grid size={{ xs: 12, sm: 6 }} key={idx}>
-                                            <Card variant="outlined">
-                                                <CardContent>
-                                                    <Typography variant="subtitle2">{t.title} {t.firstName} {t.lastName}</Typography>
-                                                    <Typography variant="caption" color="text.secondary">Type: {t.type}</Typography>
-                                                </CardContent>
-                                            </Card>
-                                        </Grid>
-                                    ))}
-                                </Grid>
-                            </Paper>
-
-                            {/* Ancillary Services Summary */}
-                            <Paper sx={{ p: 3, borderRadius: 2 }}>
-                                <Typography variant="h6" gutterBottom display="flex" alignItems="center" gap={1}>
-                                    <LuggageIcon color="primary" /> Ancillary Services
+                                    <PersonIcon color="primary" /> Travellers & Services
                                 </Typography>
                                 <Divider sx={{ mb: 2 }} />
 
-                                {['onward', 'return'].map((journey) => {
-                                    if (journey === 'return' && !returnFlight) return null;
-                                    const services = ancillaryServices[journey as 'onward' | 'return'];
+                                <Stack spacing={2}>
+                                    {travellers.map((t, idx) => {
+                                        const ancillaries = getAncillariesForPassenger(idx);
 
-                                    // Check if any services exist
-                                    const hasServices = services && Object.values(services).some((s: any) =>
-                                        s.meals || s.baggage || s.seats
-                                    );
+                                        return (
+                                            <Paper
+                                                key={idx}
+                                                elevation={0}
+                                                variant="outlined"
+                                                sx={{
+                                                    p: 0,
+                                                    borderRadius: 2,
+                                                    overflow: 'hidden',
+                                                    borderLeft: '4px solid',
+                                                    borderColor: 'primary.main',
+                                                    bgcolor: 'background.paper'
+                                                }}
+                                            >
+                                                <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', bgcolor: 'rgba(0, 0, 0, 0.02)' }}>
+                                                    <Box>
+                                                        <Typography variant="subtitle1" fontWeight="bold">
+                                                            {t.title} {t.firstName} {t.lastName}
+                                                        </Typography>
+                                                        <Typography variant="caption" color="text.secondary" sx={{ textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                                                            {t.type}
+                                                        </Typography>
+                                                    </Box>
+                                                </Box>
 
-                                    return (
-                                        <Box key={journey} sx={{ mb: 3 }}>
-                                            <Typography variant="subtitle2" sx={{ mb: 1, textTransform: 'capitalize', color: 'primary.main' }}>
-                                                {journey} Journey
-                                            </Typography>
+                                                <Divider />
 
-                                            {!hasServices ? (
-                                                <Typography variant="body2" color="text.secondary" fontStyle="italic">
-                                                    No additional services selected.
-                                                </Typography>
-                                            ) : (
-                                                <Grid container spacing={2}>
-                                                    {Object.entries(services || {}).map(([travelerId, details]: [string, any]) => {
-                                                        const traveler = travellers.find((t, i) => i.toString() === travelerId);
-                                                        const name = traveler ? `${traveler.firstName}` : `Passenger ${parseInt(travelerId) + 1}`;
-
-                                                        return (
-                                                            <Grid size={{ xs: 12, sm: 6 }} key={travelerId}>
-                                                                <Box sx={{ p: 1.5, border: '1px solid #eee', borderRadius: 1 }}>
-                                                                    <Typography variant="body2" fontWeight="bold" gutterBottom>{name}</Typography>
-
-                                                                    {details.seats && (
-                                                                        <Box display="flex" alignItems="center" gap={1}>
-                                                                            <ChairIcon fontSize="small" color="action" />
-                                                                            <Typography variant="caption">Seat: {Object.values(details.seats).map((s: any) => s.number).join(', ')}</Typography>
+                                                <Box sx={{ p: 2 }}>
+                                                    {ancillaries.length > 0 ? (
+                                                        <Grid container spacing={1}>
+                                                            {ancillaries.map((service, sIdx) => {
+                                                                const IconComponent = service.icon;
+                                                                return (
+                                                                    <Grid size={{ xs: 12, sm: 6, md: 4 }} key={sIdx}>
+                                                                        <Box sx={{
+                                                                            display: 'flex',
+                                                                            alignItems: 'center',
+                                                                            gap: 1.5,
+                                                                            p: 1,
+                                                                            borderRadius: 1,
+                                                                            border: '1px dashed #e0e0e0',
+                                                                            height: '100%'
+                                                                        }}>
+                                                                            <IconComponent color={service.color} fontSize="small" />
+                                                                            <Box>
+                                                                                <Typography variant="caption" display="block" color="text.secondary" lineHeight={1}>
+                                                                                    {service.direction}
+                                                                                </Typography>
+                                                                                <Typography variant="body2" fontWeight="medium">
+                                                                                    {service.label}
+                                                                                </Typography>
+                                                                            </Box>
                                                                         </Box>
-                                                                    )}
-                                                                    {details.meals && (
-                                                                        <Box display="flex" alignItems="center" gap={1}>
-                                                                            <RestaurantIcon fontSize="small" color="action" />
-                                                                            <Typography variant="caption">Meals: {Object.values(details.meals).map((m: any) => m.name).join(', ')}</Typography>
-                                                                        </Box>
-                                                                    )}
-                                                                    {details.baggage && (
-                                                                        <Box display="flex" alignItems="center" gap={1}>
-                                                                            <LuggageIcon fontSize="small" color="action" />
-                                                                            <Typography variant="caption">Baggage: {Object.values(details.baggage).map((b: any) => `${b.weight}kg`).join(', ')}</Typography>
-                                                                        </Box>
-                                                                    )}
-                                                                </Box>
-                                                            </Grid>
-                                                        );
-                                                    })}
-                                                </Grid>
-                                            )}
-                                        </Box>
-                                    );
-                                })}
-                            </Paper>
+                                                                    </Grid>
+                                                                );
+                                                            })}
+                                                        </Grid>
+                                                    ) : (
+                                                        <Typography variant="body2" color="text.secondary" fontStyle="italic">
+                                                            No additional services selected.
+                                                        </Typography>
+                                                    )}
+                                                </Box>
+                                            </Paper>
+                                        );
+                                    })}
+                                </Stack>
+                            </Box>
 
                             {/* Payment Summary */}
                             <Paper sx={{ p: 3, borderRadius: 2 }}>
