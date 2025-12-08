@@ -55,10 +55,8 @@ function syncWindowState(state: ConsentState, isInitialLoad: boolean = false): v
         categories: state.preferences
     };
 
-    // Only push consent events on homepage
-    const isHomepage = typeof window !== 'undefined' && (window.location.pathname === '/' || window.location.pathname === '/index');
-
-    if ((window as any).adobeDataLayer && isHomepage) {
+    // Push consent events to Adobe Data Layer on all pages
+    if ((window as any).adobeDataLayer) {
         // Push initial userConsent object on first load (even if pending)
         if (isInitialLoad && !initialConsentPushed) {
             (window as any).adobeDataLayer.push({
