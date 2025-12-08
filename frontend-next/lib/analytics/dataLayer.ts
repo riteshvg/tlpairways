@@ -138,9 +138,9 @@ export function pushPageView(
             ...(pageData.totalBookingSteps && { totalBookingSteps: pageData.totalBookingSteps }),
             ...(pageData.sections && { sections: pageData.sections }),
             ...(pageData.searchType && { searchType: pageData.searchType }),
-            userData: userData,
             ...additionalData // This spreads bookingContext, searchContext, etc. into pageData
         },
+        userData: userData, // Moved to root level
         viewData: {
             landingPage: previousPage === 'direct',
             userAuthenticated: isAuthenticated,
