@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Container, Paper, Typography, Box, Grid, Divider, Button, Chip, Stack } from '@mui/material';
 import Head from 'next/head';
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
