@@ -156,76 +156,82 @@ export default function AboutPage() {
                                 {/* Removed contact section from here - moved to right side */}
                             </Grid>
 
-                            {/* Right Side - Contact Information */}
+                            {/* Right Side - Contact Information & Booking Ref */}
                             <Grid item xs={12} md={4}>
                                 <Box sx={{
                                     borderLeft: { md: '2px dashed #ddd' },
                                     borderTop: { xs: '2px dashed #ddd', md: 'none' },
                                     pl: { md: 4 },
-                                    pt: { xs: 3, md: 0 },
-                                    textAlign: 'center'
+                                    pt: { xs: 3, md: 0 }
                                 }}>
-                                    <Typography variant="overline" color="text.secondary" fontWeight="bold">
-                                        CONTACT FOR COLLABORATION
-                                    </Typography>
-
-                                    <Box sx={{ mt: 3, mb: 3 }}>
-                                        <EmailIcon color="primary" sx={{ fontSize: 48, mb: 2 }} />
-                                        <Typography variant="h6" fontWeight="bold" color="primary" gutterBottom>
-                                            ritesh@thelearningproject.in
-                                        </Typography>
-                                        <Typography variant="caption" color="text.secondary" display="block" sx={{ mb: 3 }}>
-                                            Available for analytics discussions
+                                    {/* Contact Section */}
+                                    <Box sx={{ mb: 3 }}>
+                                        <Typography variant="overline" color="text.secondary" fontWeight="bold" display="block" textAlign="center">
+                                            CONTACT FOR COLLABORATION
                                         </Typography>
 
-                                        <Button
-                                            variant="contained"
-                                            size="medium"
-                                            href="mailto:ritesh@thelearningproject.in"
-                                            fullWidth
-                                            sx={{
-                                                bgcolor: '#667eea',
-                                                fontWeight: 'bold',
-                                                '&:hover': {
-                                                    bgcolor: '#764ba2'
-                                                }
-                                            }}
-                                            startIcon={<EmailIcon />}
-                                        >
-                                            Send Email
-                                        </Button>
+                                        <Box sx={{ textAlign: 'center', mt: 2 }}>
+                                            <EmailIcon color="primary" sx={{ fontSize: 40, mb: 1 }} />
+                                            <Typography variant="body1" fontWeight="bold" color="primary" gutterBottom>
+                                                ritesh@thelearningproject.in
+                                            </Typography>
+                                            <Typography variant="caption" color="text.secondary" display="block" sx={{ mb: 2 }}>
+                                                Available for analytics discussions
+                                            </Typography>
+
+                                            <Button
+                                                variant="contained"
+                                                size="small"
+                                                href="mailto:ritesh@thelearningproject.in"
+                                                fullWidth
+                                                sx={{
+                                                    bgcolor: '#667eea',
+                                                    fontWeight: 'bold',
+                                                    '&:hover': {
+                                                        bgcolor: '#764ba2'
+                                                    }
+                                                }}
+                                                startIcon={<EmailIcon />}
+                                            >
+                                                Send Email
+                                            </Button>
+                                        </Box>
                                     </Box>
 
                                     <Divider sx={{ my: 2 }} />
 
-                                    {/* Barcode Simulation */}
-                                    <Typography variant="overline" color="text.secondary" fontWeight="bold" fontSize="0.65rem">
-                                        BOOKING REF
-                                    </Typography>
-                                    <Typography variant="body1" fontWeight="bold" color="primary" sx={{ mb: 1 }}>
-                                        DEMO2024
-                                    </Typography>
-                                    <Box sx={{
-                                        display: 'flex',
-                                        gap: '2px',
-                                        justifyContent: 'center',
-                                        mb: 1,
-                                        height: 40
-                                    }}>
-                                        {[3, 1, 2, 1, 3, 2, 1, 3, 1, 2, 3, 1, 2, 1, 3].map((height, i) => (
-                                            <Box
-                                                key={i}
-                                                sx={{
-                                                    width: 3,
-                                                    height: `${height * 13}px`,
-                                                    bgcolor: 'black'
-                                                }}
-                                            />
-                                        ))}
+                                    {/* Booking Reference & Barcode */}
+                                    <Box sx={{ textAlign: 'center' }}>
+                                        <Typography variant="overline" color="text.secondary" fontWeight="bold" fontSize="0.65rem">
+                                            BOOKING REF
+                                        </Typography>
+                                        <Typography variant="h6" fontWeight="bold" color="primary" sx={{ mb: 1 }}>
+                                            DEMO2024
+                                        </Typography>
+
+                                        {/* Barcode Simulation */}
+                                        <Box sx={{
+                                            display: 'flex',
+                                            gap: '2px',
+                                            justifyContent: 'center',
+                                            mb: 1,
+                                            height: 40
+                                        }}>
+                                            {[3, 1, 2, 1, 3, 2, 1, 3, 1, 2, 3, 1, 2, 1, 3].map((height, i) => (
+                                                <Box
+                                                    key={i}
+                                                    sx={{
+                                                        width: 3,
+                                                        height: `${height * 13}px`,
+                                                        bgcolor: 'black'
+                                                    }}
+                                                />
+                                            ))}
+                                        </Box>
+                                        <Typography variant="caption" color="text.secondary">
+                                            *DEMO TICKET*
+                                        </Typography>
                                     </Box>
-                                    <Typography variant="caption" color="text.secondary">
-                                        *DEMO TICKET*
-                                    </Typography>
                                 </Box>
                             </Grid>
                         </Grid>
