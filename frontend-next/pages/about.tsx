@@ -70,7 +70,7 @@ export default function AboutPage() {
 
                     {/* Main Ticket Body */}
                     <Box sx={{ p: 4 }}>
-                        <Grid container spacing={4}>
+                        <Grid container spacing={4} alignItems="flex-start">
                             {/* Left Side - Flight Route */}
                             <Grid item xs={12} md={8}>
                                 <Box sx={{ mb: 3 }}>
@@ -162,10 +162,13 @@ export default function AboutPage() {
                                     borderLeft: { md: '2px dashed #ddd' },
                                     borderTop: { xs: '2px dashed #ddd', md: 'none' },
                                     pl: { md: 4 },
-                                    pt: { xs: 3, md: 0 }
+                                    pt: { xs: 3, md: 0 },
+                                    height: '100%',
+                                    display: 'flex',
+                                    flexDirection: 'column'
                                 }}>
                                     {/* Contact Section */}
-                                    <Box sx={{ mb: 3 }}>
+                                    <Box>
                                         <Typography variant="overline" color="text.secondary" fontWeight="bold" display="block" textAlign="center">
                                             CONTACT FOR COLLABORATION
                                         </Typography>
@@ -198,10 +201,10 @@ export default function AboutPage() {
                                         </Box>
                                     </Box>
 
-                                    <Divider sx={{ my: 2 }} />
+                                    <Divider sx={{ my: 3 }} />
 
                                     {/* Booking Reference & Barcode */}
-                                    <Box sx={{ textAlign: 'center' }}>
+                                    <Box sx={{ textAlign: 'center', mt: 'auto' }}>
                                         <Typography variant="overline" color="text.secondary" fontWeight="bold" fontSize="0.65rem">
                                             BOOKING REF
                                         </Typography>
