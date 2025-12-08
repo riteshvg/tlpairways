@@ -189,6 +189,22 @@ export function pushLogoutEvent(userId: string) {
 
 
 /**
+ * Sanitize userId to 8 alphanumeric characters
+ * Removes "auth0|" prefix and takes first 8 characters
+ */
+function sanitizeUserId(userId: string | null): string | null {
+    if (!userId) return null;
+
+    // Remove "auth0|" or similar prefixes
+    const cleaned = userId.replace(/^[a-z0-9]+\|/i, '');
+
+    // Take first 8 alphanumeric characters
+    const alphanumeric = cleaned.replace(/[^a-zA-Z0-9]/g, '');
+
+    return alphanumeric.substring(0, 8) || null;
+}
+
+/**
  * Push user context updated event
  */
 export function pushUserContext(userData: {
@@ -202,7 +218,7 @@ export function pushUserContext(userData: {
         event: 'userContextUpdated',
         userData: {
             isAuthenticated: userData.isAuthenticated,
-            userId: userData.userId,
+            userId: sanitizeUserId(userData.userId),
             hashedUserId: userData.hashedUserId || null,
             userSegment: userData.userSegment || (userData.isAuthenticated ? 'registered' : 'anonymous'),
         }
