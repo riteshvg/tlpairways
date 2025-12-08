@@ -201,21 +201,6 @@ export default function AboutPage() {
                                             </Button>
                                         </Box>
                                     </Box>
-
-                                    <Divider sx={{ my: 3 }} />
-
-                                    {/* Booking Reference */}
-                                    <Box sx={{ textAlign: 'center', mt: 'auto' }}>
-                                        <Typography variant="overline" color="text.secondary" fontWeight="bold" fontSize="0.65rem">
-                                            BOOKING REF
-                                        </Typography>
-                                        <Typography variant="h5" fontWeight="bold" color="primary" sx={{ my: 2 }}>
-                                            DEMO2024
-                                        </Typography>
-                                        <Typography variant="caption" color="text.secondary">
-                                            *DEMO TICKET*
-                                        </Typography>
-                                    </Box>
                                 </Box>
                             </Grid>
                         </Grid>
