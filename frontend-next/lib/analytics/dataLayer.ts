@@ -215,14 +215,22 @@ export function pushUserContext(userData: {
     userSegment?: string;
     [key: string]: any;
 }): void {
+    const sanitizedUserData = {
+        isAuthenticated: userData.isAuthenticated,
+        userId: sanitizeUserId(userData.userId),
+        hashedUserId: userData.hashedUserId || null,
+        userSegment: userData.userSegment || (userData.isAuthenticated ? 'registered' : 'anonymous'),
+    };
+
+    // First, update the computed state (so getState().userData works)
+    pushToDataLayer({
+        userData: sanitizedUserData
+    });
+
+    // Then, push the event
     pushToDataLayer({
         event: 'userContextUpdated',
-        userData: {
-            isAuthenticated: userData.isAuthenticated,
-            userId: sanitizeUserId(userData.userId),
-            hashedUserId: userData.hashedUserId || null,
-            userSegment: userData.userSegment || (userData.isAuthenticated ? 'registered' : 'anonymous'),
-        }
+        userData: sanitizedUserData
     });
 }
 
@@ -247,7 +255,7 @@ export function pushSearchContext(searchData: {
             searchId: searchData.searchId,
             origin: searchData.origin,
             destination: searchData.destination,
-            originDestination: `${searchData.origin}-${searchData.destination}`,
+            originDestination: `${searchData.origin}-${searchData.destination} `,
             departureDate: searchData.departureDate,
             returnDate: searchData.returnDate,
             passengers: searchData.passengers,
