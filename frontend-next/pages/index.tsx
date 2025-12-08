@@ -17,7 +17,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import PersonIcon from '@mui/icons-material/Person';
 import { usePageView } from '../lib/analytics/useAnalytics';
 import { useEffect } from 'react';
-import { pushUserContext } from '../lib/analytics/dataLayer';
+import { pushUserContext, pushPageView } from '../lib/analytics/dataLayer';
 
 /**
  * Homepage - MPA Version
@@ -32,16 +32,20 @@ import { pushUserContext } from '../lib/analytics/dataLayer';
 export default function Home() {
     const { user, isLoading } = useUser();
 
-    // Track page view with enhanced data
-    usePageView({
-        pageType: 'home',
-        pageName: 'Homepage',
-        pageTitle: 'TLAirways - Book Flights Across India',
-        pageDescription: 'Book affordable flights across India with TLAirways',
-        pageCategory: 'landing',
-        sections: ['hero', 'destinations', 'features', 'cta'],
-        user: user
-    });
+    // Track page view with enhanced data - wait for auth to load
+    useEffect(() => {
+        if (!isLoading) {
+            pushPageView({
+                pageType: 'home',
+                pageName: 'Homepage',
+                pageTitle: 'TLAirways - Book Flights Across India',
+                pageDescription: 'Book affordable flights across India with TLAirways',
+                pageCategory: 'landing',
+                sections: ['hero', 'destinations', 'features', 'cta'],
+                user: user
+            });
+        }
+    }, [user, isLoading]);
 
     // Track user context when user state changes
     useEffect(() => {
