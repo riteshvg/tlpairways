@@ -201,25 +201,20 @@ export default function AboutPage() {
                                             </Button>
                                         </Box>
                                     </Box>
+
+                                    <Divider sx={{ my: 2 }} />
+                                    <Divider sx={{ my: 0.5 }} />
+                                    <Divider sx={{ my: 2 }} />
+
+                                    {/* Welcome Message */}
+                                    <Box sx={{ textAlign: 'center' }}>
+                                        <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+                                            Demo app showcasing e-commerce flow with Adobe Analytics data layer
+                                        </Typography>
+                                    </Box>
                                 </Box>
                             </Grid>
                         </Grid>
-
-                        {/* Description */}
-                        <Box sx={{
-                            mt: 4,
-                            p: 3,
-                            bgcolor: '#f8f9fa',
-                            borderRadius: 2,
-                            borderLeft: '4px solid #667eea'
-                        }}>
-                            <Typography variant="body1" color="text.secondary">
-                                <strong>Welcome aboard!</strong> This is a demonstration flight booking application
-                                built to showcase a complete e-commerce booking flow with comprehensive
-                                Adobe Analytics data layer implementation. Fasten your seatbelt as we take you
-                                through a journey of modern web development and analytics excellence.
-                            </Typography>
-                        </Box>
                     </Box>
 
                     {/* Perforated Edge Effect */}
