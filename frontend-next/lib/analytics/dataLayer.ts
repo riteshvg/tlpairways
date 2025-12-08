@@ -190,18 +190,19 @@ export function pushLogoutEvent(userId: string) {
 
 /**
  * Sanitize userId to 8 alphanumeric characters
- * Removes "auth0|" prefix and takes first 8 characters
+ * Removes provider prefix (e.g., "auth0|", "google-oauth2|") and takes first 8 chars from the hash
  */
 function sanitizeUserId(userId: string | null): string | null {
     if (!userId) return null;
 
-    // Remove "auth0|" or similar prefixes
-    const cleaned = userId.replace(/^[a-z0-9]+\|/i, '');
+    // Split by pipe and take the part after it (the actual user hash)
+    const parts = userId.split('|');
+    const hash = parts.length > 1 ? parts[1] : userId;
 
-    // Take first 8 alphanumeric characters
-    const alphanumeric = cleaned.replace(/[^a-zA-Z0-9]/g, '');
+    // Take first 8 alphanumeric characters from the hash
+    const alphanumeric = hash.replace(/[^a-zA-Z0-9]/g, '');
 
-    return alphanumeric.substring(0, 8) || null;
+    return alphanumeric.substring(0, 8).toUpperCase() || null;
 }
 
 /**
