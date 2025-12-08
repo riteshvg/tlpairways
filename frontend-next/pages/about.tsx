@@ -203,34 +203,14 @@ export default function AboutPage() {
 
                                     <Divider sx={{ my: 3 }} />
 
-                                    {/* Booking Reference & Barcode */}
+                                    {/* Booking Reference */}
                                     <Box sx={{ textAlign: 'center', mt: 'auto' }}>
                                         <Typography variant="overline" color="text.secondary" fontWeight="bold" fontSize="0.65rem">
                                             BOOKING REF
                                         </Typography>
-                                        <Typography variant="h6" fontWeight="bold" color="primary" sx={{ mb: 1 }}>
+                                        <Typography variant="h5" fontWeight="bold" color="primary" sx={{ my: 2 }}>
                                             DEMO2024
                                         </Typography>
-
-                                        {/* Barcode Simulation */}
-                                        <Box sx={{
-                                            display: 'flex',
-                                            gap: '2px',
-                                            justifyContent: 'center',
-                                            mb: 1,
-                                            height: 40
-                                        }}>
-                                            {[3, 1, 2, 1, 3, 2, 1, 3, 1, 2, 3, 1, 2, 1, 3].map((height, i) => (
-                                                <Box
-                                                    key={i}
-                                                    sx={{
-                                                        width: 3,
-                                                        height: `${height * 13}px`,
-                                                        bgcolor: 'black'
-                                                    }}
-                                                />
-                                            ))}
-                                        </Box>
                                         <Typography variant="caption" color="text.secondary">
                                             *DEMO TICKET*
                                         </Typography>
