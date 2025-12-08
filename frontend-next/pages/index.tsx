@@ -48,11 +48,15 @@ export default function Home() {
     }, [user, isLoading]);
 
     // Track user context when user state changes
+    // This fires when:
+    // - User logs in (user becomes truthy)
+    // - User logs out (user becomes null)
+    // - Cookies are deleted (user becomes null)
     useEffect(() => {
         if (!isLoading) {
             pushUserContext({
                 isAuthenticated: !!user,
-                userId: user?.sub || null,
+                userId: user?.sub || null,  // null when logged out or cookies deleted
                 userSegment: user ? 'registered' : 'anonymous'
             });
         }
