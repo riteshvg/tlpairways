@@ -32,6 +32,7 @@ import {
     setCurrentPageAsPrevious,
     getUserAgentDetails
 } from '../lib/analytics/dataLayer';
+import { sendBookingConfirmationEmail } from '../lib/services/emailService';
 
 export default function ConfirmationPage() {
     const router = useRouter();
