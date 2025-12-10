@@ -15,10 +15,10 @@ import Head from 'next/head';
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
 import SearchIcon from '@mui/icons-material/Search';
 import PersonIcon from '@mui/icons-material/Person';
-import { usePageView } from '../lib/analytics/useAnalytics';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { pushUserContext, pushPageView } from '../lib/analytics/dataLayer';
+import { useConsent } from '../lib/consent/ConsentContext';
 
 /**
  * Homepage - MPA Version
@@ -33,10 +33,15 @@ import { pushUserContext, pushPageView } from '../lib/analytics/dataLayer';
 export default function Home() {
     const { user, isLoading } = useUser();
     const router = useRouter();
+    const { isBannerVisible } = useConsent();
 
     // Marketing Simulator Interception
+    // Only redirect AFTER consent banner is dismissed to ensure consent appears on index page
     useEffect(() => {
         if (!router.isReady) return;
+
+        // Don't redirect if consent banner is still visible - let user handle consent first
+        if (isBannerVisible) return;
 
         // Check if we have the simulator cookie
         const hasMarketingCookie = document.cookie.split(';').some((item) => item.trim().startsWith('marketing_simulator_done='));
@@ -49,7 +54,7 @@ export default function Home() {
         if (!hasMarketingCookie && !hasUtmParams) {
             router.push('/marketing-simulator');
         }
-    }, [router.isReady, router.query]);
+    }, [router.isReady, router.query, isBannerVisible]);
 
     // Track page view with enhanced data - wait for auth to load
     useEffect(() => {
