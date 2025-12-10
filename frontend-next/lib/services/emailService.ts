@@ -10,8 +10,8 @@ const API_BASE_URL = (() => {
         return process.env.NEXT_PUBLIC_API_URL;
     }
 
-    // Development fallback
-    return 'http://localhost:3001/api';
+    // Development fallback - backend runs on port 5000
+    return 'http://localhost:5000/api';
 })();
 
 export interface BookingEmailData {
