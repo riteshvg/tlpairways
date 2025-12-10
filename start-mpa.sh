@@ -29,7 +29,8 @@ trap cleanup SIGINT SIGTERM
 # ============================================
 # START BACKEND SERVER
 # ============================================
-echo -e "${CYAN}📡 Starting Backend Server (Port 5000)...${NC}"
+echo -e "${CYAN}📡 Starting Backend Server (Port 5001)...${NC}"
+echo -e "${CYAN}   Note: Port 5000 is blocked by macOS Control Center${NC}"
 
 cd backend || { echo -e "${RED}Error: backend directory not found!${NC}"; exit 1; }
 
@@ -40,7 +41,7 @@ if [ ! -d "node_modules" ]; then
 fi
 
 # Start backend in background
-PORT=5000 npm run dev > ../backend.log 2>&1 &
+PORT=5001 npm run dev > ../backend.log 2>&1 &
 BACKEND_PID=$!
 
 cd ..
@@ -77,8 +78,8 @@ echo -e "${GREEN}---------------------------------------------------${NC}"
 echo -e "${GREEN}🌐 Servers Starting...${NC}"
 echo -e "${GREEN}---------------------------------------------------${NC}"
 echo -e "  Frontend (Next.js): ${YELLOW}http://localhost:3000${NC}"
-echo -e "  Backend API:        ${YELLOW}http://localhost:5000/api${NC}"
-echo -e "  Backend Health:     ${YELLOW}http://localhost:5000/api/health${NC}"
+echo -e "  Backend API:        ${YELLOW}http://localhost:5001/api${NC}"
+echo -e "  Backend Health:     ${YELLOW}http://localhost:5001/api/health${NC}"
 echo -e "${GREEN}---------------------------------------------------${NC}"
 echo -e "${YELLOW}Press Ctrl+C to stop both servers${NC}"
 echo ""
