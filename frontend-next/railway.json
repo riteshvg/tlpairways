@@ -5,7 +5,7 @@
         "buildCommand": "cd ../backend && npm install --legacy-peer-deps && cd ../frontend-next && npm install --legacy-peer-deps && npm run build"
     },
     "deploy": {
-        "startCommand": "cd ../backend && PORT=5001 node src/index.js & sleep 2 && cd ../frontend-next && npm run start",
+        "startCommand": "bash start-railway.sh",
         "restartPolicyType": "ON_FAILURE",
         "restartPolicyMaxRetries": 10,
         "healthcheckPath": "/api/health"
