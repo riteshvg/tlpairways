@@ -16,6 +16,7 @@ import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
 import SearchIcon from '@mui/icons-material/Search';
 import PersonIcon from '@mui/icons-material/Person';
 import { usePageView } from '../lib/analytics/useAnalytics';
+import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { pushUserContext, pushPageView } from '../lib/analytics/dataLayer';
 
@@ -31,6 +32,24 @@ import { pushUserContext, pushPageView } from '../lib/analytics/dataLayer';
  */
 export default function Home() {
     const { user, isLoading } = useUser();
+    const router = useRouter();
+
+    // Marketing Simulator Interception
+    useEffect(() => {
+        if (!router.isReady) return;
+
+        // Check if we have the simulator cookie
+        const hasMarketingCookie = document.cookie.split(';').some((item) => item.trim().startsWith('marketing_simulator_done='));
+
+        // Check if we definitely have UTM params (meaning we just came from simulator or real campaign)
+        // We check for any param starting with utm_
+        const hasUtmParams = Object.keys(router.query).some(key => key.startsWith('utm_'));
+
+        // If no cookie preference set AND we aren't currently landing with new params -> Intercept
+        if (!hasMarketingCookie && !hasUtmParams) {
+            router.push('/marketing-simulator');
+        }
+    }, [router.isReady, router.query]);
 
     // Track page view with enhanced data - wait for auth to load
     useEffect(() => {
