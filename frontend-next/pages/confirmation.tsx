@@ -56,13 +56,13 @@ export default function ConfirmationPage() {
 
                 // Generate PNR if not exists (Persistent for this session)
                 if (!parsedData.pnr) {
-                    parsedData.pnr = `TL${Math.floor(Math.random() * 900000 + 100000).toString().toUpperCase()} `;
+                    parsedData.pnr = `TL${Math.floor(Math.random() * 900000 + 100000).toString().toUpperCase()}`;
 
                     // Generate Ticket Numbers for each traveller
                     if (parsedData.travellers) {
                         parsedData.travellers = parsedData.travellers.map((t: any) => ({
                             ...t,
-                            ticketNumber: t.ticketNumber || `176${Math.floor(Math.random() * 9000000000 + 1000000000)} `
+                            ticketNumber: t.ticketNumber || `176${Math.floor(Math.random() * 9000000000 + 1000000000)}`
                         }));
                     }
 
