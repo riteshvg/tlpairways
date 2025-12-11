@@ -154,7 +154,7 @@ export default function Home() {
                             <Box>
                                 <Button
                                     component="a"
-                                    href="/api/auth/login"
+                                    href="/auth/login"
                                     variant="contained"
                                     size="large"
                                     sx={{

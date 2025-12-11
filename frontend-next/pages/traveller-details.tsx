@@ -484,7 +484,7 @@ export default function TravellerDetailsPage() {
                                 onClick={() => {
                                     // Construct the current page URL with all query params to return after login
                                     const currentPath = window.location.pathname + window.location.search;
-                                    window.location.href = `/api/auth/login?returnTo=${encodeURIComponent(currentPath)}`;
+                                    window.location.href = `/auth/login?returnTo=${encodeURIComponent(currentPath)}`;
                                 }}
                                 sx={{ fontWeight: 'bold' }}
                             >

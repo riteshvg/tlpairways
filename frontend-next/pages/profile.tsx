@@ -96,7 +96,7 @@ function ProfilePage() {
                         <Button component="a" href="/search" variant="contained">
                             Search Flights
                         </Button>
-                        <Button href="/api/auth/logout" variant="outlined" color="error">
+                        <Button href="/auth/logout" variant="outlined" color="error">
                             Logout
                         </Button>
                     </Box>
