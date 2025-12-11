@@ -26,6 +26,7 @@ import Head from 'next/head';
 import FlightIcon from '@mui/icons-material/Flight';
 import PassengerSelector from '../components/PassengerSelector';
 import airportsData from '../data/airports.json';
+import flightsData from '../data/flights.json';
 import { usePageView } from '../lib/analytics/useAnalytics';
 
 interface Airport {
@@ -178,6 +179,19 @@ export default function SearchPage() {
     const [cabinClass, setCabinClass] = useState('economy');
     const [travelPurpose, setTravelPurpose] = useState('personal');
     const [currentCarouselIndex, setCurrentCarouselIndex] = useState(0);
+    const [availableRoutes, setAvailableRoutes] = useState<Set<string>>(new Set());
+
+    // Build available routes map on component mount
+    useEffect(() => {
+        const routes = new Set<string>();
+        const flights = (flightsData as any).flights || [];
+
+        flights.forEach((flight: any) => {
+            routes.add(`${flight.origin}-${flight.destination}`);
+        });
+
+        setAvailableRoutes(routes);
+    }, []);
 
     // Track page view
     usePageView({
@@ -233,7 +247,18 @@ export default function SearchPage() {
         const allAirports = getUniqueLocations();
 
         // Filter out the origin airport
-        return allAirports.filter(location => location.iata_code !== origin.iata_code);
+        let filtered = allAirports.filter(location => location.iata_code !== origin.iata_code);
+
+        // For roundtrip, only show destinations that have return flights
+        if (tripType === 'roundtrip') {
+            filtered = filtered.filter(location => {
+                const hasOnwardFlight = availableRoutes.has(`${origin.iata_code}-${location.iata_code}`);
+                const hasReturnFlight = availableRoutes.has(`${location.iata_code}-${origin.iata_code}`);
+                return hasOnwardFlight && hasReturnFlight;
+            });
+        }
+
+        return filtered;
     };
 
     const nextCarousel = () => {
@@ -257,6 +282,19 @@ export default function SearchPage() {
             document.getElementById('search-form')?.scrollIntoView({ behavior: 'smooth' });
         }
     };
+
+    // Check if current destination is valid when switching to roundtrip
+    useEffect(() => {
+        if (tripType === 'roundtrip' && origin && destination) {
+            const hasReturnFlight = availableRoutes.has(`${destination.iata_code}-${origin.iata_code}`);
+
+            if (!hasReturnFlight) {
+                // Clear destination and show alert
+                setDestination(null);
+                alert(`⚠️ Return flights not available from ${destination.city} to ${origin.city}.\n\nPlease select a different destination that has return flights available.`);
+            }
+        }
+    }, [tripType, origin, destination, availableRoutes]);
 
     return (
         <>
@@ -328,10 +366,12 @@ export default function SearchPage() {
                                             required
                                             fullWidth
                                             disabled={!origin}
+                                            helperText={tripType === 'roundtrip' && origin ? 'Only showing destinations with return flights' : ''}
                                         />
                                     )}
                                     isOptionEqualToValue={(option, value) => option.iata_code === value.iata_code}
                                     disabled={!origin}
+                                    noOptionsText={tripType === 'roundtrip' ? 'No destinations with return flights available' : 'No destinations available'}
                                 />
                             </Grid>
                             <Grid size={{ xs: 12, md: 3 }} suppressHydrationWarning>

@@ -278,6 +278,15 @@ export default function ResultsPage() {
     // Update flights when search parameters change
     useEffect(() => {
         if (searchParams) {
+            console.log('🔍 Search Parameters:', {
+                origin: searchParams.originCode,
+                destination: searchParams.destinationCode,
+                date: searchParams.date,
+                returnDate: searchParams.returnDate,
+                tripType: searchParams.tripType,
+                cabinClass: searchParams.cabinClass
+            });
+
             const onward = getMatchingFlights(
                 searchParams.originCode,
                 searchParams.destinationCode,
@@ -285,6 +294,7 @@ export default function ResultsPage() {
                 searchParams.cabinClass
             );
             setOnwardFlights(onward);
+            console.log(`✈️ Found ${onward.length} onward flights from ${searchParams.originCode} to ${searchParams.destinationCode}`);
 
             if (searchParams.tripType === 'roundtrip' && searchParams.returnDate) {
                 const returnFlts = getMatchingFlights(
@@ -294,8 +304,10 @@ export default function ResultsPage() {
                     searchParams.cabinClass
                 );
                 setReturnFlights(returnFlts);
+                console.log(`🔙 Found ${returnFlts.length} return flights from ${searchParams.destinationCode} to ${searchParams.originCode}`);
             } else {
                 setReturnFlights([]);
+                console.log('ℹ️ No return flights needed (one-way trip)');
             }
         }
     }, [searchParams]);
@@ -529,7 +541,7 @@ export default function ResultsPage() {
                         </Paper>
 
                         {/* Return Flights */}
-                        {searchParams.tripType === 'roundtrip' && returnFlights.length > 0 && (
+                        {searchParams.tripType === 'roundtrip' && (
                             <Paper sx={{ p: 3, mb: 4 }}>
                                 <Typography variant="h6" gutterBottom sx={{ color: '#00695c', fontWeight: 600 }}>
                                     Return Journey
@@ -538,7 +550,13 @@ export default function ResultsPage() {
                                     {returnFlights.length} flights found
                                 </Typography>
                                 <Divider sx={{ my: 2 }} />
-                                {returnFlights.map(flight => renderFlightCard(flight, true))}
+                                {returnFlights.length === 0 ? (
+                                    <Alert severity="warning">
+                                        No return flights found for this route. Please try different dates or check if this route has return flights available.
+                                    </Alert>
+                                ) : (
+                                    returnFlights.map(flight => renderFlightCard(flight, true))
+                                )}
                             </Paper>
                         )}
                     </Grid>
