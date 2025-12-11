@@ -472,7 +472,7 @@ export default function TravellerDetailsPage() {
 
             <Container maxWidth="xl" sx={{ mt: 4, mb: 8 }}>
                 {/* Optional Login Banner - Subtle & Dismissible */}
-                {showLoginBanner && (
+                {showLoginBanner && !user && (
                     <Alert
                         severity="info"
                         onClose={() => setShowLoginBanner(false)}
@@ -481,7 +481,11 @@ export default function TravellerDetailsPage() {
                             <Button
                                 color="inherit"
                                 size="small"
-                                href="/profile" // Placeholder for login
+                                onClick={() => {
+                                    // Construct the current page URL with all query params to return after login
+                                    const currentPath = window.location.pathname + window.location.search;
+                                    window.location.href = `/api/auth/login?returnTo=${encodeURIComponent(currentPath)}`;
+                                }}
                                 sx={{ fontWeight: 'bold' }}
                             >
                                 Sign In

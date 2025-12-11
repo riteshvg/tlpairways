@@ -8,7 +8,7 @@ interface LoginButtonProps extends Omit<ButtonProps, 'onClick'> {
 export default function LoginButton({ returnTo, ...props }: LoginButtonProps) {
     const handleLogin = () => {
         const path = returnTo || (typeof window !== 'undefined' ? window.location.pathname + window.location.search : '/');
-        window.location.href = `/auth/login?returnTo=${encodeURIComponent(path)}`;
+        window.location.href = `/api/auth/login?returnTo=${encodeURIComponent(path)}`;
     };
 
     return (
