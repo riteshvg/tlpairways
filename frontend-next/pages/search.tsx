@@ -249,12 +249,19 @@ export default function SearchPage() {
         // Filter out the origin airport
         let filtered = allAirports.filter(location => location.iata_code !== origin.iata_code);
 
-        // For roundtrip, only show destinations that have return flights
+        // Filter based on available routes
         if (tripType === 'roundtrip') {
+            // For roundtrip, only show destinations that have BOTH onward and return flights
             filtered = filtered.filter(location => {
                 const hasOnwardFlight = availableRoutes.has(`${origin.iata_code}-${location.iata_code}`);
                 const hasReturnFlight = availableRoutes.has(`${location.iata_code}-${origin.iata_code}`);
                 return hasOnwardFlight && hasReturnFlight;
+            });
+        } else {
+            // For one-way, only show destinations that have onward flights
+            filtered = filtered.filter(location => {
+                const hasOnwardFlight = availableRoutes.has(`${origin.iata_code}-${location.iata_code}`);
+                return hasOnwardFlight;
             });
         }
 
@@ -283,15 +290,28 @@ export default function SearchPage() {
         }
     };
 
-    // Check if current destination is valid when switching to roundtrip
+    // Check if current destination is valid for the selected trip type
     useEffect(() => {
-        if (tripType === 'roundtrip' && origin && destination) {
-            const hasReturnFlight = availableRoutes.has(`${destination.iata_code}-${origin.iata_code}`);
+        if (origin && destination && availableRoutes.size > 0) {
+            const hasOnwardFlight = availableRoutes.has(`${origin.iata_code}-${destination.iata_code}`);
 
-            if (!hasReturnFlight) {
-                // Clear destination and show alert
-                setDestination(null);
-                alert(`⚠️ Return flights not available from ${destination.city} to ${origin.city}.\n\nPlease select a different destination that has return flights available.`);
+            if (tripType === 'roundtrip') {
+                const hasReturnFlight = availableRoutes.has(`${destination.iata_code}-${origin.iata_code}`);
+
+                if (!hasOnwardFlight || !hasReturnFlight) {
+                    setDestination(null);
+                    if (!hasOnwardFlight && !hasReturnFlight) {
+                        alert(`⚠️ No flights available between ${origin.city} and ${destination.city}.\n\nPlease select a different destination.`);
+                    } else if (!hasReturnFlight) {
+                        alert(`⚠️ Return flights not available from ${destination.city} to ${origin.city}.\n\nPlease select a different destination that has return flights available.`);
+                    }
+                }
+            } else {
+                // One-way trip
+                if (!hasOnwardFlight) {
+                    setDestination(null);
+                    alert(`⚠️ No flights available from ${origin.city} to ${destination.city}.\n\nPlease select a different destination with available flights.`);
+                }
             }
         }
     }, [tripType, origin, destination, availableRoutes]);
@@ -366,12 +386,22 @@ export default function SearchPage() {
                                             required
                                             fullWidth
                                             disabled={!origin}
-                                            helperText={tripType === 'roundtrip' && origin ? 'Only showing destinations with return flights' : ''}
+                                            helperText={
+                                                origin
+                                                    ? tripType === 'roundtrip'
+                                                        ? 'Only showing destinations with return flights'
+                                                        : 'Only showing destinations with available flights'
+                                                    : ''
+                                            }
                                         />
                                     )}
                                     isOptionEqualToValue={(option, value) => option.iata_code === value.iata_code}
                                     disabled={!origin}
-                                    noOptionsText={tripType === 'roundtrip' ? 'No destinations with return flights available' : 'No destinations available'}
+                                    noOptionsText={
+                                        tripType === 'roundtrip'
+                                            ? 'No destinations with return flights available'
+                                            : 'No flights available from this origin'
+                                    }
                                 />
                             </Grid>
                             <Grid size={{ xs: 12, md: 3 }} suppressHydrationWarning>
