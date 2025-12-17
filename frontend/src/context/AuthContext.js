@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { validateAuth0Config } from '../config/auth0Config';
 import userAnalytics from '../services/UserAnalytics';
+import airlinesDataLayer from '../services/AirlinesDataLayer';
 
 // Validate Auth0 configuration only when environment variables are available
 if (process.env.NODE_ENV !== 'production' || process.env.REACT_APP_AUTH0_DOMAIN) {
@@ -180,6 +181,9 @@ export const AuthProvider = ({ children }) => {
         reason: 'manual'
       });
     }
+
+    // Clear userData from data layer
+    airlinesDataLayer.clearUserData();
 
     logout({
       logoutParams: {
