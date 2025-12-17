@@ -38,9 +38,11 @@ class AirlinesDataLayer {
       // This ensures defaultConsent is available when Adobe Launch loads
       this.initializeConsentState();
 
-      // CRITICAL: Initialize default userData state IMMEDIATELY
-      // This ensures userData is always available for data elements
-      this.initializeDefaultUserData();
+      // CRITICAL: Do NOT initialize userData here
+      // userData should ONLY be set after successful sign-in via trackLoginSuccess()
+      // This prevents Adobe Launch rules from failing due to missing userData
+      // Restore userData from sessionStorage if user was previously authenticated
+      this.restoreUserDataFromSession();
 
       const initEndTime = performance.now();
       const initDuration = initEndTime - initStartTime;
@@ -313,38 +315,32 @@ class AirlinesDataLayer {
   }
 
   /**
-   * Initialize default userData state
-   * This ensures userData is ALWAYS available in the data layer,
-   * even before Auth0 completes loading
+   * Restore userData from sessionStorage if user was previously authenticated
+   * This ensures userData persists across page navigations within the same session
    */
-  initializeDefaultUserData() {
+  restoreUserDataFromSession() {
     if (typeof window === 'undefined') return;
 
     // Check if userData already exists in the state
     if (window._adobeDataLayerState?.userData) {
-      console.log('✅ userData already initialized - skipping default init');
+      console.log('✅ userData already in state - skipping restore');
       return;
     }
 
-    // Set default anonymous user data
-    const defaultUserData = {
-      hashedUserId: null,
-      loyaltyTier: 'none',
-      registrationDate: null,
-      userSegment: 'anonymous',
-      emailDomain: null,
-      isEmailVerified: false,
-      lastLogin: null,
-      loginCount: 0,
-      isAuthenticated: false
-    };
-
-    // CRITICAL: Only set in computed state, do NOT push to array
-    // This ensures userData is available for data elements without creating a duplicate event
-    // The real userData event will be pushed when user authenticates via trackLoginSuccess()
-    window._adobeDataLayerState.userData = defaultUserData;
-
-    console.log('✅ Default userData initialized in computed state (no event pushed):', defaultUserData);
+    try {
+      // Try to restore userData from sessionStorage
+      const savedUserData = sessionStorage.getItem('tlpairways_userData');
+      if (savedUserData) {
+        const userData = JSON.parse(savedUserData);
+        // Only restore if user was authenticated
+        if (userData.isAuthenticated === true) {
+          window._adobeDataLayerState.userData = userData;
+          console.log('✅ userData restored from sessionStorage:', userData);
+        }
+      }
+    } catch (error) {
+      console.warn('⚠️ Failed to restore userData from sessionStorage:', error);
+    }
   }
 
   /**
@@ -430,6 +426,7 @@ class AirlinesDataLayer {
 
   /**
    * Set user data in the data layer
+   * This should ONLY be called after successful sign-in
    * @param {Object} userData - User information object
    */
   setUserData(userData) {
@@ -447,10 +444,47 @@ class AirlinesDataLayer {
     // CRITICAL: Update computed state so userData is always available
     if (typeof window !== 'undefined' && window._adobeDataLayerState) {
       window._adobeDataLayerState.userData = enrichedUserData;
+      
+      // Persist userData to sessionStorage for cross-page persistence
+      try {
+        sessionStorage.setItem('tlpairways_userData', JSON.stringify(enrichedUserData));
+        console.log('✅ userData saved to sessionStorage for persistence');
+      } catch (error) {
+        console.warn('⚠️ Failed to save userData to sessionStorage:', error);
+      }
     }
 
     this.pushToDataLayer(userDataEvent);
     this.log('User data set', userDataEvent);
+  }
+
+  /**
+   * Clear user data from the data layer
+   * Called when user logs out
+   */
+  clearUserData() {
+    if (typeof window !== 'undefined') {
+      // Remove from computed state
+      if (window._adobeDataLayerState?.userData) {
+        delete window._adobeDataLayerState.userData;
+      }
+
+      // Remove from sessionStorage
+      try {
+        sessionStorage.removeItem('tlpairways_userData');
+        console.log('✅ userData cleared from sessionStorage');
+      } catch (error) {
+        console.warn('⚠️ Failed to clear userData from sessionStorage:', error);
+      }
+
+      // Push a userData cleared event
+      this.pushToDataLayer({
+        event: 'userDataCleared',
+        timestamp: new Date().toISOString()
+      });
+
+      this.log('User data cleared');
+    }
   }
 
   /**
@@ -882,7 +916,7 @@ class AirlinesDataLayer {
    * Call this on page navigation to prevent stale data
    * @param {Array} keysToKeep - Keys to preserve (e.g., user data)
    */
-  clearPageState(keysToKeep = ['userContext', 'sessionId']) {
+  clearPageState(keysToKeep = ['userContext', 'sessionId', 'userData', 'consent']) {
     if (typeof window !== 'undefined' && window._adobeDataLayerState) {
       const preservedData = {};
       keysToKeep.forEach(key => {
