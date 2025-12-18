@@ -104,21 +104,31 @@ export function pushPageView(
     const sessionId = getSessionId();
     const { userAgent, screenResolution, viewportSize } = getUserAgentDetails();
 
-    // Extract user info if provided
-    const isAuthenticated = !!pageData.user;
-    const userId = pageData.user?.sub || null;
-    const userEmail = pageData.user?.email || null;
+    // CRITICAL: Check for authenticated userData from sessionStorage
+    // DO NOT create anonymous userData that would overwrite authenticated userData in getState()
+    let userData = null;
+    let isAuthenticated = false;
+    let userId = null;
+    let userEmail = null;
 
-    const userData = {
-        isAuthenticated: isAuthenticated,
-        userId: userId,
-        userEmail: userEmail,
-        userSegment: isAuthenticated ? 'registered' : 'anonymous',
-        hashedUserId: null, // TODO: Add hashing if needed
-        hashedEmail: null // TODO: Add hashing if needed
-    };
+    if (typeof window !== 'undefined') {
+        try {
+            const savedUserData = sessionStorage.getItem('tlpairways_userData');
+            if (savedUserData) {
+                const parsedUserData = JSON.parse(savedUserData);
+                if (parsedUserData.isAuthenticated === true) {
+                    userData = parsedUserData;
+                    isAuthenticated = true;
+                    userId = parsedUserData.userId;
+                    userEmail = parsedUserData.userEmail || null;
+                }
+            }
+        } catch (error) {
+            console.warn('⚠️ Failed to read userData from sessionStorage:', error);
+        }
+    }
 
-    const event = {
+    const event: any = {
         event: 'pageView',
         pageData: {
             pageType: pageData.pageType,
@@ -140,7 +150,6 @@ export function pushPageView(
             ...(pageData.searchType && { searchType: pageData.searchType }),
             ...additionalData // This spreads bookingContext, searchContext, etc. into pageData
         },
-        userData: userData, // Moved to root level
         viewData: {
             landingPage: previousPage === 'direct',
             userAuthenticated: isAuthenticated,
@@ -150,6 +159,12 @@ export function pushPageView(
             userLoyaltyTier: null
         }
     };
+
+    // CRITICAL: Only include userData if authenticated user exists
+    // This prevents anonymous userData from overwriting authenticated userData in getState()
+    if (userData) {
+        event.userData = userData;
+    }
 
     pushToDataLayer(event);
     setCurrentPageAsPrevious(pageData.pageName);
