@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { useUser } from '@auth0/nextjs-auth0/client';
 import {
     Container,
     Typography,
@@ -29,6 +30,7 @@ import { format } from 'date-fns';
 import flightsData from '../data/flights.json';
 import airports from '../data/airports.json';
 import { usePageView, useAnalytics } from '../lib/analytics/useAnalytics';
+import { pushUserContext } from '../lib/analytics/dataLayer';
 
 
 
@@ -94,6 +96,7 @@ interface SearchParams {
 
 export default function ResultsPage() {
     const router = useRouter();
+    const { user, isLoading } = useUser();
     const {
         originCode,
         destinationCode,
@@ -120,6 +123,18 @@ export default function ResultsPage() {
     const [searchContext, setSearchContext] = useState<any>(null);
 
     const { trackSearch, trackPageView } = useAnalytics();
+
+    // Push independent userData object when user is authenticated
+    useEffect(() => {
+        if (!isLoading && user) {
+            pushUserContext({
+                isAuthenticated: true,
+                userId: user.sub || null,
+                userSegment: 'registered'
+            });
+            console.log('✅ Independent userData pushed for authenticated user');
+        }
+    }, [user, isLoading]);
 
     // Build search context when URL params are available
     useEffect(() => {
@@ -202,12 +217,13 @@ export default function ResultsPage() {
                     pageName: 'Search Results',
                     pageCategory: 'booking',
                     searchType: 'flightResults',
-                    sections: ['resultsList', 'filters', 'sorting']
+                    sections: ['resultsList', 'filters', 'sorting'],
+                    user: user // Pass user for userData in pageView
                 },
                 { searchContext }
             );
         }
-    }, [searchContext, trackPageView]);
+    }, [searchContext, trackPageView, user]);
 
 
     // Initialize search parameters from URL

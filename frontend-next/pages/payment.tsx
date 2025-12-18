@@ -28,7 +28,7 @@ import { format } from 'date-fns';
 import flightsData from '../data/flights.json';
 import BookingSteps from '../components/BookingSteps';
 import { useAnalytics } from '../lib/analytics/useAnalytics';
-import { hashSensitiveData } from '../lib/analytics/dataLayer';
+import { hashSensitiveData, pushUserContext } from '../lib/analytics/dataLayer';
 
 // Constants matching SPA
 const CURRENCY_CONFIG = {
@@ -58,6 +58,18 @@ export default function PaymentPage() {
     const [billingName, setBillingName] = useState('');
     const [validationErrors, setValidationErrors] = useState<any>({});
     const [snackbar, setSnackbar] = useState({ open: false, message: '' });
+
+    // Push independent userData object when user is authenticated
+    useEffect(() => {
+        if (!isLoading && user) {
+            pushUserContext({
+                isAuthenticated: true,
+                userId: user.sub || null,
+                userSegment: 'registered'
+            });
+            console.log('✅ Independent userData pushed for authenticated user on payment');
+        }
+    }, [user, isLoading]);
 
     // --- Data ---
     const [onwardFlight, setOnwardFlight] = useState<any>(null);

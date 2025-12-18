@@ -41,6 +41,7 @@ import mealsData from '../data/ancillary/meals.json';
 import baggageRules from '../data/ancillary/baggage_rules.json';
 import seatConfigurations from '../data/ancillary/seat_configurations.json';
 import { useAnalytics } from '../lib/analytics/useAnalytics';
+import { pushUserContext } from '../lib/analytics/dataLayer';
 import SeatMap from '../components/SeatMap';
 
 // --- Interfaces ---
@@ -133,6 +134,18 @@ export default function AncillaryServicesPage() {
     const [onwardFlight, setOnwardFlight] = useState<Flight | null>(null);
     const [returnFlight, setReturnFlight] = useState<Flight | null>(null);
     const [travellers, setTravellers] = useState<Traveller[]>([]);
+
+    // Push independent userData object when user is authenticated
+    useEffect(() => {
+        if (!isLoading && user) {
+            pushUserContext({
+                isAuthenticated: true,
+                userId: user.sub || null,
+                userSegment: 'registered'
+            });
+            console.log('✅ Independent userData pushed for authenticated user on ancillary-services');
+        }
+    }, [user, isLoading]);
 
     // State for selections
     const [selections, setSelections] = useState<FlightServices>({

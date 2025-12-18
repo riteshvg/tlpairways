@@ -24,6 +24,7 @@ import { format } from 'date-fns';
 import flightsData from '../data/flights.json';
 import BookingSteps from '../components/BookingSteps';
 import { useAnalytics } from '../lib/analytics/useAnalytics';
+import { pushUserContext } from '../lib/analytics/dataLayer';
 
 interface Traveller {
     firstName: string;
@@ -67,6 +68,18 @@ export default function TravellerDetailsPage() {
         travelPurpose,
         paymentType,
     } = router.query;
+
+    // Push independent userData object when user is authenticated
+    useEffect(() => {
+        if (!isLoading && user) {
+            pushUserContext({
+                isAuthenticated: true,
+                userId: user.sub || null,
+                userSegment: 'registered'
+            });
+            console.log('✅ Independent userData pushed for authenticated user on traveller-details');
+        }
+    }, [user, isLoading]);
 
     const [onwardFlight, setOnwardFlight] = useState<any>(null);
     const [returnFlight, setReturnFlight] = useState<any>(null);
