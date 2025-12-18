@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { useAnalytics } from '../lib/analytics/useAnalytics';
+import { pushUserContext } from '../lib/analytics/dataLayer';
 import {
     Container,
     Paper,
@@ -45,7 +46,7 @@ const CURRENCY_CONFIG = {
 export default function ReviewPage() {
     const router = useRouter();
     const query = router.query;
-    const { user } = useUser();
+    const { user, isLoading } = useUser();
     const { trackPageView } = useAnalytics();
 
     const [loading, setLoading] = useState(false);
@@ -54,6 +55,18 @@ export default function ReviewPage() {
     const [travellers, setTravellers] = useState<any[]>([]);
     const [ancillaryServices, setAncillaryServices] = useState<any>({ onward: {}, return: {} });
     const [paymentDetails, setPaymentDetails] = useState<any>(null);
+
+    // Push independent userData object when user is authenticated
+    useEffect(() => {
+        if (!isLoading && user) {
+            pushUserContext({
+                isAuthenticated: true,
+                userId: user.sub || null,
+                userSegment: 'registered'
+            });
+            console.log('✅ Independent userData pushed for authenticated user on review');
+        }
+    }, [user, isLoading]);
 
     useEffect(() => {
         if (!router.isReady) return;
@@ -122,10 +135,9 @@ export default function ReviewPage() {
             pageType: 'checkout',
             pageTitle: 'Review Booking | TLP Airways',
             bookingStep: 'review',
-            bookingStepNumber: 4,
-            user
+            bookingStepNumber: 4
         });
-    }, [onwardFlight, trackPageView, user]);
+    }, [onwardFlight, trackPageView]);
 
     // Helper to get ancillaries for a specific passenger (Adapted for Review Page State)
     const getAncillariesForPassenger = (idx: number) => {
