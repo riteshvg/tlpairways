@@ -217,13 +217,12 @@ export default function ResultsPage() {
                     pageName: 'Search Results',
                     pageCategory: 'booking',
                     searchType: 'flightResults',
-                    sections: ['resultsList', 'filters', 'sorting'],
-                    user: user // Pass user for userData in pageView
+                    sections: ['resultsList', 'filters', 'sorting']
                 },
                 { searchContext }
             );
         }
-    }, [searchContext, trackPageView, user]);
+    }, [searchContext, trackPageView]);
 
 
     // Initialize search parameters from URL
