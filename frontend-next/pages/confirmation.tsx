@@ -30,13 +30,14 @@ import {
     getSessionId,
     getPreviousPage,
     setCurrentPageAsPrevious,
-    getUserAgentDetails
+    getUserAgentDetails,
+    pushUserContext
 } from '../lib/analytics/dataLayer';
 import { sendBookingConfirmationEmail } from '../lib/services/emailService';
 
 export default function ConfirmationPage() {
     const router = useRouter();
-    const { user } = useUser();
+    const { user, isLoading } = useUser();
     const { trackPurchase, trackPageView } = useAnalytics();
     const pageViewTracked = useRef(false); // Prevent duplicate page views
     const hasSentEmail = useRef(false); // Prevent duplicate emails
@@ -45,6 +46,18 @@ export default function ConfirmationPage() {
     const [loading, setLoading] = useState(true);
     const [emailSending, setEmailSending] = useState(false);
     const [emailSent, setEmailSent] = useState(false);
+
+    // Push independent userData object when user is authenticated
+    useEffect(() => {
+        if (!isLoading && user) {
+            pushUserContext({
+                isAuthenticated: true,
+                userId: user.sub || null,
+                userSegment: 'registered'
+            });
+            console.log('✅ Independent userData pushed for authenticated user on confirmation');
+        }
+    }, [user, isLoading]);
 
     useEffect(() => {
         // Try to retrieve data from sessionStorage

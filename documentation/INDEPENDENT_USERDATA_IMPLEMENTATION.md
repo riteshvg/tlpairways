@@ -160,9 +160,29 @@ useEffect(() => {
 ```
 
 ### 5. `/frontend-next/pages/confirmation.tsx`
-**Status:** ✅ Verified - Does NOT push independent userData (as per requirement)
-- Confirmation page only includes userData nested in pageView event
-- No `pushUserContext` call on this page
+**Changes:**
+- Added `pushUserContext` import
+- Added `useEffect` to push independent userData when user is authenticated
+- Added `isLoading` to useUser destructuring
+
+**Code Added:**
+```typescript
+import { pushUserContext } from '../lib/analytics/dataLayer';
+
+const { user, isLoading } = useUser();
+
+// Push independent userData object when user is authenticated
+useEffect(() => {
+    if (!isLoading && user) {
+        pushUserContext({
+            isAuthenticated: true,
+            userId: user.sub || null,
+            userSegment: 'registered'
+        });
+        console.log('✅ Independent userData pushed for authenticated user on confirmation');
+    }
+}, [user, isLoading]);
+```
 
 ## How It Works
 
@@ -231,8 +251,8 @@ The `pushPageView` function uses this priority:
 ✅ **Payment** (`/frontend-next/pages/payment.tsx`)
 - ✅ Updated
 
-❌ **Confirmation** (`/frontend-next/pages/confirmation.tsx`)
-- ✅ Verified - Does NOT push independent userData (by design)
+✅ **Confirmation** (`/frontend-next/pages/confirmation.tsx`)
+- ✅ Updated
 
 ## Testing
 
@@ -334,7 +354,7 @@ Each page will log when userData is pushed:
 - [Adobe Script Manager](./ADOBE_SCRIPT_MANAGER.md)
 
 ## Notes
-- Confirmation page intentionally does NOT push independent userData
+- Independent userData is now pushed on ALL pages including confirmation
 - userData is cleared on logout via `clearUserData()` function
 - All changes are in the MPA (`frontend-next`) directory
 - No changes required to SPA (`frontend`) directory
