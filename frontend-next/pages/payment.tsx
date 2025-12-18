@@ -58,6 +58,20 @@ export default function PaymentPage() {
     const [billingName, setBillingName] = useState('');
     const [validationErrors, setValidationErrors] = useState<any>({});
     const [snackbar, setSnackbar] = useState({ open: false, message: '' });
+    const userDataPushed = useRef(false);
+
+    // Push independent userData object once when user is authenticated
+    useEffect(() => {
+        if (!isLoading && user && !userDataPushed.current) {
+            pushUserContext({
+                isAuthenticated: true,
+                userId: user.sub || null,
+                userSegment: 'registered'
+            });
+            userDataPushed.current = true;
+            console.log('✅ Independent userData pushed on payment');
+        }
+    }, [user, isLoading]);
 
     // --- Data ---
     const [onwardFlight, setOnwardFlight] = useState<any>(null);
@@ -126,7 +140,7 @@ export default function PaymentPage() {
 
     // Track page view with comprehensive payment data
     useEffect(() => {
-        if (!onwardFlight || travellers.length === 0 || pageViewTracked.current) return;
+        if (!onwardFlight || travellers.length === 0 || pageViewTracked.current || isLoading) return;
 
         const buildPaymentTracking = async () => {
             const { buildAncillaryServicesBreakdown } = await import('../lib/analytics/buildPaymentTracking');
@@ -230,16 +244,6 @@ export default function PaymentPage() {
                 tripType: query.tripType || (returnFlight ? 'roundtrip' : 'oneway')
             };
 
-            // CRITICAL: Push userData BEFORE pageView to ensure it's available for Launch data elements
-            if (!isLoading && user) {
-                pushUserContext({
-                    isAuthenticated: true,
-                    userId: user.sub || null,
-                    userSegment: 'registered'
-                });
-                console.log('✅ Independent userData pushed BEFORE pageView on payment');
-            }
-
             trackPageView(
                 {
                     pageType: 'booking',
@@ -259,7 +263,7 @@ export default function PaymentPage() {
         };
 
         buildPaymentTracking();
-    }, [onwardFlight, travellers]); // Simplified dependencies - only track when flight and traveller data is ready
+    }, [onwardFlight, travellers, isLoading]); // Simplified dependencies - only track when flight and traveller data is ready
 
 
     // --- Calculations ---

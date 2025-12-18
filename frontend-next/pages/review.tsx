@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { useAnalytics } from '../lib/analytics/useAnalytics';
@@ -55,6 +55,20 @@ export default function ReviewPage() {
     const [travellers, setTravellers] = useState<any[]>([]);
     const [ancillaryServices, setAncillaryServices] = useState<any>({ onward: {}, return: {} });
     const [paymentDetails, setPaymentDetails] = useState<any>(null);
+    const userDataPushed = useRef(false);
+
+    // Push independent userData object once when user is authenticated
+    useEffect(() => {
+        if (!isLoading && user && !userDataPushed.current) {
+            pushUserContext({
+                isAuthenticated: true,
+                userId: user.sub || null,
+                userSegment: 'registered'
+            });
+            userDataPushed.current = true;
+            console.log('✅ Independent userData pushed on review');
+        }
+    }, [user, isLoading]);
 
     useEffect(() => {
         if (!router.isReady) return;
@@ -115,19 +129,9 @@ export default function ReviewPage() {
 
     }, [router.isReady, router.query]);
 
-    // Track Page View
+    // Track Page View (wait for user to load first)
     useEffect(() => {
-        if (!onwardFlight) return;
-        
-        // CRITICAL: Push userData BEFORE pageView to ensure it's available for Launch data elements
-        if (!isLoading && user) {
-            pushUserContext({
-                isAuthenticated: true,
-                userId: user.sub || null,
-                userSegment: 'registered'
-            });
-            console.log('✅ Independent userData pushed BEFORE pageView on review');
-        }
+        if (!onwardFlight || isLoading) return;
         
         trackPageView({
             pageName: 'Review Booking',
@@ -136,7 +140,7 @@ export default function ReviewPage() {
             bookingStep: 'review',
             bookingStepNumber: 4
         });
-    }, [onwardFlight, trackPageView]);
+    }, [onwardFlight, trackPageView, isLoading]);
 
     // Helper to get ancillaries for a specific passenger (Adapted for Review Page State)
     const getAncillariesForPassenger = (idx: number) => {

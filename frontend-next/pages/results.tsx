@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import {
@@ -123,6 +123,20 @@ export default function ResultsPage() {
     const [searchContext, setSearchContext] = useState<any>(null);
 
     const { trackSearch, trackPageView } = useAnalytics();
+    const userDataPushed = useRef(false);
+
+    // Push independent userData object once when user is authenticated
+    useEffect(() => {
+        if (!isLoading && user && !userDataPushed.current) {
+            pushUserContext({
+                isAuthenticated: true,
+                userId: user.sub || null,
+                userSegment: 'registered'
+            });
+            userDataPushed.current = true;
+            console.log('✅ Independent userData pushed');
+        }
+    }, [user, isLoading]);
 
     // Build search context when URL params are available
     useEffect(() => {
@@ -196,19 +210,9 @@ export default function ResultsPage() {
         }
     }, [originCode, destinationCode, date, returnDate, adults, children, infants, tripType, cabinClass, travelPurpose, paymentType]);
 
-    // Track page view with search context once it's available
+    // Track page view with search context once it's available (wait for user to load first)
     useEffect(() => {
-        if (searchContext) {
-            // CRITICAL: Push userData BEFORE pageView to ensure it's available for Launch data elements
-            if (!isLoading && user) {
-                pushUserContext({
-                    isAuthenticated: true,
-                    userId: user.sub || null,
-                    userSegment: 'registered'
-                });
-                console.log('✅ Independent userData pushed BEFORE pageView');
-            }
-            
+        if (searchContext && !isLoading) {
             trackPageView(
                 {
                     pageType: 'searchResults',
@@ -220,7 +224,7 @@ export default function ResultsPage() {
                 { searchContext }
             );
         }
-    }, [searchContext, trackPageView]);
+    }, [searchContext, trackPageView, isLoading]);
 
 
     // Initialize search parameters from URL

@@ -46,6 +46,20 @@ export default function ConfirmationPage() {
     const [loading, setLoading] = useState(true);
     const [emailSending, setEmailSending] = useState(false);
     const [emailSent, setEmailSent] = useState(false);
+    const userDataPushed = useRef(false);
+
+    // Push independent userData object once when user is authenticated
+    useEffect(() => {
+        if (!isLoading && user && !userDataPushed.current) {
+            pushUserContext({
+                isAuthenticated: true,
+                userId: user.sub || null,
+                userSegment: 'registered'
+            });
+            userDataPushed.current = true;
+            console.log('✅ Independent userData pushed on confirmation');
+        }
+    }, [user, isLoading]);
 
     useEffect(() => {
         // Try to retrieve data from sessionStorage
@@ -79,21 +93,11 @@ export default function ConfirmationPage() {
         setLoading(false);
     }, []);
 
-    // Track both purchase and page view events together
+    // Track both purchase and page view events together (wait for user to load first)
     useEffect(() => {
-        if (!bookingData || pageViewTracked.current) return;
+        if (!bookingData || pageViewTracked.current || isLoading) return;
 
         const trackConfirmationEvents = async () => {
-            // CRITICAL: Push userData BEFORE any tracking events to ensure it's available for Launch data elements
-            if (!isLoading && user) {
-                pushUserContext({
-                    isAuthenticated: true,
-                    userId: user.sub || null,
-                    userSegment: 'registered'
-                });
-                console.log('✅ Independent userData pushed BEFORE tracking events on confirmation');
-            }
-            
             const { buildPurchaseProducts } = await import('../lib/analytics/buildPurchaseProducts');
 
             const transactionId = bookingData.paymentData?.transactionId || `TXN${Date.now()}${Math.random().toString(36).substring(2, 15).toUpperCase()}`;
@@ -550,7 +554,7 @@ export default function ConfirmationPage() {
         };
 
         trackConfirmationEvents();
-    }, [bookingData, user, trackPageView]);
+    }, [bookingData, user, trackPageView, isLoading]);
 
     const getAncillariesForPassenger = (idx: number) => {
         const services: any[] = [];

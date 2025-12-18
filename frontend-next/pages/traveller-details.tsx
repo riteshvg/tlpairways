@@ -69,6 +69,21 @@ export default function TravellerDetailsPage() {
         paymentType,
     } = router.query;
 
+    const userDataPushed = useRef(false);
+
+    // Push independent userData object once when user is authenticated
+    useEffect(() => {
+        if (!isLoading && user && !userDataPushed.current) {
+            pushUserContext({
+                isAuthenticated: true,
+                userId: user.sub || null,
+                userSegment: 'registered'
+            });
+            userDataPushed.current = true;
+            console.log('✅ Independent userData pushed on traveller-details');
+        }
+    }, [user, isLoading]);
+
     const [onwardFlight, setOnwardFlight] = useState<any>(null);
     const [returnFlight, setReturnFlight] = useState<any>(null);
     const [travellers, setTravellers] = useState<Traveller[]>([]);
@@ -322,16 +337,6 @@ export default function TravellerDetailsPage() {
                 }
             };
 
-            // CRITICAL: Push userData BEFORE pageView to ensure it's available for Launch data elements
-            if (!isLoading && user) {
-                pushUserContext({
-                    isAuthenticated: true,
-                    userId: user.sub || null,
-                    userSegment: 'registered'
-                });
-                console.log('✅ Independent userData pushed BEFORE pageView on traveller-details');
-            }
-
             trackPageView(
                 {
                     pageType: 'booking',
@@ -349,7 +354,7 @@ export default function TravellerDetailsPage() {
             // Mark as tracked
             pageViewTracked.current = true;
         }
-    }, [onwardFlight, date]); // Simplified dependencies - only track when flight data is ready
+    }, [onwardFlight, date, isLoading]); // Simplified dependencies - only track when flight data is ready
 
     const handleTravellerChange = (index: number, field: keyof Traveller, value: string) => {
         const newTravellers = [...travellers];
