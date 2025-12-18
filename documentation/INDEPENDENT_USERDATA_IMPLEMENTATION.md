@@ -159,7 +159,34 @@ useEffect(() => {
 }, [user, isLoading]);
 ```
 
-### 5. `/frontend-next/pages/confirmation.tsx`
+### 5. `/frontend-next/pages/review.tsx`
+**Changes:**
+- Added `pushUserContext` import
+- Added `useEffect` to push independent userData when user is authenticated
+- Added `isLoading` to useUser destructuring
+- **Fixed duplicate pageView:** Removed `user` parameter from trackPageView call
+- **Fixed duplicate pageView:** Removed `user` from dependency array
+
+**Code Added:**
+```typescript
+import { pushUserContext } from '../lib/analytics/dataLayer';
+
+const { user, isLoading } = useUser();
+
+// Push independent userData object when user is authenticated
+useEffect(() => {
+    if (!isLoading && user) {
+        pushUserContext({
+            isAuthenticated: true,
+            userId: user.sub || null,
+            userSegment: 'registered'
+        });
+        console.log('✅ Independent userData pushed for authenticated user on review');
+    }
+}, [user, isLoading]);
+```
+
+### 6. `/frontend-next/pages/confirmation.tsx`
 **Changes:**
 - Added `pushUserContext` import
 - Added `useEffect` to push independent userData when user is authenticated
@@ -249,6 +276,9 @@ The `pushPageView` function uses this priority:
 - ✅ Updated
 
 ✅ **Payment** (`/frontend-next/pages/payment.tsx`)
+- ✅ Updated
+
+✅ **Review Booking** (`/frontend-next/pages/review.tsx`)
 - ✅ Updated
 
 ✅ **Confirmation** (`/frontend-next/pages/confirmation.tsx`)
