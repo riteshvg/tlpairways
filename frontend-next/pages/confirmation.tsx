@@ -47,18 +47,6 @@ export default function ConfirmationPage() {
     const [emailSending, setEmailSending] = useState(false);
     const [emailSent, setEmailSent] = useState(false);
 
-    // Push independent userData object when user is authenticated
-    useEffect(() => {
-        if (!isLoading && user) {
-            pushUserContext({
-                isAuthenticated: true,
-                userId: user.sub || null,
-                userSegment: 'registered'
-            });
-            console.log('✅ Independent userData pushed for authenticated user on confirmation');
-        }
-    }, [user, isLoading]);
-
     useEffect(() => {
         // Try to retrieve data from sessionStorage
         const storedData = sessionStorage.getItem('temp_confirmation_data');
@@ -96,6 +84,16 @@ export default function ConfirmationPage() {
         if (!bookingData || pageViewTracked.current) return;
 
         const trackConfirmationEvents = async () => {
+            // CRITICAL: Push userData BEFORE any tracking events to ensure it's available for Launch data elements
+            if (!isLoading && user) {
+                pushUserContext({
+                    isAuthenticated: true,
+                    userId: user.sub || null,
+                    userSegment: 'registered'
+                });
+                console.log('✅ Independent userData pushed BEFORE tracking events on confirmation');
+            }
+            
             const { buildPurchaseProducts } = await import('../lib/analytics/buildPurchaseProducts');
 
             const transactionId = bookingData.paymentData?.transactionId || `TXN${Date.now()}${Math.random().toString(36).substring(2, 15).toUpperCase()}`;
@@ -552,7 +550,7 @@ export default function ConfirmationPage() {
         };
 
         trackConfirmationEvents();
-    }, [bookingData, user, trackPageView]);
+    }, [bookingData, user, trackPageView, isLoading]);
 
     const getAncillariesForPassenger = (idx: number) => {
         const services: any[] = [];

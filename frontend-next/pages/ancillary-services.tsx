@@ -135,18 +135,6 @@ export default function AncillaryServicesPage() {
     const [returnFlight, setReturnFlight] = useState<Flight | null>(null);
     const [travellers, setTravellers] = useState<Traveller[]>([]);
 
-    // Push independent userData object when user is authenticated
-    useEffect(() => {
-        if (!isLoading && user) {
-            pushUserContext({
-                isAuthenticated: true,
-                userId: user.sub || null,
-                userSegment: 'registered'
-            });
-            console.log('✅ Independent userData pushed for authenticated user on ancillary-services');
-        }
-    }, [user, isLoading]);
-
     // State for selections
     const [selections, setSelections] = useState<FlightServices>({
         onward: {},
@@ -278,6 +266,16 @@ export default function AncillaryServicesPage() {
                 }
             };
 
+            // CRITICAL: Push userData BEFORE pageView to ensure it's available for Launch data elements
+            if (!isLoading && user) {
+                pushUserContext({
+                    isAuthenticated: true,
+                    userId: user.sub || null,
+                    userSegment: 'registered'
+                });
+                console.log('✅ Independent userData pushed BEFORE pageView on ancillary-services');
+            }
+
             trackPageView(
                 {
                     pageType: 'booking',
@@ -287,8 +285,7 @@ export default function AncillaryServicesPage() {
                     bookingStep: 'ancillary-services',
                     bookingStepNumber: 2,
                     totalBookingSteps: 4,
-                    sections: ['meals', 'baggage', 'seats', 'priorityBoarding'],
-                    user: user
+                    sections: ['meals', 'baggage', 'seats', 'priorityBoarding']
                 },
                 { bookingContext }
             );
@@ -296,7 +293,7 @@ export default function AncillaryServicesPage() {
             // Mark as tracked
             pageViewTracked.current = true;
         }
-    }, [onwardFlight, date]); // Simplified dependencies - only track when flight data is ready
+    }, [onwardFlight, date, user, isLoading]); // Simplified dependencies - only track when flight data is ready
 
 
     // Initialize selections for new travellers

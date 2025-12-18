@@ -59,18 +59,6 @@ export default function PaymentPage() {
     const [validationErrors, setValidationErrors] = useState<any>({});
     const [snackbar, setSnackbar] = useState({ open: false, message: '' });
 
-    // Push independent userData object when user is authenticated
-    useEffect(() => {
-        if (!isLoading && user) {
-            pushUserContext({
-                isAuthenticated: true,
-                userId: user.sub || null,
-                userSegment: 'registered'
-            });
-            console.log('✅ Independent userData pushed for authenticated user on payment');
-        }
-    }, [user, isLoading]);
-
     // --- Data ---
     const [onwardFlight, setOnwardFlight] = useState<any>(null);
     const [returnFlight, setReturnFlight] = useState<any>(null);
@@ -242,6 +230,16 @@ export default function PaymentPage() {
                 tripType: query.tripType || (returnFlight ? 'roundtrip' : 'oneway')
             };
 
+            // CRITICAL: Push userData BEFORE pageView to ensure it's available for Launch data elements
+            if (!isLoading && user) {
+                pushUserContext({
+                    isAuthenticated: true,
+                    userId: user.sub || null,
+                    userSegment: 'registered'
+                });
+                console.log('✅ Independent userData pushed BEFORE pageView on payment');
+            }
+
             trackPageView(
                 {
                     pageType: 'booking',
@@ -251,8 +249,7 @@ export default function PaymentPage() {
                     bookingStep: 'payment',
                     bookingStepNumber: 3,
                     totalBookingSteps: 4,
-                    sections: ['paymentMethods', 'pricingSummary', 'bookingDetails'],
-                    user: user
+                    sections: ['paymentMethods', 'pricingSummary', 'bookingDetails']
                 },
                 { bookingContext }
             );
@@ -262,7 +259,7 @@ export default function PaymentPage() {
         };
 
         buildPaymentTracking();
-    }, [onwardFlight, travellers]); // Simplified dependencies - only track when flight and traveller data is ready
+    }, [onwardFlight, travellers, user, isLoading]); // Simplified dependencies - only track when flight and traveller data is ready
 
 
     // --- Calculations ---

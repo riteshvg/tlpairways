@@ -56,18 +56,6 @@ export default function ReviewPage() {
     const [ancillaryServices, setAncillaryServices] = useState<any>({ onward: {}, return: {} });
     const [paymentDetails, setPaymentDetails] = useState<any>(null);
 
-    // Push independent userData object when user is authenticated
-    useEffect(() => {
-        if (!isLoading && user) {
-            pushUserContext({
-                isAuthenticated: true,
-                userId: user.sub || null,
-                userSegment: 'registered'
-            });
-            console.log('✅ Independent userData pushed for authenticated user on review');
-        }
-    }, [user, isLoading]);
-
     useEffect(() => {
         if (!router.isReady) return;
 
@@ -130,6 +118,17 @@ export default function ReviewPage() {
     // Track Page View
     useEffect(() => {
         if (!onwardFlight) return;
+        
+        // CRITICAL: Push userData BEFORE pageView to ensure it's available for Launch data elements
+        if (!isLoading && user) {
+            pushUserContext({
+                isAuthenticated: true,
+                userId: user.sub || null,
+                userSegment: 'registered'
+            });
+            console.log('✅ Independent userData pushed BEFORE pageView on review');
+        }
+        
         trackPageView({
             pageName: 'Review Booking',
             pageType: 'checkout',
@@ -137,7 +136,7 @@ export default function ReviewPage() {
             bookingStep: 'review',
             bookingStepNumber: 4
         });
-    }, [onwardFlight, trackPageView]);
+    }, [onwardFlight, trackPageView, user, isLoading]);
 
     // Helper to get ancillaries for a specific passenger (Adapted for Review Page State)
     const getAncillariesForPassenger = (idx: number) => {

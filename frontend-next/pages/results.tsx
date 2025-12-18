@@ -124,18 +124,6 @@ export default function ResultsPage() {
 
     const { trackSearch, trackPageView } = useAnalytics();
 
-    // Push independent userData object when user is authenticated
-    useEffect(() => {
-        if (!isLoading && user) {
-            pushUserContext({
-                isAuthenticated: true,
-                userId: user.sub || null,
-                userSegment: 'registered'
-            });
-            console.log('✅ Independent userData pushed for authenticated user');
-        }
-    }, [user, isLoading]);
-
     // Build search context when URL params are available
     useEffect(() => {
         if (originCode && destinationCode && date) {
@@ -211,6 +199,16 @@ export default function ResultsPage() {
     // Track page view with search context once it's available
     useEffect(() => {
         if (searchContext) {
+            // CRITICAL: Push userData BEFORE pageView to ensure it's available for Launch data elements
+            if (!isLoading && user) {
+                pushUserContext({
+                    isAuthenticated: true,
+                    userId: user.sub || null,
+                    userSegment: 'registered'
+                });
+                console.log('✅ Independent userData pushed BEFORE pageView');
+            }
+            
             trackPageView(
                 {
                     pageType: 'searchResults',
@@ -222,7 +220,7 @@ export default function ResultsPage() {
                 { searchContext }
             );
         }
-    }, [searchContext, trackPageView]);
+    }, [searchContext, trackPageView, user, isLoading]);
 
 
     // Initialize search parameters from URL
