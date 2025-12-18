@@ -259,7 +259,7 @@ export default function PaymentPage() {
         };
 
         buildPaymentTracking();
-    }, [onwardFlight, travellers, user, isLoading]); // Simplified dependencies - only track when flight and traveller data is ready
+    }, [onwardFlight, travellers]); // Simplified dependencies - only track when flight and traveller data is ready
 
 
     // --- Calculations ---

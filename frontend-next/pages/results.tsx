@@ -220,7 +220,7 @@ export default function ResultsPage() {
                 { searchContext }
             );
         }
-    }, [searchContext, trackPageView, user, isLoading]);
+    }, [searchContext, trackPageView]);
 
 
     // Initialize search parameters from URL

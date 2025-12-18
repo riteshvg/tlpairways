@@ -349,7 +349,7 @@ export default function TravellerDetailsPage() {
             // Mark as tracked
             pageViewTracked.current = true;
         }
-    }, [onwardFlight, date, user, isLoading]); // Simplified dependencies - only track when flight data is ready
+    }, [onwardFlight, date]); // Simplified dependencies - only track when flight data is ready
 
     const handleTravellerChange = (index: number, field: keyof Traveller, value: string) => {
         const newTravellers = [...travellers];

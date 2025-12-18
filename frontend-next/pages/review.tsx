@@ -136,7 +136,7 @@ export default function ReviewPage() {
             bookingStep: 'review',
             bookingStepNumber: 4
         });
-    }, [onwardFlight, trackPageView, user, isLoading]);
+    }, [onwardFlight, trackPageView]);
 
     // Helper to get ancillaries for a specific passenger (Adapted for Review Page State)
     const getAncillariesForPassenger = (idx: number) => {

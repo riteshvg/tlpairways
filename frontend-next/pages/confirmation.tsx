@@ -550,7 +550,7 @@ export default function ConfirmationPage() {
         };
 
         trackConfirmationEvents();
-    }, [bookingData, user, trackPageView, isLoading]);
+    }, [bookingData, user, trackPageView]);
 
     const getAncillariesForPassenger = (idx: number) => {
         const services: any[] = [];

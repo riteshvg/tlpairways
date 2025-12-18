@@ -293,7 +293,7 @@ export default function AncillaryServicesPage() {
             // Mark as tracked
             pageViewTracked.current = true;
         }
-    }, [onwardFlight, date, user, isLoading]); // Simplified dependencies - only track when flight data is ready
+    }, [onwardFlight, date]); // Simplified dependencies - only track when flight data is ready
 
 
     // Initialize selections for new travellers
