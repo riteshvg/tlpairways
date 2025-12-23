@@ -8,13 +8,14 @@ const { generateBookingConfirmationEmail, generateBookingConfirmationEmailText }
 const { getWeatherForCity } = require('./weatherService');
 const { sanitizeString } = require('../utils/validators');
 const { logEmailSent, logEmailFailed } = require('./loggerService');
+const { isEmailEnabled } = require('./settingsService');
 
 // Initialize Brevo API client
 function getBrevoClient() {
   if (!process.env.BREVO_API_KEY) {
     throw new Error('BREVO_API_KEY is not configured');
   }
-  
+
   const apiInstance = new brevo.TransactionalEmailsApi();
   // Set API key using setApiKey method
   apiInstance.setApiKey(brevo.TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY);
@@ -39,6 +40,20 @@ function getBrevoClient() {
  */
 async function sendBookingConfirmationEmail(bookingData) {
   try {
+    // Check if email sending is enabled (checks both settings file and env variable)
+    const emailEnabledFlag = isEmailEnabled();
+
+    if (!emailEnabledFlag) {
+      console.log('📧 Email sending is disabled. Skipping email for:', bookingData.email);
+      return {
+        success: true,
+        messageId: 'disabled-' + Date.now(),
+        message: 'Email sending is disabled (test mode)',
+        weatherIncluded: false,
+        disabled: true
+      };
+    }
+
     // Validate required fields
     if (!bookingData.email) {
       throw new Error('Recipient email is required');
@@ -68,11 +83,11 @@ async function sendBookingConfirmationEmail(bookingData) {
     // Fetch weather data for destination city (non-blocking)
     let weatherData = null;
     let weatherIncluded = false;
-    
+
     // Normalize city name (handles airport codes, variations, etc.)
     const { normalizeCityName } = require('../utils/cityMapper');
     const cityForWeather = normalizeCityName(sanitizedData.toCity || sanitizedData.to || '');
-    
+
     if (cityForWeather) {
       try {
         weatherData = await getWeatherForCity(cityForWeather);
@@ -137,7 +152,7 @@ async function sendBookingConfirmationEmail(bookingData) {
     };
   } catch (error) {
     logEmailFailed(bookingData.bookingId || 'unknown', error);
-    
+
     // Extract error message
     let errorMessage = 'Failed to send email';
     if (error.response) {
@@ -162,16 +177,20 @@ function getEmailServiceStatus() {
   const hasApiKey = !!process.env.BREVO_API_KEY;
   const hasSenderEmail = !!process.env.SENDER_EMAIL;
   const isConfigured = hasApiKey && hasSenderEmail;
+  const emailEnabledFlag = isEmailEnabled();
 
   return {
     configured: isConfigured,
+    enabled: emailEnabledFlag,
     hasApiKey,
     hasSenderEmail,
     senderEmail: process.env.SENDER_EMAIL || 'Not configured',
     senderName: process.env.SENDER_NAME || 'TLP Airways',
-    message: isConfigured 
-      ? 'Email service is configured and ready' 
-      : 'Email service is not fully configured. Please set BREVO_API_KEY and SENDER_EMAIL'
+    message: !emailEnabledFlag
+      ? 'Email service is disabled (test mode)'
+      : isConfigured
+        ? 'Email service is configured and ready'
+        : 'Email service is not fully configured. Please set BREVO_API_KEY and SENDER_EMAIL'
   };
 }
 
