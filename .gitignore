@@ -43,3 +43,7 @@ cypress/screenshots/
 # Temporary files
 *.tmp
 .cache/
+
+# Runtime configuration
+backend/config/settings.json
+

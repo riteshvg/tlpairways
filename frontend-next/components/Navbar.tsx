@@ -38,6 +38,7 @@ const Navbar = () => {
         { label: 'Manage Booking', path: '/manage-booking' },
         { label: 'Offers', path: '/offers' },
         { label: 'About Us', path: '/about' },
+        { label: 'Settings', path: '/settings' },
     ];
 
     return (
