@@ -170,8 +170,7 @@ export default function TravellerDetailsPage() {
 
         setTravellers(updatedTravellers);
 
-        const { firstName, lastName } = generateRandomName();
-        setContactEmail(generateRandomEmail(firstName, lastName));
+        // Keep the default test email, only fill phone number
         setContactPhone(generateRandomPhone());
 
         setSnackbar({

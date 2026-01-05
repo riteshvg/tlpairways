@@ -286,9 +286,7 @@ const TravellerDetails = () => {
 
     setTravellers(updatedTravellers);
 
-    // Fill contact information
-    const { firstName, lastName } = generateRandomName();
-    setEmail(generateRandomEmail(firstName, lastName));
+    // Keep the default test email, only fill phone number
     setPhone(generateRandomPhone());
 
     // Show success message
