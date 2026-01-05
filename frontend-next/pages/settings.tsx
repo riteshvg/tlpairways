@@ -70,11 +70,25 @@ const SettingsPage: React.FC = () => {
             }
 
             const data = await response.json();
-            setSettings(data.settings);
-            setSuccessMessage(data.message);
 
-            // Clear success message after 3 seconds
-            setTimeout(() => setSuccessMessage(null), 3000);
+            // Handle both successful saves and warnings about persistence
+            if (data.success) {
+                setSettings(data.settings);
+                setSuccessMessage(data.message);
+            } else if (data.warning) {
+                // Settings couldn't be persisted (production environment)
+                setSettings(data.settings);
+                setError(
+                    `${data.warning}. ${data.message}. ` +
+                    `To make this change permanent, set the environment variable: ` +
+                    `${data.recommendation?.variable}=${data.recommendation?.value}`
+                );
+            } else {
+                throw new Error(data.error || 'Failed to update settings');
+            }
+
+            // Clear success message after 5 seconds
+            setTimeout(() => setSuccessMessage(null), 5000);
         } catch (err: any) {
             setError(err.message || 'Failed to update settings');
             console.error('Error updating settings:', err);

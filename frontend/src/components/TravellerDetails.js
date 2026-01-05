@@ -159,7 +159,7 @@ const TravellerDetails = () => {
     }
     return { onward: null, return: null };
   });
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState('yougotjunkedbro@gmail.com');
   const [phone, setPhone] = useState('');
   const [whatsappNotification, setWhatsappNotification] = useState(true);
 
@@ -886,6 +886,13 @@ const TravellerDetails = () => {
                         helperText={validationErrors.email}
                         required
                       />
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{ mt: 0.5, display: 'block', fontSize: '0.75rem' }}
+                      >
+                        💡 Default test email is pre-filled. You can clear and enter your own email to receive booking confirmations.
+                      </Typography>
                     </Grid>
                     <Grid item xs={12} md={6}>
                       <TextField

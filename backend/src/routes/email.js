@@ -285,9 +285,21 @@ router.post('/settings', (req, res) => {
         settings
       });
     } else {
-      res.status(500).json({
+      // Settings couldn't be saved to file (common in production with ephemeral filesystem)
+      const { getAllSettings } = require('../services/settingsService');
+      const settings = getAllSettings();
+
+      res.status(200).json({
         success: false,
-        error: 'Failed to update settings'
+        warning: 'Settings could not be persisted to disk',
+        message: 'To persist this setting in production, set the EMAIL_ENABLED environment variable',
+        settings,
+        recommendation: {
+          action: 'Set environment variable',
+          variable: 'EMAIL_ENABLED',
+          value: emailEnabled.toString(),
+          note: 'Environment variables take precedence over file-based settings'
+        }
       });
     }
   } catch (error) {

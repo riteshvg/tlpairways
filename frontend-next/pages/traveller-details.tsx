@@ -87,7 +87,7 @@ export default function TravellerDetailsPage() {
     const [onwardFlight, setOnwardFlight] = useState<any>(null);
     const [returnFlight, setReturnFlight] = useState<any>(null);
     const [travellers, setTravellers] = useState<Traveller[]>([]);
-    const [contactEmail, setContactEmail] = useState('');
+    const [contactEmail, setContactEmail] = useState('yougotjunkedbro@gmail.com');
     const [contactPhone, setContactPhone] = useState('');
     const [showLoginBanner, setShowLoginBanner] = useState(true);
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' as 'info' | 'success' | 'error' });
@@ -561,6 +561,13 @@ export default function TravellerDetailsPage() {
                                             value={contactEmail}
                                             onChange={(e) => setContactEmail(e.target.value)}
                                         />
+                                        <Typography
+                                            variant="caption"
+                                            color="text.secondary"
+                                            sx={{ mt: 0.5, display: 'block', fontSize: '0.75rem' }}
+                                        >
+                                            💡 Default test email is pre-filled. You can clear and enter your own email to receive booking confirmations.
+                                        </Typography>
                                     </Grid>
                                     <Grid size={{ xs: 12, md: 6 }}>
                                         <TextField

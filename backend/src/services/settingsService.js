@@ -19,16 +19,24 @@ const DEFAULT_SETTINGS = {
  * Ensure settings file exists
  */
 function ensureSettingsFile() {
-    const configDir = path.dirname(SETTINGS_FILE);
+    try {
+        const configDir = path.dirname(SETTINGS_FILE);
 
-    // Create config directory if it doesn't exist
-    if (!fs.existsSync(configDir)) {
-        fs.mkdirSync(configDir, { recursive: true });
-    }
+        // Create config directory if it doesn't exist
+        if (!fs.existsSync(configDir)) {
+            console.log('📁 Creating config directory:', configDir);
+            fs.mkdirSync(configDir, { recursive: true });
+        }
 
-    // Create settings file if it doesn't exist
-    if (!fs.existsSync(SETTINGS_FILE)) {
-        fs.writeFileSync(SETTINGS_FILE, JSON.stringify(DEFAULT_SETTINGS, null, 2));
+        // Create settings file if it doesn't exist
+        if (!fs.existsSync(SETTINGS_FILE)) {
+            console.log('📄 Creating settings file with defaults:', SETTINGS_FILE);
+            fs.writeFileSync(SETTINGS_FILE, JSON.stringify(DEFAULT_SETTINGS, null, 2));
+        }
+    } catch (error) {
+        console.error('❌ Error ensuring settings file:', error.message);
+        console.warn('⚠️  Settings will use defaults and environment variables only');
+        // Don't throw - allow the app to continue with defaults
     }
 }
 
@@ -38,11 +46,19 @@ function ensureSettingsFile() {
 function getSettings() {
     try {
         ensureSettingsFile();
+
+        // Check if file exists before reading
+        if (!fs.existsSync(SETTINGS_FILE)) {
+            console.warn('⚠️  Settings file does not exist, using defaults');
+            return { ...DEFAULT_SETTINGS };
+        }
+
         const data = fs.readFileSync(SETTINGS_FILE, 'utf8');
         return JSON.parse(data);
     } catch (error) {
-        console.error('Error reading settings:', error);
-        return DEFAULT_SETTINGS;
+        console.error('❌ Error reading settings:', error.message);
+        console.warn('⚠️  Using default settings');
+        return { ...DEFAULT_SETTINGS };
     }
 }
 
@@ -54,9 +70,11 @@ function saveSettings(settings) {
         ensureSettingsFile();
         settings.lastUpdated = new Date().toISOString();
         fs.writeFileSync(SETTINGS_FILE, JSON.stringify(settings, null, 2));
+        console.log('✅ Settings saved successfully');
         return true;
     } catch (error) {
-        console.error('Error saving settings:', error);
+        console.error('❌ Error saving settings:', error.message);
+        console.warn('⚠️  Settings could not be persisted. Use EMAIL_ENABLED environment variable for production.');
         return false;
     }
 }
