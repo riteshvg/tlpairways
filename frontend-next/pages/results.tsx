@@ -537,12 +537,33 @@ export default function ResultsPage() {
                     </Grid>
                 </Paper>
 
+                {/* Destination Personalization Banner Placeholder - To be customized via Adobe Target */}
+                <Box
+                    id="destination-personalization-banner"
+                    className="target-destination-banner"
+                    sx={{
+                        mb: 4,
+                        minHeight: '200px',
+                        borderRadius: 2,
+                        border: '2px dashed #ccc',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        bgcolor: '#f5f5f5',
+                    }}
+                >
+                    <Typography variant="body1" color="text.secondary">
+                        Destination Personalization Banner Placeholder
+                    </Typography>
+                </Box>
+
                 {/* Main Content Grid: Flights (left) + Booking Summary (right) */}
-                <Grid container spacing={4}>
+                < Grid container spacing={4} >
                     {/* Left Column - Flight Lists */}
-                    <Grid size={{ xs: 12, md: 8 }}>
+                    < Grid size={{ xs: 12, md: 8 }
+                    }>
                         {/* Onward Flights */}
-                        <Paper sx={{ p: 3, mb: 4 }}>
+                        < Paper sx={{ p: 3, mb: 4 }}>
                             <Typography variant="h6" gutterBottom sx={{ color: '#00695c', fontWeight: 600 }}>
                                 {searchParams.tripType === 'roundtrip' ? 'Onward Journey' : 'Available Flights'}
                             </Typography>
@@ -550,36 +571,40 @@ export default function ResultsPage() {
                                 {onwardFlights.length} flights found
                             </Typography>
                             <Divider sx={{ my: 2 }} />
-                            {onwardFlights.length === 0 ? (
-                                <Alert severity="info">No flights found for this route. Please try different dates.</Alert>
-                            ) : (
-                                onwardFlights.map(flight => renderFlightCard(flight, false))
-                            )}
-                        </Paper>
+                            {
+                                onwardFlights.length === 0 ? (
+                                    <Alert severity="info">No flights found for this route. Please try different dates.</Alert>
+                                ) : (
+                                    onwardFlights.map(flight => renderFlightCard(flight, false))
+                                )
+                            }
+                        </Paper >
 
                         {/* Return Flights */}
-                        {searchParams.tripType === 'roundtrip' && (
-                            <Paper sx={{ p: 3, mb: 4 }}>
-                                <Typography variant="h6" gutterBottom sx={{ color: '#00695c', fontWeight: 600 }}>
-                                    Return Journey
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary" gutterBottom>
-                                    {returnFlights.length} flights found
-                                </Typography>
-                                <Divider sx={{ my: 2 }} />
-                                {returnFlights.length === 0 ? (
-                                    <Alert severity="warning">
-                                        No return flights found for this route. Please try different dates or check if this route has return flights available.
-                                    </Alert>
-                                ) : (
-                                    returnFlights.map(flight => renderFlightCard(flight, true))
-                                )}
-                            </Paper>
-                        )}
-                    </Grid>
+                        {
+                            searchParams.tripType === 'roundtrip' && (
+                                <Paper sx={{ p: 3, mb: 4 }}>
+                                    <Typography variant="h6" gutterBottom sx={{ color: '#00695c', fontWeight: 600 }}>
+                                        Return Journey
+                                    </Typography>
+                                    <Typography variant="body2" color="text.secondary" gutterBottom>
+                                        {returnFlights.length} flights found
+                                    </Typography>
+                                    <Divider sx={{ my: 2 }} />
+                                    {returnFlights.length === 0 ? (
+                                        <Alert severity="warning">
+                                            No return flights found for this route. Please try different dates or check if this route has return flights available.
+                                        </Alert>
+                                    ) : (
+                                        returnFlights.map(flight => renderFlightCard(flight, true))
+                                    )}
+                                </Paper>
+                            )
+                        }
+                    </Grid >
 
                     {/* Right Column - Sticky Booking Summary */}
-                    <Grid size={{ xs: 12, md: 4 }}>
+                    < Grid size={{ xs: 12, md: 4 }}>
                         <Paper sx={{ p: 3, position: 'sticky', top: 20 }}>
                             <Typography variant="h6" gutterBottom>
                                 Selected Flights
@@ -727,11 +752,11 @@ export default function ResultsPage() {
                                 </Box>
                             )}
                         </Paper>
-                    </Grid>
-                </Grid>
+                    </Grid >
+                </Grid >
 
                 {/* Flight Details Modal */}
-                <Dialog open={isModalOpen} onClose={handleCloseModal} maxWidth="md" fullWidth>
+                < Dialog open={isModalOpen} onClose={handleCloseModal} maxWidth="md" fullWidth >
                     <DialogTitle>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <Typography variant="h6">Flight Details</Typography>
@@ -840,8 +865,8 @@ export default function ResultsPage() {
                             Select This Flight
                         </Button>
                     </DialogActions>
-                </Dialog>
-            </Container>
+                </Dialog >
+            </Container >
         </>
     );
 }
