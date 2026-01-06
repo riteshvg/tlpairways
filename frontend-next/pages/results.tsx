@@ -510,33 +510,6 @@ export default function ResultsPage() {
 
 
             <Container maxWidth="lg" sx={{ mt: 4, mb: 8 }}>
-                {/* Search Summary */}
-                <Paper sx={{ p: 3, mb: 4 }}>
-                    <Grid container spacing={2} alignItems="center">
-                        <Grid size={{ xs: 12, md: 8 }}>
-                            <Typography variant="h5" gutterBottom>
-                                <FlightIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
-                                {originAirport?.city} ({searchParams.originCode}) → {destAirport?.city} ({searchParams.destinationCode})
-                            </Typography>
-                            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                                <Chip label={format(searchParams.date, 'MMM dd, yyyy')} size="small" />
-                                <Chip label={`${searchParams.passengers} Passenger${searchParams.passengers > 1 ? 's' : ''}`} size="small" />
-                                <Chip label={searchParams.tripType === 'roundtrip' ? 'Round Trip' : 'One Way'} size="small" color="primary" />
-                                <Chip label={searchParams.cabinClass.charAt(0).toUpperCase() + searchParams.cabinClass.slice(1)} size="small" />
-                            </Box>
-                        </Grid>
-                        <Grid size={{ xs: 12, md: 4 }} sx={{ textAlign: { md: 'right' } }}>
-                            <Button
-                                variant="outlined"
-                                onClick={handleModifySearch}
-                                startIcon={<FlightIcon />}
-                            >
-                                Modify Search
-                            </Button>
-                        </Grid>
-                    </Grid>
-                </Paper>
-
                 {/* Destination Personalization Banner Placeholder - To be customized via Adobe Target */}
                 <Box
                     id="destination-personalization-banner"
