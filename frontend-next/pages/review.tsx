@@ -272,20 +272,34 @@ export default function ReviewPage() {
     };
 
     const handleCancel = () => {
-        // Extract search params from query to maintain user context
-        const { origin, destination, departureDate, returnDate, tripType, cabinClass, passengers } = query;
+        // Extract all necessary search params from query to maintain user context
+        const {
+            originCode,
+            destinationCode,
+            date,
+            returnDate,
+            tripType,
+            cabinClass,
+            passengers,
+            adults,
+            children,
+            infants
+        } = query;
 
         // Redirect to results page with original search parameters
         router.push({
             pathname: '/results',
             query: {
-                origin,
-                destination,
-                departureDate,
+                originCode,
+                destinationCode,
+                date,
                 returnDate,
                 tripType,
                 cabinClass,
-                passengers
+                passengers,
+                adults,
+                children,
+                infants
             }
         });
     };
