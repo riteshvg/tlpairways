@@ -132,7 +132,7 @@ export default function ReviewPage() {
     // Track Page View (wait for user to load first)
     useEffect(() => {
         if (!onwardFlight || isLoading) return;
-        
+
         trackPageView({
             pageName: 'Review Booking',
             pageType: 'checkout',
@@ -489,6 +489,7 @@ export default function ReviewPage() {
                                     {loading ? 'Processing...' : 'Confirm Booking'}
                                 </Button>
                                 <Button
+                                    id="cancel-booking-btn"
                                     variant="outlined"
                                     color="error"
                                     onClick={handleCancel}
