@@ -47,3 +47,8 @@ cypress/screenshots/
 # Runtime configuration
 backend/config/settings.json
 
+# Archive (keep folder structure, ignore large files)
+archive/*/node_modules/
+archive/*/build/
+archive/*/.next/
+
