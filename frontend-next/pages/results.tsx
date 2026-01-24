@@ -510,25 +510,7 @@ export default function ResultsPage() {
 
 
             <Container maxWidth="lg" sx={{ mt: 4, mb: 8 }}>
-                {/* Destination Personalization Banner Placeholder - To be customized via Adobe Target */}
-                <Box
-                    id="destination-personalization-banner"
-                    className="target-destination-banner"
-                    sx={{
-                        mb: 4,
-                        minHeight: '200px',
-                        borderRadius: 2,
-                        border: '2px dashed #ccc',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        bgcolor: '#f5f5f5',
-                    }}
-                >
-                    <Typography variant="body1" color="text.secondary">
-                        Destination Personalization Banner Placeholder
-                    </Typography>
-                </Box>
+
 
                 {/* Main Content Grid: Flights (left) + Booking Summary (right) */}
                 < Grid container spacing={4} >

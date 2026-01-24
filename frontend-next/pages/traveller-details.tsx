@@ -519,37 +519,87 @@ export default function TravellerDetailsPage() {
                 <Grid container spacing={4}>
                     {/* Left Column - Forms */}
                     <Grid size={{ xs: 12, md: 8 }}>
-                        {/* Quick Fill Section */}
-                        <Box sx={{ mb: 4, p: 2, border: '1px solid #e0e0e0', borderRadius: 1, backgroundColor: '#f5f5f5' }}>
-                            <Typography variant="h6" gutterBottom>
-                                Quick Fill
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                                Fill all passenger details with random data for testing
-                            </Typography>
-                            <Box sx={{ display: 'flex', gap: 2 }}>
-                                <Button
-                                    variant="contained"
-                                    color="secondary"
-                                    onClick={handleFillRandomDetails}
-                                >
-                                    Fill Random Details
-                                </Button>
-                                <Button
-                                    variant="outlined"
-                                    onClick={handleClearAllDetails}
-                                >
-                                    Clear All
-                                </Button>
-                            </Box>
+                        {/* Destination Personalization Banner - Adobe Target */}
+                        <Box
+                            id="destination-promo-banner"
+                            data-mbox="traveller-destination-banner"
+                            sx={{
+                                mb: 4,
+                                p: 0,
+                                borderRadius: 2,
+                                overflow: 'hidden',
+                                height: 180,
+                                background: 'linear-gradient(135deg, #1a237e 0%, #0d47a1 50%, #01579b 100%)',
+                                position: 'relative',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
+                        >
+                            {/* Empty placeholder - Content will be injected by Adobe Target */}
+                            {/* Decorative Elements */}
+                            <Box
+                                sx={{
+                                    position: 'absolute',
+                                    right: -20,
+                                    top: -20,
+                                    width: 200,
+                                    height: 200,
+                                    borderRadius: '50%',
+                                    background: 'rgba(255,255,255,0.1)',
+                                }}
+                            />
+                            <Box
+                                sx={{
+                                    position: 'absolute',
+                                    right: 60,
+                                    bottom: -40,
+                                    width: 120,
+                                    height: 120,
+                                    borderRadius: '50%',
+                                    background: 'rgba(255,255,255,0.05)',
+                                }}
+                            />
+                            <Box
+                                sx={{
+                                    position: 'absolute',
+                                    left: -30,
+                                    bottom: -30,
+                                    width: 150,
+                                    height: 150,
+                                    borderRadius: '50%',
+                                    background: 'rgba(255,255,255,0.08)',
+                                }}
+                            />
                         </Box>
 
                         <form id="traveller-form" onSubmit={handleSubmit}>
                             {/* Contact Details */}
                             <Paper sx={{ p: 3, mb: 3 }}>
-                                <Typography variant="h6" gutterBottom>
-                                    Contact Information
-                                </Typography>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                                    <Typography variant="h6">
+                                        Contact Information
+                                    </Typography>
+                                    <Box sx={{ display: 'flex', gap: 1 }}>
+                                        <Button
+                                            variant="contained"
+                                            color="secondary"
+                                            size="small"
+                                            onClick={handleFillRandomDetails}
+                                            sx={{ fontSize: '0.75rem' }}
+                                        >
+                                            Fill Random Details
+                                        </Button>
+                                        <Button
+                                            variant="outlined"
+                                            size="small"
+                                            onClick={handleClearAllDetails}
+                                            sx={{ fontSize: '0.75rem' }}
+                                        >
+                                            Clear All
+                                        </Button>
+                                    </Box>
+                                </Box>
                                 <Grid container spacing={2}>
                                     <Grid size={{ xs: 12, md: 6 }}>
                                         <TextField
