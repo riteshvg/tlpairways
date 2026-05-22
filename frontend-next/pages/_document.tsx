@@ -15,6 +15,43 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
+        {/* AEP Web SDK (alloy.js) — initialized before Adobe Launch */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              !function(n,o){o.forEach(function(o){n[o]||((n.__alloyNS=n.__alloyNS||[]).push(o),n[o]=
+              function(){var u=arguments;return new Promise(function(i,l){n[o].q.push([i,l,u])})},
+              n[o].q=[])})}(window,["alloy"]);
+            `,
+          }}
+        />
+        <script
+          async
+          src="https://cdn1.adoberesources.net/alloy/2.24.0/alloy.min.js"
+        />
+        {/* Configure alloy with TLP Airways datastream */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                if (typeof window.alloy !== 'function') return;
+                window.alloy("configure", {
+                  datastreamId: "tlp-airways-demo-datastream",
+                  orgId: "TLP_AIRWAYS_DEMO_ORG@AdobeOrg",
+                  debugEnabled: true,
+                  defaultConsent: "pending",
+                  idMigrationEnabled: true,
+                  thirdPartyCookiesEnabled: false
+                }).then(function() {
+                  console.log("✅ AEP Web SDK configured");
+                }).catch(function(err) {
+                  console.warn("⚠️ AEP Web SDK configure error (expected in demo):", err.message);
+                });
+              })();
+            `,
+          }}
+        />
+
         {/* Adobe Target Pre-hiding Snippet */}
         <script
           dangerouslySetInnerHTML={{

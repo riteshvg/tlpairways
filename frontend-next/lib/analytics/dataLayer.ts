@@ -353,6 +353,92 @@ export function pushCustomEvent(eventName: string, eventData: any): void {
 }
 
 /**
+ * Push travel agent session started event
+ */
+export function pushAgentSessionStarted(sessionData: {
+    agentSessionId: string;
+    userPrompt: string;
+    intentType?: string;
+}): void {
+    pushToDataLayer({
+        event: 'travel.agent.sessionStarted',
+        agentData: {
+            agentSessionId: sessionData.agentSessionId,
+            userPrompt: sessionData.userPrompt,
+            intentType: sessionData.intentType || 'unknown',
+            timestamp: new Date().toISOString()
+        }
+    });
+}
+
+/**
+ * Push agent tool invocation event (flight/hotel/destination/itinerary agent)
+ */
+export function pushAgentToolInvoked(agentData: {
+    agentSessionId: string;
+    agentName: string;
+    toolName: string;
+    query: Record<string, any>;
+}): void {
+    pushToDataLayer({
+        event: `travel.agent.${agentData.toolName}`,
+        agentData: {
+            agentSessionId: agentData.agentSessionId,
+            agentName: agentData.agentName,
+            toolName: agentData.toolName,
+            query: agentData.query,
+            timestamp: new Date().toISOString()
+        }
+    });
+}
+
+/**
+ * Push agent result selected event (user clicks Book on a flight/hotel card)
+ */
+export function pushAgentResultSelected(selectionData: {
+    agentSessionId: string;
+    resultType: 'flight' | 'hotel';
+    resultId: string;
+    resultName: string;
+    price?: number;
+    destination?: string;
+}): void {
+    pushToDataLayer({
+        event: 'travel.agent.resultSelected',
+        agentData: {
+            agentSessionId: selectionData.agentSessionId,
+            resultType: selectionData.resultType,
+            resultId: selectionData.resultId,
+            resultName: selectionData.resultName,
+            price: selectionData.price,
+            destination: selectionData.destination,
+            timestamp: new Date().toISOString()
+        }
+    });
+}
+
+/**
+ * Push agent booking handoff event (agent passes control to booking flow)
+ */
+export function pushAgentBookingHandoff(handoffData: {
+    agentSessionId: string;
+    bookingType: 'flight' | 'hotel';
+    destinationCode: string;
+    targetPage: string;
+}): void {
+    pushToDataLayer({
+        event: 'travel.agent.bookingHandoff',
+        agentData: {
+            agentSessionId: handoffData.agentSessionId,
+            bookingType: handoffData.bookingType,
+            destinationCode: handoffData.destinationCode,
+            targetPage: handoffData.targetPage,
+            timestamp: new Date().toISOString()
+        }
+    });
+}
+
+/**
  * Hash sensitive data (email, phone) using SHA-256
  */
 export async function hashSensitiveData(data: string): Promise<string> {

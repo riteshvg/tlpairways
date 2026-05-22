@@ -1,14 +1,14 @@
 # 🎬 TLP Airways - Video Scripts (Episodes 1-3)
 
-> **Production-Ready Scripts for YouTube Tutorial Series**
+> **Learning to Build a Complete Airlines Booking Platform**
 
 ---
 
-# 📹 EPISODE 1: "Building a Complete Airlines Booking Platform"
+# 📹 EPISODE 1: "Why I Built This Airline Booking Demo"
 
 **Duration:** 18-22 minutes  
-**Style:** Engaging introduction with live demo  
-**Tone:** Professional yet conversational, like explaining to a smart colleague
+**Style:** Honest introduction with live demo  
+**Tone:** Conversational, like sharing a project with a friend
 
 ---
 
@@ -18,76 +18,83 @@
 [SCREEN: Show the live TLP Airways website - homepage hero section]
 
 SCRIPT:
-"What if I told you that you could build THIS... 
+"So I built this thing.
+
 [click through to search, show results, select a flight]
-...a complete airlines booking platform...
+
+It's a fake airline booking website.
+You can search for flights, pick seats, add meals, 
+go through payment, and get a confirmation.
+
 [show the confirmation page with PNR]
-...with real-time analytics tracking, authentication, email confirmations, 
-and deploy it to the cloud...
+
+Why? Honestly, I wanted to learn how complex booking systems work.
+And I needed something for Adobe Experience Platform demos.
+
 [show Railway dashboard briefly]
-...all by yourself?
 
-I'm [Your Name], and over the next few videos, I'm going to show you 
-exactly how I built TLP Airways - a fully functional flight booking 
-demo that I use for Adobe Experience Platform demonstrations.
+It's deployed. It works. And along the way, 
+I learned way more than I expected about 
+full-stack development, analytics tracking, and UI design.
 
-Whether you're a developer wanting to level up your portfolio, 
-a solutions consultant needing a demo environment, 
-or just curious about how airline websites actually work behind the scenes...
-this series is for you.
+I'm [Your Name], and I thought I'd share how I built it.
+Not because I did everything perfectly — I definitely didn't.
+But maybe seeing my approach will help you with your own projects.
 
-Let's dive in."
+Let's take a look."
 ```
 
 **[VISUAL: Animated intro/logo - 5 seconds]**
 
 ---
 
-## 📍 CHAPTER 1: What We're Building (0:45 - 4:30)
+## 📍 CHAPTER 1: What We're Looking At (0:45 - 4:30)
 
 ```
 [SCREEN: Split view - website on left, feature list on right]
 
 SCRIPT:
-"Before we write a single line of code, let me show you what 
-we're actually building. TLP Airways isn't just a pretty UI - 
-it's a complete booking system.
+"Let me show you what's actually here.
+This isn't just a UI mockup — there's real functionality.
 
 [Navigate to homepage]
-Here's our homepage. Clean, modern design with a hero section, 
-popular destinations, and a quick search widget.
+Here's the homepage. Pretty standard stuff — 
+hero section, popular destinations, search widget.
 
 [Click 'Book Now' and go to search page]
-This is the flight search page. We've got origin and destination 
-selectors with smart filtering - meaning if I select Bangalore as my origin,
-the destination dropdown only shows cities that actually have flights 
-FROM Bangalore.
+This is the search page. One thing I'm happy with 
+is the smart filtering — if I select Bangalore as origin,
+the destination dropdown only shows places we have flights to.
+
+That was surprisingly tricky to get right.
 
 [Fill in search: BLR to DEL, select dates, 2 adults]
-Let me search for a flight. Bangalore to Delhi, let's say next month,
-two adult passengers, economy class.
+Let me search for something. Bangalore to Delhi, 
+two passengers, economy.
 
 [Show results page]
-And here are our results. We've got onward flights, return flights,
-pricing in Indian Rupees, and I can select any combination.
+Here are the results. Onward and return flights,
+pricing, and you can select any combination.
 
 [Select flights and proceed]
-Now here's where it gets interesting. We've got a complete 
-traveller details form...
+Now the booking flow...
 
 [Show ancillary services]
-...an ancillary services page with an interactive seat map, 
-meal selection, baggage upgrades...
+There's an interactive seat map here. 
+Meal selection. Baggage upgrades.
+This page was fun to build, actually.
 
 [Show payment page]
-...a payment page with card validation...
+Payment page with card validation...
 
 [Show confirmation]
-...and finally, a confirmation page with a generated PNR, 
-passenger details, and the option to receive an email confirmation.
+And a confirmation with a generated booking reference.
 
-That's the user journey. But what's happening underneath? 
-That's what we're going to explore."
+The whole flow works. It's not connected to real flights, 
+obviously — it's mock data. But the UX mirrors 
+what real airline sites do.
+
+Now let me show you what's happening under the hood."
 ```
 
 ---
@@ -98,133 +105,144 @@ That's what we're going to explore."
 [SCREEN: VS Code with project open, or architecture diagram]
 
 SCRIPT:
-"Let's talk about what powers this application.
+"Here's what I'm using. Some of these choices 
+I'd probably reconsider if I started over, 
+but they work well enough.
 
-[Show architecture diagram or draw on screen]
+[Show architecture diagram or explain verbally]
 
 **Frontend:**
-We're using Next.js with TypeScript. Why Next.js? 
-It gives us the best of both worlds - server-side rendering for 
-SEO and performance, plus React's component model for interactivity.
-We're also using Material-UI for our design system, which saves us 
-tons of time on building UI components from scratch.
+Next.js with TypeScript. I chose Next.js because 
+I wanted server-side rendering and the file-based routing 
+is really convenient. 
+
+Material-UI for the design system. 
+It saved me a ton of time — I didn't want to 
+style every button and input from scratch.
 
 **Backend:**
-Node.js with Express. Simple, fast, and JavaScript all the way down.
-This handles our API endpoints - flight searches, bookings, 
-and email sending.
+Node.js with Express. Simple and I know it well.
+Handles the API endpoints for flights and email sending.
 
 **Authentication:**
-Auth0. Look, you could build your own auth system, but why? 
-Auth0 gives us OAuth 2.0, social logins, and enterprise-grade 
-security out of the box. It took me about 30 minutes to integrate.
+Auth0. I didn't want to build my own auth — 
+that felt like a rabbit hole. Auth0 took maybe 
+30 minutes to integrate, and it just works.
 
 **Analytics:**
-And here's the secret sauce - the Adobe Data Layer. 
-Every single interaction you saw in that demo? 
-It's being tracked. Flight searches, selections, purchases - 
-all of it is captured in a format that Adobe Analytics 
-and Adobe Experience Platform can consume.
+This is the part I'm most interested in — 
+the Adobe Data Layer.
+
+Every interaction in the demo is tracked.
+Flight searches, selections, purchases — 
+all captured in a format for Adobe Analytics and AEP.
+
+We'll dig into this in later episodes.
 
 **Deployment:**
-Railway for hosting. It's like Heroku but better - 
-automatic deployments from GitHub, environment variable management,
-and a generous free tier.
+Railway. It's like Heroku but I find the 
+interface cleaner. Automatic deployments from GitHub.
 
 [Show GitHub repo briefly]
-The entire codebase is on GitHub, and by the end of this series,
-you'll understand every single file in here."
+The code is on GitHub. It's not perfectly organized, 
+but it's fairly readable. You can clone it and explore."
 ```
 
 ---
 
-## 📍 CHAPTER 3: Project Demo - The Complete Flow (9:00 - 15:00)
+## 📍 CHAPTER 3: The Data Layer - Quick Demo (9:00 - 15:00)
 
 ```
 [SCREEN: Browser with DevTools open, Console tab visible]
 
 SCRIPT:
-"Now let me show you something most users never see. 
-Let's do a complete booking while watching what happens 
-in the data layer.
+"Let me show you something I think is cool.
+Open the browser console and let's do a booking.
 
 [Open browser console, type: window.adobeDataLayer]
 
-This is the Adobe Data Layer - an array that captures 
-every significant event on our website.
+This is the Adobe Data Layer — 
+basically an array that captures events as they happen.
 
 [Start fresh booking - go to homepage]
 I'm on the homepage. Let me expand this array...
-See this 'pageView' event? It fired the moment the page loaded.
-It contains the page name, URL, timestamp, and user information.
+See this 'pageView' event? It fired when the page loaded.
+Page name, URL, timestamp, user info — it's all there.
 
 [Navigate to search, fill form]
-Now I'm searching for a flight...
+Now I'm searching...
+
 [Submit search]
-BOOM - 'flightSearchInitiated' event. Look at this data:
-origin BLR, destination DEL, departure date, number of passengers,
-cabin class. Everything a marketing team would want to know 
-about search patterns.
+There — 'searchInitiated' event. 
+Origin, destination, dates, passenger count.
+This is the kind of data marketing teams care about.
 
 [Select a flight from results]
-I'll select this morning flight...
-'flightSelected' event. It captured which flight I picked,
-the price, the position in the list - was it the first result? 
-The third? That's valuable for understanding user behavior.
+I'll pick this flight...
+'flightSelected' event. It captures which flight I chose,
+the price, even the position in the list.
+
+That position thing is interesting for merchandising —
+if users always pick the second result, 
+maybe the sorting algorithm needs work.
 
 [Proceed through ancillary services]
-Selecting my seat... adding a meal... extra baggage...
-Each of these is tracked.
+Selecting a seat... adding a meal...
+Each interaction is tracked.
 
 [Complete payment]
-And finally... payment submitted...
+And finally, payment...
+
 [Show confirmation page]
-'purchase' event with 'commerce.purchases'. 
+'purchase' event.
 
-This right here - this is what makes this demo valuable.
-This is production-grade analytics tracking that you'd find 
-on Emirates, United, or IndiGo.
+This is what I was building toward.
+A proper e-commerce purchase event with 
+revenue, products, customer info (hashed).
 
-Let me show you the purchase event structure...
 [Expand the event in console]
-We've got revenue data, product details broken down by 
-flights and ancillary services, customer information 
-(hashed for privacy), booking reference... everything."
+Look at the structure — 
+flights and ancillary items are broken down separately.
+That allows for proper revenue attribution in analytics.
+
+Getting this right took me several attempts, honestly.
+The products array format wasn't obvious at first."
 ```
 
 ---
 
-## 📍 CHAPTER 4: What You'll Learn (15:00 - 17:30)
+## 📍 CHAPTER 4: What's Coming in This Series (15:00 - 17:30)
 
 ```
 [SCREEN: Outline of upcoming episodes or bullet points]
 
 SCRIPT:
-"So what's coming in this series? Let me give you the roadmap.
+"Here's what I'm planning to cover.
+This might evolve as I go — I'm figuring out what's 
+most useful to share.
 
-**In the next video**, we're going to set up our development 
-environment and walk through the project structure. 
-I'll show you how I organize components, pages, utilities, 
-and data files.
+**Next episode**: Project setup and folder structure.
+How I organize components, pages, and utilities.
 
-**Episode 3** is all about the design system - our color palette,
-typography, component library, and how Material-UI theming works.
+**Episode 3**: The design system.
+Material-UI theming, colors, typography — 
+how to make things look consistent.
 
-**Episodes 4 through 7** - this is the Adobe Data Layer deep dive.
-We'll implement tracking from scratch, covering page views, 
-custom events, e-commerce purchases, and user identity.
+**Episodes 4-7**: Adobe Data Layer deep dive.
+This is the core of what makes this demo useful.
+Page views, custom events, e-commerce purchases.
 
-**Episodes 8 through 11** cover the full-stack features:
-Auth0 integration, the flight search engine, 
-seat maps and ancillary services, and email confirmations.
+**Episodes 8-11**: Full-stack features.
+Auth0 integration, the search engine,
+seat maps, email confirmations.
 
-**And episodes 12 through 15** take us to production:
-deployment, Adobe Target personalization, performance optimization,
-and a complete series wrap-up.
+**Episodes 12-15**: Production stuff.
+Deployment, personalization with Target,
+and wrapping it all up.
 
-By the end, you won't just have a cool demo - you'll have 
-a portfolio project that demonstrates real-world skills 
-that employers and clients are looking for."
+By the end, hopefully you'll have a sense of 
+how to build something like this yourself.
+Or at least, what's involved."
 ```
 
 ---
@@ -235,26 +253,19 @@ that employers and clients are looking for."
 [SCREEN: Subscribe animation, GitHub link, social links]
 
 SCRIPT:
-"If you want to follow along, there are two things to do right now.
+"If you want to follow along, the GitHub link is in the description.
+Clone it, poke around, break things — that's how you learn.
 
-First, hit that subscribe button and the notification bell. 
-I'm releasing new episodes weekly, and you don't want to miss 
-the next one where we actually start building.
-
-Second, the GitHub link is in the description. 
-Star the repo, clone it, explore the code. 
-I've made sure everything is well-documented.
-
-And if you have questions or suggestions for what you'd like 
-to see in this series, drop a comment. I read every single one.
+If you have questions or suggestions, drop a comment.
+I read them, and if I don't know the answer, 
+I'll try to figure it out.
 
 I'm [Your Name], and I'll see you in the next episode 
-where we're setting up our development environment and 
-exploring the project structure.
+where we look at project structure and setup.
 
-Happy coding."
+Thanks for watching."
 
-[END CARD: 10 seconds with subscribe button, playlist link, social handles]
+[END CARD: 10 seconds with subscribe button, playlist link]
 ```
 
 ---
@@ -275,7 +286,7 @@ Happy coding."
 
 **Duration:** 16-20 minutes  
 **Style:** Tutorial with live coding  
-**Tone:** Practical, step-by-step, encouraging
+**Tone:** Practical, step-by-step, friendly
 
 ---
 
@@ -285,54 +296,53 @@ Happy coding."
 [SCREEN: Terminal with project clone in progress]
 
 SCRIPT:
-"A good project structure is like a clean apartment - 
-everything has its place, and you can find what you need 
-without digging through piles of clothes.
+"A good folder structure saves you so much headache later.
 
-Today, we're setting up TLP Airways and I'm going to show you 
-a folder structure that's survived six months of feature additions 
-without turning into spaghetti code.
+I didn't get this right immediately — 
+the first version of this project was a mess.
+I eventually reorganized it, and now it makes sense to me.
 
-Let's get started."
+Today I'll show you how it's set up 
+and we'll get the project running locally.
+
+Let's go."
 ```
 
 **[VISUAL: Animated intro - 5 seconds]**
 
 ---
 
-## 📍 CHAPTER 1: Prerequisites & Environment Setup (0:30 - 4:00)
+## 📍 CHAPTER 1: What You Need to Install (0:30 - 4:00)
 
 ```
 [SCREEN: Terminal or split with browser for downloads]
 
 SCRIPT:
-"Before we clone the repo, let's make sure you have everything installed.
+"Before we clone anything, let's make sure you have the basics.
 
 **Node.js**
-You need Node.js version 18 or higher. 
+You need Node 18 or higher. 
 [Type: node --version]
-I'm running 20.10. If you need to install it, go to nodejs.org 
-or use nvm if you're on Mac or Linux.
+I'm on 20. If you don't have it, grab it from nodejs.org 
+or use nvm if you prefer.
 
 **Code Editor**
-I'm using VS Code, but any editor works. 
-If you're using VS Code, I recommend these extensions:
-- ESLint for code quality
+I use VS Code, but really anything works. 
+If you're in VS Code, I recommend:
+- ESLint for catching mistakes
 - Prettier for formatting  
-- TypeScript support comes built-in
-- And I love the 'Error Lens' extension for inline error messages
+- Error Lens for inline error messages — really helpful
 
 **Git**
-You'll need Git for version control.
+For cloning and version control.
 [Type: git --version]
-Got it.
+Good.
 
 **Package Manager**
-We're using npm, which comes with Node.js.
-Some people prefer yarn or pnpm - that's fine, 
-just adjust the commands accordingly.
+We're using npm. Yarn or pnpm work too — 
+just adjust the commands.
 
-Alright, environment is ready. Let's get the code."
+Okay, let's get the code."
 ```
 
 ---
@@ -343,8 +353,7 @@ Alright, environment is ready. Let's get the code."
 [SCREEN: Terminal, full screen or large]
 
 SCRIPT:
-"Head to GitHub - the link is in the description - 
-and you can either fork the repo or clone it directly.
+"The repo is on GitHub — link's in the description.
 
 [Type commands as you speak]
 
@@ -354,26 +363,22 @@ cd tlpairways
 Let's see what we've got...
 ls -la
 
-Okay, we've got our main directories here. 
-Let me open this in VS Code.
+Okay, there's our directories. Let me open this in VS Code.
 
 code .
 
 [VS Code opens]
 
-Now, this is a monorepo structure - meaning we have 
-both our frontend and backend in the same repository.
-Let me show you the lay of the land.
+Now, this is a monorepo — frontend and backend 
+are in the same repository.
 
-First, let's install dependencies. We have a root package.json
-that orchestrates everything.
+Let's install dependencies.
 
 npm install
 
-This is installing dependencies for the root, which mainly 
-contains development tools and scripts.
+That installs some root-level stuff.
 
-Now we need to set up the frontend:
+Now the frontend:
 
 cd frontend-next
 npm install
@@ -383,34 +388,33 @@ And the backend:
 cd ../backend  
 npm install
 
-[While installing, start explaining structure]
+[While installing, start explaining]
 
 While that's running, let me explain what each folder does..."
 ```
 
 ---
 
-## 📍 CHAPTER 3: Project Structure Deep Dive (7:30 - 14:00)
+## 📍 CHAPTER 3: Project Structure (7:30 - 14:00)
 
 ```
 [SCREEN: VS Code with file explorer open]
 
 SCRIPT:
-"Let me walk you through the folder structure. 
-This is where you'll spend most of your time.
+"Let me walk you through this.
 
 [Click through folders as you explain]
 
 **Root Level**
 
 tlpairways/
-├── frontend-next/    ← Our Next.js application
+├── frontend-next/    ← Next.js app
 ├── backend/          ← Node.js API server
-├── documentation/    ← All our project docs
-├── cypress/          ← End-to-end tests
-└── archive/          ← Legacy code (we won't touch this)
+├── documentation/    ← Project docs
+├── cypress/          ← Tests (not fully built out)
+└── archive/          ← Old stuff I'm keeping around
 
-The most important ones are frontend-next and backend.
+The main ones are frontend-next and backend.
 
 ---
 
@@ -419,114 +423,105 @@ The most important ones are frontend-next and backend.
 Let me expand frontend-next...
 
 frontend-next/
-├── pages/            ← Route-based pages (Next.js magic)
-├── components/       ← Reusable UI components
+├── pages/            ← Routes (Next.js thing)
+├── components/       ← Reusable UI pieces
 ├── lib/              ← Utilities and services
-├── data/             ← Static data (flights, airports)
-├── public/           ← Static assets (images, fonts)
-└── theme/            ← Material-UI theme configuration
+├── data/             ← Static data like flights and airports
+├── public/           ← Images, fonts
+└── theme/            ← Material-UI theming
 
-**The Pages Directory**
+**Pages Directory**
 [Open pages folder]
 
-In Next.js, every file in the pages directory becomes a route.
-So index.tsx is our homepage at '/'
-search.tsx is '/search'
-results.tsx is '/results'
-And so on.
+In Next.js, each file here becomes a route.
+index.tsx = homepage at '/'
+search.tsx = '/search'
+results.tsx = '/results'
 
-See how intuitive that is? No need to configure React Router - 
-the file system IS your router.
+It's pretty intuitive once you get used to it.
+No need for a separate router configuration.
 
 Let me open index.tsx...
 [Open the file]
 
-This is our homepage. You can see we're importing components,
-using Material-UI for layout, and there's our hero section.
+This is the homepage. You can see the imports,
+Material-UI components, the hero section.
 
-**The Components Directory**
+**Components Directory**
 [Open components folder]
 
-We keep reusable pieces here.
-- Navbar.tsx - the navigation bar used on every page
-- BookingSteps.tsx - the progress indicator in the booking flow
-- PassengerSelector.tsx - the adult/child/infant picker
-- SeatMap.tsx - our interactive seat selection
+Reusable stuff lives here.
+- Navbar.tsx - navigation
+- BookingSteps.tsx - progress indicator
+- PassengerSelector.tsx - the passenger count picker
+- SeatMap.tsx - the seat selection grid
 
 [Open Navbar.tsx briefly]
-See how this is self-contained? It handles its own state,
-its own styling, and can be dropped into any page.
+Each component is self-contained.
+It handles its own state and styling.
 
-**The Lib Directory**
+**Lib Directory**
 [Open lib folder]
 
-This is where the business logic lives.
-- analytics/ - Adobe Data Layer service
+Business logic and services.
+- analytics/ - the data layer implementation
 - auth/ - Auth0 utilities
 
 [Open analytics folder]
-AdobeDataLayerService - this is the heart of our tracking implementation.
-We'll spend an entire episode on this later.
+This is where the tracking code lives.
+We'll spend a lot of time here later.
 
-**The Data Directory**
+**Data Directory**
 [Open data folder]
 
-Mock data for our demo.
-- flights.json - all available flights with schedules and prices
-- airports.ts - airport codes and city names
+Mock data.
+- flights.json - routes, schedules, prices
+- airports.ts - airport codes and cities
 
 [Open flights.json briefly]
-See? Each flight has an ID, origin, destination, times, prices per class...
-This simulates what a real API would return.
+Each flight has an ID, origin, destination, times, prices...
+This is what a real API would return, basically.
 
 ---
 
 **Backend Structure**
 
-Now let's look at the backend.
+Now the backend.
 
 backend/
 ├── src/
 │   ├── routes/       ← API endpoints
 │   ├── services/     ← Business logic
 │   ├── models/       ← Data structures
-│   ├── config/       ← Configuration
 │   └── index.js      ← Entry point
 
 [Open routes folder]
-We have routes for:
-- flights.js - search and get flight data
-- airports.js - get airport list
-- email.js - send confirmation emails
-- bookings.js - save booking data
+Routes for flights, airports, email, bookings.
 
 [Open services folder]
-Services contain the actual logic.
-- emailService.js - integrates with SendGrid
-- flightService.js - filters and returns flights
+Services have the actual logic — 
+email sending, flight filtering, etc.
 
-This separation is important - routes handle HTTP,
-services handle business logic. 
-Never mix the two."
+I try to keep routes thin — 
+they just handle HTTP request/response.
+Services do the real work."
 ```
 
 ---
 
-## 📍 CHAPTER 4: Environment Configuration (14:00 - 16:30)
+## 📍 CHAPTER 4: Environment Variables (14:00 - 16:30)
 
 ```
 [SCREEN: VS Code showing .env files]
 
 SCRIPT:
-"Now let's talk about environment variables - 
-the secret sauce that makes your app work.
+"Environment variables. The thing I always forget to set up.
 
-[Open .env.example or env.example]
+[Open .env.example]
 
-Every project has an example env file. 
-Never commit your actual secrets!
+There's an example file. Never commit your actual secrets!
 
-Let me create our local environment file.
+Let me create the local env file.
 
 [In terminal]
 cp frontend-next/env.example frontend-next/.env.local
@@ -535,27 +530,27 @@ cp frontend-next/env.example frontend-next/.env.local
 
 Here's what we need:
 
-# Auth0 - We'll set this up in episode 8
-AUTH0_SECRET='a-long-random-string-here'
+# Auth0 - we'll set this up later
+AUTH0_SECRET='a-long-random-string'
 AUTH0_BASE_URL='http://localhost:3000'
 AUTH0_ISSUER_BASE_URL='https://your-tenant.auth0.com'
 AUTH0_CLIENT_ID='your-client-id'
 AUTH0_CLIENT_SECRET='your-client-secret'
 
-For now, you can leave the Auth0 values as placeholders - 
-the app will work without authentication.
+For now, you can leave Auth0 values as placeholders.
+The app runs without authentication — 
+you just can't log in.
 
 # Backend URL
 NEXT_PUBLIC_BACKEND_URL='http://localhost:5000'
 
-# Adobe Analytics - Optional for now
+# Adobe Analytics - optional
 NEXT_PUBLIC_ADOBE_LAUNCH_URL='your-launch-script-url'
 
-The prefix NEXT_PUBLIC_ means this variable is exposed to the browser.
-Variables without that prefix are server-side only - 
-important for security.
+NEXT_PUBLIC_ prefix means it's exposed to the browser.
+Variables without that prefix are server-side only.
 
-Now let's do the same for the backend...
+Now the backend...
 
 cp backend/.env.example backend/.env
 
@@ -565,50 +560,51 @@ PORT=5000
 NODE_ENV=development
 EMAIL_ENABLED=false
 
-We're disabling emails in development. 
-You don't want to accidentally send test emails to real addresses."
+Email is disabled in dev. 
+You don't want to accidentally send test emails 
+to real addresses. I learned that the hard way."
 ```
 
 ---
 
-## 📍 CHAPTER 5: Running the Application (16:30 - 18:30)
+## 📍 CHAPTER 5: Running the App (16:30 - 18:30)
 
 ```
 [SCREEN: Terminal with split or tabs]
 
 SCRIPT:
-"Moment of truth - let's start this thing.
+"Let's see if this actually works.
 
-We need two terminal windows - one for the frontend, one for the backend.
+We need two terminals — frontend and backend.
 
 **Terminal 1 - Backend**
 cd backend
 npm run dev
 
 [Server starts]
-Backend is running on port 5000.
+Backend running on 5000.
 
 **Terminal 2 - Frontend**  
 cd frontend-next
 npm run dev
 
 [Server starts]
-Frontend is running on port 3000.
+Frontend on 3000.
 
 [Open browser to localhost:3000]
 
-And there it is! Our TLP Airways homepage, running locally.
+And there it is. TLP Airways, running locally.
 
 [Quick click through]
 Search works... results load... 
-We're in business.
 
-If you see any errors, check:
+If you see errors, check:
 1. Both servers are running
-2. Your .env files are in place
-3. Dependencies are installed
+2. .env files exist
+3. Dependencies installed
 
-Drop a comment if you're stuck - I'll help you out."
+If you're stuck, drop a comment — 
+I'll try to help."
 ```
 
 ---
@@ -619,20 +615,17 @@ Drop a comment if you're stuck - I'll help you out."
 [SCREEN: VS Code with project open, then end card]
 
 SCRIPT:
-"We've got our development environment running and you now 
-understand how TLP Airways is structured.
+"We've got the project running.
+You've seen how it's organized.
 
-In the next episode, we're diving into the design system - 
-the colors, typography, and Material-UI theme that makes 
-this app look professional.
+Next episode, we're looking at the design system —
+colors, typography, Material-UI theming.
+How things go from basic to looking decent.
 
-Make sure you've got the project running locally before then,
-because we're going to start making changes.
+Make sure you have the project running locally.
+We'll start making changes.
 
-Hit subscribe if you haven't already, and I'll see you 
-in Episode 3.
-
-Happy coding."
+See you in Episode 3."
 
 [END CARD: 10 seconds]
 ```
@@ -653,7 +646,7 @@ Happy coding."
 
 **Duration:** 18-22 minutes  
 **Style:** Visual tutorial with code editing  
-**Tone:** Creative, inspiring, showing the "why" behind design choices
+**Tone:** Exploratory, showing how decisions were made
 
 ---
 
@@ -663,81 +656,79 @@ Happy coding."
 [SCREEN: Side-by-side of ugly wireframe vs polished TLP Airways]
 
 SCRIPT:
-"You know what separates a demo that makes people say 'nice!' 
-from one that makes them say 'WOW'?
+"There's a difference between 'functional' and 'nice to look at'.
 
 [Transition from wireframe to polished UI]
 
-It's not the features. It's not the code complexity.
-It's the design system.
+When I first built this, it was functional.
+But it looked pretty rough.
 
-Today we're breaking down exactly how TLP Airways goes from 
-basic components to this polished, professional look 
-that could pass for a real airline website.
+It took me a while to figure out how to make it look...
+not embarrassing.
 
-Let's build something beautiful."
+Today I want to share what I learned about design systems
+and how Material-UI theming works.
+
+I'm not a designer, by the way.
+But I've figured out some patterns that help."
 ```
 
 **[VISUAL: Animated intro - 5 seconds]**
 
 ---
 
-## 📍 CHAPTER 1: What is a Design System? (0:40 - 3:30)
+## 📍 CHAPTER 1: What's a Design System? (0:40 - 3:30)
 
 ```
 [SCREEN: Examples of design systems - airline websites]
 
 SCRIPT:
-"Before we look at code, let's understand what a design system is.
+"A design system is basically a set of rules 
+for how your UI should look.
 
-Think of it like a brand guideline for developers.
 It defines:
-- Colors - not just 'blue', but exactly WHICH blue
-- Typography - font families, sizes, weights
-- Spacing - consistent margins and padding
-- Components - buttons, cards, inputs that look the same everywhere
+- Colors — not just 'blue', but which specific blue
+- Typography — fonts, sizes, weights
+- Spacing — consistent margins and padding
+- Components — buttons and cards that look the same everywhere
 
 [Show Emirates, IndiGo, Lufthansa websites briefly]
 
-Look at any major airline website. 
-Every button looks the same. Every card has the same border radius.
-Every heading uses the same font.
-
-That's not by accident - that's a design system.
+Look at any major airline website.
+Every button looks the same. Every card has the same style.
+That consistency doesn't happen by accident.
 
 [Show TLP Airways]
 
-For TLP Airways, I wanted a modern, premium feel.
-Think Emirates meets a Silicon Valley startup.
-Deep purples, subtle gradients, lots of white space.
+For TLP Airways, I wanted something modern-ish.
+Purples, subtle shadows, clean spacing.
 
-Let me show you how this is implemented."
+I looked at a bunch of airline sites and 
+tried to figure out what made them look professional.
+
+Let me show you how I implemented it."
 ```
 
 ---
 
-## 📍 CHAPTER 2: Material-UI Theme Configuration (3:30 - 9:00)
+## 📍 CHAPTER 2: Material-UI Theming (3:30 - 9:00)
 
 ```
 [SCREEN: VS Code - theme configuration file]
 
 SCRIPT:
-"Our design system is powered by Material-UI's theming system.
-Let me open our theme configuration.
+"Material-UI has a theming system that's really useful.
+You define your styles once, and they apply everywhere.
 
 [Open frontend-next/theme/index.ts or theme file]
 
-This is the single source of truth for our entire UI.
-
 **Color Palette**
-
-Let's start with colors.
 
 [Highlight the palette section]
 
 palette: {
   primary: {
-    main: '#6366F1',      // Indigo - our brand color
+    main: '#6366F1',      // Indigo - main brand color
     light: '#818CF8',
     dark: '#4F46E5',
     contrastText: '#FFFFFF'
@@ -748,17 +739,16 @@ palette: {
     dark: '#DB2777'
   },
   background: {
-    default: '#F8FAFC',   // Light gray background
-    paper: '#FFFFFF'       // White cards
+    default: '#F8FAFC',   // Light gray
+    paper: '#FFFFFF'       // White for cards
   }
 }
 
-See how we're not using random hex codes everywhere?
-We define them once, and reference them throughout the app.
+The key is — I'm not hard-coding colors everywhere.
+I define them once and use 'primary.main' instead of '#6366F1'.
 
-When I want a button in the primary color, I don't write '#6366F1'.
-I write 'primary.main' - and if we ever rebrand, 
-I change ONE line and the whole app updates.
+If I ever want to change the brand color,
+I change one line and everything updates.
 
 [Show a button component using the theme]
 
@@ -766,8 +756,8 @@ I change ONE line and the whole app updates.
   Book Now
 </Button>
 
-That button automatically gets our indigo color, 
-the right text contrast, hover states... everything.
+That button automatically gets the right colors,
+hover states — everything.
 
 **Typography**
 
@@ -780,43 +770,39 @@ typography: {
     fontWeight: 700,
     lineHeight: 1.2
   },
-  h2: {
-    fontSize: '2rem',
-    fontWeight: 600
-  },
   body1: {
     fontSize: '1rem',
     lineHeight: 1.6
   },
   button: {
-    textTransform: 'none',  // No UPPERCASE buttons
+    textTransform: 'none',  // No UPPERCASE
     fontWeight: 600
   }
 }
 
-I'm using Inter as the primary font - it's clean, modern, 
-and extremely readable. You can get it from Google Fonts.
+I'm using Inter as the main font.
+It's clean and readable.
 
-Notice 'textTransform: none' for buttons. 
-By default, Material-UI makes button text UPPERCASE.
-That looks dated to me, so I disable it.
+See 'textTransform: none'? 
+By default Material-UI makes button text UPPERCASE.
+That looks dated to me, so I turn it off.
 
-**Spacing & Border Radius**
+**Spacing & Corners**
 
 [Show shape configuration]
 
 shape: {
-  borderRadius: 12  // Rounded corners everywhere
+  borderRadius: 12
 }
 
-This gives us those modern, friendly rounded corners.
-Every card, every button, every input - consistent.
+Rounded corners everywhere.
+Cards, buttons, inputs — all consistent.
 
 **Component Overrides**
 
-[Show components section if it exists]
+[Show components section]
 
-Now here's where it gets powerful - component overrides.
+This is where it gets powerful.
 
 components: {
   MuiButton: {
@@ -824,7 +810,6 @@ components: {
       root: {
         borderRadius: 8,
         padding: '10px 24px',
-        boxShadow: 'none',
         '&:hover': {
           boxShadow: '0 4px 12px rgba(99, 102, 241, 0.3)'
         }
@@ -841,29 +826,24 @@ components: {
   }
 }
 
-Every Button in our app now has that subtle hover shadow.
-Every Card has that soft, elevated look.
-We defined it once, and it applies everywhere."
+Now every Button has that subtle hover shadow.
+Every Card has that soft shadow.
+I defined it once."
 ```
 
 ---
 
-## 📍 CHAPTER 3: Key UI Components Walkthrough (9:00 - 15:00)
+## 📍 CHAPTER 3: Key Components (9:00 - 15:00)
 
 ```
 [SCREEN: VS Code + Browser preview side by side]
 
 SCRIPT:
-"Let me show you how our main components use this design system.
+"Let me show you a few components and how they work.
 
 **The Navbar**
 
 [Open components/Navbar.tsx]
-
-Our navbar is fixed at the top, has our logo, navigation links,
-and a login button.
-
-[Highlight key styling]
 
 <AppBar 
   position='fixed'
@@ -874,36 +854,25 @@ and a login button.
   }}
 >
 
-See that 'backdropFilter: blur(10px)'? 
-That's the frosted glass effect you see on modern websites.
-The content behind the navbar gets blurred as you scroll.
+See 'backdropFilter: blur(10px)'?
+That's the frosted glass effect.
+Content behind the navbar gets blurred as you scroll.
 
 [Scroll on the live site to demonstrate]
 
-Subtle, but it makes a huge difference in perceived quality.
+It's subtle, but it feels more polished.
 
 ---
 
 **Flight Cards**
 
-[Navigate to results page, show a flight card]
+[Navigate to results page]
 
-Let's look at how we display flights.
+Each card shows flight info — times, duration, price.
 
-[Open relevant component or results.tsx]
+[Open relevant component]
 
-Each flight card shows:
-- Airline logo and flight number
-- Departure and arrival times with city codes
-- Duration and stops
-- Price prominently displayed
-
-The card uses:
-- Our theme's border radius (rounded corners)
-- The soft shadow from our card override
-- Hover effect to indicate it's clickable
-
-[Hover over card to show effect]
+The hover effect lifts the card slightly:
 
 <Card
   sx={{
@@ -915,20 +884,19 @@ The card uses:
   }}
 >
 
-That micro-animation - lifting up slightly on hover - 
-tells the user 'this is interactive' without them having to guess.
+[Hover over card to show effect]
+
+That micro-animation tells users 'this is clickable'.
 
 ---
 
-**Booking Steps Indicator**
+**Booking Steps**
 
 [Show booking flow with stepper]
 
 [Open components/BookingSteps.tsx]
 
-This component shows where you are in the booking process.
-
-We're using Material-UI's Stepper component, but customized:
+This shows progress through the booking.
 
 <Stepper 
   activeStep={currentStep}
@@ -943,33 +911,22 @@ We're using Material-UI's Stepper component, but customized:
 >
   <Step><StepLabel>Search</StepLabel></Step>
   <Step><StepLabel>Select Flight</StepLabel></Step>
-  <Step><StepLabel>Traveller Details</StepLabel></Step>
-  <Step><StepLabel>Payment</StepLabel></Step>
-  <Step><StepLabel>Confirmation</StepLabel></Step>
+  ...
 </Stepper>
 
-Active steps show our primary indigo.
-Completed steps turn green.
+Active steps are indigo. Completed are green.
 Users always know where they are.
 
 ---
 
 **The Seat Map**
 
-[Navigate to ancillary services, show seat map]
+[Navigate to ancillary services]
 
 [Open components/SeatMap.tsx]
 
-This is probably our most complex visual component.
-
-We're rendering an SVG-based seat layout.
-Each seat is a clickable element that can be:
-- Available (default color)
-- Selected (primary color) 
-- Occupied (gray, non-clickable)
-- Premium (different color, higher price)
-
-[Click a seat to select it]
+This one's more complex.
+Each seat is clickable — available, selected, or occupied.
 
 <Box
   onClick={() => handleSeatClick(seat)}
@@ -979,14 +936,14 @@ Each seat is a clickable element that can be:
     borderRadius: 1,
     backgroundColor: getSeatColor(seat),
     cursor: seat.available ? 'pointer' : 'not-allowed',
-    transition: 'all 0.2s',
     '&:hover': seat.available ? {
       transform: 'scale(1.1)'
     } : {}
   }}
 />
 
-Interactive, responsive, and visually clear."
+It took me a while to get this working nicely.
+The scaling on hover was a nice touch I found."
 ```
 
 ---
@@ -997,20 +954,20 @@ Interactive, responsive, and visually clear."
 [SCREEN: Browser with DevTools open, device toolbar enabled]
 
 SCRIPT:
-"A beautiful desktop design is worthless if it breaks on mobile.
-Let's see how TLP Airways handles different screen sizes.
+"A nice desktop design needs to work on mobile too.
+Let me show you how this handles different screen sizes.
 
 [Toggle device toolbar in DevTools, select iPhone view]
 
-Here's our homepage on mobile.
+Here's the homepage on mobile.
 
 [Show mobile layout]
 
-The navigation collapses into a hamburger menu.
-The hero text resizes to fit.
-Cards stack vertically instead of in a grid.
+Navigation becomes a hamburger menu.
+Cards stack vertically.
+Text resizes.
 
-How do we achieve this? Material-UI's breakpoint system.
+Material-UI's breakpoint system makes this easier.
 
 [Show code example]
 
@@ -1020,13 +977,11 @@ How do we achieve this? Material-UI's breakpoint system.
   </Grid>
 </Grid>
 
-Breakpoints:
-- xs (extra-small): phones, full width
-- sm (small): large phones
-- md (medium): tablets, 2 columns
-- lg (large): desktops, 3 columns
+- xs (extra-small): full width on phones
+- md (medium): 2 columns on tablets
+- lg (large): 3 columns on desktops
 
-For typography, we use responsive values:
+For typography:
 
 <Typography
   sx={{
@@ -1036,51 +991,48 @@ For typography, we use responsive values:
   Fly the Luxurious Way
 </Typography>
 
-Different font size at each breakpoint.
-No media query spaghetti - it's all inline and readable.
+Different size at each breakpoint.
+No messy media queries.
 
-[Switch between device sizes to demonstrate]
+[Switch between device sizes]
 
-Works on every device. Ship it."
+Works on every device. Good enough for me."
 ```
 
 ---
 
-## 📍 CHAPTER 5: Quick Design Exercise (17:30 - 19:30)
+## 📍 CHAPTER 5: Quick Experiment (17:30 - 19:30)
 
 ```
 [SCREEN: VS Code, live editing]
 
 SCRIPT:
-"Let me show you how easy it is to change the entire look 
-with our theme system.
+"Let me show you how easy it is to change things.
 
-What if TLP Airways was acquired by a company with 
-a different brand color? Let's say... teal.
+What if we wanted a different brand color? Let's try teal.
 
 [Open theme file, change primary.main]
 
 primary: {
-  main: '#14B8A6',  // Teal instead of indigo
+  main: '#14B8A6',  // Teal
 }
 
 [Save, show hot reload]
 
-Look at that. Every button, every indicator, every accent - 
-all updated to teal. One line change.
+Look at that. Buttons, indicators, accents — all teal.
+One line change.
 
 Let me put it back...
 
 [Revert change]
 
-That's the power of a design system.
-You're not hunting through 50 files to find all the places 
-where you hard-coded a color.
-You change it once, and you're done.
+That's the point of a design system.
+You're not hunting through 50 files to change a color.
+You change it once.
 
-I encourage you to experiment with the theme.
-Try different colors, different border radius values,
-different shadows. See how it affects the entire app."
+I'd encourage you to experiment.
+Try different colors, different border radius values.
+See what happens."
 ```
 
 ---
@@ -1091,26 +1043,24 @@ different shadows. See how it affects the entire app."
 [SCREEN: Side by side - code and polished UI, then end card]
 
 SCRIPT:
-"That's our design system - the foundation that makes 
-TLP Airways look professional and feel cohesive.
+"That's the design system.
+The basics, anyway.
 
 Quick recap:
-- We use Material-UI's theming for consistency
-- Colors, typography, and spacing are defined once
-- Component overrides apply styles globally
-- Responsive design is built-in with breakpoints
+- Material-UI theming for consistency
+- Colors and typography defined once
+- Component overrides for global styles
+- Breakpoints for responsive design
 
-Next episode, we're diving into the Adobe Data Layer.
-This is where analytics gets interesting - we'll implement 
-page views, custom events, and start capturing real user behavior.
+Next episode, we're getting into the data layer.
+That's where the analytics tracking lives, 
+and it's the part I find most interesting.
 
-If you've been following along and have your project running,
-try making a theme change and share a screenshot in the comments.
-I'd love to see your color variations.
+If you've got the project running, 
+try changing the theme and see what happens.
+Share a screenshot in the comments if you want.
 
-Subscribe, hit the bell, and I'll see you in Episode 4.
-
-Happy designing."
+See you in Episode 4."
 
 [END CARD: 10 seconds]
 ```
@@ -1120,7 +1070,7 @@ Happy designing."
 ## 🎬 B-ROLL SHOTS NEEDED FOR EPISODE 3
 
 - [ ] Slow-mo UI transitions (button hovers, card lifts)
-- [ ] Color palette showcase (swatches animating)
+- [ ] Color palette showcase
 - [ ] Mobile responsive transformation
 - [ ] Side-by-side before/after design
 - [ ] Smooth scroll through polished UI
@@ -1142,7 +1092,7 @@ Happy designing."
 ## Recording Setup
 - [ ] OBS/Camtasia ready
 - [ ] Good lighting on face (if doing facecam)
-- [ ] Water nearby (you'll be talking a lot!)
+- [ ] Water nearby
 - [ ] Script visible on second monitor
 
 ## Post-Production
@@ -1155,6 +1105,6 @@ Happy designing."
 
 ---
 
-**Script Version:** 1.0  
-**Created:** January 2026  
+**Script Version:** 2.0 (Humble, Learner-Teacher Tone)  
+**Updated:** January 2026  
 **Author:** TLP Airways Team

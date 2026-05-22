@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mastering Airline Analytics with Adobe Experience Platform</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #6366F1;
+            --secondary: #EC4899;
+            --accent: #14B8A6;
+            --dark: #0F172A;
+            --darker: #020617;
+            --light: #F8FAFC;
+            --gray: #64748B;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--darker);
+            color: var(--light);
+            overflow: hidden;
+        }
+        
+        /* Presentation Container */
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+        
+        /* Individual Slides */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px;
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .slide.active {
+            display: flex;
+            opacity: 1;
+        }
+        
+        /* Slide Backgrounds */
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        
+        /* Title Slide */
+        .title-slide h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 24px;
+            line-height: 1.1;
+        }
+        
+        .title-slide .subtitle {
+            font-size: 1.5rem;
+            color: var(--gray);
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        
+        .title-slide .author {
+            font-size: 1.25rem;
+            color: var(--accent);
+            text-align: center;
+        }
+        
+        .title-slide .logo {
+            font-size: 6rem;
+            margin-bottom: 32px;
+        }
+        
+        /* Content Slides */
+        .content-slide {
+            padding: 40px 80px;
+            align-items: flex-start;
+        }
+        
+        .slide-header {
+            width: 100%;
+            margin-bottom: 40px;
+            z-index: 1;
+        }
+        
+        .slide-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .slide-header .slide-number {
+            font-size: 0.875rem;
+            color: var(--gray);
+            margin-top: 8px;
+        }
+        
+        .slide-content {
+            width: 100%;
+            flex: 1;
+            display: flex;
+            gap: 40px;
+            z-index: 1;
+        }
+        
+        /* Two Column Layout */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            width: 100%;
+        }
+        
+        .column {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        /* Text Styles */
+        h3 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--light);
+        }
+        
+        p {
+            font-size: 1.25rem;
+            line-height: 1.8;
+            color: var(--gray);
+            margin-bottom: 16px;
+        }
+        
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        li {
+            font-size: 1.25rem;
+            line-height: 2;
+            color: var(--light);
+            padding-left: 32px;
+            position: relative;
+        }
+        
+        li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-weight: 700;
+        }
+        
+        /* Image Slides */
+        .diagram-slide .slide-content {
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .diagram-container {
+            max-width: 90%;
+            max-height: 70vh;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        
+        .diagram-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        /* Cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            width: 100%;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px -12px rgba(99, 102, 241, 0.3);
+        }
+        
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+        
+        .card h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--light);
+        }
+        
+        .card p {
+            font-size: 1rem;
+            color: var(--gray);
+            margin-bottom: 0;
+        }
+        
+        /* Challenge Cards */
+        .challenge-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            width: 100%;
+        }
+        
+        .challenge-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.1));
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+        
+        .challenge-card .number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+        
+        .challenge-card h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--light);
+            margin-bottom: 8px;
+        }
+        
+        .challenge-card p {
+            font-size: 0.875rem;
+            color: var(--gray);
+            margin-bottom: 0;
+        }
+        
+        /* Stats */
+        .stats-row {
+            display: flex;
+            gap: 40px;
+            margin-top: 40px;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            color: var(--gray);
+            margin-top: 8px;
+        }
+        
+        /* Navigation */
+        .nav-controls {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+            background: rgba(15, 23, 42, 0.9);
+            padding: 12px 24px;
+            border-radius: 100px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            background: transparent;
+            color: var(--primary);
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .nav-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
+        .slide-indicator {
+            font-size: 1rem;
+            color: var(--gray);
+            min-width: 80px;
+            text-align: center;
+        }
+        
+        /* Progress Bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.3s ease;
+            z-index: 100;
+        }
+        
+        /* Keyboard Hint */
+        .keyboard-hint {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            font-size: 0.75rem;
+            color: var(--gray);
+            opacity: 0.5;
+        }
+        
+        /* Adobe Stack Visualization */
+        .stack-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 32px;
+        }
+        
+        .stack-item {
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            padding: 16px 24px;
+            font-weight: 600;
+            color: var(--light);
+        }
+        
+        .stack-arrow {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        /* Episode Grid */
+        .episode-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            width: 100%;
+        }
+        
+        .episode-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .episode-card .ep-number {
+            font-size: 0.75rem;
+            color: var(--primary);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        
+        .episode-card h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--light);
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        
+        .episode-card .duration {
+            font-size: 0.875rem;
+            color: var(--gray);
+        }
+        
+        .module-label {
+            grid-column: 1 / -1;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-top: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* CTA Slide */
+        .cta-slide {
+            text-align: center;
+        }
+        
+        .cta-slide h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            margin-top: 40px;
+        }
+        
+        .cta-btn {
+            padding: 16px 40px;
+            border-radius: 100px;
+            font-size: 1.125rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-btn.primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            color: white;
+        }
+        
+        .cta-btn.secondary {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.5);
+        }
+        
+        /* Fullscreen Button */
+        .fullscreen-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--light);
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+        
+        .fullscreen-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .card-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .challenge-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .episode-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    
+    <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+    
+    <div class="presentation" id="presentation">
+        
+        <!-- Slide 1: Title -->
+        <div class="slide title-slide active" data-slide="1">
+            <div class="logo">✈️</div>
+            <h1>Mastering Airline Analytics<br>with Adobe Experience Platform</h1>
+            <p class="subtitle">A comprehensive guide for Marketers, MarTech Leads & Analytics Professionals</p>
+            <p class="author">TLP Airways | Analytics Masterclass</p>
+        </div>
+        
+        <!-- Slide 2: The Challenge -->
+        <div class="slide content-slide" data-slide="2">
+            <div class="slide-header">
+                <h2>Why Airlines Are the Ultimate Analytics Challenge</h2>
+                <p class="slide-number">01 / Introduction</p>
+            </div>
+            <div class="slide-content">
+                <div class="challenge-grid">
+                    <div class="challenge-card">
+                        <div class="number">01</div>
+                        <h4>Multi-Step Journeys</h4>
+                        <p>Non-linear paths with abandonment & return</p>
+                    </div>
+                    <div class="challenge-card">
+                        <div class="number">02</div>
+                        <h4>Complex Products</h4>
+                        <p>Flights + seats + meals + baggage = 1 booking</p>
+                    </div>
+                    <div class="challenge-card">
+                        <div class="number">03</div>
+                        <h4>Dynamic Pricing</h4>
+                        <p>Same seat, different price every hour</p>
+                    </div>
+                    <div class="challenge-card">
+                        <div class="number">04</div>
+                        <h4>Multi-Passenger</h4>
+                        <p>2 adults + 1 child × 2 legs = complexity</p>
+                    </div>
+                    <div class="challenge-card">
+                        <div class="number">05</div>
+                        <h4>Consent & Privacy</h4>
+                        <p>GDPR, CCPA, DPDP across channels</p>
+                    </div>
+                </div>
+                <div class="stats-row" style="justify-content: center; width: 100%;">
+                    <div class="stat">
+                        <div class="stat-value">50+</div>
+                        <div class="stat-label">Events per booking</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">6</div>
+                        <div class="stat-label">Data sources</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Identity touchpoints</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 3: ERD Diagram -->
+        <div class="slide diagram-slide" data-slide="3">
+            <div class="slide-header">
+                <h2>Airlines Data Model - Entity Relationships</h2>
+                <p class="slide-number">02 / Data Architecture</p>
+            </div>
+            <div class="slide-content">
+                <div class="diagram-container">
+                    <img src="diagrams/airline_erd_diagram.png" alt="Airlines ERD Diagram">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 4: Data Flow Diagram -->
+        <div class="slide diagram-slide" data-slide="4">
+            <div class="slide-header">
+                <h2>AEP Data Flow Architecture</h2>
+                <p class="slide-number">03 / Data Architecture</p>
+            </div>
+            <div class="slide-content">
+                <div class="diagram-container">
+                    <img src="diagrams/aep_data_flow_diagram.png" alt="AEP Data Flow">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 5: Adobe Stack -->
+        <div class="slide content-slide" data-slide="5">
+            <div class="slide-header">
+                <h2>The Adobe Technology Stack</h2>
+                <p class="slide-number">04 / Technology</p>
+            </div>
+            <div class="slide-content">
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card-icon">🌐</div>
+                        <h4>AEP Web SDK</h4>
+                        <p>Single SDK for all Adobe solutions. Real-time data collection via Edge Network.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">📊</div>
+                        <h4>Adobe Analytics</h4>
+                        <p>Traditional reporting and real-time analytics for marketing teams.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">🔍</div>
+                        <h4>Customer Journey Analytics</h4>
+                        <p>Cross-channel analysis with unlimited dimensions on AEP data.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">👤</div>
+                        <h4>Real-Time CDP</h4>
+                        <p>Unified profiles, audience building, and activation to destinations.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">🎯</div>
+                        <h4>Adobe Target</h4>
+                        <p>A/B testing and personalization based on real-time segments.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">🗺️</div>
+                        <h4>Journey Orchestration</h4>
+                        <p>Automated customer journeys triggered by real-time events.</p>
+                    </div>
+                </div>
+                <div class="stack-flow">
+                    <span class="stack-item">Web SDK</span>
+                    <span class="stack-arrow">→</span>
+                    <span class="stack-item">Edge Network</span>
+                    <span class="stack-arrow">→</span>
+                    <span class="stack-item">AEP</span>
+                    <span class="stack-arrow">→</span>
+                    <span class="stack-item">CJA / CDP</span>
+                    <span class="stack-arrow">→</span>
+                    <span class="stack-item">Target</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 6: Identity Graph -->
+        <div class="slide diagram-slide" data-slide="6">
+            <div class="slide-header">
+                <h2>Customer Identity Graph</h2>
+                <p class="slide-number">05 / Identity Stitching</p>
+            </div>
+            <div class="slide-content">
+                <div class="diagram-container">
+                    <img src="diagrams/identity_graph_diagram.png" alt="Identity Graph">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 7: Booking Funnel -->
+        <div class="slide diagram-slide" data-slide="7">
+            <div class="slide-header">
+                <h2>Booking Funnel - Conversion Analytics</h2>
+                <p class="slide-number">06 / Analytics</p>
+            </div>
+            <div class="slide-content">
+                <div class="diagram-container">
+                    <img src="diagrams/booking_funnel_diagram.png" alt="Booking Funnel">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 8: Key Events -->
+        <div class="slide content-slide" data-slide="8">
+            <div class="slide-header">
+                <h2>Data Layer Events - Complete Inventory</h2>
+                <p class="slide-number">07 / Implementation</p>
+            </div>
+            <div class="slide-content">
+                <div class="two-column">
+                    <div class="column">
+                        <h3>User Journey Events</h3>
+                        <ul>
+                            <li><strong>pageView</strong> - Page load tracking</li>
+                            <li><strong>flightSearchInitiated</strong> - Search submit</li>
+                            <li><strong>searchResultsDisplayed</strong> - Results shown</li>
+                            <li><strong>flightSelected</strong> - Flight click</li>
+                            <li><strong>ancillarySelected</strong> - Add-ons chosen</li>
+                        </ul>
+                    </div>
+                    <div class="column">
+                        <h3>Conversion Events</h3>
+                        <ul>
+                            <li><strong>paymentMethodSelected</strong> - Payment choice</li>
+                            <li><strong>paymentSubmitted</strong> - Payment attempt</li>
+                            <li><strong>paymentFailed</strong> - Error tracking</li>
+                            <li><strong>purchase</strong> - Booking complete</li>
+                            <li><strong>bookingModified</strong> - Post-booking changes</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 9: Tutorial Series -->
+        <div class="slide content-slide" data-slide="9">
+            <div class="slide-header">
+                <h2>Video Tutorial Series - 12 Episodes</h2>
+                <p class="slide-number">08 / Learning Path</p>
+            </div>
+            <div class="slide-content">
+                <div class="episode-grid">
+                    <div class="module-label">Module 1: Understanding the Challenge</div>
+                    <div class="episode-card">
+                        <div class="ep-number">Episode 1</div>
+                        <h4>Why Airlines Are Complex</h4>
+                        <div class="duration">22 min</div>
+                    </div>
+                    <div class="episode-card">
+                        <div class="ep-number">Episode 2</div>
+                        <h4>Mapping the Data Layer</h4>
+                        <div class="duration">27 min</div>
+                    </div>
+                    
+                    <div class="module-label">Module 2: Implementation Deep Dive</div>
+                    <div class="episode-card">
+                        <div class="ep-number">Episode 3</div>
+                        <h4>AEP Web SDK Setup</h4>
+                        <div class="duration">30 min</div>
+                    </div>
+                    <div class="episode-card">
+                        <div class="ep-number">Episode 4</div>
+                        <h4>XDM Schema Design</h4>
+                        <div class="duration">33 min</div>
+                    </div>
+                    <div class="episode-card">
+                        <div class="ep-number">Episode 5</div>
+                        <h4>E-Commerce Tracking</h4>
+                        <div class="duration">30 min</div>
+                    </div>
+                    <div class="episode-card">
+                        <div class="ep-number">Episode 6</div>
+                        <h4>Identity & Consent</h4>
+                        <div class="duration">28 min</div>
+                    </div>
+                    
+                    <div class="module-label">Module 3: Analysis & Activation</div>
+                    <div class="episode-card">
+                        <div class="ep-number">Episode 7-8</div>
+                        <h4>CJA Dashboards</h4>
+                        <div class="duration">55 min</div>
+                    </div>
+                    <div class="episode-card">
+                        <div class="ep-number">Episode 9-10</div>
+                        <h4>CDP Audiences</h4>
+                        <div class="duration">60 min</div>
+                    </div>
+                    <div class="episode-card">
+                        <div class="ep-number">Episode 11-12</div>
+                        <h4>Target & Finale</h4>
+                        <div class="duration">55 min</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 10: CTA -->
+        <div class="slide cta-slide" data-slide="10">
+            <h2>Ready to Master Airline Analytics?</h2>
+            <p class="subtitle" style="font-size: 1.5rem; color: var(--gray); max-width: 600px;">
+                Subscribe to the channel and start your journey to becoming an Adobe Experience Platform expert.
+            </p>
+            <div class="stats-row" style="margin-top: 48px;">
+                <div class="stat">
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Episodes</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">6+</div>
+                    <div class="stat-label">Hours of Content</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">∞</div>
+                    <div class="stat-label">Value</div>
+                </div>
+            </div>
+            <div class="cta-buttons">
+                <button class="cta-btn primary">▶ Watch Episode 1</button>
+                <button class="cta-btn secondary">⭐ GitHub Repo</button>
+            </div>
+            <p style="margin-top: 48px; font-size: 1.25rem; color: var(--accent);">
+                ✈️ TLP Airways - Your Analytics Sandbox
+            </p>
+        </div>
+        
+    </div>
+    
+    <!-- Navigation Controls -->
+    <div class="nav-controls">
+        <button class="nav-btn" id="prevBtn" onclick="prevSlide()">←</button>
+        <span class="slide-indicator"><span id="currentSlide">1</span> / <span id="totalSlides">10</span></span>
+        <button class="nav-btn" id="nextBtn" onclick="nextSlide()">→</button>
+    </div>
+    
+    <div class="keyboard-hint">
+        Use ← → arrow keys or click to navigate
+    </div>
+    
+    <script>
+        let currentSlide = 1;
+        const totalSlides = document.querySelectorAll('.slide').length;
+        
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            
+            if (n < 1) currentSlide = 1;
+            if (n > totalSlides) currentSlide = totalSlides;
+            
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active');
+                if (index === currentSlide - 1) {
+                    slide.classList.add('active');
+                }
+            });
+            
+            // Update navigation
+            document.getElementById('currentSlide').textContent = currentSlide;
+            document.getElementById('prevBtn').disabled = currentSlide === 1;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+            
+            // Update progress bar
+            const progress = (currentSlide / totalSlides) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+        
+        function nextSlide() {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+        
+        function prevSlide() {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+        
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            } else if (e.key === 'f' || e.key === 'F') {
+                toggleFullscreen();
+            }
+        });
+        
+        // Click navigation
+        document.getElementById('presentation').addEventListener('click', (e) => {
+            if (e.target.closest('.nav-controls') || e.target.closest('button') || e.target.closest('a')) return;
+            
+            const x = e.clientX;
+            const width = window.innerWidth;
+            
+            if (x > width * 0.7) {
+                nextSlide();
+            } else if (x < width * 0.3) {
+                prevSlide();
+            }
+        });
+        
+        // Initialize
+        document.getElementById('totalSlides').textContent = totalSlides;
+        showSlide(currentSlide);
+    </script>
+</body>
+</html>

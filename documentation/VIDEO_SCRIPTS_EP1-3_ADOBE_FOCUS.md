@@ -1,28 +1,62 @@
-# 🎬 TLP Airways - Adobe Analytics Masterclass Video Scripts
+# 🎬 TLP Airways - Learning Airline Analytics Together
 
-> **Series Title: "Mastering Airline Analytics with Adobe Experience Platform"**
+> **Series Title: "Figuring Out Airline Analytics with Adobe Experience Platform"**
 > 
-> For Marketers, Developers & MarTech Leaders who want to understand 
-> complex tracking implementations in the travel industry
+> A learning journey for Marketers, Developers & MarTech folks 
+> who want to understand tracking in the travel industry
 
 ---
 
-## 🎯 Series Repositioning
+## 🎯 Series Approach
 
 | Attribute | Details |
 |-----------|---------|
 | **Focus** | Adobe Analytics, AEP Web SDK, CJA, CDP Integration |
-| **Context** | Airlines/Travel Industry (using TLP Airways as sandbox) |
+| **Context** | Airlines/Travel Industry (using TLP Airways as our sandbox) |
 | **Target Audience** | Marketers, MarTech Leads, Implementation Specialists, Solution Architects |
-| **Takeaway** | Master complex analytics tracking in high-value e-commerce scenarios |
+| **Vibe** | Learning together - not a lecture, but an exploration |
+| **Development Approach** | AI-Assisted with Cursor IDE + LLMs (Claude/Gemini) |
 
 ---
 
-# 📹 EPISODE 1: "Why Airlines Are the Ultimate Analytics Challenge"
+## 🤖 AI-Assisted Development: A Key Part of This Story
+
+This series isn't just about Adobe Analytics and AEP — it's also about **how we built this application**. And that story involves AI.
+
+### The Tools We Used
+
+| Tool | Purpose | How We Used It |
+|------|---------|---------------|
+| **Cursor IDE** | AI-powered code editor | Primary development environment with built-in AI assistance |
+| **Claude (Anthropic)** | LLM for code generation | Complex logic, schema design, architecture decisions |
+| **Gemini (Google)** | LLM for code review & docs | Documentation, testing strategies, code optimization |
+| **GitHub Copilot** | Inline code completion | Faster coding for repetitive patterns |
+
+### What AI Helped Us Build
+
+- **Data Layer Architecture** — Complex event structures and XDM schema mappings
+- **React/Next.js Components** — UI components with proper TypeScript typing
+- **Analytics Integration** — Adobe Data Layer implementation with proper event sequencing
+- **Email Templates** — Responsive HTML email templates for booking confirmations
+- **Testing Scripts** — Cypress E2E tests and validation utilities
+- **Documentation** — ERDs, API documentation, implementation guides
+
+### Why This Matters for the Series
+
+1. **It's Authentic** — This is how modern developers actually work
+2. **It's Faster** — We built a full airline demo in weeks, not months
+3. **It's Educational** — You'll see real AI-developer collaboration workflows
+4. **It's Replicable** — You can use the same approach for your projects
+
+> 💡 **Pro Tip:** Throughout this series, we'll occasionally highlight where AI helped us solve a tricky problem — like designing the XDM schema or debugging consent flows.
+
+---
+
+# 📹 EPISODE 1: "Why I Built an Airline Booking Demo to Learn Analytics"
 
 **Duration:** 20-25 minutes  
-**Style:** Industry deep-dive with live demo  
-**Goal:** Set the stage - why airline analytics is complex and what we'll master
+**Style:** Honest conversation with live demo  
+**Goal:** Share why airline analytics is genuinely challenging and what we're attempting to learn
 
 ---
 
@@ -32,405 +66,440 @@
 [SCREEN: Montage of airline websites - Emirates, Delta, IndiGo booking flows]
 
 SCRIPT:
-"A single flight booking can generate over 50 distinct tracking events.
+"I've been working with Adobe Analytics and AEP for a while now, 
+and honestly? There's still a lot I'm figuring out.
+
+But here's what I've noticed:
+The most complex tracking problems I've encountered 
+come from the travel industry — especially airlines.
 
 Search. Filter. Select. Abandon. Return. Compare. 
 Add baggage. Remove baggage. Select seat. Change seat.
-Enter passenger details. Validate. Fail validation. Retry.
-Enter payment. Fail payment. Succeed. Confirmation.
+Enter passenger details. Fail validation. Retry.
+Payment fails. Try again. Finally, confirmation.
 
 [Show quick flash of data layer events in console]
 
-Each of these moments is a data point.
-Each data point tells a story.
-And if you're a marketer, developer, or MarTech lead 
-working in travel, hospitality, or complex e-commerce...
-understanding how to capture, structure, and analyze these moments 
-is your competitive advantage.
+That's a LOT of data points. 
+And I realized — if I could figure out how to track all of this properly, 
+I'd understand analytics at a much deeper level.
 
-I'm [Your Name], and in this series, I'll show you how to build 
-production-grade analytics tracking for an airline booking system 
-using AEP Web SDK, Customer Journey Analytics, and Real-Time CDP.
+So I built something. 
+A fake airline booking website called TLP Airways.
+Not because I'm an expert, but because I wanted to BECOME one.
 
-But we're going beyond tracking. 
-I'll walk you through the data model, the data flow, 
-and how to activate that data — with Adobe Target personalization, 
-Brevo email confirmations, Twilio SMS and WhatsApp alerts, 
-and even an Event Forwarding pipeline to S3 
-for creative use cases like weather-based destination recommendations.
+And here's the honest part:
+I didn't build it alone. 
+I used Cursor — an AI-powered code editor — with Claude and Gemini as my pair programmers.
+They helped me write components, debug tracking issues, design XDM schemas.
+Modern development involves AI. Pretending otherwise would be disingenuous.
 
-This isn't fragmented advice. 
-This is the full stack — from Web SDK to Event Forwarding — built for production, 
-and we're starting from the basics.
+I'm [Your Name], and in this series, 
+I'm going to share what I've learned — and what I'm still learning — 
+about analytics for complex booking flows.
 
-And while we're using an airline as our sandbox, 
-these principles apply everywhere — 
+We'll use AEP Web SDK, Customer Journey Analytics, Real-Time CDP.
+We'll also connect some other tools — 
+Brevo for emails, Twilio for SMS, Adobe Target for personalization.
+
+I don't have all the answers. 
+But I've done the work, made the mistakes, 
+and I think sharing that journey might help others.
+
+And honestly? These patterns apply beyond airlines — 
 e-commerce, hospitality, banking, insurance, healthcare. 
-Any industry with a complex customer journey will benefit from this approach.
+Any complex customer journey.
 
-Let's begin."
+Let's learn together."
 ```
 
 **[VISUAL: Animated intro - 5 seconds]**
 
 ---
 
-## 📍 CHAPTER 1: The Airlines Analytics Challenge (1:00 - 6:00)
+## 📍 CHAPTER 1: Why Airlines? Why This Is Hard (1:00 - 6:00)
 
 ```
 [SCREEN: Whiteboard/diagram or slide deck]
 
 SCRIPT:
-"Let me explain why airline booking is considered 
-the most complex analytics challenge in e-commerce.
+"Let me tell you why I chose airlines as my learning project.
 
-**Challenge #1: Multi-Step, Non-Linear Journeys**
+I kept hearing that airline booking is one of the 
+hardest analytics challenges in e-commerce.
+At first, I didn't fully get why.
+
+Now I do. Let me share what I've figured out — 
+and honestly, some of this still trips me up.
+
+**Challenge #1: The Journey is a Mess (in a good way)**
 
 [Draw or show journey diagram]
 
 Unlike simple e-commerce where you browse → add to cart → checkout,
-airline booking is a maze.
+airline booking is non-linear.
 
-A user might:
-- Search for BLR to DEL on Monday
+A person might:
+- Search for flights on Monday
 - Abandon, come back Thursday
-- Search BLR to BOM instead
-- Compare 5 different flights
+- Search a completely different route
+- Compare 5 flights
 - Almost book, then change the date
-- Finally book... with a completely different route
+- Finally book something totally different
 
-How do you stitch this journey together?
-How do you attribute the conversion correctly?
-That's where AEP's identity stitching becomes critical.
+How do you stitch this together into a coherent story?
+That's where identity stitching comes in — 
+something I'm still wrapping my head around, honestly.
 
-**Challenge #2: Complex Product Structure**
+**Challenge #2: What Even IS the Product?**
 
-In retail, a product is a SKU - a shirt, a phone.
-In airlines, what's the product?
+This one confused me at first.
+In retail, a product is simple — a shirt, a phone.
+But in airlines... what's the product?
 
 [Show product breakdown]
 
 Is it:
-- The flight itself? (TL-234 BLR→DEL)
+- The flight? (TL-234 BLR→DEL)
 - The seat? (12A extra legroom)
 - The fare class? (economy, business)
 - The ancillary bundle? (meal + baggage + priority)
-- Or the entire itinerary? (roundtrip with connections)
+- The entire itinerary? (roundtrip with connections)
 
-The answer? ALL OF THEM.
-And each needs separate tracking for proper revenue attribution.
+I think the answer is... all of them?
+Each needs separate tracking for proper revenue attribution.
+That took me a while to figure out.
 
-**Challenge #3: Dynamic Pricing**
+**Challenge #3: Prices That Won't Sit Still**
 
 The same seat on the same flight can cost 
 ₹5,000 in the morning and ₹8,000 by evening.
 
-Your analytics needs to capture:
-- Price at time of search
-- Price at time of selection  
-- Price at time of booking
-- And the delta between them
+So your analytics needs to capture:
+- Price when they searched
+- Price when they selected  
+- Price when they actually booked
+- And ideally, the difference between them
 
-This is crucial for pricing optimization and marketing attribution.
+This matters for understanding price sensitivity.
+I'm still not 100% sure I'm capturing this perfectly.
 
-**Challenge #4: Multiple Passengers, Multiple Legs**
+**Challenge #4: Multiple Everything**
 
 A single booking might include:
 - 3 passengers (adult + child + infant)
 - 2 flight legs (outbound + return)
 - 6 ancillary selections (2 per passenger per leg)
 
-That's ONE transaction, but your data layer needs to 
-decompose it into its constituent parts 
-for meaningful analysis in CJA.
+That's ONE transaction, but it needs to break down 
+into all its parts for meaningful analysis.
 
-**Challenge #5: Consent & Privacy**
+This is where the products array in your purchase event 
+becomes really important — something we'll work through.
 
-Airlines collect PII: names, emails, passport numbers, phone numbers.
-GDPR, CCPA, India's DPDP Act - you need consent management 
-that integrates with your analytics stack.
+**Challenge #5: Privacy is Complicated Here**
 
-This is the world we're diving into.
-And TLP Airways is our sandbox to master it."
+Airlines collect a lot of PII: names, emails, passport numbers, phone numbers.
+GDPR, CCPA, India's DPDP Act — consent management is crucial.
+
+I won't pretend I've mastered privacy compliance.
+But I've learned enough to implement basic consent flows,
+and I'll share what I know.
+
+This is the world we're exploring together.
+TLP Airways is my sandbox for learning all of this."
 ```
 
 ---
 
-## 📍 CHAPTER 2: The TLP Airways Sandbox (6:00 - 10:00)
+## 📍 CHAPTER 2: Let Me Show You TLP Airways (6:00 - 10:00)
 
 ```
 [SCREEN: Browser showing TLP Airways website]
 
 SCRIPT:
-"TLP Airways is a fully functional airline booking demo 
-I built specifically for Adobe Experience Platform training.
+"So TLP Airways is a fake airline booking site I built.
 
-Let me give you a quick tour - not of the UI, 
-but of the ANALYTICS TOUCHPOINTS.
+It's not perfect — there are definitely edge cases I haven't handled.
+But it's functional enough to demonstrate real analytics.
+
+Let me walk you through it — 
+not focusing on the UI, but on where tracking happens.
 
 [Navigate to homepage]
 
 **Homepage**
-- pageView with page metadata
-- Promotional banner impressions
-- User authentication state
+- We fire a pageView when the page loads
+- There are promotional banners — eventually I want to track impressions
+- We track whether the user is logged in or not
+
+By the way, this UI was built with AI assistance.
+I described what I wanted in natural language,
+and Cursor helped generate the React components.
+Still needed human judgment to polish it, but the scaffolding came fast.
 
 [Go to search page]
 
 **Search**
-Here's where it gets interesting.
+This is where it gets interesting for me.
 
-Every field interaction is a potential event:
+Every field is a potential tracking opportunity:
 - Origin selection
 - Destination selection
-- Date picker interaction
-- Passenger count changes
-- Cabin class selection
-- Trip type toggle (one-way vs roundtrip)
+- Date picker
+- Passenger count
+- Cabin class
+- One-way vs roundtrip
 
-When they click 'Search', we fire 'flightSearchInitiated' 
-with the complete search context.
+When they click 'Search', we fire a search event.
+Getting all this data structured correctly took me a few attempts.
 
 [Submit search, show results]
 
 **Results Page**
-- searchResultsDisplayed with result count and timing
-- Impression tracking for each flight shown
-- Filter interactions
-- Sort changes
-- flightSelected when they choose
+- We fire an event when results appear
+- Ideally we'd track filter and sort interactions
+- When they select a flight, that's another event
+
+I'll be honest — I'm not tracking every single interaction here yet.
+There's still work to do.
 
 [Select flight, proceed to traveller details]
 
 **Traveller Details**
 - Form field engagement
-- Validation errors (gold for UX optimization)
-- Time spent per field
+- Validation errors (this is gold for UX insights)
+- I want to track time spent, but haven't implemented that
 
 [Show ancillary services]
 
 **Ancillary Services**
-This is where airlines make 30% of their revenue.
+This is where airlines make serious money — 
+I've read it can be 30% of revenue.
 
-- Seat map interactions (which seats are they looking at?)
+- Seat map interactions
 - Meal selection
 - Baggage upgrades
 - Priority services
 
-Each selection is revenue. Each is tracked.
+Each selection is revenue. I'm tracking most of this.
 
 [Proceed to payment]
 
 **Payment**
 - Payment method selection
 - Card type detection
-- Payment attempts (success/failure)
-- Error tracking
+- Success and failure tracking
+
+Payment failure tracking is really important, 
+but also tricky to get right. Still refining this.
 
 [Show confirmation]
 
 **Confirmation**
-The crown jewel:
-- commerce.purchases event
-- Complete revenue attribution
-- Product breakdown
+The main event:
+- The purchase event (commerce.purchases)
+- Complete revenue breakdown
 - Customer identity
 
-This entire flow - every click, every decision - 
-feeds into Adobe Analytics and AEP.
+Getting the purchase event right is critical.
+It took me several iterations.
 
-That's what we're going to implement and analyze."
+That's the flow. Every click feeds into the data layer,
+which eventually goes to Adobe Analytics and AEP."
 ```
 
 ---
 
-## 📍 CHAPTER 3: The Adobe Stack We'll Use (10:00 - 15:00)
+## 📍 CHAPTER 3: The Adobe Tools We'll Use (10:00 - 15:00)
 
 ```
 [SCREEN: Adobe Experience Cloud architecture diagram]
 
 SCRIPT:
-"Let me introduce the Adobe tools we'll be working with.
+"Let me briefly introduce the Adobe tools.
+
+I want to be upfront: I don't claim to be an expert on all of these.
+I've spent the most time with Web SDK and Analytics.
+CJA and CDP — I'm still learning.
 
 **AEP Web SDK (Alloy.js)**
 
 [Show Web SDK documentation or diagram]
 
-This is the modern way to send data to Adobe.
-One SDK replaces:
+This is Adobe's modern way to send data.
+One SDK that replaces the older, separate libraries:
 - AppMeasurement (legacy Analytics)
 - AT.js (Target)
-- DIL (Audience Manager)
 - ECID Service
 
-Instead of multiple tags firing separately,
-Web SDK sends a single payload to Adobe Edge Network,
-which routes it to Analytics, Target, AEP - wherever it needs to go.
+The idea is: send one payload to Adobe Edge Network,
+and it routes the data wherever it needs to go.
 
-For airlines, this means:
-- Faster page loads (critical for conversion)
-- Consistent identity across touchpoints
-- Real-time data availability
+I like this approach. It's cleaner.
+But there's a learning curve if you're used to the old way.
 
 **Adobe Experience Platform (AEP)**
 
 [Show AEP interface or diagram]
 
 AEP is Adobe's Customer Data Platform.
-It's where all your data comes together:
-- Web interactions (via Web SDK)
+It's where all your data can come together:
+- Web interactions
 - Mobile app events
 - Call center data
 - CRM data
-- Offline purchases
 
-For our airline, we'll create XDM schemas that model:
-- Flight search behavior
-- Booking transactions
-- Customer profiles
-- Loyalty programs
+For our airline demo, we're creating XDM schemas 
+to model flight searches, bookings, and customer profiles.
+
+Honestly, XDM schema design is one of the things 
+I found most confusing at first.
+We'll work through it together.
 
 **Customer Journey Analytics (CJA)**
 
 [Show CJA interface briefly]
 
-CJA is the next generation of Adobe Analytics.
+CJA is the next-generation Analytics tool.
 It sits on top of AEP and lets you:
 - Analyze cross-channel journeys
 - Apply segments retroactively
-- Compare cohorts over time
-- Build custom attribution models
+- Compare cohorts
 
-We'll use CJA to answer questions like:
-- What's the path from search to booking?
-- How does ancillary attachment rate vary by route?
-- What's the impact of price sensitivity on conversion?
+I'm still exploring what's possible here.
+The dashboarding is powerful, but has a learning curve.
 
 **Real-Time CDP**
 
 [Show CDP concept]
 
-This is where we activate our audience segments.
-Once we've identified high-value behaviors,
-we can push audiences to:
-- Adobe Target for personalization
-- Email platforms for retargeting
-- Ad platforms for suppression or lookalikes
+This is where you activate audience segments.
+Push audiences to Target, email platforms, ad platforms.
 
-The entire stack works together.
+I haven't gone super deep on CDP yet.
+But I'll share what I learn as we go.
+
+The basic flow is:
 Web SDK captures → AEP stores → CJA analyzes → CDP activates.
 
-By the end of this series, you'll understand 
-how to implement and leverage each of these components."
+By the end of this series, I hope we'll both understand 
+how these pieces fit together."
 ```
 
 ---
 
-## 📍 CHAPTER 4: What You'll Master (15:00 - 18:00)
+## 📍 CHAPTER 4: What We'll Cover in This Series (15:00 - 18:00)
 
 ```
 [SCREEN: Series overview / roadmap]
 
 SCRIPT:
-"Here's what's coming in this series.
+"Here's what I'm planning to cover.
+Fair warning: this might evolve as I learn more.
 
-**Episode 2: Mapping the Airline Data Layer**
-We'll document every trackable moment in the booking flow.
-You'll learn how to think about data layer design 
-for complex, multi-step journeys.
+**Episode 2: Mapping the Data Layer**
+We'll document the trackable moments in a booking flow.
+I'll share my thinking on data layer design,
+and I'm curious to hear if you'd do it differently.
 
 **Episodes 3-4: AEP Web SDK Implementation**
-Hands-on implementation of the Web SDK.
-We'll configure datastreams, set up XDM schemas,
-and fire events from search through purchase.
+Hands-on implementation.
+Configuring datastreams, setting up XDM schemas,
+firing events from search through purchase.
 
-**Episode 5: XDM Schema Design for Airlines**
-Deep dive into Experience Data Model.
+This is where I've spent the most time, so I'm fairly confident here.
+
+**Episode 5: XDM Schema Design**
 How do you structure flight data, passenger data, 
 transaction data in XDM?
 
-**Episode 6: E-Commerce Tracking & Revenue Attribution**
-The purchase event is everything.
-We'll break down product arrays, revenue calculation,
-and proper attribution for multi-product bookings.
+This was confusing for me initially.
+I'll share the approach I landed on.
 
-**Episode 7: Identity & Consent Management**
-How to hash PII correctly,
-implement consent with Adobe's consent framework,
-and handle authenticated vs anonymous users.
+**Episode 6: E-Commerce Tracking & Revenue**
+The purchase event. Product arrays. Revenue attribution.
+Getting this right is crucial.
 
-**Episode 8: Connecting to CJA**
-Building connections and data views in CJA.
-Creating calculated metrics for airline-specific KPIs.
+**Episode 7: Identity & Consent**
+Hashing PII, implementing consent, handling auth states.
+Important stuff, especially for compliance.
 
-**Episode 9: Building Airline Dashboards in CJA**
-Practical dashboards: conversion funnels,
-route performance, ancillary attachment,
-abandonment analysis.
+**Episode 8-9: CJA Exploration**
+Building connections, data views, dashboards.
+I'm still learning CJA, so this will be exploratory.
 
-**Episode 10: Real-Time CDP Activation**
-Creating segments and pushing them to downstream systems.
-Practical use cases for personalization and retargeting.
+**Episode 10: Real-Time CDP**
+Creating segments, pushing to downstream systems.
+Also still learning here.
 
 **Episode 11: Adobe Target Integration**
-A/B testing and personalization using the same data.
-Offer decisioning based on search behavior.
+A/B testing and personalization.
+We have a banner placeholder ready for this.
 
-**Episode 12: Series Finale - End-to-End Demo**
-Complete walkthrough from raw event to personalized experience.
+**Episode 12: Putting It All Together**
+End-to-end walkthrough.
 
-This is a comprehensive masterclass.
-By the end, you'll be able to architect and implement
-analytics tracking for any complex e-commerce scenario."
+I won't pretend I have everything figured out.
+But I'll share what I've learned and what questions remain."
 ```
 
 ---
 
-## 📍 CHAPTER 5: Prerequisites & Access (18:00 - 21:00)
+## 📍 CHAPTER 5: What You'll Need to Follow Along (18:00 - 21:00)
 
 ```
 [SCREEN: Setup requirements]
 
 SCRIPT:
-"To follow along, here's what you'll need.
+"To follow along, here's the situation.
 
-**Option A: You Have Adobe Access**
+**If You Have Adobe Access**
 
 If your organization has AEP and CJA licenses,
-you can implement everything we discuss in your own sandbox.
-I'll show you the exact configurations.
+you can implement alongside me in your own sandbox.
+I'll show my configurations, and you can adapt.
 
-**Option B: You're Learning**
+**If You're Learning (No Adobe Access)**
 
-If you're studying for certification or exploring,
-you can still follow along conceptually.
-I'll explain everything in detail so you understand 
-the 'why' behind each implementation choice.
+That's totally fine.
+You can follow along conceptually.
+Understanding the 'why' is often more valuable 
+than copying the exact implementation.
 
-Adobe offers free trial sandboxes for AEP - 
-link is in the description.
+Adobe does offer free trial sandboxes — 
+I'll put a link in the description if I can find the current one.
 
 **The TLP Airways Demo**
 
 The website is live at [your-url].
-You can interact with it and watch events fire in your console.
+You can click around and watch events in your console.
 
-The code is on GitHub - not because you need to build it,
-but so you can see exactly how each tracking event is implemented.
-This is a reference implementation you can adapt.
+The code is on GitHub.
+Not because you need to build the same thing,
+but so you can see how I implemented things.
+Maybe you'll find a better way to do it.
 
-**Who This Series is For**
+**Who This Might Help**
 
 If you're:
-- A marketer who wants to understand what's possible
-- A developer implementing analytics for an agency client
-- A MarTech lead architecting your company's data strategy
-- A consultant helping travel brands with their Adobe stack
+- A marketer curious about what's possible with tracking
+- A developer implementing analytics for a client
+- A MarTech person architecting a data strategy
+- Someone studying for Adobe certifications
 
-...this series is for you.
+...maybe this series will be useful.
 
-You don't need to be a full-stack developer.
-You DO need curiosity and willingness to dig into data."
+I'm not going to claim you'll be an expert after watching.
+But hopefully you'll have more clarity than before.
+
+**For The AI-Assisted Development Parts**
+
+If you're curious about how we used Cursor and LLMs:
+- Cursor is available at cursor.com (free tier available)
+- Claude and Gemini both have free tiers
+- You don't need these to follow along with the analytics content,
+  but if you want to build your own demo, AI tools speed things up dramatically."
 ```
 
 ---
@@ -441,28 +510,28 @@ You DO need curiosity and willingness to dig into data."
 [SCREEN: Subscribe prompt, links]
 
 SCRIPT:
-"Airline analytics is complex. 
-But complexity is where value lives.
+"Look, airline analytics is complex. 
+I'm not going to pretend I've solved it completely.
 
-If you can master tracking for a multi-step, multi-passenger,
+But I've built something that works well enough to learn from.
+And I've made enough mistakes to have useful insights.
+
+If you can figure out tracking for a multi-step, multi-passenger,
 dynamic-pricing, ancillary-heavy booking flow...
-you can track anything.
+you can probably track most things.
 
-That's what we're going to do together.
+That's the bet I'm making with this series.
 
-In the next episode, we're going to map out 
-the complete airline data layer - 
-every event, every property, every business question it answers.
+In the next episode, we'll map out the data layer — 
+every event, every property, and why I included it.
 
-Hit subscribe and the notification bell 
-so you don't miss it.
-
-If you're already working on Adobe Analytics or AEP 
-and have questions about airline or travel tracking,
-drop them in the comments. 
-I'll address them in the series.
+If that sounds useful, subscribe.
+And if you're already working on Adobe Analytics or AEP 
+and have advice or questions, drop them in the comments. 
+I genuinely want to hear from people who know more than me.
 
 I'm [Your Name]. 
+Learning out loud.
 See you in Episode 2."
 
 [END CARD: 10 seconds with subscribe, links]
@@ -473,20 +542,24 @@ See you in Episode 2."
 ## 🎬 B-ROLL & VISUALS FOR EPISODE 1
 
 - [ ] Airline website montage (Emirates, Delta, IndiGo, United)
-- [ ] Data layer console output scrolling (looks impressive)
+- [ ] Data layer console output scrolling
 - [ ] AEP interface screenshots
 - [ ] CJA dashboard screenshots
 - [ ] Architecture diagram animation
 - [ ] Journey flow animation
+- [ ] **Cursor IDE in action** — showing AI code generation
+- [ ] **AI prompt examples** — natural language to code workflow
+- [ ] **Split screen**: Human thinking + AI generating
 
 ---
 ---
 
-# 📹 EPISODE 2: "Mapping the Airline Data Layer - Every Event That Matters"
+# 📹 EPISODE 2: "Mapping the Airline Data Layer - What Should We Track?"
 
 **Duration:** 25-30 minutes  
-**Style:** Workshop/documentation session  
-**Goal:** Complete data layer blueprint for airline tracking
+**Style:** Working session / thinking out loud  
+**Goal:** Create a data layer blueprint together  
+**AI Note:** This episode shows how we used AI to help design the data layer structure
 
 ---
 
@@ -496,193 +569,206 @@ See you in Episode 2."
 [SCREEN: Spreadsheet or documentation template]
 
 SCRIPT:
-"Before you write a single line of tracking code,
-you need a data layer specification.
+"Before you write any tracking code,
+you need to know what you're tracking. And why.
 
-This document becomes your contract between 
-marketing, analytics, and engineering.
-It answers: What are we tracking? Why? What does it look like?
+I've learned this the hard way.
+I used to just start implementing and figure it out as I went.
+Bad idea. You end up with incomplete, inconsistent data.
 
-Today, I'm going to give you the complete data layer 
-for an airline booking system.
+So I started documenting everything first.
+Call it a data layer specification — 
+a contract between marketing, analytics, and engineering.
+
+Today, I'm going to share my data layer for TLP Airways.
 Event by event. Property by property.
-With business justification for every decision.
+And I'll explain my thinking — 
+though I'm open to being wrong about some of it.
 
-By the end of this episode, you'll have a template 
-you can use for any travel or complex e-commerce implementation.
+By the end, you'll have a template 
+you can use or adapt for your own projects.
 
-Let's document."
+Let's work through this."
 ```
 
 **[VISUAL: Animated intro - 5 seconds]**
 
 ---
 
-## 📍 CHAPTER 1: Data Layer Design Principles (0:45 - 4:00)
+## 📍 CHAPTER 1: My Approach to Data Layer Design (0:45 - 4:00)
 
 ```
 [SCREEN: Slides or whiteboard]
 
 SCRIPT:
-"Before we dive into events, let's establish 
-some design principles for data layers.
+"Before diving into events, here's how I think about data layers.
+These are principles I've picked up — 
+some from experience, some from articles and talks.
 
-**Principle 1: Event-Driven, Not Page-Driven**
+**Principle 1: Events, Not Just Page Views**
 
-The old way: fire a pageView, stuff everything in it.
-The modern way: discrete events for discrete actions.
+The old approach: fire a pageView, cram everything into it.
+Modern apps don't work that way.
 
 In a single-page booking flow, you might have 
-10 meaningful events without a single traditional 'page load'.
-Your data layer needs to capture those.
+10 meaningful user actions without a traditional 'page load'.
+Your data layer needs to capture those discrete moments.
 
-**Principle 2: Business Questions Drive Data Points**
+**Principle 2: Start with Business Questions**
 
-Never track something just because you can.
-For every property, ask: 
-'What business question does this answer?'
+For every property, I try to ask: 
+'What question does this help answer?'
 
-If you can't answer that, don't track it.
-It's noise that clouds your analysis.
+If I can't think of one, I question whether to include it.
+Extra data is noise that clouds analysis.
 
-**Principle 3: Hierarchy & Context**
+That said, I've definitely over-tracked at times.
+Finding the balance is tricky.
+
+**Principle 3: Context Links Events Together**
 
 Events don't exist in isolation.
-A flightSelected event is meaningless without:
-- Which search triggered it?
-- Which results were shown?
-- What was the user's profile?
+A flight selection is meaningless without knowing:
+- What search triggered it?
+- What other options were shown?
+- Who was the user?
 
-Context links events together into journeys.
+This is where IDs become important — 
+searchId, bookingId, sessionId — 
+to stitch the journey together.
 
-**Principle 4: Consistent Naming**
+**Principle 4: Be Consistent with Naming**
 
-originCity not origin_city not OriginCity.
+originCity, not origin_city, not OriginCity.
 Pick a convention and stick to it.
-I use camelCase for properties, hyphenated-lowercase for event names.
+I use camelCase for properties. Some prefer snake_case.
+Just be consistent.
 
-**Principle 5: Plan for XDM**
+**Principle 5: Think About XDM (If Using AEP)**
 
-If you're using AEP, your data layer will map to XDM schemas.
-Design with that in mind - 
-understand field groups, data types, relationships.
+If you're sending data to AEP, it maps to XDM schemas.
+I didn't fully appreciate this at first.
+Now I try to design with XDM in mind from the start.
 
-Let's apply these principles to our airline tracking."
+Okay, let's apply these to our airline."
 ```
 
 ---
 
-## 📍 CHAPTER 2: The Complete Event Inventory (4:00 - 18:00)
+## 📍 CHAPTER 2: The Events and Their Properties (4:00 - 18:00)
 
 ```
 [SCREEN: Documentation/Spreadsheet + Browser side by side]
 
 SCRIPT:
-"I'm going to walk through every event in the booking flow.
-I'll show you the event structure and explain 
-the business value of each property.
+"I'm going to walk through the events I'm tracking.
+For each one, I'll show the structure and explain my thinking.
+
+Feel free to disagree — I'd love to hear alternative approaches.
 
 ---
 
 **EVENT 1: pageView**
+
+The foundation. Fires when a page loads.
 
 [Show schema]
 
 {
   "event": "pageView",
   "page": {
-    "pageInfo": {
-      "pageName": "TLP Airways | Search Flights",
-      "pageURL": "https://tlpairways.com/search",
-      "pageType": "search",
-      "channel": "web",
-      "siteSection": "booking"
-    }
+    "pageName": "TLP Airways | Search Flights",
+    "pageURL": "https://tlpairways.com/search",
+    "pageType": "search",
+    "siteSection": "booking"
   },
   "user": {
     "authState": "authenticated" | "anonymous",
-    "hashedUserId": "sha256...",
-    "loyaltyTier": "gold" | "silver" | "standard"
+    "hashedUserId": "sha256..."
   }
 }
 
-Business Questions Answered:
-- Which pages get the most traffic?
-- How does authenticated vs anonymous behavior differ?
-- Where do loyalty members spend their time?
+Why these properties?
+- pageName/pageURL: Standard for any analytics
+- pageType: Helps segment by type of page
+- authState: Authenticated users behave differently
+- hashedUserId: Links sessions for logged-in users (hashed for privacy)
+
+I debated including loyaltyTier here, but decided 
+to keep user data separate. Still not sure if that's right.
 
 ---
 
-**EVENT 2: flightSearchInitiated**
+**EVENT 2: searchInitiated**
 
-This fires when the user submits a search.
+Fires when the user submits a flight search.
 
 [Show schema + fire event on site]
 
 {
-  "event": "flightSearchInitiated",
+  "event": "searchInitiated",
   "search": {
-    "searchId": "srch_1705612345_abc",  // Unique ID for stitching
+    "searchId": "srch_1705612345_abc",
     "origin": "BLR",
     "originCity": "Bangalore",
     "destination": "DEL",
     "destinationCity": "New Delhi",
-    "route": "BLR-DEL",                 // Pre-concatenated for easy segmenting
+    "route": "BLR-DEL",
     "departureDate": "2026-02-15",
     "returnDate": "2026-02-20",
     "tripType": "roundtrip",
-    "daysUntilDeparture": 27,           // Calculated - travel intent signal
-    "tripDuration": 5,                  // Number of days
+    "daysUntilDeparture": 27,
+    "tripDuration": 5,
     "passengers": {
       "total": 2,
       "adults": 2,
       "children": 0,
       "infants": 0
     },
-    "cabinClass": "economy",
-    "flexibleDates": false
-  },
-  "timestamp": "2026-01-19T14:30:00Z"
+    "cabinClass": "economy"
+  }
 }
 
-Business Questions Answered:
-- Most popular routes?
-- How far in advance do customers book?
-- What's the average party size?
-- How does cabin class preference vary by route?
-- What percentage are one-way vs roundtrip?
+The searchId is critical — it links this search 
+to the results and any eventual booking.
 
-The searchId is CRITICAL. 
-It links this search to the results and any eventual booking.
+daysUntilDeparture is calculated, not raw.
+This helps segment 'last-minute bookers' vs 'planners'.
+
+tripDuration helps identify weekend trips vs longer vacations.
+
+Some of these calculated fields might be overkill.
+I'm still figuring out what's actually useful in analysis.
 
 ---
 
 **EVENT 3: searchResultsDisplayed**
 
-[Show search results on site, point to event]
+Fires when results are shown.
+
+[Show search results on site]
 
 {
   "event": "searchResultsDisplayed",
   "search": {
-    "searchId": "srch_1705612345_abc",  // Links to the search
+    "searchId": "srch_1705612345_abc",
     "totalResults": 8,
     "onwardFlights": 4,
-    "returnFlights": 4,
-    "loadTime": 1.2,                     // Seconds - performance metric
-    "lowestPrice": 4500,
-    "highestPrice": 12000,
-    "currency": "INR",
-    "averagePrice": 7250
+    "returnFlights": 4
   },
-  "appliedFilters": [],
-  "sortOrder": "price-low-high"
+  "priceRange": {
+    "lowest": 4500,
+    "highest": 12000,
+    "currency": "INR"
+  }
 }
 
-Business Questions Answered:
-- Search to zero-results rate?
-- Price distribution per route?
-- Performance impact on conversion?
-- Which filters are used most?
+I want to add loadTime here for performance tracking.
+Haven't implemented that yet.
+
+Zero results is an important scenario to track.
+Right now I track totalResults = 0, 
+but maybe a separate event would be clearer?
 
 ---
 
@@ -696,68 +782,51 @@ User clicks on a specific flight.
   "event": "flightSelected",
   "flight": {
     "flightNumber": "TL-234",
-    "airline": "TLP Airways",
     "origin": "BLR",
     "destination": "DEL",
     "departureTime": "08:00",
     "arrivalTime": "10:30",
     "duration": "2h 30m",
-    "durationMinutes": 150,
     "stops": 0,
-    "stopType": "non-stop",
-    "aircraft": "A320",
     "cabinClass": "economy",
-    "fareClass": "discount",             // Pricing bucket
     "price": 5000,
-    "pricePerPax": 5000,
-    "currency": "INR",
-    "seatsRemaining": 12                 // Scarcity signal
+    "currency": "INR"
   },
   "selection": {
-    "journeyType": "onward",             // or "return"
-    "resultPosition": 2,                 // Was it the first result? Third?
-    "selectionMethod": "click"           // vs keyboard, etc.
+    "journeyType": "onward",
+    "resultPosition": 2
   },
   "searchContext": {
     "searchId": "srch_1705612345_abc"
   }
 }
 
-Business Questions Answered:
-- Which flights convert best?
-- Does position in results matter?
-- How does price sensitivity vary by route?
-- Does scarcity messaging work?
+resultPosition is interesting for merchandising.
+If users always pick the second result, 
+maybe our ranking isn't optimal?
 
-resultPosition is huge for merchandising optimization.
-If users always pick the second result, your ranking algorithm might be wrong.
+I'm not currently tracking WHY they selected — 
+was it price? timing? That might be worth adding.
 
 ---
 
-**EVENT 5: ancillaryViewed**
+**EVENT 5: ancillaryViewed / ancillarySelected**
 
 [Navigate to ancillary services page]
+
+When they VIEW an ancillary section (seat map, meals, etc.):
 
 {
   "event": "ancillaryViewed",
   "ancillary": {
-    "type": "seatmap" | "meals" | "baggage" | "priority",
-    "viewDuration": null,                // Filled on exit
-    "interactionCount": 0
+    "type": "seatmap"
   },
   "bookingContext": {
     "bookingId": "bkg_1705612345_xyz"
   }
 }
 
-Fires when users VIEW each ancillary section.
-Even without selection, views tell you about intent.
-
----
-
-**EVENT 6: ancillarySelected**
-
-[Select a seat on the seat map]
+When they SELECT something:
 
 {
   "event": "ancillarySelected",
@@ -770,18 +839,16 @@ Even without selection, views tell you about intent.
     "currency": "INR",
     "passenger": 1,
     "journey": "onward"
-  },
-  "bookingContext": {
-    "bookingId": "bkg_1705612345_xyz"
   }
 }
 
-Pro move: Track what they UNSELECT too (ancillaryRemoved).
-Reveals price sensitivity and decision patterns.
+I should also track when they REMOVE a selection.
+That reveals price sensitivity.
+Haven't implemented ancillaryRemoved yet.
 
 ---
 
-**EVENT 7: paymentMethodSelected**
+**EVENT 6: paymentMethodSelected / paymentSubmitted / paymentFailed**
 
 [Navigate to payment page]
 
@@ -789,14 +856,9 @@ Reveals price sensitivity and decision patterns.
   "event": "paymentMethodSelected",
   "payment": {
     "method": "credit-card",
-    "provider": "visa",
-    "isDefault": false
+    "provider": "visa"
   }
 }
-
----
-
-**EVENT 8: paymentSubmitted**
 
 {
   "event": "paymentSubmitted",
@@ -808,12 +870,6 @@ Reveals price sensitivity and decision patterns.
   }
 }
 
----
-
-**EVENT 9: paymentFailed**
-
-CRITICAL for debugging conversion drops.
-
 {
   "event": "paymentFailed",
   "payment": {
@@ -824,14 +880,14 @@ CRITICAL for debugging conversion drops.
   }
 }
 
-Track every failure. The error codes tell you 
-whether it's user error or system error.
+Payment failures are critical for debugging conversion drops.
+I want to track every failure with its error code.
 
 ---
 
-**EVENT 10: purchase (commerce.purchases)**
+**EVENT 7: purchase**
 
-The big one. The conversion event.
+The conversion event. This is the big one.
 
 [Show confirmation page]
 
@@ -846,8 +902,7 @@ The big one. The conversion event.
     "transactionId": "TXN20260119ABC123",
     "revenue": 12500,
     "currency": "INR",
-    "tax": 750,
-    "convenienceFee": 200
+    "bookingReference": "PNR-ABC123"
   },
   "products": [
     {
@@ -856,9 +911,7 @@ The big one. The conversion event.
       "category": "flight",
       "subcategory": "onward",
       "price": 5000,
-      "quantity": 2,
-      "route": "BLR-DEL",
-      "cabinClass": "economy"
+      "quantity": 2
     },
     {
       "sku": "TL-789",
@@ -866,9 +919,7 @@ The big one. The conversion event.
       "category": "flight",
       "subcategory": "return",
       "price": 4500,
-      "quantity": 2,
-      "route": "DEL-BLR",
-      "cabinClass": "economy"
+      "quantity": 2
     },
     {
       "sku": "seat_extraleg",
@@ -877,111 +928,148 @@ The big one. The conversion event.
       "subcategory": "seat",
       "price": 500,
       "quantity": 2
-    },
-    {
-      "sku": "baggage_20kg",
-      "name": "20kg Checked Baggage",
-      "category": "ancillary",
-      "subcategory": "baggage",
-      "price": 1000,
-      "quantity": 1
     }
   ],
-  "booking": {
-    "bookingReference": "PNR-ABC123",
-    "passengers": 2,
-    "tripType": "roundtrip"
-  },
   "customer": {
-    "hashedEmail": "sha256...",
-    "loyaltyTier": "standard"
+    "hashedEmail": "sha256..."
   }
 }
 
-This structure allows you to:
-- Measure total revenue
-- Break down by flight vs ancillary
-- Calculate ancillary attach rate
-- Segment by route, cabin, etc.
+The products array is key.
+Each line item — flights and ancillaries — gets its own entry.
+This allows breakdown by category in analysis.
 
-The products array is the key.
-Each line item gets its own entry for proper analysis."
+Getting this structure right took me several iterations.
+I think it's solid now, but I'm open to suggestions."
 ```
 
 ---
 
-## 📍 CHAPTER 3: Calculated Properties & Enrichment (18:00 - 22:00)
+## 📍 CHAPTER 3: Calculated Properties - Worth the Effort? (18:00 - 22:00)
 
 ```
 [SCREEN: Documentation]
 
 SCRIPT:
-"Some properties shouldn't be tracked raw - 
-they should be calculated at tracking time.
+"Some properties I calculate at tracking time 
+rather than tracking raw values.
+
+Is this worth it? I think so, but let me explain my reasoning.
 
 **Days Until Departure**
-Don't track just the date.
-Calculate and track daysUntilDeparture.
-This is how you segment 'last-minute bookers' vs 'planners'.
+Instead of just the date, I calculate how many days away it is.
+This makes segmenting 'last-minute' vs 'planners' easier in CJA.
+You could also calculate this later, but I find it cleaner to do upfront.
 
 **Trip Duration**
-Calculate the number of days between outbound and return.
-Weekend trips vs week-long vacations behave differently.
+Number of days between outbound and return.
+Helps identify weekend trips vs longer vacations.
 
 **Route Concatenation**
 Instead of making analysts concatenate origin + destination,
-do it in the data layer: 'BLR-DEL'.
-Makes segmenting in CJA much easier.
-
-**Sector Type**
-International vs domestic.
-Calculated based on origin/destination country codes.
-
-**Haul Type**
-Short haul (<3 hours), medium haul (3-6), long haul (>6).
-Based on flight duration.
+I do it in the data layer: 'BLR-DEL'.
+Small convenience, but saves time.
 
 **Price Per Passenger**
-Total price divided by passenger count.
-Enables fair comparison across party sizes.
+Total divided by passenger count.
+Enables fair comparison across different party sizes.
 
-These enrichments save hours of analysis time downstream."
+Am I over-engineering? Maybe.
+But I've found that small enrichments upfront 
+save hours of manipulation later."
 ```
 
 ---
 
-## 📍 CHAPTER 4: The Data Layer Specification Document (22:00 - 26:00)
+## 📍 CHAPTER 3.5: How AI Helped Design This Data Layer (20:00 - 22:00)
+
+```
+[SCREEN: Cursor IDE with AI chat panel]
+
+SCRIPT:
+"I want to take a minute to show you something real.
+
+This data layer didn't come from my head alone.
+I used AI tools — specifically Claude in Cursor — to help design it.
+
+[Show actual prompt/response in Cursor]
+
+Here's an example. I asked:
+'What properties should an airline flight search event capture 
+for meaningful analytics and customer journey analysis?'
+
+Claude gave me a comprehensive list:
+- Origin and destination (obviously)
+- Trip type (one-way, roundtrip, multi-city)
+- Number of passengers broken down by type
+- Cabin class preference
+- Days until departure — I hadn't thought of this one
+- Whether dates are flexible
+
+It also suggested calculated properties:
+- Route concatenation (BLR-DEL instead of two fields)
+- Trip duration for vacation analysis
+- Price sensitivity indicators
+
+**What AI Is Good At**
+
+AI is excellent at:
+- Brainstorming comprehensive lists
+- Suggesting properties you might forget
+- Explaining XDM field mappings
+- Generating boilerplate code
+
+**What AI Is Bad At**
+
+AI struggles with:
+- Knowing YOUR specific business context
+- Understanding your analytics maturity
+- Prioritizing what matters most for YOUR team
+- Edge cases unique to your implementation
+
+So my workflow was:
+1. Ask AI for a comprehensive starting point
+2. Review and remove what doesn't apply
+3. Add context-specific fields (like our loyalty program)
+4. Have AI generate the actual code structure
+5. Test and refine
+
+The result: a data layer built in days instead of weeks.
+And honestly, more comprehensive than if I'd started from scratch."
+```
+
+---
+
+## 📍 CHAPTER 4: Creating a Specification Document (22:00 - 26:00)
 
 ```
 [SCREEN: Template/Spreadsheet]
 
 SCRIPT:
-"Every implementation should have a formal specification document.
-Here's what it should include:
+"I've started creating formal specification documents.
+Here's the structure I use:
 
 **For Each Event:**
 
 | Field | Description |
 |-------|-------------|
-| Event Name | flightSearchInitiated |
+| Event Name | searchInitiated |
 | Trigger | User submits search form |
-| Page/Component | /search - SearchForm component |
-| XDM Mapping | commerce.productListViews (or custom) |
+| Page/Component | /search page, SearchForm component |
 
 **For Each Property:**
 
 | Property | Type | Required | Example | Business Question |
 |----------|------|----------|---------|-------------------|
 | search.origin | String (IATA) | Yes | "BLR" | Route popularity |
-| search.daysUntilDeparture | Number | Yes | 27 | Booking window |
-| search.tripType | Enum | Yes | "roundtrip" | Trip type split |
+| search.daysUntilDeparture | Number | Yes | 27 | Booking window analysis |
 
-The 'Business Question' column is crucial.
-If you can't fill it in, reconsider whether you need the property.
+The 'Business Question' column forces me to justify each property.
+If I can't fill it in, I reconsider including it.
 
-I've created a template document for TLP Airways 
-that you can adapt for your implementations.
-Link is in the description."
+I've put my TLP Airways specification template on GitHub.
+Feel free to use it or modify it.
+If you have a better approach, I'd love to see it."
 ```
 
 ---
@@ -992,22 +1080,26 @@ Link is in the description."
 [SCREEN: Documentation + next episode preview]
 
 SCRIPT:
-"You now have a complete event inventory for airline tracking.
-10+ events, dozens of properties, all with business justification.
+"That's my data layer for airline booking.
+Events, properties, and the thinking behind each.
 
-This is your blueprint.
-Whether you're implementing from scratch or auditing an existing setup,
-this document is your reference.
+Is it perfect? Probably not.
+But it's comprehensive enough to enable meaningful analysis.
 
-Download the specification template from the description.
-Adapt it for your use case.
+If you see gaps or have different ideas,
+please share in the comments.
+I genuinely want to learn from others' experience.
 
-In the next episode, we're implementing this 
-using AEP Web SDK.
-We'll configure datastreams, set up the SDK,
-and start firing these events for real.
+You can download my specification template from the description.
+Adapt it for your own projects.
 
-Subscribe and I'll see you there."
+Next episode, we're implementing this using AEP Web SDK.
+Configuring datastreams, initializing the SDK, firing events.
+
+That's where theory meets reality — and where things can break.
+
+Subscribe if you want to see how it goes.
+See you next time."
 
 [END CARD: 10 seconds]
 ```
@@ -1015,11 +1107,12 @@ Subscribe and I'll see you there."
 ---
 ---
 
-# 📹 EPISODE 3: "AEP Web SDK Setup - From Zero to First Event"
+# 📹 EPISODE 3: "AEP Web SDK Setup - Getting Our First Event to Fire"
 
 **Duration:** 28-32 minutes  
-**Style:** Technical implementation walkthrough  
-**Goal:** Complete Web SDK configuration and fire first events
+**Style:** Technical walkthrough, troubleshooting included  
+**Goal:** Get the Web SDK configured and fire real events  
+**AI Note:** This episode showcases AI-assisted debugging when things go wrong
 
 ---
 
@@ -1029,108 +1122,104 @@ Subscribe and I'll see you there."
 [SCREEN: AEP Interface + Code editor]
 
 SCRIPT:
-"Data layer design is theory.
-Web SDK implementation is reality.
+"Data layer design is the plan.
+Web SDK implementation is the reality.
 
-Today we're going to:
+Today we're getting hands-on:
 - Configure a datastream in AEP
 - Install and initialize the Web SDK
-- Fire our first pageView and search events
-- Verify the data lands in AEP
+- Fire our first pageView event
+- Verify the data actually arrives
 
-By the end of this episode, you'll have 
-real events flowing from your website to Adobe Experience Platform.
+I'll also show you some mistakes I made along the way.
+Because that's where the real learning happens.
 
-Let's implement."
+Let's get into it."
 ```
 
 **[VISUAL: Animated intro - 5 seconds]**
 
 ---
 
-## 📍 CHAPTER 1: AEP Datastream Configuration (0:45 - 8:00)
+## 📍 CHAPTER 1: Setting Up the Datastream in AEP (0:45 - 8:00)
 
 ```
 [SCREEN: AEP Data Collection interface]
 
 SCRIPT:
-"First, we need to tell AEP where to send our data.
+"First, we need to tell AEP where to receive our data.
 That's what a datastream does.
 
 [Navigate to Data Collection > Datastreams]
 
-I'll create a new datastream for TLP Airways.
+I'll create one for TLP Airways.
 
 **Step 1: Basic Configuration**
 
 Click 'New Datastream'.
 
-Name: 'TLP Airways - Production'
+Name: 'TLP Airways - Development'
 Description: 'Web tracking for airline booking demo'
-Mapping Schema: This is important - select your XDM schema.
 
-[Select Commerce schema or custom schema]
+Mapping Schema: This is important — 
+you select the XDM schema that defines your data structure.
 
-The schema defines what data AEP expects.
-If your events don't match the schema, they'll fail validation.
-We'll dive into schema design in Episode 5.
+[Select schema]
+
+I'm using a custom schema we'll discuss in a later episode.
+For now, just know that the schema determines 
+what data AEP expects to receive.
 
 **Step 2: Add Services**
 
-Now we tell the datastream what to DO with the data.
+Here we tell the datastream what to do with incoming data.
 
 [Click 'Add Service']
 
 Adobe Analytics:
-- Report Suite: [Your report suite ID]
-- This sends data to your existing Analytics implementation
+- I enter my Report Suite ID
+- This sends data to traditional Analytics
 
 Adobe Experience Platform:
-- Event Dataset: [Select your dataset]
-- This stores raw event data in AEP
+- I select the Event Dataset
+- This stores raw events in AEP
 
-Adobe Target: 
-- Enable if you want personalization
+Adobe Target:
+- I enable this for personalization later
 
-Adobe Audience Manager:
-- Enable for legacy audience needs
-
-For TLP Airways, I'm enabling:
-- Analytics (for traditional reporting)
-- AEP (for CJA and CDP)
-- Target (for personalization later)
+For TLP Airways, I'm enabling Analytics, AEP, and Target.
+You might not need all three — depends on your setup.
 
 [Save configuration]
 
-Note the Datastream ID - we'll need this for SDK configuration.
-Also copy the Edge endpoint URL.
+Note the Datastream ID — we need this for the SDK.
+Copy it somewhere safe.
 
-**Step 3: Environment Configuration**
+**Step 3: Environments**
 
 Datastreams have environments: Development, Staging, Production.
-Each has its own ID.
+Each gets its own ID.
 
-For implementation, start with Development.
-You can override settings per environment 
-(like disabling certain services in dev).
+I start with Development for testing.
+You can override settings per environment,
+like disabling services in dev.
 
-That's our datastream configured.
-Now let's install the SDK."
+Okay, datastream is ready. Let's install the SDK."
 ```
 
 ---
 
-## 📍 CHAPTER 2: Web SDK Installation (8:00 - 14:00)
+## 📍 CHAPTER 2: Installing Web SDK (8:00 - 14:00)
 
 ```
 [SCREEN: Code editor + Browser]
 
 SCRIPT:
-"There are two ways to install the Web SDK:
+"There are two ways to add the Web SDK:
 1. NPM package (for React/Next.js apps)  
 2. Launch tag (for tag manager deployments)
 
-I'll show you the NPM approach since that's what TLP Airways uses.
+I'll show the NPM approach since TLP Airways is Next.js.
 
 [Open terminal]
 
@@ -1138,89 +1227,74 @@ I'll show you the NPM approach since that's what TLP Airways uses.
 
 npm install @adobe/alloy
 
-That's it. The SDK is now available.
+Done. The SDK is now available.
 
 **Configuration**
 
-[Open or create the analytics configuration file]
+[Create configuration file]
 
-Create a file: lib/analytics/adobeConfig.ts
+I create a file: lib/analytics/adobeConfig.ts
 
 import { configure } from '@adobe/alloy';
 
-// Initialize the Web SDK
 configure({
-  // Datastream ID from AEP
   edgeConfigId: 'your-datastream-id-here',
-  
-  // Your AEP organization ID
   orgId: 'your-org-id@AdobeOrg',
-  
-  // Edge domain (default works for most)
   edgeDomain: 'edge.adobedc.net',
-  
-  // Collect standard web events
   defaultConsent: 'pending',
-  
-  // Identity settings
-  idMigrationEnabled: true,
-  thirdPartyCookiesEnabled: false,
-  
-  // Debugging (disable in production)
   debugEnabled: true
 });
 
-Let me explain the key settings:
+Let me explain these:
 
-**edgeConfigId**: Your datastream ID from step 1.
+**edgeConfigId**: The Datastream ID from earlier.
 
-**orgId**: Find this in AEP Admin > Organization Settings.
+**orgId**: Your organization ID. 
+Find this in AEP Admin. Format is 'XXXXX@AdobeOrg'.
+I got this wrong the first time — make sure the format is exact.
 
 **defaultConsent**: 
-- 'in' = collect data immediately (risky for GDPR)
-- 'pending' = wait for consent (recommended)
+- 'in' = collect data immediately
+- 'pending' = wait for consent first
 - 'out' = don't collect until explicit consent
 
-We start with 'pending' and set it to 'in' 
-after the user accepts cookies.
+I use 'pending' for GDPR compliance.
+Events queue until the user accepts cookies.
 
 **debugEnabled**: 
-Set to true during development.
-You'll see every network request in the console.
+Set true during development to see detailed console logs.
 MUST be false in production.
 
-**Initialization Timing**
+**When to Initialize**
 
-The SDK should initialize as early as possible.
-In Next.js, we do this in _document.tsx or _app.tsx.
+The SDK should load early, before any events fire.
+In Next.js, I do this in _app.tsx.
 
-[Show the initialization code in the appropriate file]
+[Show initialization code]
 
-This ensures the SDK is ready before any events fire."
+This ensures everything is ready when pages load."
 ```
 
 ---
 
-## 📍 CHAPTER 3: Firing Your First Event (14:00 - 22:00)
+## 📍 CHAPTER 3: Firing the First Event (14:00 - 22:00)
 
 ```
 [SCREEN: Code editor + Browser with DevTools]
 
 SCRIPT:
-"SDK is configured. Let's fire some events.
+"SDK is configured. Let's fire an event.
 
-**The sendEvent Command**
+**The sendEvent Function**
 
-All events go through the same function: sendEvent.
+Everything goes through sendEvent.
 
 [Create or open the data layer service]
 
 import { sendEvent } from '@adobe/alloy';
 
-// Fire a page view
 async function trackPageView(pageData) {
   const result = await sendEvent({
-    // The XDM object contains your data
     xdm: {
       eventType: 'web.webpagedetails.pageViews',
       web: {
@@ -1228,16 +1302,6 @@ async function trackPageView(pageData) {
           name: pageData.pageName,
           URL: pageData.pageURL,
           siteSection: pageData.siteSection
-        }
-      },
-      // Custom data goes in _experience or custom fields
-      _experience: {
-        analytics: {
-          customDimensions: {
-            eVars: {
-              eVar1: pageData.pageType
-            }
-          }
         }
       }
     }
@@ -1249,64 +1313,56 @@ async function trackPageView(pageData) {
 The xdm object follows your schema structure.
 eventType tells AEP what kind of event this is.
 
-**Standard Event Types**
-
-Adobe has predefined event types:
+Adobe has standard event types:
 - web.webpagedetails.pageViews (page loads)
 - commerce.productListViews (search results)
-- commerce.productViews (product detail)
 - commerce.purchases (conversions)
 
-Using standard types enables automatic reporting in Analytics.
+Using standard types enables automatic reporting.
 
-**Firing on Page Load**
+**Calling It on Page Load**
 
-[Open a page component, e.g., search.tsx]
+[Open a page component]
 
-In our Next.js pages, we fire on component mount:
+In my Next.js pages, I fire on component mount:
 
 useEffect(() => {
   trackPageView({
     pageName: 'TLP Airways | Search Flights',
     pageURL: window.location.href,
-    siteSection: 'booking',
-    pageType: 'search'
+    siteSection: 'booking'
   });
 }, []);
 
-**Let's Test It**
+**Let's Test**
 
-[Open browser, navigate to the site, open DevTools > Network tab]
+[Open browser, navigate to site, open DevTools > Network tab]
 
 Filter by 'edge.adobedc.net' or 'interact'.
 
 [Navigate to a page]
 
-There! See that request?
-That's our pageView event going to Adobe Edge.
+There! See that network request?
+That's our pageView going to Adobe Edge.
 
-[Click on the request, show the payload]
+[Click request, show payload]
 
 Look at the request body.
 There's our XDM data, exactly as we structured it.
 
-The response shows:
-- Handle from Analytics 
-- Handle from AEP
-- Any errors or warnings
+The response shows handles from Analytics and AEP.
+If there are errors, they'll appear here too.
 
-**Debugging**
+**Console Debugging**
 
-If debugEnabled is true, check the console.
-You'll see verbose logging of every event.
+With debugEnabled true, check the console.
 
 [Show console output]
 
 '[alloy] Executing sendEvent command'
-'[alloy] XDM: { ... }'
 '[alloy] Response received from edge'
 
-This is your best friend during implementation."
+This logging saved me many times during implementation."
 ```
 
 ---
@@ -1317,11 +1373,11 @@ This is your best friend during implementation."
 [SCREEN: Code implementation]
 
 SCRIPT:
-"Let's implement a real event: flightSearchInitiated.
+"Let's implement a real event: search tracking.
 
-[Open the search page or search handler]
+[Open the search page]
 
-When the user submits a search, we call:
+When the user submits a search:
 
 async function trackFlightSearch(searchParams) {
   await sendEvent({
@@ -1332,19 +1388,14 @@ async function trackFlightSearch(searchParams) {
           value: 1
         }
       },
-      // Custom search data
       _tlpairways: {
         search: {
           searchId: generateSearchId(),
           origin: searchParams.from,
-          originCity: getAirportCity(searchParams.from),
           destination: searchParams.to,
-          destinationCity: getAirportCity(searchParams.to),
           route: `${searchParams.from}-${searchParams.to}`,
           departureDate: searchParams.departureDate,
-          returnDate: searchParams.returnDate,
           tripType: searchParams.returnDate ? 'roundtrip' : 'oneway',
-          daysUntilDeparture: calculateDaysUntil(searchParams.departureDate),
           passengers: {
             total: searchParams.passengerCount,
             adults: searchParams.adults,
@@ -1360,30 +1411,27 @@ async function trackFlightSearch(searchParams) {
 
 Note: _tlpairways is a custom field group in our XDM schema.
 This is where airline-specific data lives.
+We'll cover schema design in detail later.
 
 **Calling It**
 
 In the search form submit handler:
 
 const handleSearch = async (formData) => {
-  // Track the search
   await trackFlightSearch(formData);
-  
-  // Navigate to results
   router.push(`/results?${buildQueryString(formData)}`);
 };
 
-**Validation in AEP**
+**Verifying in AEP**
 
-[Switch to AEP interface, show dataset or debugging]
+[Switch to AEP interface]
 
-After firing events, you can validate in AEP:
+After firing events, you can verify in AEP:
 - Datasets > Preview Data
-- Assurance (for real-time debugging)
+- Look for your events
 
-You should see your events appearing with all the properties we defined.
-
-If something's missing or wrong, check:
+You should see your data appearing.
+If something's wrong, check:
 1. Schema validation errors in the response
 2. Network errors in DevTools
 3. SDK console logs"
@@ -1391,66 +1439,103 @@ If something's missing or wrong, check:
 
 ---
 
-## 📍 CHAPTER 5: Common Implementation Gotchas (28:00 - 30:00)
+## 📍 CHAPTER 5: Mistakes I Made (So You Don't Have To) (28:00 - 30:00)
 
 ```
 [SCREEN: Troubleshooting tips]
 
 SCRIPT:
-"Before we wrap, let me save you hours of debugging.
+"Before we wrap, let me share some mistakes I made.
 
-**Gotcha 1: Consent Blocking Events**
-If defaultConsent is 'pending', events queue but don't send 
-until you call setConsent({ consent: [{ standard: 'Adobe', version: '2.0', value: { general: 'in' } }] }).
-Many devs forget this and wonder why no data appears.
+**Mistake 1: Forgot About Consent**
+With defaultConsent as 'pending', events queue but don't send.
+I spent an hour wondering why nothing appeared in AEP.
+You need to call setConsent() after the user accepts cookies.
 
-**Gotcha 2: Schema Mismatch**
-If your XDM doesn't match your schema, events fail silently (or with cryptic errors).
+**Mistake 2: Schema Mismatch**
+My XDM structure didn't match my schema.
+Events failed silently. Very confusing.
 Always validate against your schema.
 
-**Gotcha 3: Missing orgId**
-The organization ID format is specific: 'XXXXX@AdobeOrg'.
-Get it from Admin Console, not from anywhere else.
+**Mistake 3: Wrong orgId Format**
+The organization ID must be 'XXXXX@AdobeOrg'.
+I had just 'XXXXX' and couldn't figure out why auth failed.
 
-**Gotcha 4: CORS Issues**
-If you see CORS errors, check your datastream configuration.
-Allowed domains must include your development URLs.
+**Mistake 4: CORS Issues**
+Got CORS errors because my development URL 
+wasn't in the datastream's allowed domains.
+Easy fix once you know where to look.
 
-**Gotcha 5: Duplicate Events**
-React's double-render in StrictMode can cause duplicate events.
-Use a flag or check to prevent double-firing.
+**Mistake 5: React Double-Render**
+React's StrictMode renders components twice in dev.
+My events were firing twice.
+I added a flag to prevent duplicate sends.
 
-Keep these in mind and you'll have a smooth implementation."
+These cost me hours. Hopefully they'll save you time."
 ```
 
 ---
 
-## 📍 CLOSING & CTA (30:00 - 31:30)
+## 📍 CHAPTER 5.5: AI as a Debugging Partner (30:00 - 31:00)
+
+```
+[SCREEN: Cursor IDE with AI chat panel]
+
+SCRIPT:
+"Quick aside on debugging with AI.
+
+For at least three of those mistakes, 
+I described the problem to Claude in Cursor
+and got the answer in under a minute.
+
+'My AEP events are not appearing even though the network call succeeds.'
+Claude immediately asked: 'Is your defaultConsent set to pending?'
+Boom. That was it.
+
+'My SDK initialization fails with an auth error.'
+Claude asked: 'Is your orgId in the format XXXXX@AdobeOrg?'
+
+AI cannot replace understanding, 
+but for debugging common issues,
+it is like having a senior developer on call 24/7.
+
+The pattern I use:
+1. Describe the symptom clearly
+2. Share relevant code snippets
+3. Ask for possible causes
+4. Test the suggestions one by one
+
+It saved me hours on this project alone."
+```
+
+---
+
+## 📍 CLOSING & CTA (31:00 - 32:30)
 
 ```
 [SCREEN: Summary + next episode]
 
 SCRIPT:
-"We've gone from zero to firing real events.
+"We went from zero to firing real events.
 
-Today you learned:
-- How to configure a datastream in AEP
-- How to install and initialize the Web SDK
-- How to fire pageView and search events
-- How to validate data is flowing
+Today we covered:
+- Configuring a datastream in AEP
+- Installing and initializing Web SDK
+- Firing pageView and search events
+- Validating data flow
+- Common mistakes to avoid
 
-Your homework: 
-Implement the flight selection event (flightSelected) 
-we documented in Episode 2.
-Post your XDM structure in the comments - I'll review them.
+If you want practice, try implementing flight selection tracking.
+Post your approach in the comments — 
+I'm curious how others structure it.
 
-Next episode, we're going deep on XDM schema design.
-How do you model flights, passengers, and transactions 
-in Adobe's Experience Data Model?
+Next episode, we're diving into XDM schema design.
+How do you model flights, passengers, and transactions?
+It's foundational knowledge, and honestly, 
+it's where I struggled most when starting out.
 
-It's foundational knowledge for any AEP implementation.
-
-Subscribe and I'll see you in Episode 4."
+Subscribe if you're following along.
+See you next time."
 
 [END CARD: 10 seconds]
 ```
@@ -1460,25 +1545,50 @@ Subscribe and I'll see you in Episode 4."
 ## 🎬 B-ROLL & VISUALS FOR EPISODE 3
 
 - [ ] AEP interface navigation
-- [ ] Code typing in VS Code
+- [ ] Code typing in VS Code / Cursor IDE
 - [ ] Network tab showing successful requests
 - [ ] Console output with SDK debugging
 - [ ] Schema validation success/error examples
+- [ ] **Cursor AI chat panel** — showing debugging prompt
+- [ ] **AI response** — suggesting solution to common error
+- [ ] **Split screen**: Error message + AI suggestion + fix applied
 
 ---
 
-# 📋 EPISODE COMPARISON: OLD vs NEW FOCUS
+# 📋 TONE COMPARISON: OLD vs NEW
 
-| Episode | OLD (Web Dev Tutorial) | NEW (Adobe Analytics Masterclass) |
-|---------|------------------------|-----------------------------------|
-| Ep 1 | "How to build an airlines website" | "Why airlines are the ultimate analytics challenge" |
-| Ep 2 | "Project setup and folder structure" | "Mapping the complete airline data layer" |
-| Ep 3 | "Design system with Material-UI" | "AEP Web SDK implementation" |
-| Target | Web developers | Marketers, MarTech leads, analytics implementers |
-| Takeaway | Build a project | Master complex analytics tracking |
+| Aspect | OLD (Masterclass) | NEW (Learning Together) |
+|--------|-------------------|-------------------------|
+| Opening | "I'll show you how to build..." | "I'm going to share what I've learned..." |
+| Expertise claim | "Master complex analytics" | "Still figuring out some of this" |
+| Mistakes | Rarely mentioned | Openly discussed |
+| Certainty | "This is the right way" | "This is my approach, open to other ideas" |
+| Call to action | "Follow my masterclass" | "Join me in learning" |
+| Audience role | Students being taught | Fellow learners exploring together |
+| **AI Usage** | Not mentioned | Openly acknowledged as a development partner |
 
 ---
 
-**Script Version:** 2.0 (Adobe Analytics Focus)  
-**Created:** January 2026  
-**Author:** TLP Airways Team
+# 🤖 AI DEVELOPMENT HIGHLIGHTS SUMMARY
+
+Throughout this series, we reference how AI tools assisted in building TLP Airways:
+
+| Episode | AI Usage Highlight |
+|---------|-------------------|
+| **EP1** | Introduction to AI-assisted development with Cursor + Claude/Gemini |
+| **EP2** | AI helped design comprehensive data layer schema structure |
+| **EP3** | AI-assisted debugging of SDK configuration issues |
+
+**Key AI Tools Used:**
+- **Cursor IDE** — Primary development environment with built-in AI
+- **Claude (Anthropic)** — Complex logic, architecture, debugging
+- **Gemini (Google)** — Documentation, code review, optimization
+
+**Philosophy:** AI accelerates development but doesn't replace understanding. We use AI for brainstorming, debugging, and boilerplate — but human judgment drives all final decisions.
+
+---
+
+**Script Version:** 4.0 (AI-Assisted Development Narrative)  
+**Updated:** January 2026  
+**Author:** TLP Airways Team  
+**AI Partners:** Claude, Gemini, GitHub Copilot

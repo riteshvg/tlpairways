@@ -1,8 +1,8 @@
-# 🎬 Mastering Airline Analytics with Adobe Experience Platform
+# 🎬 Learning Airline Analytics with Adobe Experience Platform
 
-> **Complete Video Course for Marketers, MarTech Leads & Analytics Professionals**
+> **A Video Series for Marketers, MarTech Leads & Analytics Folks**
 > 
-> Learn how to track, analyze, and activate data from complex airline booking journeys 
+> Exploring how to track, analyze, and activate data from complex airline booking journeys 
 > using Adobe Analytics, AEP Web SDK, Customer Journey Analytics, and Real-Time CDP
 
 ---
@@ -11,52 +11,55 @@
 
 | Attribute | Details |
 |-----------|---------|
-| **Series Title** | Mastering Airline Analytics with Adobe Experience Platform |
+| **Series Title** | Learning Airline Analytics with Adobe Experience Platform |
 | **Total Episodes** | 12 Videos |
 | **Total Duration** | ~6-7 hours |
 | **Target Audience** | Marketers, MarTech Leads, Analytics Implementers, Solution Architects |
-| **Skill Level** | Intermediate to Advanced |
+| **Skill Level** | Beginner to Intermediate (learning together!) |
 | **Adobe Stack** | AEP Web SDK, Adobe Analytics, Customer Journey Analytics, Real-Time CDP, Adobe Target |
 | **Industry Context** | Airlines / Travel / Complex E-Commerce |
 
 ---
 
-## 🎯 Series Goals
+## 🎯 What We're Aiming For
 
-By the end of this series, viewers will be able to:
+By the end of this series, we'll have explored:
 
-1. **Understand** why airline/travel tracking is the most complex analytics challenge
-2. **Design** comprehensive data layer specifications for multi-step booking flows
-3. **Implement** AEP Web SDK for production-grade event tracking
-4. **Build** XDM schemas that model flights, passengers, and transactions
-5. **Configure** proper e-commerce purchase tracking with product arrays
-6. **Handle** identity stitching and consent management correctly
-7. **Analyze** booking funnels and customer journeys in CJA
-8. **Activate** audiences in Real-Time CDP for personalization
+1. **Why** airline/travel tracking is considered complex (I'm still learning the nuances)
+2. **How** to design data layer specifications for multi-step booking flows
+3. **Implementing** AEP Web SDK for event tracking (with all the mistakes along the way)
+4. **Building** XDM schemas that model flights, passengers, and transactions
+5. **Configuring** e-commerce purchase tracking with product arrays
+6. **Handling** identity stitching and consent management
+7. **Analyzing** booking funnels and customer journeys in CJA
+8. **Activating** audiences in Real-Time CDP for personalization
+
+Some of this I'm confident about. Other parts I'm still figuring out.
+That's the honest truth.
 
 ---
 
-## 👥 Target Audience Personas
+## 👥 Who This Might Help
 
 ### 1. The Marketer
-> "I want to understand what data we can collect and how to use it for campaigns"
+> "I want to understand what data we can collect and how to use it"
 
-**What they'll learn:** Business questions data can answer, CJA dashboards, audience activation
+**You'll learn:** Business questions data can answer, CJA dashboards, audience activation
 
 ### 2. The MarTech Lead
 > "I need to architect our analytics strategy across channels"
 
-**What they'll learn:** End-to-end data flow, schema design, CDP integration, multi-channel stitching
+**You'll learn:** Data flow, schema design, CDP integration, identity stitching
 
 ### 3. The Implementation Specialist
-> "I need to implement tracking on websites and apps"
+> "I need to implement tracking on websites"
 
-**What they'll learn:** Web SDK configuration, event firing, debugging, validation
+**You'll learn:** Web SDK configuration, event firing, debugging, validation
 
 ### 4. The Solution Architect
 > "I'm designing the Adobe stack for a travel client"
 
-**What they'll learn:** XDM design patterns, datastream configuration, system integration
+**You'll learn:** XDM design patterns, datastream configuration, system integration
 
 ---
 
@@ -66,74 +69,74 @@ By the end of this series, viewers will be able to:
 
 ## **Module 1: Understanding the Challenge (Episodes 1-2)**
 
-### 📹 Episode 1: "Why Airlines Are the Ultimate Analytics Challenge"
+### 📹 Episode 1: "Why I Built an Airline Demo to Learn Analytics"
 **Duration:** 20-25 minutes
 
-#### Learning Objectives
-- Understand the 5 unique challenges of airline analytics
-- See TLP Airways as an analytics sandbox (not a coding project)
-- Know the Adobe stack we'll use and how it fits together
+#### What We'll Explore
+- The 5 unique challenges of airline analytics (that I've learned about)
+- TLP Airways as an analytics sandbox
+- The Adobe stack and how the pieces connect
 
 #### Content Outline
 | Timestamp | Topic | Key Points |
 |-----------|-------|------------|
-| 0:00-1:00 | Cold Open | Hook: "50+ events in a single booking" |
-| 1:00-6:00 | The 5 Challenges | Multi-step journeys, complex products, dynamic pricing, multi-passenger, consent |
+| 0:00-1:00 | Cold Open | "I built this to learn" |
+| 1:00-6:00 | The Challenges | Multi-step journeys, complex products, dynamic pricing, multi-passenger, consent |
 | 6:00-10:00 | TLP Airways Tour | Analytics touchpoints, not UI features |
 | 10:00-15:00 | The Adobe Stack | Web SDK → AEP → CJA → CDP explained |
-| 15:00-18:00 | Series Roadmap | What's coming and business outcomes |
-| 18:00-21:00 | Prerequisites | Access requirements, who this is for |
-| 21:00-22:30 | Closing & CTA | Subscribe, resources |
+| 15:00-18:00 | Series Roadmap | What's coming |
+| 18:00-21:00 | Prerequisites | What you need, who this is for |
+| 21:00-22:30 | Closing | Subscribe, resources |
 
-#### Key Takeaways
-- Airlines generate uniquely complex data (routes, ancillaries, passengers)
-- Traditional analytics tools weren't designed for this complexity
-- AEP + CJA provides the flexibility needed for proper analysis
+#### Honest Notes
+- Airlines generate complex data (routes, ancillaries, passengers)
+- I'm still learning the best ways to analyze this
+- AEP + CJA provides flexibility, but has a learning curve
 
 ---
 
-### 📹 Episode 2: "Mapping the Airline Data Layer - Every Event That Matters"
+### 📹 Episode 2: "Mapping the Data Layer - What Should We Track?"
 **Duration:** 25-30 minutes
 
-#### Learning Objectives
-- Learn data layer design principles for complex flows
-- Document all trackable events in an airline booking
-- Understand business justification for each data point
+#### What We'll Explore
+- Data layer design principles (the approach I've landed on)
+- All the trackable events in an airline booking
+- Business justification for each data point
 
 #### Content Outline
 | Timestamp | Topic | Key Points |
 |-----------|-------|------------|
-| 0:00-0:45 | Cold Open | "Before code, you need a spec" |
-| 0:45-4:00 | Design Principles | Event-driven, business-question-driven, XDM-ready |
-| 4:00-18:00 | Event Inventory | 10+ events with schemas and business value |
+| 0:00-0:45 | Cold Open | "Before code, you need a plan" |
+| 0:45-4:00 | Design Principles | Event-driven, business-question-driven |
+| 4:00-18:00 | Event Inventory | 10+ events with my reasoning |
 | 18:00-22:00 | Calculated Properties | daysUntilDeparture, route concatenation |
-| 22:00-26:00 | Spec Document Template | Handoff document between teams |
-| 26:00-27:30 | Closing & CTA | Download template, next episode preview |
+| 22:00-26:00 | Spec Document Template | How I document for handoff |
+| 26:00-27:30 | Closing | Template download, feedback welcome |
 
-#### Events Documented
-| Event | Trigger | Business Questions |
-|-------|---------|-------------------|
+#### Events I'm Tracking
+| Event | Trigger | Questions It Helps Answer |
+|-------|---------|--------------------------|
 | pageView | Page load | Traffic patterns, user segmentation |
-| flightSearchInitiated | Search submit | Popular routes, booking windows |
+| searchInitiated | Search submit | Popular routes, booking windows |
 | searchResultsDisplayed | Results load | Zero-result rate, price distribution |
 | flightSelected | Flight click | Price sensitivity, position impact |
 | ancillaryViewed | Section view | Interest without conversion |
-| ancillarySelected | Add to booking | Attach rates, revenue per route |
+| ancillarySelected | Add to booking | Attach rates, revenue |
 | paymentSubmitted | Payment attempt | Conversion, payment methods |
 | paymentFailed | Payment error | Drop-off diagnosis |
-| purchase | Booking complete | Revenue, attribution, products |
+| purchase | Booking complete | Revenue, attribution |
 
 ---
 
-## **Module 2: Implementation Deep Dive (Episodes 3-6)**
+## **Module 2: Implementation (Episodes 3-6)**
 
-### 📹 Episode 3: "AEP Web SDK Setup - From Zero to First Event"
+### 📹 Episode 3: "AEP Web SDK Setup - Getting Our First Event to Fire"
 **Duration:** 28-32 minutes
 
-#### Learning Objectives
-- Configure datastreams in AEP Data Collection
-- Install and initialize Web SDK
-- Fire and validate pageView and search events
+#### What We'll Explore
+- Configuring datastreams in AEP Data Collection
+- Installing and initializing Web SDK
+- Firing and validating our first events (and debugging when things break)
 
 #### Content Outline
 | Timestamp | Topic |
@@ -142,38 +145,38 @@ By the end of this series, viewers will be able to:
 | 0:45-8:00 | Datastream Configuration |
 | 8:00-14:00 | Web SDK Installation |
 | 14:00-22:00 | Firing First Events |
-| 22:00-28:00 | Search Event Implementation |
-| 28:00-30:00 | Common Gotchas |
+| 22:00-28:00 | Implementing Search Tracking |
+| 28:00-30:00 | Mistakes I Made (so you don't have to) |
 | 30:00-31:30 | Closing |
 
-#### Hands-On Deliverables
+#### What We'll Build
 - Configured datastream with Analytics + AEP + Target
 - Working Web SDK initialization
-- pageView event firing on every page
-- flightSearchInitiated event with full context
+- pageView event firing
+- searchInitiated event with context
 
 ---
 
-### 📹 Episode 4: "XDM Schema Design for Airlines"
+### 📹 Episode 4: "XDM Schema Design - Figuring Out the Data Model"
 **Duration:** 30-35 minutes
 
-#### Learning Objectives
-- Understand XDM architecture and field groups
-- Design schemas for flights, passengers, and bookings
-- Model relationships between entities
+#### What We'll Explore
+- XDM architecture and field groups (this confused me at first)
+- Designing schemas for flights, passengers, bookings
+- Modeling relationships between entities
 
 #### Content Outline
 | Timestamp | Topic |
 |-----------|-------|
-| 0:00-1:00 | Cold Open: "XDM is the foundation" |
+| 0:00-1:00 | Cold Open: "XDM took me a while" |
 | 1:00-8:00 | XDM Fundamentals | Classes, field groups, data types |
 | 8:00-15:00 | Airline Schema Design | Flights, passengers, transactions |
-| 15:00-22:00 | Custom Field Groups | _tlpairways namespace |
+| 15:00-22:00 | Custom Field Groups | Our namespace |
 | 22:00-28:00 | Schema Relationships | Linking events to profiles |
-| 28:00-32:00 | Validation & Testing | Schema-based validation in AEP |
+| 28:00-32:00 | Validation & Testing |
 | 32:00-34:00 | Closing |
 
-#### Schema Components
+#### Schema Components I'm Using
 - **XDM ExperienceEvent** - For behavioral events
 - **XDM Individual Profile** - For customer data
 - **Custom Field Groups:**
@@ -185,26 +188,26 @@ By the end of this series, viewers will be able to:
 
 ---
 
-### 📹 Episode 5: "E-Commerce Tracking & Revenue Attribution"
+### 📹 Episode 5: "E-Commerce Tracking - Getting the Purchase Event Right"
 **Duration:** 28-32 minutes
 
-#### Learning Objectives
-- Implement purchase tracking with product arrays
-- Structure revenue attribution for flights + ancillaries
-- Handle multi-passenger, multi-leg bookings
+#### What We'll Explore
+- Purchase tracking with product arrays
+- Structuring revenue for flights + ancillaries
+- Handling multi-passenger, multi-leg bookings
 
 #### Content Outline
 | Timestamp | Topic |
 |-----------|-------|
-| 0:00-1:00 | Cold Open: "Purchase is everything" |
+| 0:00-1:00 | Cold Open: "This took me several attempts" |
 | 1:00-6:00 | E-Commerce Architecture | productListViews → purchase flow |
-| 6:00-14:00 | Product Array Design | Flights as products, ancillaries as products |
-| 14:00-20:00 | Revenue Breakdown | Base fare, taxes, fees, ancillaries |
+| 6:00-14:00 | Product Array Design | Flights and ancillaries as products |
+| 14:00-20:00 | Revenue Breakdown | Base fare, taxes, fees |
 | 20:00-26:00 | Implementation | Full purchase event walkthrough |
-| 26:00-30:00 | Validation | Checking data in AEP and Analytics |
+| 26:00-30:00 | Validation | Checking data in AEP |
 | 30:00-32:00 | Closing |
 
-#### Product Array Example
+#### Product Array Structure
 ```javascript
 products: [
   { sku: "TL-234", name: "BLR→DEL", category: "flight", price: 5000, quantity: 2 },
@@ -216,36 +219,36 @@ products: [
 
 ---
 
-### 📹 Episode 6: "Identity Stitching & Consent Management"
+### 📹 Episode 6: "Identity & Consent - The Important (Confusing) Stuff"
 **Duration:** 25-30 minutes
 
-#### Learning Objectives
-- Hash PII correctly for privacy-safe tracking
-- Implement Adobe consent framework
-- Stitch anonymous to known identities
+#### What We'll Explore
+- Hashing PII for privacy-safe tracking
+- Implementing Adobe consent framework
+- Stitching anonymous to known identities
 
 #### Content Outline
 | Timestamp | Topic |
 |-----------|-------|
-| 0:00-1:00 | Cold Open: "Identity is the key to personalization" |
+| 0:00-1:00 | Cold Open: "Privacy is complicated" |
 | 1:00-7:00 | Identity Fundamentals | ECID, CRM ID, hashed email |
 | 7:00-14:00 | Implementing Identity | Setting identities in Web SDK |
 | 14:00-20:00 | Consent Framework | Adobe 2.0 standard, pending vs in |
 | 20:00-25:00 | Anonymous to Known | Pre-login stitching |
-| 25:00-28:00 | GDPR/DPDP Considerations | Regional requirements |
+| 25:00-28:00 | GDPR/DPDP Considerations | What I understand so far |
 | 28:00-30:00 | Closing |
 
 ---
 
-## **Module 3: Analysis & Insights (Episodes 7-9)**
+## **Module 3: Analysis (Episodes 7-9)**
 
 ### 📹 Episode 7: "Connecting to Customer Journey Analytics"
 **Duration:** 25-28 minutes
 
-#### Learning Objectives
-- Create connections and data views in CJA
-- Build calculated metrics for airline KPIs
-- Understand session vs event-based analysis
+#### What We'll Explore
+- Creating connections and data views in CJA
+- Building calculated metrics for airline KPIs
+- Session vs event-based analysis
 
 #### Content Outline
 | Timestamp | Topic |
@@ -254,183 +257,173 @@ products: [
 | 1:00-8:00 | CJA Architecture | Connections → Data Views → Workspace |
 | 8:00-15:00 | Creating Connections | AEP datasets to CJA |
 | 15:00-22:00 | Data Views | Dimensions, metrics, calculated fields |
-| 22:00-26:00 | Airline-Specific Metrics | Ancillary attach rate, booking window |
+| 22:00-26:00 | Airline-Specific Metrics | The KPIs I'm trying to track |
 | 26:00-28:00 | Closing |
 
-#### Key Metrics to Build
+#### Metrics I'm Building
 - Conversion Rate (Search → Book)
 - Ancillary Attach Rate
 - Revenue per Passenger
-- Average Booking Window (days until departure)
-- Price Sensitivity Index
+- Average Booking Window
+- Price Sensitivity Index (still working on this one)
 
 ---
 
-### 📹 Episode 8: "Building Airline Dashboards in CJA"
+### 📹 Episode 8: "Building Dashboards in CJA"
 **Duration:** 30-35 minutes
 
-#### Learning Objectives
-- Build a conversion funnel analysis
-- Analyze route performance
-- Create abandonment and recovery reports
+#### What We'll Explore
+- Building a conversion funnel analysis
+- Analyzing route performance
+- Creating abandonment and recovery reports
 
 #### Content Outline
 | Timestamp | Topic |
 |-----------|-------|
 | 0:00-1:00 | Cold Open |
 | 1:00-10:00 | Booking Funnel | Search → Results → Select → Pay → Confirm |
-| 10:00-18:00 | Route Analysis | Top routes, seasonal trends |
-| 18:00-25:00 | Ancillary Analysis | Attach rates by route, passenger type |
-| 25:00-32:00 | Abandonment Analysis | Where and why they drop off |
+| 10:00-18:00 | Route Analysis | Top routes, patterns |
+| 18:00-25:00 | Ancillary Analysis | Attach rates |
+| 25:00-32:00 | Abandonment Analysis | Where they drop off |
 | 32:00-35:00 | Closing |
 
 #### Dashboard Panels
-1. **Executive Summary** - Key KPIs, trends
+1. **Summary** - Key KPIs, trends
 2. **Booking Funnel** - Conversion at each step
-3. **Route Performance** - Revenue, volume, conversion by route
+3. **Route Performance** - Revenue, volume by route
 4. **Ancillary Performance** - Attach rate, revenue contribution
-5. **Abandonment Analysis** - Drop-off points, recovery candidates
+5. **Abandonment Analysis** - Drop-off points
 
 ---
 
 ### 📹 Episode 9: "Cross-Channel Journey Analysis"
 **Duration:** 25-30 minutes
 
-#### Learning Objectives
-- Stitch web, call center, and offline data
-- Analyze multi-channel journeys
-- Identify channel attribution patterns
+#### What We'll Explore
+- Stitching web, call center, and offline data (conceptually)
+- Analyzing multi-channel journeys
+- Attribution patterns
 
 #### Content Outline
 | Timestamp | Topic |
 |-----------|-------|
 | 0:00-1:00 | Cold Open |
-| 1:00-8:00 | Multi-Channel Concept | Web + Call Center + Kiosk + App |
-| 8:00-16:00 | Bringing Data Together | Multiple datasets in CJA |
-| 16:00-22:00 | Journey Stitching | Cross-device, cross-channel identity |
-| 22:00-26:00 | Attribution Models | First touch, last touch, algorithmic |
+| 1:00-8:00 | Multi-Channel Concept | Web + Call Center + App |
+| 8:00-16:00 | Bringing Data Together | Multiple datasets |
+| 16:00-22:00 | Journey Stitching | Identity across channels |
+| 22:00-26:00 | Attribution Models | First touch, last touch |
 | 26:00-28:00 | Closing |
 
 ---
 
-## **Module 4: Activation & Personalization (Episodes 10-12)**
+## **Module 4: Activation (Episodes 10-12)**
 
-### 📹 Episode 10: "Real-Time CDP - Building Airline Audiences"
+### 📹 Episode 10: "Real-Time CDP - Building Audiences"
 **Duration:** 28-32 minutes
 
-#### Learning Objectives
-- Create audiences based on booking behavior
-- Understand audience composition and overlap
-- Push audiences to downstream destinations
+#### What We'll Explore
+- Creating audiences based on booking behavior
+- Audience composition
+- Pushing audiences to destinations
 
 #### Content Outline
 | Timestamp | Topic |
 |-----------|-------|
 | 0:00-1:00 | Cold Open |
 | 1:00-8:00 | CDP Overview | Profiles, segments, destinations |
-| 8:00-16:00 | Audience Building | Rules-based and AI-driven |
-| 16:00-24:00 | Airline Use Cases | Abandoners, high-value, loyalty |
-| 24:00-30:00 | Activation | Pushing to Target, email, ads |
+| 8:00-16:00 | Audience Building | Rules-based segmentation |
+| 16:00-24:00 | Airline Use Cases | Abandoners, high-value |
+| 24:00-30:00 | Activation | Pushing to Target, email |
 | 30:00-32:00 | Closing |
 
-#### Audience Examples
-| Audience | Definition | Activation Use Case |
-|----------|------------|---------------------|
-| Cart Abandoners | Searched but didn't book (7 days) | Retargeting ads |
-| High-Value Travelers | 3+ bookings, business class | Loyalty offers |
+#### Audience Ideas
+| Audience | Definition | Activation |
+|----------|------------|------------|
+| Cart Abandoners | Searched but didn't book | Retargeting |
+| High-Value Travelers | Multiple bookings, business class | Loyalty offers |
 | Price Sensitive | Multiple searches, price-sorted | Price drop alerts |
 | Last-Minute Bookers | Departure <7 days | Express checkout |
-| Ancillary Rejecters | Never buy extras | Bundle promotions |
 
 ---
 
-### 📹 Episode 11: "Adobe Target - Personalization in Booking Flows"
+### 📹 Episode 11: "Adobe Target - Personalization"
 **Duration:** 25-30 minutes
 
-#### Learning Objectives
-- Set up A/B tests using AEP data
-- Implement experience personalization
-- Use Offer Decisioning for dynamic content
+#### What We'll Explore
+- Setting up tests using AEP data
+- Experience personalization
+- Offer Decisioning (still learning this one)
 
 #### Content Outline
 | Timestamp | Topic |
 |-----------|-------|
 | 0:00-1:00 | Cold Open |
-| 1:00-8:00 | Target + AEP Integration | Shared audiences, consistent identity |
-| 8:00-15:00 | A/B Testing Use Cases | Hero banners, pricing display, CTAs |
-| 15:00-22:00 | Personalization | Showing relevant routes, offers |
+| 1:00-8:00 | Target + AEP Integration | Shared audiences |
+| 8:00-15:00 | A/B Testing | Banner tests, CTA variations |
+| 15:00-22:00 | Personalization | Showing relevant content |
 | 22:00-26:00 | Offer Decisioning | AI-driven recommendations |
 | 26:00-28:00 | Closing |
 
 #### Test Ideas
 - Price display: ₹5,000 vs "From ₹4,999"
 - Urgency messaging: "Only 3 seats left" vs no messaging
-- Ancillary placement: During booking vs confirmation page
-- Hero banner: Destination-based vs price-based
+- Destination-based banners
 
 ---
 
-### 📹 Episode 12: "Series Finale - End-to-End Demo & What's Next"
+### 📹 Episode 12: "Series Wrap-Up - What We Learned"
 **Duration:** 25-30 minutes
 
-#### Learning Objectives
-- See the complete flow from event to personalization
+#### What We'll Explore
+- End-to-end demo of the full flow
 - Recap key learnings
-- Understand advanced topics for continued learning
+- What's next for continued learning
 
 #### Content Outline
 | Timestamp | Topic |
 |-----------|-------|
 | 0:00-1:00 | Cold Open |
-| 1:00-12:00 | End-to-End Demo | Full booking with data flowing through stack |
-| 12:00-18:00 | Key Learnings Recap | What we covered |
-| 18:00-23:00 | Advanced Topics | Journey Orchestration, AI, offline sync |
-| 23:00-27:00 | Resources & Next Steps | Documentation, certification |
+| 1:00-12:00 | End-to-End Demo | Full booking with data flowing |
+| 12:00-18:00 | Key Learnings | What we covered |
+| 18:00-23:00 | What I Still Don't Know | Honest gaps |
+| 23:00-27:00 | Resources | Documentation, where to learn more |
 | 27:00-30:00 | Final Closing |
 
 ---
 
-## 📊 Episode Summary Matrix
+## 📊 Episode Summary
 
-| Ep | Title | Duration | Key Adobe Products | Hands-On? |
-|----|-------|----------|-------------------|-----------|
-| 1 | Why Airlines Are Complex | 22 min | Overview | Conceptual |
-| 2 | Mapping the Data Layer | 27 min | Data Layer Design | Template |
-| 3 | AEP Web SDK Setup | 30 min | Web SDK | Yes |
-| 4 | XDM Schema Design | 33 min | AEP Schemas | Yes |
-| 5 | E-Commerce Tracking | 30 min | Web SDK, Analytics | Yes |
-| 6 | Identity & Consent | 28 min | Web SDK, Privacy | Yes |
-| 7 | Connecting to CJA | 27 min | CJA | Yes |
-| 8 | Building Dashboards | 33 min | CJA | Yes |
+| Ep | Title | Duration | Key Products | Style |
+|----|-------|----------|--------------|-------|
+| 1 | Why I Built This | 22 min | Overview | Conceptual |
+| 2 | Mapping the Data Layer | 27 min | Data Layer | Working session |
+| 3 | Web SDK Setup | 30 min | Web SDK | Hands-on |
+| 4 | XDM Schema Design | 33 min | AEP Schemas | Hands-on |
+| 5 | E-Commerce Tracking | 30 min | Web SDK, Analytics | Hands-on |
+| 6 | Identity & Consent | 28 min | Web SDK, Privacy | Hands-on |
+| 7 | Connecting to CJA | 27 min | CJA | Hands-on |
+| 8 | Building Dashboards | 33 min | CJA | Hands-on |
 | 9 | Cross-Channel Analysis | 28 min | CJA | Conceptual |
-| 10 | Real-Time CDP | 30 min | CDP | Yes |
-| 11 | Adobe Target | 28 min | Target | Yes |
-| 12 | Series Finale | 28 min | All | Demo |
+| 10 | Real-Time CDP | 30 min | CDP | Hands-on |
+| 11 | Adobe Target | 28 min | Target | Hands-on |
+| 12 | Series Wrap-Up | 28 min | All | Demo |
 
 ---
 
 ## 🎨 Production Resources
-
-### Thumbnail Concepts
-| Episode | Visual Concept |
-|---------|----------------|
-| Ep 1-2 | Airplane with data flowing around it |
-| Ep 3-6 | Code + AEP interface split |
-| Ep 7-9 | CJA dashboard screenshots |
-| Ep 10-12 | Connected customer profile visual |
 
 ### Graphics Needed
 - [ ] Adobe Experience Platform architecture diagram
 - [ ] Data flow animation (Web → Edge → AEP → CJA → CDP)
 - [ ] XDM schema visualization
 - [ ] Airline booking funnel diagram
-- [ ] ERD diagram for airline data model
+- [ ] ERD diagram for data model
 
 ### B-Roll Footage
 - [ ] AEP interface navigation
 - [ ] CJA Workspace building
 - [ ] TLP Airways booking flow
-- [ ] Console showing events firing
+- [ ] Console showing events
 - [ ] Datastream configuration
 
 ---
@@ -444,24 +437,7 @@ products: [
 | Week 3 | Ep 5-6 | Implementation: Tracking & Identity |
 | Week 4 | Ep 7-8 | Analysis: CJA Setup & Dashboards |
 | Week 5 | Ep 9-10 | Analysis & Activation |
-| Week 6 | Ep 11-12 | Personalization & Finale |
-
----
-
-## 🔗 Playlist Organization
-
-```
-Main Playlist: "Mastering Airline Analytics with AEP"
-├── Module 1: Understanding the Challenge (Ep 1-2)
-├── Module 2: Implementation Deep Dive (Ep 3-6)
-├── Module 3: Analysis & Insights (Ep 7-9)
-└── Module 4: Activation & Personalization (Ep 10-12)
-
-Related Content:
-├── "Adobe Analytics Quick Tips" (shorts from longer content)
-├── "AEP Schema Design Patterns" (deep dives)
-└── "CJA Dashboard Templates" (downloadables)
-```
+| Week 6 | Ep 11-12 | Personalization & Wrap-Up |
 
 ---
 
@@ -470,20 +446,20 @@ Related Content:
 | Episode | Primary Keywords |
 |---------|------------------|
 | Ep 1 | airline analytics, travel tracking, adobe experience platform |
-| Ep 2 | data layer design, analytics specification, tracking requirements |
-| Ep 3 | aep web sdk tutorial, adobe alloy, datastream configuration |
-| Ep 4 | xdm schema design, adobe experience data model |
-| Ep 5 | e-commerce tracking, purchase event, revenue attribution |
-| Ep 6 | identity stitching, gdpr analytics, consent management |
-| Ep 7 | customer journey analytics tutorial, cja setup |
-| Ep 8 | cja dashboard, analytics workspace, booking funnel |
-| Ep 9 | cross-channel analytics, multi-touch attribution |
+| Ep 2 | data layer design, analytics specification |
+| Ep 3 | aep web sdk tutorial, datastream configuration |
+| Ep 4 | xdm schema design, experience data model |
+| Ep 5 | e-commerce tracking, purchase event |
+| Ep 6 | identity stitching, consent management |
+| Ep 7 | customer journey analytics tutorial |
+| Ep 8 | cja dashboard, booking funnel |
+| Ep 9 | cross-channel analytics |
 | Ep 10 | adobe real-time cdp, audience segmentation |
-| Ep 11 | adobe target personalization, a/b testing |
-| Ep 12 | adobe experience platform demo, complete walkthrough |
+| Ep 11 | adobe target personalization |
+| Ep 12 | adobe experience platform demo |
 
 ---
 
-**Series Version:** 2.0 (Adobe Analytics Focus)  
+**Series Version:** 2.1 (Humble Learning Tone)  
 **Last Updated:** January 2026  
 **Author:** TLP Airways Team

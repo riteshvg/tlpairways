@@ -1,0 +1,793 @@
+{
+  "DPS": {
+    "name": "Bali",
+    "country": "Indonesia",
+    "cityCode": "DPS",
+    "continent": "Asia",
+    "tagline": "Island of the Gods",
+    "description": "Bali is a living postcard — volcanic mountains, ancient temples, lush rice terraces, and world-class surf breaks. Whether you seek spiritual retreat, adventure, or pure indulgence, Bali delivers.",
+    "bestTimeToVisit": "April to October (dry season)",
+    "currency": "Indonesian Rupiah (IDR)",
+    "language": "Balinese, Indonesian",
+    "timezone": "WITA (UTC+8)",
+    "visaRequirements": "Indians require a visa on arrival (USD 35, valid 30 days)",
+    "highlights": [
+      {
+        "name": "Tanah Lot Temple",
+        "type": "spiritual",
+        "description": "A 16th-century sea temple perched on a rocky outcrop, most magical at sunset.",
+        "bestTime": "45 minutes before sunset",
+        "entryFee": "~₹260"
+      },
+      {
+        "name": "Ubud Monkey Forest",
+        "type": "nature",
+        "description": "A sacred forest sanctuary housing 749 long-tailed macaques among ancient temples and towering trees.",
+        "bestTime": "Morning (8–10 AM)",
+        "entryFee": "~₹260"
+      },
+      {
+        "name": "Tegallalang Rice Terraces",
+        "type": "landscape",
+        "description": "Iconic UNESCO-listed rice paddies carved into the hillside near Ubud. The subak irrigation system here dates back to the 9th century.",
+        "bestTime": "Early morning for soft light",
+        "entryFee": "Free (donations welcome)"
+      },
+      {
+        "name": "Seminyak Beach",
+        "type": "beach",
+        "description": "Bali's most sophisticated beach strip — premium beach clubs, world-class sunsets, and celebrity chef restaurants.",
+        "bestTime": "Late afternoon",
+        "entryFee": "Free"
+      },
+      {
+        "name": "Uluwatu Kecak Fire Dance",
+        "type": "culture",
+        "description": "Watch the dramatic Kecak dance performed at cliff-edge Uluwatu Temple as the sun sets over the Indian Ocean.",
+        "bestTime": "6 PM (daily performance)",
+        "entryFee": "~₹520"
+      }
+    ],
+    "neighborhoods": [
+      { "name": "Seminyak", "vibe": "Upscale beach clubs, boutiques, fine dining" },
+      { "name": "Ubud", "vibe": "Arts, spirituality, jungle, wellness retreats" },
+      { "name": "Nusa Dua", "vibe": "Luxury resorts, private beaches, water sports" },
+      { "name": "Canggu", "vibe": "Surfer culture, digital nomads, cafes, nightlife" },
+      { "name": "Kuta", "vibe": "Budget-friendly, busy nightlife, shopping" }
+    ],
+    "tips": [
+      "Rent a scooter — it's the best way to explore at your own pace (₹400–600/day).",
+      "Dress modestly when visiting temples — a sarong is required (usually provided).",
+      "Eat at warungs (local family restaurants) for the best nasi goreng at a fraction of hotel prices.",
+      "Book popular spots like Potato Head or Ku De Ta beach clubs in advance.",
+      "The Gili Islands are a 2-hour fast-boat ride — add them to a longer itinerary."
+    ],
+    "cuisine": ["Nasi Goreng", "Babi Guling (suckling pig)", "Sate Lilit", "Lawar", "Bebek Betutu"],
+    "averageDailyBudget": { "budget": "₹3,000", "mid": "₹8,000", "luxury": "₹25,000+" }
+  },
+  "SYD": {
+    "name": "Sydney",
+    "country": "Australia",
+    "cityCode": "SYD",
+    "continent": "Oceania",
+    "tagline": "The Harbour City",
+    "description": "Sydney is Australia's dazzling gateway — a city of iconic landmarks, pristine beaches, world-class cuisine, and an outdoor lifestyle that's impossible to resist. It's equally spectacular for business and leisure.",
+    "bestTimeToVisit": "September to November and March to May (shoulder seasons)",
+    "currency": "Australian Dollar (AUD)",
+    "language": "English",
+    "timezone": "AEDT (UTC+11)",
+    "visaRequirements": "Indians require a visitor visa (apply online via ImmiAccount, typically 2–4 weeks)",
+    "highlights": [
+      {
+        "name": "Sydney Opera House",
+        "type": "landmark",
+        "description": "One of the 20th century's greatest architectural achievements. Catch a performance, take a backstage tour, or simply admire it from the ferry.",
+        "bestTime": "Evening (lit up beautifully)",
+        "entryFee": "Tours from ~₹2,400"
+      },
+      {
+        "name": "Bondi Beach",
+        "type": "beach",
+        "description": "Australia's most famous beach — great surf, the Bondi to Coogee coastal walk, and the Icebergs ocean pool.",
+        "bestTime": "Weekday mornings",
+        "entryFee": "Free"
+      },
+      {
+        "name": "Sydney Harbour Bridge Climb",
+        "type": "adventure",
+        "description": "Climb to the summit of the Harbour Bridge for 360° views of Sydney. One of the world's most thrilling urban experiences.",
+        "bestTime": "Twilight climb for golden hour views",
+        "entryFee": "~₹14,000"
+      },
+      {
+        "name": "Blue Mountains",
+        "type": "nature",
+        "description": "A UNESCO World Heritage wilderness 90 minutes from Sydney. See the Three Sisters, Wentworth Falls, and vast eucalyptus forests.",
+        "bestTime": "Full day trip",
+        "entryFee": "~₹800 (Blue Mountains Explorer Bus)"
+      },
+      {
+        "name": "The Rocks Markets",
+        "type": "culture",
+        "description": "Sydney's oldest neighbourhood hosts weekend markets with artisans, food stalls, and live music under the shadow of the Harbour Bridge.",
+        "bestTime": "Saturdays and Sundays",
+        "entryFee": "Free"
+      }
+    ],
+    "neighborhoods": [
+      { "name": "CBD & Circular Quay", "vibe": "Business hub, Opera House, ferries, fine dining" },
+      { "name": "The Rocks", "vibe": "Heritage sandstone, boutique hotels, weekend markets" },
+      { "name": "Surry Hills", "vibe": "Cafes, galleries, independent restaurants, craft beer" },
+      { "name": "Darling Harbour", "vibe": "Tourism precinct, aquarium, museums, restaurants" },
+      { "name": "Newtown", "vibe": "Eclectic, diverse, vintage shopping, live music" }
+    ],
+    "tips": [
+      "Get an Opal card for seamless public transport (train, bus, ferry, light rail).",
+      "The ferry to Manly is one of the world's great commutes — do it at least once.",
+      "Book Bondi Icebergs pool entry online to avoid queues.",
+      "Sydney restaurants are exceptional but expensive — allow AUD 80–120 per head for a quality dinner.",
+      "If combining with Melbourne, the XPT overnight train is a scenic alternative to flying."
+    ],
+    "cuisine": ["Sydney rock oysters", "Barramundi", "Meat pies", "Lamingtons", "Tim Tams", "Flat whites"],
+    "averageDailyBudget": { "budget": "₹8,000", "mid": "₹20,000", "luxury": "₹50,000+" }
+  },
+  "LHR": {
+    "name": "London",
+    "country": "United Kingdom",
+    "cityCode": "LHR",
+    "continent": "Europe",
+    "tagline": "The World in One City",
+    "description": "London is a city that defies superlatives — 2,000 years of history layered with world-leading museums, theatre, fashion, finance, and food from every corner of the globe. Business or pleasure, London always delivers.",
+    "bestTimeToVisit": "June to August (warm and long days), December (Christmas markets)",
+    "currency": "British Pound (GBP)",
+    "language": "English",
+    "timezone": "GMT/BST (UTC+0/+1)",
+    "visaRequirements": "Indians require a Standard Visitor Visa (apply online, typically 3 weeks)",
+    "highlights": [
+      {
+        "name": "The British Museum",
+        "type": "culture",
+        "description": "Home to 8 million works spanning human history from the Rosetta Stone to the Elgin Marbles. One of the world's greatest free museums.",
+        "bestTime": "Weekday mornings",
+        "entryFee": "Free"
+      },
+      {
+        "name": "Tower of London",
+        "type": "historical",
+        "description": "A 1,000-year-old castle housing the Crown Jewels, Beefeater Yeoman guards, and the legendary ravens.",
+        "bestTime": "Weekday (less crowded)",
+        "entryFee": "~₹3,200"
+      },
+      {
+        "name": "West End Theatre",
+        "type": "entertainment",
+        "description": "The world's greatest concentration of theatre. From Les Misérables to Hamilton to new productions — always something unmissable.",
+        "bestTime": "Evening performances",
+        "entryFee": "₹2,500–₹12,000"
+      },
+      {
+        "name": "Borough Market",
+        "type": "food",
+        "description": "London's oldest and most celebrated food market — artisan cheeses, charcuterie, street food from 50 countries, and exceptional coffee.",
+        "bestTime": "Thursday to Saturday",
+        "entryFee": "Free"
+      },
+      {
+        "name": "Hyde Park",
+        "type": "nature",
+        "description": "350 acres in the heart of London — the Serpentine lake, outdoor concerts, Speaker's Corner, and the Diana Memorial.",
+        "bestTime": "Summer afternoons",
+        "entryFee": "Free"
+      }
+    ],
+    "neighborhoods": [
+      { "name": "Mayfair & St James's", "vibe": "Luxury hotels, fine dining, private members clubs" },
+      { "name": "Covent Garden", "vibe": "Theatre, opera, market, street performers" },
+      { "name": "Shoreditch", "vibe": "Tech startups, street art, nightlife, brunch" },
+      { "name": "South Kensington", "vibe": "Museums, embassies, affordable cafes" },
+      { "name": "Canary Wharf", "vibe": "Financial district, excellent transport links" }
+    ],
+    "tips": [
+      "Get an Oyster card or use contactless payment on the Tube — it's always cheaper than paper tickets.",
+      "Most major museums and galleries are free — plan your free days strategically.",
+      "Book theatre tickets on TodayTix or at the TKTS booth in Leicester Square for discounts.",
+      "London weather is famously unpredictable — always carry a light layer.",
+      "The Elizabeth line (Crossrail) connects Heathrow to central London in ~30 minutes."
+    ],
+    "cuisine": ["Full English breakfast", "Fish and chips", "Chicken tikka masala", "Afternoon tea", "Pies and mash"],
+    "averageDailyBudget": { "budget": "₹12,000", "mid": "₹28,000", "luxury": "₹70,000+" }
+  },
+  "DXB": {
+    "name": "Dubai",
+    "country": "UAE",
+    "cityCode": "DXB",
+    "continent": "Middle East",
+    "tagline": "Where the Future Meets the Desert",
+    "description": "Dubai is the world's most audacious city — record-breaking skyscrapers, man-made islands, indoor ski slopes in the desert, and more Michelin stars than many European capitals. Increasingly popular for business events, incentive travel, and luxury shopping.",
+    "bestTimeToVisit": "November to April (cooler and pleasant)",
+    "currency": "UAE Dirham (AED)",
+    "language": "Arabic (English widely spoken)",
+    "timezone": "GST (UTC+4)",
+    "visaRequirements": "Indians receive a visa on arrival (free, valid 14 days with return ticket)",
+    "highlights": [
+      {
+        "name": "Burj Khalifa",
+        "type": "landmark",
+        "description": "The world's tallest building at 828m. The At The Top observation deck on the 148th floor offers staggering views across the Gulf.",
+        "bestTime": "Sunset",
+        "entryFee": "~₹3,500 (book online for discounts)"
+      },
+      {
+        "name": "Dubai Mall & Dubai Fountain",
+        "type": "shopping",
+        "description": "The world's largest shopping mall — with an Olympic-size ice rink, indoor aquarium, and a 30-acre outdoor fountain show every evening.",
+        "bestTime": "Evening (fountain shows at 6 PM+)",
+        "entryFee": "Free (mall entry)"
+      },
+      {
+        "name": "Dubai Desert Safari",
+        "type": "adventure",
+        "description": "A quintessential Dubai experience — dune bashing in a 4x4, camel riding, sandboarding, and a Bedouin camp dinner under the stars.",
+        "bestTime": "Late afternoon to evening",
+        "entryFee": "~₹3,800–₹7,500"
+      },
+      {
+        "name": "Dubai Creek & Old Souk",
+        "type": "culture",
+        "description": "The historic heart of Dubai — take an abra (wooden water taxi) across the creek and explore the Gold Souk and Spice Souk.",
+        "bestTime": "Morning or late afternoon",
+        "entryFee": "Abra: ₹10"
+      },
+      {
+        "name": "Palm Jumeirah",
+        "type": "landmark",
+        "description": "The world's largest man-made island, home to Atlantis, the Palm Monorail, and the best beach clubs in Dubai.",
+        "bestTime": "Evening",
+        "entryFee": "Monorail: ~₹200"
+      }
+    ],
+    "neighborhoods": [
+      { "name": "Downtown Dubai", "vibe": "Burj Khalifa, Dubai Mall, premium hotels" },
+      { "name": "Jumeirah Beach Residence (JBR)", "vibe": "Beach promenade, outdoor dining, The Walk" },
+      { "name": "DIFC", "vibe": "Financial centre, art galleries, upscale restaurants" },
+      { "name": "Deira / Old Dubai", "vibe": "Souks, heritage, local food, budget accommodation" },
+      { "name": "Business Bay", "vibe": "New CBD, canal views, business hotels" }
+    ],
+    "tips": [
+      "Dress modestly in public areas (not beach/hotel) — shoulders and knees covered.",
+      "Ramadan changes operating hours significantly — restaurants close during daylight hours.",
+      "The Dubai Metro is excellent — covers most tourist areas and costs almost nothing.",
+      "Duty-free shopping at Dubai Airport is genuinely excellent — especially for perfumes and electronics.",
+      "Taxi and Uber are affordable — most rides within the city are under ₹800."
+    ],
+    "cuisine": ["Shawarma", "Hummus & Meze", "Camel burger", "Al Harees", "Luqaimat (dumplings)", "Arabic coffee"],
+    "averageDailyBudget": { "budget": "₹7,000", "mid": "₹18,000", "luxury": "₹55,000+" }
+  },
+  "SIN": {
+    "name": "Singapore",
+    "country": "Singapore",
+    "cityCode": "SIN",
+    "continent": "Asia",
+    "tagline": "The Lion City",
+    "description": "Singapore punches far above its weight — a tiny city-state that leads the world in aviation, finance, food, and urban planning. Immaculately clean, hyper-efficient, and endlessly surprising. An ideal stopover or standalone destination.",
+    "bestTimeToVisit": "February to April (inter-monsoon, drier)",
+    "currency": "Singapore Dollar (SGD)",
+    "language": "English, Mandarin, Malay, Tamil",
+    "timezone": "SGT (UTC+8)",
+    "visaRequirements": "Indians can obtain a 96-hour transit visa-free; for longer stays, apply for a short-term visit pass (free, processed on arrival for eligible travelers)",
+    "highlights": [
+      {
+        "name": "Gardens by the Bay",
+        "type": "attraction",
+        "description": "A futuristic park of supertrees, climate-controlled biomes (the Flower Dome and Cloud Forest), and spectacular nightly light shows.",
+        "bestTime": "Evening for the Spectra light show",
+        "entryFee": "~₹1,800 (Cloud Forest + Flower Dome)"
+      },
+      {
+        "name": "Hawker Centres",
+        "type": "food",
+        "description": "Singapore's UNESCO-listed hawker culture — hundreds of food stalls at Maxwell, Lau Pa Sat, and Old Airport Road serving incredible food for under SGD 10.",
+        "bestTime": "Lunchtime (12–2 PM)",
+        "entryFee": "~₹400–₹700 per meal"
+      },
+      {
+        "name": "Sentosa Island",
+        "type": "entertainment",
+        "description": "Singapore's resort island — Universal Studios, S.E.A. Aquarium, beach clubs, and Singapore Cable Car rides.",
+        "bestTime": "Full day",
+        "entryFee": "Varies by attraction (Cable Car ~₹1,600)"
+      },
+      {
+        "name": "Chinatown & Little India",
+        "type": "culture",
+        "description": "Two of Singapore's most vibrant heritage districts — temples, street food, spice shops, and beautifully preserved shophouses.",
+        "bestTime": "Morning for temples, evening for food",
+        "entryFee": "Free"
+      },
+      {
+        "name": "Marina Bay Sands SkyPark",
+        "type": "landmark",
+        "description": "The 200m-high infinity pool and observation deck connecting Singapore's most iconic three towers. Views are breathtaking day and night.",
+        "bestTime": "Sunset to evening",
+        "entryFee": "~₹2,500 (non-hotel guests)"
+      }
+    ],
+    "neighborhoods": [
+      { "name": "Marina Bay", "vibe": "Iconic skyline, MBS, Gardens by the Bay" },
+      { "name": "Orchard Road", "vibe": "Shopping megamall strip, luxury brands" },
+      { "name": "Kampong Glam", "vibe": "Malay heritage, street art, indie cafes" },
+      { "name": "Clarke Quay / Robertson Quay", "vibe": "Nightlife, restaurants, riverside bars" },
+      { "name": "Tiong Bahru", "vibe": "Hipster cafes, bookshops, art deco architecture" }
+    ],
+    "tips": [
+      "Chewing gum is prohibited to import and sell — don't try to smuggle any.",
+      "The MRT (metro) covers the entire island efficiently — EZ-Link card is a must.",
+      "Eating at hawker centres is a cultural experience, not just a budget option — Michelin-starred stalls cost SGD 3.",
+      "Singapore is extremely walkable between attractions in cooler evening hours.",
+      "Changi Airport is world-class — arrive early and explore the Jewel waterfall complex."
+    ],
+    "cuisine": ["Chilli Crab", "Hainanese Chicken Rice", "Laksa", "Char Kway Teow", "Kaya Toast", "Bak Kut Teh"],
+    "averageDailyBudget": { "budget": "₹5,000", "mid": "₹14,000", "luxury": "₹40,000+" }
+  },
+  "BKK": {
+    "name": "Bangkok",
+    "country": "Thailand",
+    "cityCode": "BKK",
+    "continent": "Asia",
+    "tagline": "City of Angels",
+    "description": "Bangkok is a city of extremes — ancient temples beside futuristic malls, Michelin-starred restaurants next to street stalls, chaotic traffic and serene waterways. It's one of the world's great cities and an endlessly compelling travel destination.",
+    "bestTimeToVisit": "November to February (cool and dry season)",
+    "currency": "Thai Baht (THB)",
+    "language": "Thai",
+    "timezone": "ICT (UTC+7)",
+    "visaRequirements": "Indians can enter visa-free for 30 days (as of 2024)",
+    "highlights": [
+      {
+        "name": "Wat Phra Kaew (Temple of the Emerald Buddha)",
+        "type": "spiritual",
+        "description": "Thailand's most sacred temple within the Grand Palace complex. Home to the 14th-century Emerald Buddha, carved from a single block of jade.",
+        "bestTime": "Opening (8:30 AM) before crowds",
+        "entryFee": "~₹1,600"
+      },
+      {
+        "name": "Chatuchak Weekend Market",
+        "type": "shopping",
+        "description": "One of the world's largest markets — over 15,000 stalls selling everything from street food to vintage clothing, antiques, and live plants.",
+        "bestTime": "Saturday/Sunday morning",
+        "entryFee": "Free"
+      },
+      {
+        "name": "Chao Phraya River Cruise",
+        "type": "experience",
+        "description": "The Chao Phraya is Bangkok's main artery — a dinner cruise or public ferry ride passes temples, palaces, and a side of the city invisible from land.",
+        "bestTime": "Sunset dinner cruise",
+        "entryFee": "Dinner cruise ~₹3,200"
+      },
+      {
+        "name": "Wat Arun (Temple of Dawn)",
+        "type": "spiritual",
+        "description": "A stunning 87m tower encrusted with colorful porcelain fragments on the west bank of the Chao Phraya. Especially photogenic at sunrise and dusk.",
+        "bestTime": "Dawn and dusk",
+        "entryFee": "~₹275"
+      },
+      {
+        "name": "Khao San Road",
+        "type": "nightlife",
+        "description": "The world-famous backpacker street — street food, rooftop bars, live music, and the cheapest cocktails you'll find anywhere in Asia.",
+        "bestTime": "Evening",
+        "entryFee": "Free"
+      }
+    ],
+    "neighborhoods": [
+      { "name": "Sukhumvit", "vibe": "Expats, nightlife, BTS access, malls" },
+      { "name": "Silom / Sathorn", "vibe": "Finance district, rooftop bars, LGBTQ+ friendly" },
+      { "name": "Banglamphu / Khao San Rd", "vibe": "Budget travel, temples, backpacker scene" },
+      { "name": "Ari / Phrom Phong", "vibe": "Cafes, local eateries, quieter residential" },
+      { "name": "Chinatown (Yaowarat)", "vibe": "Street food, gold shops, night markets" }
+    ],
+    "tips": [
+      "Never point your feet at a Buddha image or at a Thai person — it's considered disrespectful.",
+      "The BTS Skytrain and MRT metro avoid Bangkok's notorious traffic — use them for daytime travel.",
+      "Eat pad thai and mango sticky rice from street stalls, not restaurants — the stalls are better.",
+      "Thailand has strict laws on insulting the monarchy — avoid any commentary.",
+      "The Grab app is the easiest way to get metered fares — better than negotiating with tuk-tuks."
+    ],
+    "cuisine": ["Pad Thai", "Tom Yum Goong", "Green Curry", "Mango sticky rice", "Som Tam", "Pad Krapow Moo"],
+    "averageDailyBudget": { "budget": "₹2,500", "mid": "₹7,000", "luxury": "₹22,000+" }
+  },
+  "NRT": {
+    "name": "Tokyo",
+    "country": "Japan",
+    "cityCode": "NRT",
+    "continent": "Asia",
+    "tagline": "Where Tradition Meets the Future",
+    "description": "Tokyo is the world's most populous metropolis and arguably its most captivating — a seamless blend of ancient shrines and neon-lit skyscrapers, Michelin-starred ramen stalls and century-old tea houses. Perfectly safe, immaculately clean, and endlessly fascinating.",
+    "bestTimeToVisit": "March to May (cherry blossom) and October to November (autumn foliage)",
+    "currency": "Japanese Yen (JPY)",
+    "language": "Japanese",
+    "timezone": "JST (UTC+9)",
+    "visaRequirements": "Indians require a Japan tourist visa (apply at Japanese consulate, typically 5–7 working days; free of charge)",
+    "highlights": [
+      {
+        "name": "Senso-ji Temple, Asakusa",
+        "type": "spiritual",
+        "description": "Tokyo's oldest and most beloved temple, dating to 645 AD. The iconic Kaminarimon gate, Nakamise shopping street, and the five-storey pagoda are unmissable.",
+        "bestTime": "Early morning (6–8 AM) before crowds",
+        "entryFee": "Free"
+      },
+      {
+        "name": "Shibuya Crossing",
+        "type": "landmark",
+        "description": "The world's busiest pedestrian crossing — up to 3,000 people cross simultaneously when the lights change. Best viewed from the Starbucks or Mag's Park overlooking the scramble.",
+        "bestTime": "Evening rush hour (6–8 PM)",
+        "entryFee": "Free"
+      },
+      {
+        "name": "teamLab Borderless / Planets",
+        "type": "culture",
+        "description": "A revolutionary digital art museum where immersive light installations dissolve the boundary between art and viewer. One of Tokyo's most photographed modern attractions.",
+        "bestTime": "Weekday morning (fewer crowds)",
+        "entryFee": "~₹2,800"
+      },
+      {
+        "name": "Tsukiji Outer Market",
+        "type": "food",
+        "description": "Tokyo's legendary fish market precinct — tuna sashimi at 6 AM, fresh tamago tamagoyaki, and the freshest seafood breakfast you'll ever eat.",
+        "bestTime": "Early morning (6–9 AM)",
+        "entryFee": "Free"
+      },
+      {
+        "name": "Shinjuku Gyoen National Garden",
+        "type": "nature",
+        "description": "A 58-hectare oasis in the heart of Tokyo combining French formal, English landscape, and traditional Japanese garden styles. Peak cherry blossom in late March.",
+        "bestTime": "Late March to early April (cherry blossom)",
+        "entryFee": "~₹180"
+      }
+    ],
+    "neighborhoods": [
+      { "name": "Shinjuku", "vibe": "Entertainment, nightlife, Kabukicho, Golden Gai bars" },
+      { "name": "Shibuya", "vibe": "Youth fashion, iconic crossing, department stores" },
+      { "name": "Asakusa", "vibe": "Traditional Tokyo, temples, rickshaws, street food" },
+      { "name": "Ginza", "vibe": "Luxury shopping, galleries, high-end dining" },
+      { "name": "Harajuku / Omotesando", "vibe": "Street fashion, boutiques, crepe stalls, cafes" }
+    ],
+    "tips": [
+      "Get a Suica or Pasmo IC card at the airport — it works on all trains, buses, and at convenience stores.",
+      "Japan is still very cash-oriented — carry JPY, especially in smaller restaurants and shrines.",
+      "Buy a pocket Wi-Fi or SIM at the airport; Google Maps + translate are essential.",
+      "Shoes that slip on and off easily are a must — you'll remove them constantly at temples, ryokans, and many restaurants.",
+      "7-Eleven, FamilyMart, and Lawson convenience stores serve genuinely excellent, cheap food — don't overlook them."
+    ],
+    "cuisine": ["Ramen", "Sushi & Sashimi", "Tempura", "Yakitori", "Tonkatsu", "Mochi"],
+    "averageDailyBudget": { "budget": "₹6,000", "mid": "₹16,000", "luxury": "₹45,000+" }
+  },
+  "CDG": {
+    "name": "Paris",
+    "country": "France",
+    "cityCode": "CDG",
+    "continent": "Europe",
+    "tagline": "The City of Light",
+    "description": "Paris is the undisputed capital of romance, art, and gastronomy. From the Eiffel Tower to the Louvre, from Montmartre's cobblestoned lanes to the grand boulevards of Haussmann, every arrondissement rewards exploration. The world's most visited city for good reason.",
+    "bestTimeToVisit": "April to June and September to October (mild weather, fewer crowds)",
+    "currency": "Euro (EUR)",
+    "language": "French",
+    "timezone": "CET/CEST (UTC+1/+2)",
+    "visaRequirements": "Indians require a Schengen visa (apply at French consulate/VFS, typically 15 days processing; covers all Schengen countries)",
+    "highlights": [
+      {
+        "name": "Eiffel Tower",
+        "type": "landmark",
+        "description": "Gustave Eiffel's 1889 iron masterpiece — the world's most visited paid monument. Take the lift to the summit (276m) for panoramic views across Paris.",
+        "bestTime": "Sunset and after dark (hourly light show)",
+        "entryFee": "~₹2,400 (summit by lift)"
+      },
+      {
+        "name": "The Louvre Museum",
+        "type": "culture",
+        "description": "The world's largest art museum and home to the Mona Lisa, Venus de Milo, and 35,000 other works. Allow a full day — you can't see everything in one visit.",
+        "bestTime": "Wednesday/Friday evenings (open until 9:45 PM, less crowded)",
+        "entryFee": "~₹1,900"
+      },
+      {
+        "name": "Montmartre & Sacré-Cœur",
+        "type": "culture",
+        "description": "Paris's bohemian hilltop village — artists, cabarets, the white-domed Sacré-Cœur basilica, and the best view over the city's rooftops.",
+        "bestTime": "Late afternoon to evening",
+        "entryFee": "Free (basilica)"
+      },
+      {
+        "name": "Musée d'Orsay",
+        "type": "culture",
+        "description": "Housed in a stunning Beaux-Arts railway station, the Orsay holds the world's greatest collection of Impressionist and Post-Impressionist art — Monet, Renoir, Van Gogh, Degas.",
+        "bestTime": "Thursday evenings (open until 9:45 PM)",
+        "entryFee": "~₹1,900"
+      },
+      {
+        "name": "Seine River Cruise",
+        "type": "experience",
+        "description": "A Bateaux Mouches or Vedettes du Pont Neuf cruise passes every major Paris monument from the water. Magical at dusk and after dark.",
+        "bestTime": "Evening",
+        "entryFee": "~₹1,300"
+      }
+    ],
+    "neighborhoods": [
+      { "name": "Le Marais (3rd & 4th)", "vibe": "Historic mansions, Jewish quarter, boutiques, LGBTQ+ hub" },
+      { "name": "Saint-Germain-des-Prés (6th)", "vibe": "Literary cafes, galleries, fashion, intellectual Paris" },
+      { "name": "Montmartre (18th)", "vibe": "Artists, Sacré-Cœur, vintage shops, local bistros" },
+      { "name": "Champs-Élysées / 8th", "vibe": "Luxury brands, Arc de Triomphe, grand hotels" },
+      { "name": "Bastille / 11th", "vibe": "Nightlife, craft beer bars, markets, young Parisians" }
+    ],
+    "tips": [
+      "The Paris Metro is excellent — buy a carnet of 10 tickets or a weekly Navigo pass for best value.",
+      "Most world-class museums are free on the first Sunday of each month — plan around this.",
+      "Book Eiffel Tower tickets weeks in advance online — queue on the day can be 3+ hours.",
+      "Parisians appreciate even a basic 'Bonjour' and 'Merci' — always greet shop staff.",
+      "Boulangeries sell the best and cheapest breakfast in Paris — croissant and café au lait for under ₹400."
+    ],
+    "cuisine": ["Croissants & Pain au Chocolat", "Steak Frites", "Crêpes", "Escargot", "Crème Brûlée", "Boeuf Bourguignon"],
+    "averageDailyBudget": { "budget": "₹9,000", "mid": "₹22,000", "luxury": "₹60,000+" }
+  },
+  "JFK": {
+    "name": "New York",
+    "country": "USA",
+    "cityCode": "JFK",
+    "continent": "North America",
+    "tagline": "The City That Never Sleeps",
+    "description": "New York City is the world's most iconic urban destination — a vertical metropolis of 8 million stories, where Wall Street meets Broadway, Central Park borders skyscrapers, and the best food from every country on earth is within a subway ride. Exhausting, exhilarating, and utterly unforgettable.",
+    "bestTimeToVisit": "April to June and September to November (comfortable temperatures)",
+    "currency": "US Dollar (USD)",
+    "language": "English",
+    "timezone": "EST/EDT (UTC-5/-4)",
+    "visaRequirements": "Indians require a B1/B2 visitor visa (apply at US consulate/VFS; interview required; allow 4–8 weeks)",
+    "highlights": [
+      {
+        "name": "Statue of Liberty & Ellis Island",
+        "type": "landmark",
+        "description": "The enduring symbol of American freedom — take the ferry from Battery Park to Liberty Island and explore the Ellis Island Immigration Museum.",
+        "bestTime": "First morning ferry (9 AM) to avoid crowds",
+        "entryFee": "~₹1,900 (ferry + crown access from ~₹4,000)"
+      },
+      {
+        "name": "Central Park",
+        "type": "nature",
+        "description": "843 acres of green space in the heart of Manhattan — Bethesda Fountain, Strawberry Fields, the Reservoir, the Zoo, and the Great Lawn.",
+        "bestTime": "Weekend mornings",
+        "entryFee": "Free"
+      },
+      {
+        "name": "Metropolitan Museum of Art (The Met)",
+        "type": "culture",
+        "description": "One of the world's greatest art museums — spanning 5,000 years of human creativity from Egyptian mummies to Picasso. The rooftop garden bar is a highlight.",
+        "bestTime": "Friday/Saturday evenings (open until 9 PM)",
+        "entryFee": "~₹2,400 (suggested)"
+      },
+      {
+        "name": "Times Square",
+        "type": "landmark",
+        "description": "The world's most famous intersection — neon billboards, Broadway theatres, the New Year's Eve ball drop, and the electric pulse of midtown Manhattan.",
+        "bestTime": "Evening (fully lit up)",
+        "entryFee": "Free"
+      },
+      {
+        "name": "High Line & Chelsea Market",
+        "type": "culture",
+        "description": "A 2.3km elevated park built on a disused rail line. Below it, Chelsea Market's gourmet food hall is the best lunch spot in Manhattan.",
+        "bestTime": "Afternoon",
+        "entryFee": "Free"
+      }
+    ],
+    "neighborhoods": [
+      { "name": "Midtown Manhattan", "vibe": "Empire State, Times Square, Fifth Avenue shopping" },
+      { "name": "Lower East Side / SoHo", "vibe": "Galleries, indie boutiques, brunch culture, trendy bars" },
+      { "name": "Brooklyn (Williamsburg)", "vibe": "Hipster scene, skyline views, craft breweries, street art" },
+      { "name": "Upper West Side", "vibe": "Central Park access, residential calm, museum mile" },
+      { "name": "Financial District", "vibe": "Wall Street, 9/11 Memorial, ferry terminals, history" }
+    ],
+    "tips": [
+      "Get a MetroCard or tap your contactless card on the subway — it runs 24/7 and costs USD 2.90 per ride.",
+      "Tipping is not optional in the US — 18–22% at restaurants, USD 1–2 per drink at bars.",
+      "Book Broadway shows in advance via TodayTix or TKTS booth for same-day discounts up to 50%.",
+      "The free Staten Island Ferry gives stunning Statue of Liberty views — no ticket needed.",
+      "NYC Bagels and dollar pizza slices are cultural institutions — seek them out."
+    ],
+    "cuisine": ["New York-style pizza", "Bagels with lox", "Pastrami on rye", "Cheesecake", "Halal cart chicken & rice", "Buffalo wings"],
+    "averageDailyBudget": { "budget": "₹12,000", "mid": "₹30,000", "luxury": "₹80,000+" }
+  },
+  "MLE": {
+    "name": "Maldives",
+    "country": "Maldives",
+    "cityCode": "MLE",
+    "continent": "Asia",
+    "tagline": "The Last Paradise on Earth",
+    "description": "The Maldives is 1,200 coral islands strung across the Indian Ocean — turquoise lagoons, powder-white beaches, and overwater bungalows hovering above some of the world's clearest water. The world's lowest country (average 1.5m above sea level) is also its most dreamlike.",
+    "bestTimeToVisit": "November to April (dry northeast monsoon season)",
+    "currency": "Maldivian Rufiyaa (MVR) — US dollars widely accepted",
+    "language": "Dhivehi (English widely spoken in resorts)",
+    "timezone": "MVT (UTC+5)",
+    "visaRequirements": "Indians receive a free 30-day on-arrival visa (no prior application needed)",
+    "highlights": [
+      {
+        "name": "Overwater Bungalow Stay",
+        "type": "experience",
+        "description": "The quintessential Maldives experience — a thatched villa on stilts above the lagoon, with a glass floor panel revealing the reef below and a private ladder into the sea.",
+        "bestTime": "Any time (sunrises and sunsets are equally spectacular)",
+        "entryFee": "Included in resort rate"
+      },
+      {
+        "name": "Snorkelling & Diving",
+        "type": "nature",
+        "description": "The Maldives sits on the world's 7th largest barrier reef system. Encounter manta rays, whale sharks, sea turtles, and kaleidoscopic coral gardens — often just metres from shore.",
+        "bestTime": "May to November (best visibility)",
+        "entryFee": "Resort diving from ~₹4,500/dive"
+      },
+      {
+        "name": "Biyadhoo Island House Reef",
+        "type": "nature",
+        "description": "One of the Maldives' most accessible house reefs — a coral wall dropping to 30m with frequent reef shark sightings and massive schools of tropical fish.",
+        "bestTime": "Early morning",
+        "entryFee": "Free with resort stay"
+      },
+      {
+        "name": "Malé City & Friday Mosque",
+        "type": "culture",
+        "description": "The world's most densely populated capital — the 17th-century Friday Mosque (Hukuru Miskiy) is the oldest in the Maldives, built from coral stone.",
+        "bestTime": "Morning",
+        "entryFee": "Free (modest dress required)"
+      },
+      {
+        "name": "Sandbank Picnic",
+        "type": "nature",
+        "description": "A private sandbank — a strip of white sand barely above the waterline surrounded by infinite blue — is the most romantic lunch venue on the planet.",
+        "bestTime": "Any fine day",
+        "entryFee": "Resort excursion ~₹6,000–₹12,000"
+      }
+    ],
+    "neighborhoods": [
+      { "name": "North Malé Atoll", "vibe": "Most resorts, closest to airport, easy transfers" },
+      { "name": "South Malé Atoll", "vibe": "More remote resorts, great dive sites" },
+      { "name": "Ari Atoll", "vibe": "Whale shark hotspot, luxury resorts, longer transfers" },
+      { "name": "Malé City", "vibe": "Capital, local guesthouses, budget-friendly, authentic" }
+    ],
+    "tips": [
+      "Speedboat transfers from Malé airport are 20–45 minutes; seaplane transfers cost USD 300–600 round-trip but are spectacular.",
+      "All-inclusive packages at Maldives resorts are worth the premium — food and drinks on islands are very expensive.",
+      "Bring reef-safe sunscreen — chemical sunscreens are banned to protect the coral.",
+      "Many islands are uninhabited — resorts often have exclusive use of their island, which is part of the appeal.",
+      "Alcohol is only available at resort islands, not on local islands or in Malé."
+    ],
+    "cuisine": ["Mas Huni (tuna & coconut)", "Garudhiya (fish broth soup)", "Fihunu Mas (grilled fish)", "Bis Keemiya (samosa-like snack)", "Rihaakuru (fish paste)"],
+    "averageDailyBudget": { "budget": "₹18,000", "mid": "₹45,000", "luxury": "₹1,20,000+" }
+  },
+  "KUL": {
+    "name": "Kuala Lumpur",
+    "country": "Malaysia",
+    "cityCode": "KUL",
+    "continent": "Asia",
+    "tagline": "Truly Asia in One City",
+    "description": "Kuala Lumpur is Southeast Asia's most underrated city — a thrilling mix of Malay, Chinese, and Indian cultures set against the backdrop of the iconic Petronas Twin Towers. Exceptional food, excellent shopping, and a cost of living that makes it one of the world's great value destinations.",
+    "bestTimeToVisit": "May to July and December to February (drier periods)",
+    "currency": "Malaysian Ringgit (MYR)",
+    "language": "Bahasa Malaysia (English very widely spoken)",
+    "timezone": "MYT (UTC+8)",
+    "visaRequirements": "Indians can apply for a Malaysia eNTRI (₹900 approx, single entry, 15 days) or eVISA online; also eligible for 30-day eVISA on arrival at select airports",
+    "highlights": [
+      {
+        "name": "Petronas Twin Towers",
+        "type": "landmark",
+        "description": "The world's tallest twin towers at 452m, connected by a sky bridge on the 41st floor. The KLCC park fountain show at night is one of KL's finest free spectacles.",
+        "bestTime": "Evening for the light show",
+        "entryFee": "~₹1,600 (sky bridge + observation deck)"
+      },
+      {
+        "name": "Batu Caves",
+        "type": "spiritual",
+        "description": "A Hindu temple complex inside a limestone hill, reached by 272 colourful steps past the 42.7m golden Lord Murugan statue — one of the tallest statues in the world.",
+        "bestTime": "Early morning (before 9 AM)",
+        "entryFee": "Free"
+      },
+      {
+        "name": "Jalan Alor Night Market",
+        "type": "food",
+        "description": "KL's most famous food street — grilled satay, char kway teow, durian, and hundreds of street food stalls packed into one electrifying lantern-lit lane.",
+        "bestTime": "7 PM onwards",
+        "entryFee": "Free"
+      },
+      {
+        "name": "Bukit Bintang Shopping Belt",
+        "type": "shopping",
+        "description": "KL's Golden Triangle — Pavilion KL, Starhill Gallery, Fahrenheit88, and Low Yat Plaza for electronics. Some of Asia's best mall shopping at fraction of Singapore prices.",
+        "bestTime": "Afternoon",
+        "entryFee": "Free"
+      },
+      {
+        "name": "KL Forest Eco Park",
+        "type": "nature",
+        "description": "A virgin rainforest canopy walkway in the city centre, steps from the Petronas Towers. A rare chance to walk among 130-million-year-old trees inside a major metropolis.",
+        "bestTime": "Morning",
+        "entryFee": "~₹400"
+      }
+    ],
+    "neighborhoods": [
+      { "name": "Bukit Bintang / KLCC", "vibe": "Shopping, nightlife, Petronas Towers, luxury hotels" },
+      { "name": "Chow Kit / Little India", "vibe": "Authentic local markets, spices, textiles, street food" },
+      { "name": "Bangsar", "vibe": "Expat cafes, weekend brunch, independent boutiques" },
+      { "name": "Brickfields (Little India)", "vibe": "South Indian food, temples, fabric shops" },
+      { "name": "Chinatown (Petaling Street)", "vibe": "Night market, dim sum, heritage shophouses" }
+    ],
+    "tips": [
+      "Grab (the regional Uber) is essential in KL — taxis rarely use meters and Grab is far cheaper.",
+      "The MRT, LRT, and monorail lines cover most tourist areas — a Touch 'n Go card works across all transit.",
+      "KL is an outstanding food city — nasi lemak, roti canai, and laksa are best at local mamak stalls.",
+      "The KLIA Ekspres train from KL Sentral to the airport takes 28 minutes — far faster than any taxi.",
+      "Dress modestly when visiting mosques — a headscarf and covered shoulders/knees are required for women."
+    ],
+    "cuisine": ["Nasi Lemak", "Roti Canai", "Char Kway Teow", "Laksa", "Bak Kut Teh", "Durian"],
+    "averageDailyBudget": { "budget": "₹3,500", "mid": "₹9,000", "luxury": "₹25,000+" }
+  },
+  "HKG": {
+    "name": "Hong Kong",
+    "country": "China",
+    "cityCode": "HKG",
+    "continent": "Asia",
+    "tagline": "Asia's World City",
+    "description": "Hong Kong is a spectacular collision of East and West — British colonial heritage and Chinese culture layered over one of the world's most dramatic harbours. A city of superlatives: the world's most vertical cityscape, extraordinary Cantonese cuisine, and a shopping and dining scene without equal in Asia.",
+    "bestTimeToVisit": "October to December (cool, low humidity, clear skies)",
+    "currency": "Hong Kong Dollar (HKD)",
+    "language": "Cantonese, English",
+    "timezone": "HKT (UTC+8)",
+    "visaRequirements": "Indians require a Hong Kong visa (apply online via Immigration Dept; typically 4–6 weeks; separate from China mainland visa)",
+    "highlights": [
+      {
+        "name": "Victoria Peak & The Peak Tram",
+        "type": "landmark",
+        "description": "Hong Kong's most iconic view — take the historic funicular tram to Victoria Peak for a 360-degree panorama of the harbour, Kowloon, and the South China Sea.",
+        "bestTime": "Dusk (city lit up below)",
+        "entryFee": "~₹900 (Peak Tram return)"
+      },
+      {
+        "name": "Symphony of Lights",
+        "type": "experience",
+        "description": "The world's largest permanent light and sound show — 44 buildings on both sides of Victoria Harbour synchronise lights and lasers nightly at 8 PM.",
+        "bestTime": "8 PM nightly",
+        "entryFee": "Free (best viewed from Tsim Sha Tsui waterfront)"
+      },
+      {
+        "name": "Temple Street Night Market",
+        "type": "culture",
+        "description": "Kowloon's legendary night market — fortune tellers, Cantonese opera performers, street food, and stalls selling everything from jade to fake designer goods.",
+        "bestTime": "8 PM to midnight",
+        "entryFee": "Free"
+      },
+      {
+        "name": "Dim Sum at a Traditional Teahouse",
+        "type": "food",
+        "description": "Yum cha (drinking tea with dim sum) is a Hong Kong institution. Lin Heung Kui, Tim Ho Wan, and Lung King Heen represent the full range from traditional to Michelin-starred.",
+        "bestTime": "Weekend morning (9–11 AM)",
+        "entryFee": "~₹1,200–₹2,400 per person"
+      },
+      {
+        "name": "Big Buddha & Po Lin Monastery, Lantau",
+        "type": "spiritual",
+        "description": "A 34m bronze Buddha atop Ngong Ping Plateau on Lantau Island, reached by the spectacular Ngong Ping 360 cable car. One of the world's largest outdoor seated Buddhas.",
+        "bestTime": "Weekday morning",
+        "entryFee": "~₹800 (cable car) + ₹350 (monastery meal)"
+      }
+    ],
+    "neighborhoods": [
+      { "name": "Central & Admiralty", "vibe": "Finance, luxury hotels, world-class restaurants, IFC mall" },
+      { "name": "Causeway Bay", "vibe": "Shopping, Times Square mall, restaurants, nightlife" },
+      { "name": "Tsim Sha Tsui (TST)", "vibe": "Harbour views, museums, night market, budget hotels" },
+      { "name": "Sheung Wan / Sai Ying Pun", "vibe": "Art galleries, antiques, indie cafes, PMQ" },
+      { "name": "Mong Kok", "vibe": "Bustling street markets, electronics, local food" }
+    ],
+    "tips": [
+      "Get an Octopus card at the airport — it works on all MTR, buses, ferries, trams, and at 7-Elevens.",
+      "The Star Ferry between Central and Tsim Sha Tsui costs HKD 2.70 — the cheapest harbour view in the world.",
+      "Hong Kong's wet markets are a cultural experience — Wet Market in Sai Ying Pun is especially authentic.",
+      "The MTR is impeccably clean, punctual, and air-conditioned — use it as your primary transport.",
+      "Book the Michelin-starred Tim Ho Wan weeks in advance — it's the world's most affordable Michelin restaurant."
+    ],
+    "cuisine": ["Dim Sum / Yum Cha", "Char Siu (BBQ pork)", "Wonton noodle soup", "Egg tarts", "Pineapple bun", "Milk tea (HK style)"],
+    "averageDailyBudget": { "budget": "₹7,000", "mid": "₹18,000", "luxury": "₹50,000+" }
+  }
+}

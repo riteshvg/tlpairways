@@ -367,6 +367,82 @@ export default function PaymentPage() {
         });
     };
 
+    // ── Hotel booking branch ──────────────────────────────────────────────────
+    const isHotelBooking = query.bookingType === 'hotel';
+    const hotelTotalPrice = isHotelBooking ? parseInt(query.totalPrice as string || '0', 10) : 0;
+
+    const handleHotelPaymentSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!validateForm()) return;
+        setLoading(true);
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        const existing = sessionStorage.getItem('temp_hotel_confirmation');
+        if (existing) {
+            const data = JSON.parse(existing);
+            data.paymentMethod = paymentMethod;
+            data.paymentVendor = paymentVendor;
+            data.transactionId = `TXN_HTL_${Date.now()}`;
+            sessionStorage.setItem('temp_hotel_confirmation', JSON.stringify(data));
+        }
+        router.push('/hotel-confirmation');
+    };
+
+    if (isHotelBooking) {
+        return (
+            <>
+                <Head><title>Payment — Hotel Booking</title></Head>
+                <Container maxWidth="md" sx={{ py: 4 }}>
+                    <Typography variant="h5" fontWeight={700} sx={{ mb: 3 }}>Complete Hotel Payment</Typography>
+                    <Grid container spacing={3}>
+                        <Grid size={{ xs: 12, md: 8 }}>
+                            <Paper elevation={0} sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 2, p: 3 }}>
+                                <Typography variant="subtitle1" fontWeight={700} sx={{ mb: 2 }}>
+                                    {query.hotelName} · {query.city} · {query.nights} nights
+                                </Typography>
+                                <Divider sx={{ mb: 3 }} />
+                                <form onSubmit={handleHotelPaymentSubmit}>
+                                    <RadioGroup value={paymentMethod} onChange={e => setPaymentMethod(e.target.value)} sx={{ mb: 2 }}>
+                                        {[
+                                            { value: 'credit', label: 'Credit Card' },
+                                            { value: 'debit', label: 'Debit Card' },
+                                            { value: 'netbanking', label: 'Net Banking' },
+                                            { value: 'upi', label: 'UPI' }
+                                        ].map(opt => (
+                                            <FormControlLabel key={opt.value} value={opt.value} control={<Radio />} label={opt.label} />
+                                        ))}
+                                    </RadioGroup>
+                                    {(paymentMethod === 'credit' || paymentMethod === 'debit') && (
+                                        <Stack spacing={2} sx={{ mb: 2 }}>
+                                            <TextField fullWidth size="small" label="Card Number" placeholder="1234 5678 9012 3456" value={cardNumber} onChange={e => setCardNumber(e.target.value)} />
+                                            <Box sx={{ display: 'flex', gap: 2 }}>
+                                                <TextField fullWidth size="small" label="Expiry (MM/YY)" value={expiryDate} onChange={e => setExpiryDate(e.target.value)} />
+                                                <TextField fullWidth size="small" label="CVV" value={cvv} onChange={e => setCvv(e.target.value)} />
+                                            </Box>
+                                            <TextField fullWidth size="small" label="Name on Card" value={billingName} onChange={e => setBillingName(e.target.value)} />
+                                        </Stack>
+                                    )}
+                                    <Button type="submit" variant="contained" fullWidth size="large" disabled={loading} sx={{ borderRadius: 2, textTransform: 'none', fontWeight: 700 }}>
+                                        {loading ? <CircularProgress size={22} sx={{ color: 'white' }} /> : `Pay ${CURRENCY_CONFIG.formatPrice(hotelTotalPrice * 1.18)}`}
+                                    </Button>
+                                </form>
+                            </Paper>
+                        </Grid>
+                        <Grid size={{ xs: 12, md: 4 }}>
+                            <Paper elevation={0} sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 2, p: 2.5 }}>
+                                <Typography variant="subtitle2" fontWeight={700} sx={{ mb: 1.5 }}>Order Summary</Typography>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                                    <Typography variant="body2" color="text.secondary">Hotel (incl. taxes)</Typography>
+                                    <Typography variant="body2" fontWeight={600}>{CURRENCY_CONFIG.formatPrice(hotelTotalPrice * 1.18)}</Typography>
+                                </Box>
+                            </Paper>
+                        </Grid>
+                    </Grid>
+                </Container>
+            </>
+        );
+    }
+    // ── End hotel branch ──────────────────────────────────────────────────────
+
     if (!onwardFlight) {
         return <Container><Box sx={{ mt: 4, textAlign: 'center' }}><CircularProgress /></Box></Container>;
     }

@@ -15,6 +15,7 @@ import {
     CircularProgress,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import LoginButton from './auth/LoginButton';
 import ProfileDropdown from './auth/ProfileDropdown';
 
@@ -35,6 +36,7 @@ const Navbar = () => {
 
     const navItems = [
         { label: 'Book', path: '/search' },
+        { label: 'AI Travel Agent', path: '/travel-agent', highlight: true },
         { label: 'Manage Booking', path: '/manage-booking' },
         { label: 'Offers', path: '/offers' },
         { label: 'About Us', path: '/about' },
@@ -77,11 +79,17 @@ const Navbar = () => {
                                     key={item.label}
                                     component="a"
                                     href={item.path}
+                                    startIcon={(item as any).highlight ? <AutoAwesomeIcon sx={{ fontSize: '14px !important' }} /> : undefined}
                                     sx={{
-                                        color: 'text.primary',
+                                        color: (item as any).highlight ? 'primary.main' : 'text.primary',
+                                        fontWeight: (item as any).highlight ? 700 : 400,
+                                        border: (item as any).highlight ? '1px solid' : 'none',
+                                        borderColor: 'primary.light',
+                                        borderRadius: (item as any).highlight ? 2 : 1,
+                                        px: (item as any).highlight ? 1.5 : 1,
                                         '&:hover': {
                                             color: 'primary.main',
-                                            backgroundColor: 'transparent',
+                                            backgroundColor: (item as any).highlight ? 'primary.light' + '20' : 'transparent',
                                         },
                                     }}
                                 >
