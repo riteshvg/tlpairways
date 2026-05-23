@@ -37,6 +37,7 @@ import { ExpandMore as ExpandMoreIcon, FlightTakeoff, FlightLand, Restaurant, Lu
 import { format } from 'date-fns';
 import BookingSteps from '../components/BookingSteps';
 import flightsData from '../data/flights.json';
+import intlFlightsData from '../data/international-flights.json';
 import mealsData from '../data/ancillary/meals.json';
 import baggageRules from '../data/ancillary/baggage_rules.json';
 import seatConfigurations from '../data/ancillary/seat_configurations.json';
@@ -173,7 +174,10 @@ export default function AncillaryServicesPage() {
     }, [travellersJson]);
 
     useEffect(() => {
-        const allFlights = (flightsData as any).flights || [];
+        const allFlights = [
+            ...((flightsData as any).flights || []),
+            ...((intlFlightsData as any).flights || []),
+        ];
 
         if (onwardFlightId) {
             const f = allFlights.find((x: any) => x.id === onwardFlightId);

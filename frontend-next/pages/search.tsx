@@ -27,6 +27,7 @@ import FlightIcon from '@mui/icons-material/Flight';
 import PassengerSelector from '../components/PassengerSelector';
 import airportsData from '../data/airports.json';
 import flightsData from '../data/flights.json';
+import intlFlightsData from '../data/international-flights.json';
 import { usePageView } from '../lib/analytics/useAnalytics';
 
 interface Airport {
@@ -184,7 +185,10 @@ export default function SearchPage() {
     // Build available routes map on component mount
     useEffect(() => {
         const routes = new Set<string>();
-        const flights = (flightsData as any).flights || [];
+        const flights = [
+            ...((flightsData as any).flights || []),
+            ...((intlFlightsData as any).flights || []),
+        ];
 
         flights.forEach((flight: any) => {
             routes.add(`${flight.origin}-${flight.destination}`);

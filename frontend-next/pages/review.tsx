@@ -23,6 +23,7 @@ import {
 import Head from 'next/head';
 import { format } from 'date-fns';
 import flightsData from '../data/flights.json';
+import intlFlightsData from '../data/international-flights.json';
 import BookingSteps from '../components/BookingSteps';
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
 import PersonIcon from '@mui/icons-material/Person';
@@ -100,7 +101,10 @@ export default function ReviewPage() {
         }
 
         // Load Flights
-        const allFlights = (flightsData as any).flights || [];
+        const allFlights = [
+            ...((flightsData as any).flights || []),
+            ...((intlFlightsData as any).flights || []),
+        ];
         if (onwardFlightId) {
             const f = allFlights.find((x: any) => x.id === onwardFlightId);
             if (f) {

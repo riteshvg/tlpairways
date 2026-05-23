@@ -117,7 +117,7 @@ export default function TravelAgentPage() {
         content: `Hello${name ? `, ${name.split(' ')[0]}` : ''}! 👋 I'm your AI Travel Concierge.\n\nI can help you plan complete trips — flights, hotels, destination highlights, and day-by-day itineraries. Just tell me where you want to go!\n\nTry: "I want to book a vacation to Bali from Mumbai" or "Plan a business trip to Sydney for 5 days."`,
     });
 
-    // Always start with defaults — sessionStorage is browser-only and must be read in useEffect
+    // Always start with defaults — localStorage is browser-only and must be read in useEffect
     type AgentStatus = 'idle' | 'active' | 'done' | 'error';
     type PipelineState = Record<string, AgentStatus>;
 
@@ -130,6 +130,8 @@ export default function TravelAgentPage() {
     const [pipeline, setPipeline] = useState<PipelineState>({});
     const [isSummarising, setIsSummarising] = useState(false);
     const [tokenUsage, setTokenUsage] = useState<{ input: number; output: number } | null>(null);
+    const [bookedFlightId, setBookedFlightId] = useState<string | null>(null);
+    const [bookedHotelId, setBookedHotelId] = useState<string | null>(null);
 
     // Trip details modal
     const [showTripModal, setShowTripModal] = useState(false);
@@ -147,10 +149,10 @@ export default function TravelAgentPage() {
     // Conversation history for the API (only user + final assistant turns)
     const conversationHistory = useRef<{ role: 'user' | 'assistant'; content: string }[]>([]);
 
-    // Restore session from sessionStorage after mount (client-only)
+    // Restore session from localStorage after mount (client-only)
     useEffect(() => {
         try {
-            const saved = sessionStorage.getItem(STORAGE_KEY);
+            const saved = localStorage.getItem(STORAGE_KEY);
             if (saved) {
                 const parsed = JSON.parse(saved);
                 if (parsed.messages?.length) setMessages(parsed.messages);
@@ -158,6 +160,9 @@ export default function TravelAgentPage() {
                 if (parsed.activeTab != null) setActiveTab(parsed.activeTab);
                 if (parsed.agentSessionId) setAgentSessionId(parsed.agentSessionId);
                 if (parsed.conversationHistory) conversationHistory.current = parsed.conversationHistory;
+                if (parsed.tripDetails) setTripDetails(parsed.tripDetails);
+                if (parsed.bookedFlightId) setBookedFlightId(parsed.bookedFlightId);
+                if (parsed.bookedHotelId) setBookedHotelId(parsed.bookedHotelId);
             }
         } catch { /* ignore */ }
     }, []);
@@ -180,15 +185,18 @@ export default function TravelAgentPage() {
     useEffect(() => {
         if (messages.length <= 1 && !results.outboundFlights.length) return;
         try {
-            sessionStorage.setItem(STORAGE_KEY, JSON.stringify({
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({
                 messages: messages.filter(m => !m.isLoading),
                 results,
                 activeTab,
                 agentSessionId,
+                tripDetails,
+                bookedFlightId,
+                bookedHotelId,
                 conversationHistory: conversationHistory.current,
             }));
         } catch { /* ignore quota errors */ }
-    }, [messages, results, activeTab, agentSessionId]);
+    }, [messages, results, activeTab, agentSessionId, tripDetails, bookedFlightId, bookedHotelId]);
 
     const addMessage = useCallback((msg: Omit<Message, 'id'>) => {
         const id = `msg-${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -201,7 +209,7 @@ export default function TravelAgentPage() {
     }, []);
 
     const handleNewConversation = () => {
-        sessionStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(STORAGE_KEY);
         conversationHistory.current = [];
         setMessages([makeWelcomeMessage(user?.name ?? undefined)]);
         setResults({ outboundFlights: [], returnFlights: [], hotels: [], destination: null, itinerary: null, weather: null });
@@ -425,11 +433,14 @@ export default function TravelAgentPage() {
             ...(tripDetails.returnDate && { returnDate: tripDetails.returnDate }),
         });
         try {
-            sessionStorage.setItem(STORAGE_KEY, JSON.stringify({
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({
                 messages: messages.filter(m => !m.isLoading),
                 results,
                 activeTab,
                 agentSessionId,
+                tripDetails,
+                bookedFlightId: flight.id,
+                bookedHotelId,
                 conversationHistory: conversationHistory.current,
             }));
         } catch { /* ignore */ }
@@ -460,11 +471,14 @@ export default function TravelAgentPage() {
             guests: String(tripDetails.adults + tripDetails.children),
         });
         try {
-            sessionStorage.setItem(STORAGE_KEY, JSON.stringify({
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({
                 messages: messages.filter(m => !m.isLoading),
                 results,
                 activeTab,
                 agentSessionId,
+                tripDetails,
+                bookedFlightId,
+                bookedHotelId: hotel.id,
                 conversationHistory: conversationHistory.current,
             }));
         } catch { /* ignore */ }
@@ -490,7 +504,7 @@ export default function TravelAgentPage() {
         'destination-agent': results.destination ? results.destination.name : '',
         'itinerary-agent':   results.itinerary ? `${results.itinerary.duration_days}d itinerary` : '',
         'profile-agent':     'Gold tier',
-        'weather-agent':     results.weather ? `${results.weather.avg_high}°C · ${results.weather.season}` : '',
+        'weather-agent':     results.weather ? `${results.weather.avg_high}°C · ${results.weather.season?.split(/[\s/]+/).slice(0, 2).join(' ')}` : '',
     };
 
     const PIPELINE_AGENTS: { id: string; label: string; shortLabel: string; color: string; icon: React.ReactNode }[] = [
@@ -581,7 +595,7 @@ export default function TravelAgentPage() {
                             </Box>
                             {/* Result count below */}
                             {isDone && doneLabel && (
-                                <Typography sx={{ fontSize: '0.58rem', color: agent.color, opacity: 0.8, mt: 0.2, fontWeight: 600 }}>
+                                <Typography sx={{ fontSize: '0.58rem', color: agent.color, opacity: 0.8, mt: 0.2, fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 72 }}>
                                     {doneLabel}
                                 </Typography>
                             )}
@@ -638,20 +652,6 @@ export default function TravelAgentPage() {
                             {isSummarising ? 'Generating summary…' : 'Processing…'}
                         </Typography>
                     </>
-                )}
-                {!isLoading && !isSummarising && tokenUsage && (
-                    <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
-                        <Chip
-                            label={`↑ ${tokenUsage.input.toLocaleString()} in`}
-                            size="small"
-                            sx={{ fontSize: '0.6rem', height: 18, bgcolor: '#E8F5E9', color: '#2E7D32', '& .MuiChip-label': { px: 0.75 } }}
-                        />
-                        <Chip
-                            label={`↓ ${tokenUsage.output.toLocaleString()} out`}
-                            size="small"
-                            sx={{ fontSize: '0.6rem', height: 18, bgcolor: '#E3F2FD', color: '#1565C0', '& .MuiChip-label': { px: 0.75 } }}
-                        />
-                    </Box>
                 )}
             </Box>
         </Box>
@@ -828,7 +828,24 @@ export default function TravelAgentPage() {
                         )}
                         {results.outboundFlights.length > 0 && (
                             <>
-                                {(results.outboundFlights[0] as any)?.agent_commentary && (
+                                {/* Next-step nudge after booking */}
+                                {bookedFlightId && (
+                                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 1.5, mb: 1.5, borderRadius: 2, bgcolor: '#E8F5E9', border: '1px solid #A5D6A7' }}>
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                            <Typography sx={{ fontSize: 18 }}>✅</Typography>
+                                            <Box>
+                                                <Typography variant="caption" fontWeight={700} color="#1B5E20" display="block">Flight booked!</Typography>
+                                                <Typography variant="caption" color="#2E7D32">Ready to pick your hotel?</Typography>
+                                            </Box>
+                                        </Box>
+                                        <Button size="small" variant="contained"
+                                            onClick={() => setActiveTab(1)}
+                                            sx={{ bgcolor: '#2E7D32', '&:hover': { bgcolor: '#1B5E20' }, textTransform: 'none', fontSize: '0.72rem', borderRadius: 2, whiteSpace: 'nowrap' }}>
+                                            View Hotels →
+                                        </Button>
+                                    </Box>
+                                )}
+                                {!bookedFlightId && (results.outboundFlights[0] as any)?.agent_commentary && (
                                     <Box sx={{ display: 'flex', gap: 1, p: 1.25, mb: 1.5, borderRadius: 2, bgcolor: '#F0F7FF', border: '1px solid #BBDEFB' }}>
                                         <AutoAwesomeIcon sx={{ fontSize: 14, color: '#1565C0', mt: 0.1, flexShrink: 0 }} />
                                         <Typography variant="caption" color="primary.dark">{(results.outboundFlights[0] as any).agent_commentary}</Typography>
@@ -838,7 +855,8 @@ export default function TravelAgentPage() {
                                     ✈️ Outbound Flights
                                 </Typography>
                                 {results.outboundFlights.map(f => (
-                                    <FlightResultCard key={f.id} flight={f} label="Outbound" agentSessionId={agentSessionId} onBook={handleBookFlight} />
+                                    <FlightResultCard key={f.id} flight={f} label="Outbound" agentSessionId={agentSessionId} onBook={handleBookFlight}
+                                        isBooked={bookedFlightId === f.id} isOtherBooked={!!bookedFlightId && bookedFlightId !== f.id} />
                                 ))}
                             </>
                         )}
@@ -849,7 +867,8 @@ export default function TravelAgentPage() {
                                     ↩️ Return Flights
                                 </Typography>
                                 {results.returnFlights.map(f => (
-                                    <FlightResultCard key={f.id} flight={f} label="Return" agentSessionId={agentSessionId} onBook={handleBookFlight} />
+                                    <FlightResultCard key={f.id} flight={f} label="Return" agentSessionId={agentSessionId} onBook={handleBookFlight}
+                                        isBooked={bookedFlightId === f.id} isOtherBooked={!!bookedFlightId && bookedFlightId !== f.id} />
                                 ))}
                             </>
                         )}

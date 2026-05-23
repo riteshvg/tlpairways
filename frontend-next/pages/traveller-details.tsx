@@ -22,6 +22,7 @@ import {
 import Head from 'next/head';
 import { format } from 'date-fns';
 import flightsData from '../data/flights.json';
+import intlFlightsData from '../data/international-flights.json';
 import BookingSteps from '../components/BookingSteps';
 import { useAnalytics } from '../lib/analytics/useAnalytics';
 import { pushUserContext } from '../lib/analytics/dataLayer';
@@ -206,7 +207,10 @@ export default function TravellerDetailsPage() {
     // Load flights from data
     useEffect(() => {
         if (onwardFlightId) {
-            const allFlights = (flightsData as any).flights || [];
+            const allFlights = [
+                ...((flightsData as any).flights || []),
+                ...((intlFlightsData as any).flights || []),
+            ];
             const onward = allFlights.find((f: any) => f.id === onwardFlightId);
             if (onward) {
                 // Calculate price for cabin class
@@ -226,7 +230,10 @@ export default function TravellerDetailsPage() {
         }
 
         if (returnFlightId) {
-            const allFlights = (flightsData as any).flights || [];
+            const allFlights = [
+                ...((flightsData as any).flights || []),
+                ...((intlFlightsData as any).flights || []),
+            ];
             const returnFlt = allFlights.find((f: any) => f.id === returnFlightId);
             if (returnFlt) {
                 const basePrice = returnFlt.price;

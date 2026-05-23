@@ -28,6 +28,7 @@ import AirlineSeatReclineNormalIcon from '@mui/icons-material/AirlineSeatRecline
 import LuggageIcon from '@mui/icons-material/Luggage';
 import { format } from 'date-fns';
 import flightsData from '../data/flights.json';
+import intlFlightsData from '../data/international-flights.json';
 import airports from '../data/airports.json';
 import { usePageView, useAnalytics } from '../lib/analytics/useAnalytics';
 import { pushUserContext } from '../lib/analytics/dataLayer';
@@ -250,7 +251,10 @@ export default function ResultsPage() {
         if (!origin || !destination || !searchDate || !cabin) return [];
 
         try {
-            const allFlights = (flightsData as any).flights || [];
+            const allFlights = [
+                ...((flightsData as any).flights || []),
+                ...((intlFlightsData as any).flights || []),
+            ];
 
             return allFlights
                 .filter((flight: any) => flight.origin === origin && flight.destination === destination)

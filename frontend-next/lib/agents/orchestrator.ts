@@ -19,8 +19,6 @@
 
 import { AzureOpenAI } from 'openai';
 import type { ChatCompletionMessageParam, ChatCompletionTool } from 'openai/resources/chat/completions';
-import fs from 'fs';
-const dbg = (msg: string) => { try { fs.appendFileSync('/tmp/agent-debug.log', `${new Date().toISOString()} ${msg}\n`); } catch {} };
 import {
     searchFlights,
     searchHotels,
@@ -210,7 +208,6 @@ export async function runOrchestrator(
     messages: ConversationMessage[],
     writeSSE: SSEWriter
 ): Promise<{ input: number; output: number }> {
-    dbg(`[runOrchestrator] start msgs=${messages.length} endpoint=${process.env.AZURE_OPENAI_ENDPOINT} deployment=${ORCHESTRATOR_DEPLOYMENT}`);
     const client = createClient();
     const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
@@ -258,27 +255,23 @@ export async function runOrchestrator(
             let isError = false;
 
             try {
-                dbg(`[tool] ${toolName} input=${JSON.stringify(toolInput).slice(0, 200)}`);
                 switch (toolName) {
                     case 'get_user_profile': {
                         const r = await runProfileSubAgent(toolInput, client);
                         totalInput += r.inputTokens; totalOutput += r.outputTokens;
                         result = r.profile;
-                        dbg(`[profile] keys=${Object.keys(result || {}).join(',')}`);
                         break;
                     }
                     case 'search_flights': {
                         const r = await runFlightSubAgent(toolInput as SearchFlightsInput & { travelPurpose?: string }, client);
                         totalInput += r.inputTokens; totalOutput += r.outputTokens;
                         result = r.data;
-                        dbg(`[flights] outbound=${result?.outbound?.length} return=${result?.return_flights?.length} keys=${Object.keys(result||{}).join(',')}`);
                         break;
                     }
                     case 'search_hotels': {
                         const r = await runHotelSubAgent(toolInput as SearchHotelsInput & { travelPurpose?: string; travelerProfile?: string }, client);
                         totalInput += r.inputTokens; totalOutput += r.outputTokens;
                         result = r.data;
-                        dbg(`[hotels] count=${result?.hotels?.length} keys=${Object.keys(result||{}).join(',')}`);
                         break;
                     }
                     case 'get_destination_info': {
@@ -303,7 +296,7 @@ export async function runOrchestrator(
                         throw new Error(`Unknown tool: ${toolName}`);
                 }
             } catch (err: any) {
-                dbg(`[ERROR] tool=${toolName} msg=${err.message} stack=${err.stack?.slice(0,300)}`);
+                console.error(`[travel-agent] tool=${toolName} error:`, err.message);
                 result = { error: err.message };
                 isError = true;
             }
@@ -634,12 +627,10 @@ async function runItinerarySubAgent(
     }${input.traveler_profile ? ` Traveller profile: ${input.traveler_profile}` : ''}`;
 
     const { text, inputTokens, outputTokens } = await callSubAgent(client, ITINERARY_SYSTEM_PROMPT, userMsg, 5000);
-    dbg(`[itinerary] raw_len=${text.length} preview=${text.slice(0, 200)}`);
     let itinerary: any;
     try {
         itinerary = JSON.parse(stripFences(text));
-    } catch (e: any) {
-        dbg(`[itinerary] parse_error=${e.message} raw_tail=${text.slice(-200)}`);
+    } catch {
         itinerary = { destination: input.destination, duration_days: durationDays, travel_purpose: input.travel_purpose, itinerary: [], packing_tips: [], budget_estimate: 'Contact us for a quote' };
     }
     return { itinerary, inputTokens, outputTokens };

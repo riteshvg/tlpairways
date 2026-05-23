@@ -5,6 +5,7 @@ import FlightLandIcon from '@mui/icons-material/FlightLand';
 import AirlineSeatReclineNormalIcon from '@mui/icons-material/AirlineSeatReclineNormal';
 import LuggageIcon from '@mui/icons-material/Luggage';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import type { Flight } from '../../lib/agents/tools';
 
 interface Props {
@@ -12,9 +13,11 @@ interface Props {
     label?: 'Outbound' | 'Return';
     agentSessionId: string;
     onBook: (flight: Flight, label: string) => void;
+    isBooked?: boolean;
+    isOtherBooked?: boolean;
 }
 
-export default function FlightResultCard({ flight, label = 'Outbound', agentSessionId, onBook }: Props) {
+export default function FlightResultCard({ flight, label = 'Outbound', agentSessionId, onBook, isBooked = false, isOtherBooked = false }: Props) {
     const formatPrice = (price: number) =>
         new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(price);
     const enriched = flight as any;
@@ -23,12 +26,14 @@ export default function FlightResultCard({ flight, label = 'Outbound', agentSess
         <Card
             elevation={0}
             sx={{
-                border: '1px solid',
-                borderColor: enriched.top_pick ? 'primary.main' : 'divider',
+                border: '2px solid',
+                borderColor: isBooked ? '#43A047' : enriched.top_pick ? 'primary.main' : 'divider',
                 borderRadius: 2,
                 mb: 2,
-                '&:hover': { borderColor: 'primary.main', boxShadow: '0 2px 12px rgba(0,105,92,0.12)' },
-                transition: 'all 0.2s'
+                opacity: isOtherBooked ? 0.45 : 1,
+                bgcolor: isBooked ? '#F1F8E9' : isOtherBooked ? '#FAFAFA' : 'background.paper',
+                transition: 'all 0.2s',
+                ...(!isBooked && !isOtherBooked && { '&:hover': { borderColor: 'primary.main', boxShadow: '0 2px 12px rgba(0,105,92,0.12)' } }),
             }}
         >
             <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
@@ -40,7 +45,11 @@ export default function FlightResultCard({ flight, label = 'Outbound', agentSess
                             size="small"
                             sx={{ backgroundColor: label === 'Outbound' ? '#E0F2F1' : '#E8F5E9', color: '#00695C', fontWeight: 600, fontSize: '0.65rem' }}
                         />
-                        {enriched.top_pick && (
+                        {isBooked && (
+                            <Chip icon={<CheckCircleIcon sx={{ fontSize: 12 }} />} label="Selected" size="small"
+                                sx={{ bgcolor: '#E8F5E9', color: '#1B5E20', fontWeight: 700, fontSize: '0.65rem', border: '1px solid #A5D6A7' }} />
+                        )}
+                        {!isBooked && enriched.top_pick && (
                             <Chip icon={<AutoAwesomeIcon sx={{ fontSize: 11 }} />} label="Top Pick" size="small"
                                 sx={{ bgcolor: '#E8F5E9', color: '#1B5E20', fontWeight: 700, fontSize: '0.6rem' }} />
                         )}
@@ -86,10 +95,10 @@ export default function FlightResultCard({ flight, label = 'Outbound', agentSess
                     </Box>
                 </Box>
 
-                {enriched.recommendation_reason && (
-                    <Box sx={{ display: 'flex', gap: 0.75, alignItems: 'flex-start', mb: 1, p: 1, borderRadius: 1.5, bgcolor: '#F0F7FF', border: '1px solid #BBDEFB' }}>
-                        <AutoAwesomeIcon sx={{ fontSize: 13, color: '#1565C0', mt: 0.1, flexShrink: 0 }} />
-                        <Typography variant="caption" color="primary.dark" sx={{ lineHeight: 1.4 }}>{enriched.recommendation_reason}</Typography>
+                {enriched.recommendation_reason && !isOtherBooked && (
+                    <Box sx={{ display: 'flex', gap: 0.75, alignItems: 'flex-start', mb: 1, p: 1, borderRadius: 1.5, bgcolor: isBooked ? '#F1F8E9' : '#F0F7FF', border: `1px solid ${isBooked ? '#A5D6A7' : '#BBDEFB'}` }}>
+                        <AutoAwesomeIcon sx={{ fontSize: 13, color: isBooked ? '#2E7D32' : '#1565C0', mt: 0.1, flexShrink: 0 }} />
+                        <Typography variant="caption" sx={{ color: isBooked ? '#2E7D32' : 'primary.dark', lineHeight: 1.4 }}>{enriched.recommendation_reason}</Typography>
                     </Box>
                 )}
 
@@ -104,14 +113,21 @@ export default function FlightResultCard({ flight, label = 'Outbound', agentSess
                             <Chip key={c} label={c} size="small" variant="outlined" sx={{ fontSize: '0.65rem', height: 20 }} />
                         ))}
                     </Box>
-                    <Button
-                        variant="contained"
-                        size="small"
-                        onClick={() => onBook(flight, label)}
-                        sx={{ borderRadius: 2, textTransform: 'none', fontSize: '0.75rem', px: 2, whiteSpace: 'nowrap' }}
-                    >
-                        Book Flight →
-                    </Button>
+                    {isBooked ? (
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: '#2E7D32' }}>
+                            <CheckCircleIcon sx={{ fontSize: 16 }} />
+                            <Typography variant="caption" fontWeight={700} color="#2E7D32">Your choice</Typography>
+                        </Box>
+                    ) : !isOtherBooked ? (
+                        <Button
+                            variant="contained"
+                            size="small"
+                            onClick={() => onBook(flight, label)}
+                            sx={{ borderRadius: 2, textTransform: 'none', fontSize: '0.75rem', px: 2, whiteSpace: 'nowrap' }}
+                        >
+                            Book Flight →
+                        </Button>
+                    ) : null}
                 </Box>
             </CardContent>
         </Card>

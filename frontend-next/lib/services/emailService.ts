@@ -3,16 +3,8 @@
  * Handles sending booking confirmation emails via backend API
  */
 
-// Get API URL from environment variable or use default
-const API_BASE_URL = (() => {
-    // If NEXT_PUBLIC_API_URL is explicitly set, use it
-    if (process.env.NEXT_PUBLIC_API_URL) {
-        return process.env.NEXT_PUBLIC_API_URL;
-    }
-
-    // Development fallback - backend runs on port 5001 (5000 blocked by macOS Control Center)
-    return 'http://localhost:5001/api';
-})();
+// Always use the Next.js API routes (relative URL works in both dev and prod)
+const API_BASE_URL = '/api';
 
 export interface BookingEmailData {
     // Passenger Information

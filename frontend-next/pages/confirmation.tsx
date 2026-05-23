@@ -46,6 +46,7 @@ export default function ConfirmationPage() {
     const [loading, setLoading] = useState(true);
     const [emailSending, setEmailSending] = useState(false);
     const [emailSent, setEmailSent] = useState(false);
+    const [fromAgent, setFromAgent] = useState(false);
     const userDataPushed = useRef(false);
 
     // Push independent userData object once when user is authenticated
@@ -90,6 +91,7 @@ export default function ConfirmationPage() {
                 console.error("Failed to parse booking data", e);
             }
         }
+        setFromAgent(!!sessionStorage.getItem('tlp_agent_session'));
         setLoading(false);
     }, []);
 
@@ -663,8 +665,8 @@ export default function ConfirmationPage() {
                 <Alert severity="error">
                     Booking details not found. Please start a new search.
                 </Alert>
-                <Button variant="contained" sx={{ mt: 2 }} onClick={() => router.push('/')}>
-                    Go Home
+                <Button variant="contained" sx={{ mt: 2 }} onClick={() => router.push(fromAgent ? '/travel-agent' : '/')}>
+                    {fromAgent ? 'Back to Trip Planner' : 'Go Home'}
                 </Button>
             </Container>
         );
@@ -911,10 +913,10 @@ export default function ConfirmationPage() {
                     <Button
                         variant="contained"
                         size="large"
-                        onClick={() => router.push('/')}
+                        onClick={() => router.push(fromAgent ? '/travel-agent' : '/')}
                         sx={{ px: 4 }}
                     >
-                        Book Another Flight
+                        {fromAgent ? 'Back to Trip Planner' : 'Book Another Flight'}
                     </Button>
                 </Box>
             </Container>
