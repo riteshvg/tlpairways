@@ -134,6 +134,7 @@ export default function TravelAgentPage() {
     // Trip details modal
     const [showTripModal, setShowTripModal] = useState(false);
     const [pendingPrompt, setPendingPrompt] = useState('');
+    const [dateErrors, setDateErrors] = useState({ departure: false, returnDate: false });
     const [tripDetails, setTripDetails] = useState({
         adults: 1,
         children: 0,
@@ -211,6 +212,7 @@ export default function TravelAgentPage() {
         setIsSummarising(false);
         setTokenUsage(null);
         setTripDetails({ adults: 1, children: 0, childAges: [], departureDate: '', returnDate: '' });
+        setDateErrors({ departure: false, returnDate: false });
     };
 
     const handleSend = (promptText?: string) => {
@@ -222,6 +224,15 @@ export default function TravelAgentPage() {
     };
 
     const handleTripConfirm = async () => {
+        const errors = {
+            departure: !tripDetails.departureDate,
+            returnDate: !tripDetails.returnDate,
+        };
+        if (errors.departure || errors.returnDate) {
+            setDateErrors(errors);
+            return;
+        }
+        setDateErrors({ departure: false, returnDate: false });
         setShowTripModal(false);
         const text = buildEnrichedPrompt(pendingPrompt, tripDetails);
         await runAgents(text);
@@ -817,6 +828,12 @@ export default function TravelAgentPage() {
                         )}
                         {results.outboundFlights.length > 0 && (
                             <>
+                                {(results.outboundFlights[0] as any)?.agent_commentary && (
+                                    <Box sx={{ display: 'flex', gap: 1, p: 1.25, mb: 1.5, borderRadius: 2, bgcolor: '#F0F7FF', border: '1px solid #BBDEFB' }}>
+                                        <AutoAwesomeIcon sx={{ fontSize: 14, color: '#1565C0', mt: 0.1, flexShrink: 0 }} />
+                                        <Typography variant="caption" color="primary.dark">{(results.outboundFlights[0] as any).agent_commentary}</Typography>
+                                    </Box>
+                                )}
                                 <Typography variant="caption" sx={{ fontWeight: 700, color: 'text.secondary', textTransform: 'uppercase', letterSpacing: 0.5, fontSize: '0.65rem', display: 'block', mb: 1 }}>
                                     ✈️ Outbound Flights
                                 </Typography>
@@ -847,6 +864,12 @@ export default function TravelAgentPage() {
                         )}
                         {results.hotels.length > 0 && (
                             <>
+                                {(results.hotels[0] as any)?.agent_commentary && (
+                                    <Box sx={{ display: 'flex', gap: 1, p: 1.25, mb: 1.5, borderRadius: 2, bgcolor: '#FAF0FF', border: '1px solid #E1BEE7' }}>
+                                        <AutoAwesomeIcon sx={{ fontSize: 14, color: '#6A1B9A', mt: 0.1, flexShrink: 0 }} />
+                                        <Typography variant="caption" sx={{ color: '#4A148C' }}>{(results.hotels[0] as any).agent_commentary}</Typography>
+                                    </Box>
+                                )}
                                 <Typography variant="caption" sx={{ fontWeight: 700, color: 'text.secondary', textTransform: 'uppercase', letterSpacing: 0.5, fontSize: '0.65rem', display: 'block', mb: 1 }}>
                                     🏨 Hotels
                                 </Typography>
@@ -872,6 +895,22 @@ export default function TravelAgentPage() {
                         {!results.destination && <EmptyState icon="💡" message="Destination highlights, local tips, and must-sees will appear here." />}
                         {results.destination && (
                             <Box>
+                                {/* Personalised intro from Destination Agent */}
+                                {(results.destination as any).personalized_intro && (
+                                    <Box sx={{ display: 'flex', gap: 1, p: 1.5, mb: 2, borderRadius: 2, bgcolor: '#FFF8E1', border: '1px solid #FFE082' }}>
+                                        <AutoAwesomeIcon sx={{ fontSize: 14, color: '#F57F17', mt: 0.1, flexShrink: 0 }} />
+                                        <Box>
+                                            {(results.destination as any).recommended_for && (
+                                                <Typography variant="caption" fontWeight={700} color="warning.dark" display="block" sx={{ mb: 0.25 }}>
+                                                    {(results.destination as any).recommended_for}
+                                                </Typography>
+                                            )}
+                                            <Typography variant="caption" color="text.primary" sx={{ lineHeight: 1.5 }}>
+                                                {(results.destination as any).personalized_intro}
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+                                )}
                                 {/* Highlights */}
                                 {results.destination.highlights?.length > 0 && (
                                     <Box sx={{ mb: 2.5 }}>
@@ -1130,22 +1169,28 @@ export default function TravelAgentPage() {
                     </Typography>
                     <Box sx={{ display: 'flex', gap: 2 }}>
                         <TextField
-                            label="Departure"
+                            label="Departure *"
                             type="date"
                             size="small"
                             fullWidth
+                            required
+                            error={dateErrors.departure}
+                            helperText={dateErrors.departure ? 'Please select a departure date' : ''}
                             value={tripDetails.departureDate}
-                            onChange={e => setTripDetails(d => ({ ...d, departureDate: e.target.value }))}
+                            onChange={e => { setTripDetails(d => ({ ...d, departureDate: e.target.value })); setDateErrors(err => ({ ...err, departure: false })); }}
                             InputLabelProps={{ shrink: true }}
                             inputProps={{ min: new Date().toISOString().split('T')[0] }}
                         />
                         <TextField
-                            label="Return (optional)"
+                            label="Return *"
                             type="date"
                             size="small"
                             fullWidth
+                            required
+                            error={dateErrors.returnDate}
+                            helperText={dateErrors.returnDate ? 'Please select a return date' : ''}
                             value={tripDetails.returnDate}
-                            onChange={e => setTripDetails(d => ({ ...d, returnDate: e.target.value }))}
+                            onChange={e => { setTripDetails(d => ({ ...d, returnDate: e.target.value })); setDateErrors(err => ({ ...err, returnDate: false })); }}
                             InputLabelProps={{ shrink: true }}
                             inputProps={{ min: tripDetails.departureDate || new Date().toISOString().split('T')[0] }}
                         />

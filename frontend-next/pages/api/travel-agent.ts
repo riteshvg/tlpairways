@@ -23,10 +23,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    const hasBedrock = process.env.USE_BEDROCK === 'true' || !!process.env.AWS_REGION;
-    const hasAnthropicKey = !!process.env.ANTHROPIC_API_KEY;
-    if (!hasBedrock && !hasAnthropicKey) {
-        return res.status(500).json({ error: 'No LLM credentials configured. Set ANTHROPIC_API_KEY, or set USE_BEDROCK=true and AWS_REGION.' });
+    const hasAzure = !!process.env.AZURE_OPENAI_API_KEY && !!process.env.AZURE_OPENAI_ENDPOINT;
+    if (!hasAzure) {
+        return res.status(500).json({ error: 'No LLM credentials configured. Set AZURE_OPENAI_API_KEY and AZURE_OPENAI_ENDPOINT in .env.local.' });
     }
 
     const { messages } = req.body as { messages: ConversationMessage[] };

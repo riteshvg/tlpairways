@@ -1,5 +1,6 @@
 import { Box, Card, CardContent, Typography, Chip, Button, Rating } from '@mui/material';
 import HotelIcon from '@mui/icons-material/Hotel';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import WifiIcon from '@mui/icons-material/Wifi';
 import PoolIcon from '@mui/icons-material/Pool';
@@ -36,6 +37,7 @@ export default function HotelResultCard({ hotel, agentSessionId, onBook }: Props
 
     const catColor = CATEGORY_COLORS[hotel.category] || CATEGORY_COLORS.premium;
     const displayAmenities = hotel.amenities.slice(0, 5);
+    const enriched = hotel as any;
 
     return (
         <Card
@@ -53,12 +55,16 @@ export default function HotelResultCard({ hotel, agentSessionId, onBook }: Props
                 {/* Header */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
                     <Box sx={{ flex: 1, mr: 1 }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, mb: 0.25 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, mb: 0.25, flexWrap: 'wrap' }}>
                             <Chip
                                 label={hotel.category}
                                 size="small"
                                 sx={{ backgroundColor: catColor.bg, color: catColor.text, fontWeight: 600, fontSize: '0.65rem', textTransform: 'capitalize' }}
                             />
+                            {enriched.top_pick && (
+                                <Chip icon={<AutoAwesomeIcon sx={{ fontSize: 11 }} />} label="Top Pick" size="small"
+                                    sx={{ bgcolor: '#F3E5F5', color: '#4A148C', fontWeight: 700, fontSize: '0.6rem' }} />
+                            )}
                         </Box>
                         <Typography variant="subtitle1" fontWeight={700} lineHeight={1.2}>
                             {hotel.name}
@@ -85,10 +91,17 @@ export default function HotelResultCard({ hotel, agentSessionId, onBook }: Props
                     <Typography variant="caption" color="text.secondary">({hotel.reviewCount.toLocaleString()} reviews)</Typography>
                 </Box>
 
-                {/* Description */}
-                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1, lineHeight: 1.4 }}>
-                    {hotel.description.substring(0, 120)}...
-                </Typography>
+                {/* Agent match reason */}
+                {enriched.match_reason ? (
+                    <Box sx={{ display: 'flex', gap: 0.75, alignItems: 'flex-start', mb: 1, p: 1, borderRadius: 1.5, bgcolor: '#FAF0FF', border: '1px solid #E1BEE7' }}>
+                        <AutoAwesomeIcon sx={{ fontSize: 13, color: '#6A1B9A', mt: 0.1, flexShrink: 0 }} />
+                        <Typography variant="caption" sx={{ color: '#4A148C', lineHeight: 1.4 }}>{enriched.match_reason}</Typography>
+                    </Box>
+                ) : (
+                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1, lineHeight: 1.4 }}>
+                        {hotel.description.substring(0, 120)}...
+                    </Typography>
+                )}
 
                 {/* Amenities + CTA */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

@@ -4,6 +4,7 @@ import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
 import FlightLandIcon from '@mui/icons-material/FlightLand';
 import AirlineSeatReclineNormalIcon from '@mui/icons-material/AirlineSeatReclineNormal';
 import LuggageIcon from '@mui/icons-material/Luggage';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import type { Flight } from '../../lib/agents/tools';
 
 interface Props {
@@ -16,13 +17,14 @@ interface Props {
 export default function FlightResultCard({ flight, label = 'Outbound', agentSessionId, onBook }: Props) {
     const formatPrice = (price: number) =>
         new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(price);
+    const enriched = flight as any;
 
     return (
         <Card
             elevation={0}
             sx={{
                 border: '1px solid',
-                borderColor: 'divider',
+                borderColor: enriched.top_pick ? 'primary.main' : 'divider',
                 borderRadius: 2,
                 mb: 2,
                 '&:hover': { borderColor: 'primary.main', boxShadow: '0 2px 12px rgba(0,105,92,0.12)' },
@@ -38,6 +40,10 @@ export default function FlightResultCard({ flight, label = 'Outbound', agentSess
                             size="small"
                             sx={{ backgroundColor: label === 'Outbound' ? '#E0F2F1' : '#E8F5E9', color: '#00695C', fontWeight: 600, fontSize: '0.65rem' }}
                         />
+                        {enriched.top_pick && (
+                            <Chip icon={<AutoAwesomeIcon sx={{ fontSize: 11 }} />} label="Top Pick" size="small"
+                                sx={{ bgcolor: '#E8F5E9', color: '#1B5E20', fontWeight: 700, fontSize: '0.6rem' }} />
+                        )}
                         <Typography variant="caption" color="text.secondary" fontWeight={600}>
                             {flight.flightNumber} · {flight.aircraftType}
                         </Typography>
@@ -79,6 +85,13 @@ export default function FlightResultCard({ flight, label = 'Outbound', agentSess
                         </Typography>
                     </Box>
                 </Box>
+
+                {enriched.recommendation_reason && (
+                    <Box sx={{ display: 'flex', gap: 0.75, alignItems: 'flex-start', mb: 1, p: 1, borderRadius: 1.5, bgcolor: '#F0F7FF', border: '1px solid #BBDEFB' }}>
+                        <AutoAwesomeIcon sx={{ fontSize: 13, color: '#1565C0', mt: 0.1, flexShrink: 0 }} />
+                        <Typography variant="caption" color="primary.dark" sx={{ lineHeight: 1.4 }}>{enriched.recommendation_reason}</Typography>
+                    </Box>
+                )}
 
                 <Divider sx={{ my: 1 }} />
 
