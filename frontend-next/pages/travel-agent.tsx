@@ -50,6 +50,12 @@ import WbSunnyIcon from '@mui/icons-material/WbSunny';
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 
+interface ActionButton {
+    label: string;
+    action: string;
+    prompt: string;
+}
+
 interface Message {
     id: string;
     role: 'user' | 'assistant';
@@ -57,6 +63,8 @@ interface Message {
     content: string;
     isLoading?: boolean;
     isStreaming?: boolean;
+    actionButtons?: ActionButton[];
+    suggestedTripParams?: any;
 }
 
 interface AgentStartEvent {
@@ -83,8 +91,9 @@ interface TextEvent {
 interface DoneEvent { type: 'done' }
 interface ErrorEvent { type: 'error'; message: string }
 interface SummarisingEvent { type: 'summarising' }
+interface ActionButtonsEvent { type: 'action_buttons'; buttons: ActionButton[]; tripParams?: any }
 
-type SSEEvent = AgentStartEvent | AgentResultEvent | TextEvent | DoneEvent | ErrorEvent | SummarisingEvent;
+type SSEEvent = AgentStartEvent | AgentResultEvent | TextEvent | DoneEvent | ErrorEvent | SummarisingEvent | ActionButtonsEvent;
 
 interface Results {
     outboundFlights: Flight[];
@@ -249,12 +258,55 @@ export default function TravelAgentPage() {
         setBookedHotelId(null);
     };
 
+    const isTripPlanningRequest = (text: string): boolean => {
+        const lower = text.toLowerCase().trim();
+        // Questions never need the trip modal
+        if (lower.endsWith('?')) return false;
+        const questionStarters = ['what ', 'when ', 'where ', 'how ', 'why ', 'is ', 'are ', 'do ', 'does ', 'can ', 'should ', 'which ', 'who ', 'tell me', 'hello', 'hi ', 'thanks', 'thank '];
+        if (questionStarters.some(s => lower.startsWith(s))) return false;
+        // Trip planning signals
+        const tripKeywords = ['plan', 'book', 'trip', 'travel', 'fly', 'flight', 'itinerary', 'vacation', 'holiday', 'visit', 'going to', 'want to go', 'take me'];
+        return tripKeywords.some(k => lower.includes(k));
+    };
+
     const handleSend = (promptText?: string) => {
         const text = (promptText ?? input).trim();
         if (!text || isLoading) return;
         setInput('');
         setPendingPrompt(text);
-        setShowTripModal(true);
+        if (isTripPlanningRequest(text)) {
+            setShowTripModal(true);
+        } else {
+            runAgents(text);
+        }
+    };
+
+    const handleActionButton = (btn: ActionButton, suggestedParams?: any) => {
+        if (btn.action === 'build_itinerary') {
+            // Pre-fill modal from context the agent already extracted
+            if (suggestedParams) {
+                setTripDetails(prev => ({
+                    ...prev,
+                    adults: suggestedParams.passengers > 0 ? suggestedParams.passengers : prev.adults,
+                    tripType: suggestedParams.returnDate ? 'roundtrip' : 'oneway',
+                    departureDate: suggestedParams.departureDate && suggestedParams.departureDate !== new Date().toISOString().slice(0, 10)
+                        ? suggestedParams.departureDate : prev.departureDate,
+                    returnDate: suggestedParams.returnDate || prev.returnDate,
+                    cabinClass: suggestedParams.cabinClass || prev.cabinClass,
+                    travelPurpose: suggestedParams.travelPurpose || prev.travelPurpose,
+                }));
+            }
+            const text = 'build an itinerary';
+            setInput('');
+            setPendingPrompt(text);
+            setShowTripModal(true);
+        } else if (btn.action === 'ask_more') {
+            setInput('Tell me more about ');
+            setTimeout(() => {
+                const el = document.querySelector('textarea[placeholder]') as HTMLTextAreaElement | null;
+                if (el) { el.focus(); el.setSelectionRange(el.value.length, el.value.length); }
+            }, 50);
+        }
     };
 
     const handleTripConfirm = async () => {
@@ -407,6 +459,9 @@ export default function TravelAgentPage() {
                             setResults({ ...newResults });
                         }
 
+                    } else if (event.type === 'action_buttons') {
+                        updateMessage(orchestratorMsgId, { actionButtons: event.buttons, suggestedTripParams: event.tripParams });
+
                     } else if (event.type === 'summarising') {
                         setIsSummarising(true);
 
@@ -427,7 +482,7 @@ export default function TravelAgentPage() {
             }
         } catch (err: any) {
             updateMessage(orchestratorMsgId, {
-                content: `I'm unable to process your request right now. Please check that ANTHROPIC_API_KEY is configured.\n\nError: ${err.message}`,
+                content: `I'm unable to process your request right now. Please check that AZURE_OPENAI_API_KEY and AZURE_OPENAI_ENDPOINT are configured in .env.local.\n\nError: ${err.message}`,
                 isLoading: false,
                 isStreaming: false
             });
@@ -711,13 +766,43 @@ export default function TravelAgentPage() {
                 backgroundSize: '32px 32px',
             }}>
                 {messages.map(msg => (
-                    <AgentMessage
-                        key={msg.id}
-                        agent={msg.agent}
-                        content={msg.content}
-                        isLoading={msg.isLoading}
-                        isStreaming={msg.isStreaming}
-                    />
+                    <Box key={msg.id}>
+                        <AgentMessage
+                            agent={msg.agent}
+                            content={msg.content}
+                            isLoading={msg.isLoading}
+                            isStreaming={msg.isStreaming}
+                        />
+                        {msg.actionButtons && msg.actionButtons.length > 0 && (
+                            <Box sx={{ display: 'flex', gap: 1, ml: 5.5, mb: 2, flexWrap: 'wrap' }}>
+                                {msg.actionButtons.map(btn => (
+                                    <Button
+                                        key={btn.action}
+                                        variant={btn.action === 'build_itinerary' ? 'contained' : 'outlined'}
+                                        size="small"
+                                        onClick={() => handleActionButton(btn, msg.suggestedTripParams)}
+                                        sx={{
+                                            borderRadius: 5,
+                                            textTransform: 'none',
+                                            fontSize: '0.8rem',
+                                            fontWeight: 600,
+                                            px: 2,
+                                            ...(btn.action === 'build_itinerary' ? {
+                                                bgcolor: '#1565C0',
+                                                '&:hover': { bgcolor: '#0D47A1' },
+                                            } : {
+                                                borderColor: '#1565C0',
+                                                color: '#1565C0',
+                                                '&:hover': { bgcolor: '#E3F2FD' },
+                                            }),
+                                        }}
+                                    >
+                                        {btn.label}
+                                    </Button>
+                                ))}
+                            </Box>
+                        )}
+                    </Box>
                 ))}
                 <div ref={messagesEndRef} />
             </Box>

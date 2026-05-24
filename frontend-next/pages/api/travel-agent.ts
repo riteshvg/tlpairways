@@ -12,7 +12,8 @@
  */
 
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { runOrchestrator, ConversationMessage } from '../../lib/agents/orchestrator';
+import { ConversationMessage } from '../../lib/agents/orchestrator';
+import { runGraphOrchestrator } from '../../lib/agents/graph';
 
 export const config = {
     api: { bodyParser: true }
@@ -59,7 +60,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     try {
-        const usage = await runOrchestrator(messages, writeSSE);
+        const usage = await runGraphOrchestrator(messages, writeSSE);
         writeSSE({ type: 'done', usage });
     } catch (err: any) {
         console.error('Orchestrator error:', err);
