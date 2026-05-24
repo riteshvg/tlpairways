@@ -1,7 +1,7 @@
-import { Box, Card, CardContent, Typography, Chip, Button, Rating } from '@mui/material';
-import HotelIcon from '@mui/icons-material/Hotel';
+import { Box, Card, CardContent, Typography, Chip, Rating } from '@mui/material';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WifiIcon from '@mui/icons-material/Wifi';
 import PoolIcon from '@mui/icons-material/Pool';
 import SpaIcon from '@mui/icons-material/Spa';
@@ -13,6 +13,10 @@ interface Props {
     hotel: Hotel;
     agentSessionId: string;
     onBook: (hotel: Hotel) => void;
+    isSelected?: boolean;
+    isBooked?: boolean;
+    isOtherSelected?: boolean;
+    isOtherBooked?: boolean;
 }
 
 const AMENITY_ICONS: Record<string, React.ReactNode> = {
@@ -31,7 +35,7 @@ const CATEGORY_COLORS: Record<string, { bg: string; text: string }> = {
     premium:        { bg: '#F3E5F5', text: '#4A148C' },
 };
 
-export default function HotelResultCard({ hotel, agentSessionId, onBook }: Props) {
+export default function HotelResultCard({ hotel, agentSessionId, onBook, isSelected = false, isBooked = false, isOtherSelected = false, isOtherBooked = false }: Props) {
     const formatPrice = (price: number) =>
         new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(price);
 
@@ -42,13 +46,17 @@ export default function HotelResultCard({ hotel, agentSessionId, onBook }: Props
     return (
         <Card
             elevation={0}
+            onClick={() => !isBooked && onBook(hotel)}
             sx={{
-                border: '1px solid',
-                borderColor: 'divider',
+                border: '2px solid',
+                borderColor: isBooked || isSelected ? '#6A1B9A' : enriched.top_pick ? '#AB47BC' : 'divider',
                 borderRadius: 2,
                 mb: 2,
-                '&:hover': { borderColor: '#6A1B9A', boxShadow: '0 2px 12px rgba(106,27,154,0.12)' },
-                transition: 'all 0.2s'
+                opacity: (isOtherSelected || isOtherBooked) ? 0.4 : 1,
+                bgcolor: isBooked || isSelected ? '#FAF0FF' : (isOtherSelected || isOtherBooked) ? '#FAFAFA' : 'background.paper',
+                cursor: isBooked ? 'default' : 'pointer',
+                transition: 'all 0.2s',
+                ...(!isBooked && !isOtherBooked && { '&:hover': { borderColor: '#6A1B9A', boxShadow: '0 2px 12px rgba(106,27,154,0.12)' } }),
             }}
         >
             <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
@@ -61,7 +69,11 @@ export default function HotelResultCard({ hotel, agentSessionId, onBook }: Props
                                 size="small"
                                 sx={{ backgroundColor: catColor.bg, color: catColor.text, fontWeight: 600, fontSize: '0.65rem', textTransform: 'capitalize' }}
                             />
-                            {enriched.top_pick && (
+                            {(isBooked || isSelected) && (
+                                <Chip icon={<CheckCircleIcon sx={{ fontSize: 12 }} />} label={isBooked ? 'Booked' : 'Selected'} size="small"
+                                    sx={{ bgcolor: '#EDE7F6', color: '#4A148C', fontWeight: 700, fontSize: '0.65rem', border: '1px solid #CE93D8' }} />
+                            )}
+                            {!isBooked && !isSelected && enriched.top_pick && (
                                 <Chip icon={<AutoAwesomeIcon sx={{ fontSize: 11 }} />} label="Top Pick" size="small"
                                     sx={{ bgcolor: '#F3E5F5', color: '#4A148C', fontWeight: 700, fontSize: '0.6rem' }} />
                             )}
@@ -103,7 +115,7 @@ export default function HotelResultCard({ hotel, agentSessionId, onBook }: Props
                     </Typography>
                 )}
 
-                {/* Amenities + CTA */}
+                {/* Amenities + status */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
                         {displayAmenities.map(a => (
@@ -117,23 +129,14 @@ export default function HotelResultCard({ hotel, agentSessionId, onBook }: Props
                             />
                         ))}
                     </Box>
-                    <Button
-                        variant="outlined"
-                        size="small"
-                        onClick={() => onBook(hotel)}
-                        sx={{
-                            borderRadius: 2,
-                            textTransform: 'none',
-                            fontSize: '0.75rem',
-                            px: 2,
-                            whiteSpace: 'nowrap',
-                            borderColor: '#6A1B9A',
-                            color: '#6A1B9A',
-                            '&:hover': { backgroundColor: '#F3E5F5', borderColor: '#4A148C' }
-                        }}
-                    >
-                        Book Hotel →
-                    </Button>
+                    {(isBooked || isSelected) && (
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                            <CheckCircleIcon sx={{ fontSize: 16, color: '#6A1B9A' }} />
+                            <Typography variant="caption" fontWeight={700} color="#6A1B9A">
+                                {isBooked ? 'Your choice' : 'Selected'}
+                            </Typography>
+                        </Box>
+                    )}
                 </Box>
             </CardContent>
         </Card>

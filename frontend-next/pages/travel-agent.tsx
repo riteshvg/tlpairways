@@ -140,6 +140,7 @@ export default function TravelAgentPage() {
     const [bookedHotelId, setBookedHotelId] = useState<string | null>(null);
     const [selectedOutbound, setSelectedOutbound] = useState<Flight | null>(null);
     const [selectedReturn, setSelectedReturn] = useState<Flight | null>(null);
+    const [selectedHotel, setSelectedHotel] = useState<Hotel | null>(null);
 
     // Trip details modal
     const [showTripModal, setShowTripModal] = useState(false);
@@ -177,6 +178,7 @@ export default function TravelAgentPage() {
                 if (parsed.bookedHotelId) setBookedHotelId(parsed.bookedHotelId);
                 if (parsed.selectedOutbound) setSelectedOutbound(parsed.selectedOutbound);
                 if (parsed.selectedReturn) setSelectedReturn(parsed.selectedReturn);
+                if (parsed.selectedHotel) setSelectedHotel(parsed.selectedHotel);
             }
         } catch { /* ignore */ }
     }, []);
@@ -210,10 +212,11 @@ export default function TravelAgentPage() {
                 bookedHotelId,
                 selectedOutbound,
                 selectedReturn,
+                selectedHotel,
                 conversationHistory: conversationHistory.current,
             }));
         } catch { /* ignore quota errors */ }
-    }, [messages, results, activeTab, agentSessionId, tripDetails, bookedFlightId, bookedReturnFlightId, bookedHotelId, selectedOutbound, selectedReturn]);
+    }, [messages, results, activeTab, agentSessionId, tripDetails, bookedFlightId, bookedReturnFlightId, bookedHotelId, selectedOutbound, selectedReturn, selectedHotel]);
 
     const addMessage = useCallback((msg: Omit<Message, 'id'>) => {
         const id = `msg-${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -240,6 +243,7 @@ export default function TravelAgentPage() {
         setDateErrors({ departure: false, returnDate: false });
         setSelectedOutbound(null);
         setSelectedReturn(null);
+        setSelectedHotel(null);
         setBookedFlightId(null);
         setBookedReturnFlightId(null);
         setBookedHotelId(null);
@@ -483,6 +487,13 @@ export default function TravelAgentPage() {
         new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(price);
 
     const handleBookHotel = (hotel: Hotel) => {
+        setSelectedHotel(prev => prev?.id === hotel.id ? null : hotel);
+    };
+
+    const handleConfirmHotelBooking = () => {
+        if (!selectedHotel) return;
+        const hotel = selectedHotel;
+
         pushAgentResultSelected({ agentSessionId, resultType: 'hotel', resultId: hotel.id, resultName: hotel.name, price: hotel.pricePerNight, destination: hotel.cityCode });
         trackAgentResultSelected({ agentSessionId, resultType: 'hotel', resultId: hotel.id, resultName: hotel.name, price: hotel.pricePerNight, destination: hotel.cityCode });
         pushAgentBookingHandoff({ agentSessionId, bookingType: 'hotel', destinationCode: hotel.cityCode, targetPage: '/hotel-booking' });
@@ -505,8 +516,8 @@ export default function TravelAgentPage() {
             checkOut: tripDetails.returnDate || fallbackCheckOut.toISOString().split('T')[0],
             guests: String(tripDetails.adults + tripDetails.children),
         });
-        // Mark as booked in the agent tab immediately — visible when user switches back
         setBookedHotelId(hotel.id);
+        setSelectedHotel(null);
         window.open(`/hotel-booking?${params.toString()}`, '_blank');
     };
 
@@ -1024,7 +1035,7 @@ export default function TravelAgentPage() {
                         )}
                         {results.hotels.length > 0 && (
                             <>
-                                {(results.hotels[0] as any)?.agent_commentary && (
+                                {!bookedHotelId && (results.hotels[0] as any)?.agent_commentary && (
                                     <Box sx={{ display: 'flex', gap: 1, p: 1.25, mb: 1.5, borderRadius: 2, bgcolor: '#FAF0FF', border: '1px solid #E1BEE7' }}>
                                         <AutoAwesomeIcon sx={{ fontSize: 14, color: '#6A1B9A', mt: 0.1, flexShrink: 0 }} />
                                         <Typography variant="caption" sx={{ color: '#4A148C' }}>{(results.hotels[0] as any).agent_commentary}</Typography>
@@ -1034,10 +1045,109 @@ export default function TravelAgentPage() {
                                     🏨 Hotels
                                 </Typography>
                                 {results.hotels.map(h => (
-                                    <HotelResultCard key={h.id} hotel={h} agentSessionId={agentSessionId} onBook={handleBookHotel} />
+                                    <HotelResultCard key={h.id} hotel={h} agentSessionId={agentSessionId} onBook={handleBookHotel}
+                                        isSelected={selectedHotel?.id === h.id}
+                                        isBooked={bookedHotelId === h.id}
+                                        isOtherSelected={!!selectedHotel && selectedHotel.id !== h.id}
+                                        isOtherBooked={!!bookedHotelId && bookedHotelId !== h.id} />
                                 ))}
                             </>
                         )}
+
+                        {/* ── Bottom hotel booking panel ── */}
+                        {results.hotels.length > 0 && (() => {
+                            const nights = tripDetails.departureDate && tripDetails.returnDate
+                                ? Math.max(1, Math.round((new Date(tripDetails.returnDate).getTime() - new Date(tripDetails.departureDate).getTime()) / 86400000))
+                                : null;
+                            const guests = tripDetails.adults + tripDetails.children;
+                            const totalPrice = selectedHotel && nights ? selectedHotel.pricePerNight * nights * guests : null;
+
+                            if (bookedHotelId) {
+                                return (
+                                    <Box sx={{ position: 'sticky', bottom: -16, mx: -2, mt: 2, p: 2, bgcolor: '#EDE7F6', borderTop: '2px solid #CE93D8', boxShadow: '0 -4px 20px rgba(0,0,0,0.1)' }}>
+                                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                                <Typography sx={{ fontSize: 20 }}>✅</Typography>
+                                                <Box>
+                                                    <Typography variant="caption" fontWeight={700} color="#4A148C" display="block">Hotel booked!</Typography>
+                                                    <Typography variant="caption" color="#6A1B9A">Ready to view your itinerary?</Typography>
+                                                </Box>
+                                            </Box>
+                                            <Button size="small" variant="contained" onClick={() => setActiveTab(5)}
+                                                sx={{ bgcolor: '#6A1B9A', '&:hover': { bgcolor: '#4A148C' }, textTransform: 'none', fontSize: '0.72rem', borderRadius: 2, whiteSpace: 'nowrap' }}>
+                                                View Itinerary →
+                                            </Button>
+                                        </Box>
+                                    </Box>
+                                );
+                            }
+
+                            return (
+                                <Box sx={{
+                                    position: 'sticky', bottom: -16, mx: -2, mt: 2, p: 2,
+                                    bgcolor: 'background.paper',
+                                    borderTop: '2px solid',
+                                    borderColor: selectedHotel ? '#6A1B9A' : 'divider',
+                                    boxShadow: '0 -4px 20px rgba(0,0,0,0.1)',
+                                }}>
+                                    <Typography variant="caption" fontWeight={700} color="text.secondary" sx={{ textTransform: 'uppercase', letterSpacing: 0.5, fontSize: '0.62rem', display: 'block', mb: 1.25 }}>
+                                        Your Selection
+                                    </Typography>
+
+                                    {selectedHotel ? (
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, p: 1, borderRadius: 1.5, bgcolor: '#EDE7F6', border: '1px solid #CE93D8' }}>
+                                            <HotelIcon sx={{ fontSize: 14, color: '#6A1B9A', flexShrink: 0 }} />
+                                            <Box sx={{ flex: 1, minWidth: 0 }}>
+                                                <Typography variant="caption" fontWeight={700} color="#4A148C" noWrap>
+                                                    {selectedHotel.name}
+                                                </Typography>
+                                                <Typography variant="caption" color="text.secondary" display="block" sx={{ fontSize: '0.62rem' }}>
+                                                    {selectedHotel.neighbourhood} · {selectedHotel.category}
+                                                    {nights ? ` · ${nights} night${nights !== 1 ? 's' : ''}` : ''}
+                                                </Typography>
+                                            </Box>
+                                            <Typography variant="caption" fontWeight={700} color="#4A148C" sx={{ flexShrink: 0 }}>
+                                                {formatPrice(selectedHotel.pricePerNight)}/night
+                                            </Typography>
+                                            <IconButton size="small" onClick={() => setSelectedHotel(null)} sx={{ p: 0.25, flexShrink: 0 }}>
+                                                <CloseIcon sx={{ fontSize: 13 }} />
+                                            </IconButton>
+                                        </Box>
+                                    ) : (
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, p: 1, borderRadius: 1.5, border: '1.5px dashed', borderColor: 'divider' }}>
+                                            <HotelIcon sx={{ fontSize: 14, color: 'text.disabled' }} />
+                                            <Typography variant="caption" color="text.disabled">Select a hotel above</Typography>
+                                        </Box>
+                                    )}
+
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 1.25 }}>
+                                        {totalPrice ? (
+                                            <Box>
+                                                <Typography variant="caption" color="text.secondary" display="block" sx={{ fontSize: '0.62rem' }}>Total</Typography>
+                                                <Typography variant="subtitle2" fontWeight={800} color="#4A148C">
+                                                    {formatPrice(totalPrice)}
+                                                </Typography>
+                                                <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.6rem' }}>
+                                                    {nights} night{nights !== 1 ? 's' : ''} · {guests} guest{guests !== 1 ? 's' : ''}
+                                                </Typography>
+                                            </Box>
+                                        ) : (
+                                            <Typography variant="caption" color="text.disabled" sx={{ fontSize: '0.72rem' }}>
+                                                Select a hotel to see total
+                                            </Typography>
+                                        )}
+                                        <Button
+                                            variant="contained"
+                                            disabled={!selectedHotel}
+                                            onClick={handleConfirmHotelBooking}
+                                            sx={{ borderRadius: 2, textTransform: 'none', fontWeight: 700, px: 3, bgcolor: '#6A1B9A', '&:hover': { bgcolor: '#4A148C' } }}
+                                        >
+                                            Book Now →
+                                        </Button>
+                                    </Box>
+                                </Box>
+                            );
+                        })()}
                     </>
                 )}
 
