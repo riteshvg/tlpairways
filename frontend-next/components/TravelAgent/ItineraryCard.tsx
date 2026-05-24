@@ -1,7 +1,9 @@
+import { useMemo } from 'react';
 import { Box, Card, CardContent, Typography, Chip, Stepper, Step, StepLabel, StepContent } from '@mui/material';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import type { CreateItineraryResult } from '../../lib/agents/tools';
+import { resolveItineraryImages } from '../../lib/itineraryImages';
 
 interface Props {
     itinerary: CreateItineraryResult;
@@ -31,6 +33,11 @@ const PURPOSE_LABELS: Record<string, string> = {
 };
 
 export default function ItineraryCard({ itinerary }: Props) {
+    const dayImages = useMemo(
+        () => resolveItineraryImages(itinerary.itinerary, itinerary.destination),
+        [itinerary],
+    );
+
     return (
         <Card elevation={0} sx={{ border: '1px solid', borderColor: '#2E7D32', borderRadius: 2, mb: 2 }}>
             <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
@@ -58,6 +65,20 @@ export default function ItineraryCard({ itinerary }: Props) {
                                 Day {day.day} — {day.title}
                             </StepLabel>
                             <StepContent sx={{ borderLeft: '2px solid #A5D6A7', ml: 1.5 }}>
+                                {dayImages[day.day] && (
+                                    <Box sx={{ mb: 1.25, borderRadius: 1.5, overflow: 'hidden', height: 110 }}>
+                                        <Box
+                                            component="img"
+                                            src={dayImages[day.day]}
+                                            alt={day.image_query ?? day.title}
+                                            sx={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                                            onError={(e: any) => {
+                                                const parent = e.target?.parentElement;
+                                                if (parent) parent.style.display = 'none';
+                                            }}
+                                        />
+                                    </Box>
+                                )}
                                 <Box sx={{ pb: 1 }}>
                                     {day.activities.map((act, i) => (
                                         <Box key={i} sx={{ display: 'flex', gap: 1, mb: 0.75 }}>

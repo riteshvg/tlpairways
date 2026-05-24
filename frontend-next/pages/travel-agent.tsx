@@ -4,7 +4,7 @@ import {
     Box, Typography, TextField, IconButton, Button, Paper, Tabs, Tab,
     CircularProgress, Chip, Divider, useTheme, useMediaQuery,
     Dialog, DialogTitle, DialogContent, DialogActions, Avatar,
-    Grid
+    Grid, FormControl, InputLabel, Select, MenuItem, ToggleButton, ToggleButtonGroup
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import FlightIcon from '@mui/icons-material/Flight';
@@ -21,6 +21,9 @@ import ChildCareIcon from '@mui/icons-material/ChildCare';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
+import FlightLandIcon from '@mui/icons-material/FlightLand';
+import CloseIcon from '@mui/icons-material/Close';
 import { useUser } from '@auth0/nextjs-auth0/client';
 
 import AgentMessage, { AgentId } from '../components/TravelAgent/AgentMessage';
@@ -29,6 +32,7 @@ import HotelResultCard from '../components/TravelAgent/HotelResultCard';
 import DestinationCard from '../components/TravelAgent/DestinationCard';
 import ItineraryCard from '../components/TravelAgent/ItineraryCard';
 import WeatherCard from '../components/TravelAgent/WeatherCard';
+import SummaryCard from '../components/TravelAgent/SummaryCard';
 import AepEventsPanel from '../components/TravelAgent/AepEventsPanel';
 import { useAnalytics } from '../lib/analytics/useAnalytics';
 import {
@@ -41,7 +45,7 @@ import {
     pushAgentResultSelected,
     pushAgentBookingHandoff,
 } from '../lib/analytics/dataLayer';
-import type { Flight, Hotel, DestinationInfo, CreateItineraryResult, WeatherForecast } from '../lib/agents/tools';
+import type { Flight, Hotel, DestinationInfo, CreateItineraryResult, WeatherForecast, TripSummary } from '../lib/agents/tools';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 
 // ─── Types ─────────────────────────────────────────────────────────────────
@@ -89,6 +93,7 @@ interface Results {
     destination: DestinationInfo | null;
     itinerary: CreateItineraryResult | null;
     weather: WeatherForecast | null;
+    summary: TripSummary | null;
 }
 
 // ─── Suggested prompts ─────────────────────────────────────────────────────
@@ -124,14 +129,17 @@ export default function TravelAgentPage() {
     const [messages, setMessages] = useState<Message[]>([makeWelcomeMessage()]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [results, setResults] = useState<Results>({ outboundFlights: [], returnFlights: [], hotels: [], destination: null, itinerary: null, weather: null });
+    const [results, setResults] = useState<Results>({ outboundFlights: [], returnFlights: [], hotels: [], destination: null, itinerary: null, weather: null, summary: null });
     const [activeTab, setActiveTab] = useState(0);
     const [agentSessionId, setAgentSessionId] = useState('');
     const [pipeline, setPipeline] = useState<PipelineState>({});
     const [isSummarising, setIsSummarising] = useState(false);
     const [tokenUsage, setTokenUsage] = useState<{ input: number; output: number } | null>(null);
     const [bookedFlightId, setBookedFlightId] = useState<string | null>(null);
+    const [bookedReturnFlightId, setBookedReturnFlightId] = useState<string | null>(null);
     const [bookedHotelId, setBookedHotelId] = useState<string | null>(null);
+    const [selectedOutbound, setSelectedOutbound] = useState<Flight | null>(null);
+    const [selectedReturn, setSelectedReturn] = useState<Flight | null>(null);
 
     // Trip details modal
     const [showTripModal, setShowTripModal] = useState(false);
@@ -143,6 +151,9 @@ export default function TravelAgentPage() {
         childAges: [] as number[],
         departureDate: '',
         returnDate: '',
+        tripType: 'roundtrip' as 'oneway' | 'roundtrip',
+        cabinClass: 'Economy',
+        travelPurpose: 'leisure',
     });
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -162,7 +173,10 @@ export default function TravelAgentPage() {
                 if (parsed.conversationHistory) conversationHistory.current = parsed.conversationHistory;
                 if (parsed.tripDetails) setTripDetails(parsed.tripDetails);
                 if (parsed.bookedFlightId) setBookedFlightId(parsed.bookedFlightId);
+                if (parsed.bookedReturnFlightId) setBookedReturnFlightId(parsed.bookedReturnFlightId);
                 if (parsed.bookedHotelId) setBookedHotelId(parsed.bookedHotelId);
+                if (parsed.selectedOutbound) setSelectedOutbound(parsed.selectedOutbound);
+                if (parsed.selectedReturn) setSelectedReturn(parsed.selectedReturn);
             }
         } catch { /* ignore */ }
     }, []);
@@ -192,11 +206,14 @@ export default function TravelAgentPage() {
                 agentSessionId,
                 tripDetails,
                 bookedFlightId,
+                bookedReturnFlightId,
                 bookedHotelId,
+                selectedOutbound,
+                selectedReturn,
                 conversationHistory: conversationHistory.current,
             }));
         } catch { /* ignore quota errors */ }
-    }, [messages, results, activeTab, agentSessionId, tripDetails, bookedFlightId, bookedHotelId]);
+    }, [messages, results, activeTab, agentSessionId, tripDetails, bookedFlightId, bookedReturnFlightId, bookedHotelId, selectedOutbound, selectedReturn]);
 
     const addMessage = useCallback((msg: Omit<Message, 'id'>) => {
         const id = `msg-${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -212,15 +229,20 @@ export default function TravelAgentPage() {
         localStorage.removeItem(STORAGE_KEY);
         conversationHistory.current = [];
         setMessages([makeWelcomeMessage(user?.name ?? undefined)]);
-        setResults({ outboundFlights: [], returnFlights: [], hotels: [], destination: null, itinerary: null, weather: null });
+        setResults({ outboundFlights: [], returnFlights: [], hotels: [], destination: null, itinerary: null, weather: null, summary: null });
         setActiveTab(0);
         setAgentSessionId('');
         setInput('');
         setPipeline({});
         setIsSummarising(false);
         setTokenUsage(null);
-        setTripDetails({ adults: 1, children: 0, childAges: [], departureDate: '', returnDate: '' });
+        setTripDetails({ adults: 1, children: 0, childAges: [], departureDate: '', returnDate: '', tripType: 'roundtrip', cabinClass: 'Economy', travelPurpose: 'leisure' });
         setDateErrors({ departure: false, returnDate: false });
+        setSelectedOutbound(null);
+        setSelectedReturn(null);
+        setBookedFlightId(null);
+        setBookedReturnFlightId(null);
+        setBookedHotelId(null);
     };
 
     const handleSend = (promptText?: string) => {
@@ -234,7 +256,7 @@ export default function TravelAgentPage() {
     const handleTripConfirm = async () => {
         const errors = {
             departure: !tripDetails.departureDate,
-            returnDate: !tripDetails.returnDate,
+            returnDate: tripDetails.tripType === 'roundtrip' && !tripDetails.returnDate,
         };
         if (errors.departure || errors.returnDate) {
             setDateErrors(errors);
@@ -257,9 +279,12 @@ export default function TravelAgentPage() {
         if (details.children > 0 && details.childAges.length > 0) {
             parts.push(`- Children's ages: ${details.childAges.join(', ')} years`);
         }
+        parts.push(`- Trip type: ${details.tripType === 'roundtrip' ? 'Round trip' : 'One way'}`);
+        parts.push(`- Cabin class: ${details.cabinClass}`);
+        parts.push(`- Travel purpose: ${details.travelPurpose}`);
         if (details.departureDate) parts.push(`- Departure: ${details.departureDate}`);
-        if (details.returnDate) parts.push(`- Return: ${details.returnDate}`);
-        if (details.departureDate && details.returnDate) {
+        if (details.returnDate && details.tripType === 'roundtrip') parts.push(`- Return: ${details.returnDate}`);
+        if (details.departureDate && details.returnDate && details.tripType === 'roundtrip') {
             const dep = new Date(details.departureDate);
             const ret = new Date(details.returnDate);
             const nights = Math.round((ret.getTime() - dep.getTime()) / (1000 * 60 * 60 * 24));
@@ -298,7 +323,7 @@ export default function TravelAgentPage() {
         setPipeline({});
         setIsSummarising(false);
         setTokenUsage(null);
-        const newResults: Results = { outboundFlights: [], returnFlights: [], hotels: [], destination: null, itinerary: null, weather: null };
+        const newResults: Results = { outboundFlights: [], returnFlights: [], hotels: [], destination: null, itinerary: null, weather: null, summary: null };
 
         try {
             const response = await fetch('/api/travel-agent', {
@@ -372,6 +397,8 @@ export default function TravelAgentPage() {
                                 newResults.itinerary = event.data;
                             } else if (event.toolName === 'get_weather') {
                                 newResults.weather = event.data;
+                            } else if (event.toolName === 'summarize_trip') {
+                                newResults.summary = event.data;
                             }
                             setResults({ ...newResults });
                         }
@@ -407,45 +434,53 @@ export default function TravelAgentPage() {
         }
     };
 
-    const handleBookFlight = (flight: Flight, label: string) => {
+    const navigateToBooking = (outbound: Flight, returnFlight: Flight | null) => {
         const fallbackDate = new Date();
         fallbackDate.setDate(fallbackDate.getDate() + 14);
         const departDate = tripDetails.departureDate || fallbackDate.toISOString().split('T')[0];
         const totalPassengers = tripDetails.adults + tripDetails.children;
-        const tripType = tripDetails.returnDate ? 'roundtrip' : 'oneway';
 
-        pushAgentResultSelected({ agentSessionId, resultType: 'flight', resultId: flight.id, resultName: flight.flightNumber, price: flight.price, destination: flight.destination });
-        trackAgentResultSelected({ agentSessionId, resultType: 'flight', resultId: flight.id, resultName: flight.flightNumber, price: flight.price, destination: flight.destination });
-        pushAgentBookingHandoff({ agentSessionId, bookingType: 'flight', destinationCode: flight.destination, targetPage: '/results' });
-        trackAgentBookingHandoff({ agentSessionId, bookingType: 'flight', destinationCode: flight.destination, targetPage: '/results' });
+        pushAgentResultSelected({ agentSessionId, resultType: 'flight', resultId: outbound.id, resultName: outbound.flightNumber, price: outbound.price, destination: outbound.destination });
+        trackAgentResultSelected({ agentSessionId, resultType: 'flight', resultId: outbound.id, resultName: outbound.flightNumber, price: outbound.price, destination: outbound.destination });
+        pushAgentBookingHandoff({ agentSessionId, bookingType: 'flight', destinationCode: outbound.destination, targetPage: '/traveller-details' });
+        trackAgentBookingHandoff({ agentSessionId, bookingType: 'flight', destinationCode: outbound.destination, targetPage: '/traveller-details' });
 
         const params = new URLSearchParams({
-            originCode: flight.origin,
-            destinationCode: flight.destination,
+            originCode: outbound.origin,
+            destinationCode: outbound.destination,
             date: departDate,
             adults: String(tripDetails.adults),
             children: String(tripDetails.children),
             infants: '0',
             passengers: String(totalPassengers),
-            tripType,
-            cabinClass: 'Economy',
-            onwardFlightId: flight.id,
-            ...(tripDetails.returnDate && { returnDate: tripDetails.returnDate }),
+            tripType: tripDetails.tripType,
+            cabinClass: tripDetails.cabinClass,
+            onwardFlightId: outbound.id,
+            ...(returnFlight && { returnFlightId: returnFlight.id }),
+            ...(tripDetails.returnDate && tripDetails.tripType === 'roundtrip' && { returnDate: tripDetails.returnDate }),
         });
-        try {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify({
-                messages: messages.filter(m => !m.isLoading),
-                results,
-                activeTab,
-                agentSessionId,
-                tripDetails,
-                bookedFlightId: flight.id,
-                bookedHotelId,
-                conversationHistory: conversationHistory.current,
-            }));
-        } catch { /* ignore */ }
-        window.location.href = `/traveller-details?${params.toString()}`;
+        // Mark as booked in the agent tab immediately — visible when user switches back
+        setBookedFlightId(outbound.id);
+        setBookedReturnFlightId(returnFlight?.id ?? null);
+        setSelectedOutbound(null);
+        setSelectedReturn(null);
+        window.open(`/traveller-details?${params.toString()}`, '_blank');
     };
+
+    const handleBookFlight = (flight: Flight, label: string) => {
+        if (label === 'Outbound') {
+            setSelectedOutbound(prev => prev?.id === flight.id ? null : flight);
+        } else {
+            setSelectedReturn(prev => prev?.id === flight.id ? null : flight);
+        }
+    };
+
+    const handleConfirmBooking = () => {
+        if (selectedOutbound) navigateToBooking(selectedOutbound, selectedReturn);
+    };
+
+    const formatPrice = (price: number) =>
+        new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(price);
 
     const handleBookHotel = (hotel: Hotel) => {
         pushAgentResultSelected({ agentSessionId, resultType: 'hotel', resultId: hotel.id, resultName: hotel.name, price: hotel.pricePerNight, destination: hotel.cityCode });
@@ -470,22 +505,12 @@ export default function TravelAgentPage() {
             checkOut: tripDetails.returnDate || fallbackCheckOut.toISOString().split('T')[0],
             guests: String(tripDetails.adults + tripDetails.children),
         });
-        try {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify({
-                messages: messages.filter(m => !m.isLoading),
-                results,
-                activeTab,
-                agentSessionId,
-                tripDetails,
-                bookedFlightId,
-                bookedHotelId: hotel.id,
-                conversationHistory: conversationHistory.current,
-            }));
-        } catch { /* ignore */ }
-        window.location.href = `/hotel-booking?${params.toString()}`;
+        // Mark as booked in the agent tab immediately — visible when user switches back
+        setBookedHotelId(hotel.id);
+        window.open(`/hotel-booking?${params.toString()}`, '_blank');
     };
 
-    // Tab 0: Flights+Hotels  Tab 1: Itinerary  Tab 2: Weather  Tab 3: Recommendations  Tab 4: Budget
+    // Tab 0: Flights  Tab 1: Hotels  Tab 2: Weather  Tab 3: Recommendations  Tab 4: Budget  Tab 5: Itinerary  Tab 6: Summary
     const tabHasData = (tab: number) => {
         if (tab === 0) return results.outboundFlights.length > 0 || results.returnFlights.length > 0;
         if (tab === 1) return results.hotels.length > 0;
@@ -493,6 +518,7 @@ export default function TravelAgentPage() {
         if (tab === 3) return !!results.destination;
         if (tab === 4) return !!(results.destination?.averageDailyBudget || results.itinerary?.budget_estimate);
         if (tab === 5) return !!results.itinerary;
+        if (tab === 6) return !!results.summary;
         return false;
     };
 
@@ -505,6 +531,7 @@ export default function TravelAgentPage() {
         'itinerary-agent':   results.itinerary ? `${results.itinerary.duration_days}d itinerary` : '',
         'profile-agent':     'Gold tier',
         'weather-agent':     results.weather ? `${results.weather.avg_high}°C · ${results.weather.season?.split(/[\s/]+/).slice(0, 2).join(' ')}` : '',
+        'summary-agent':     results.summary ? `${results.summary.readiness_score ?? 85}/100` : '',
     };
 
     const PIPELINE_AGENTS: { id: string; label: string; shortLabel: string; color: string; icon: React.ReactNode }[] = [
@@ -514,6 +541,7 @@ export default function TravelAgentPage() {
         { id: 'destination-agent',  label: 'Destination', shortLabel: 'Dest.',       color: '#BF360C', icon: <ExploreIcon sx={{ fontSize: 13 }} /> },
         { id: 'weather-agent',      label: 'Weather',     shortLabel: 'Weather',     color: '#1565C0', icon: <WbSunnyIcon sx={{ fontSize: 13 }} /> },
         { id: 'itinerary-agent',    label: 'Itinerary',   shortLabel: 'Itinerary',   color: '#2E7D32', icon: <CalendarMonthIcon sx={{ fontSize: 13 }} /> },
+        { id: 'summary-agent',      label: 'Summary',     shortLabel: 'Summary',     color: '#AD1457', icon: <AutoAwesomeIcon sx={{ fontSize: 13 }} /> },
     ];
 
     const showPipeline = isLoading || Object.keys(pipeline).length > 0;
@@ -815,6 +843,9 @@ export default function TravelAgentPage() {
                     label={`Budget${tabHasData(4) ? ' ✓' : ''}`} />
                 <Tab icon={<CalendarMonthIcon sx={{ fontSize: 16 }} />} iconPosition="start"
                     label={`Itinerary${results.itinerary ? ' ✓' : ''}`} />
+                <Tab icon={<AutoAwesomeIcon sx={{ fontSize: 16 }} />} iconPosition="start"
+                    label={`Summary${results.summary ? ' ✓' : ''}`}
+                    sx={{ color: results.summary ? '#AD1457' : undefined, '&.Mui-selected': { color: '#AD1457' } }} />
             </Tabs>
 
             {/* Tab content */}
@@ -828,23 +859,6 @@ export default function TravelAgentPage() {
                         )}
                         {results.outboundFlights.length > 0 && (
                             <>
-                                {/* Next-step nudge after booking */}
-                                {bookedFlightId && (
-                                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 1.5, mb: 1.5, borderRadius: 2, bgcolor: '#E8F5E9', border: '1px solid #A5D6A7' }}>
-                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                            <Typography sx={{ fontSize: 18 }}>✅</Typography>
-                                            <Box>
-                                                <Typography variant="caption" fontWeight={700} color="#1B5E20" display="block">Flight booked!</Typography>
-                                                <Typography variant="caption" color="#2E7D32">Ready to pick your hotel?</Typography>
-                                            </Box>
-                                        </Box>
-                                        <Button size="small" variant="contained"
-                                            onClick={() => setActiveTab(1)}
-                                            sx={{ bgcolor: '#2E7D32', '&:hover': { bgcolor: '#1B5E20' }, textTransform: 'none', fontSize: '0.72rem', borderRadius: 2, whiteSpace: 'nowrap' }}>
-                                            View Hotels →
-                                        </Button>
-                                    </Box>
-                                )}
                                 {!bookedFlightId && (results.outboundFlights[0] as any)?.agent_commentary && (
                                     <Box sx={{ display: 'flex', gap: 1, p: 1.25, mb: 1.5, borderRadius: 2, bgcolor: '#F0F7FF', border: '1px solid #BBDEFB' }}>
                                         <AutoAwesomeIcon sx={{ fontSize: 14, color: '#1565C0', mt: 0.1, flexShrink: 0 }} />
@@ -856,7 +870,8 @@ export default function TravelAgentPage() {
                                 </Typography>
                                 {results.outboundFlights.map(f => (
                                     <FlightResultCard key={f.id} flight={f} label="Outbound" agentSessionId={agentSessionId} onBook={handleBookFlight}
-                                        isBooked={bookedFlightId === f.id} isOtherBooked={!!bookedFlightId && bookedFlightId !== f.id} />
+                                        isBooked={bookedFlightId === f.id} isOtherBooked={!!bookedFlightId && bookedFlightId !== f.id}
+                                        isSelected={selectedOutbound?.id === f.id} isOtherSelected={!!selectedOutbound && selectedOutbound.id !== f.id} />
                                 ))}
                             </>
                         )}
@@ -868,10 +883,136 @@ export default function TravelAgentPage() {
                                 </Typography>
                                 {results.returnFlights.map(f => (
                                     <FlightResultCard key={f.id} flight={f} label="Return" agentSessionId={agentSessionId} onBook={handleBookFlight}
-                                        isBooked={bookedFlightId === f.id} isOtherBooked={!!bookedFlightId && bookedFlightId !== f.id} />
+                                        isBooked={bookedReturnFlightId === f.id} isOtherBooked={!!bookedReturnFlightId && bookedReturnFlightId !== f.id}
+                                        isSelected={selectedReturn?.id === f.id} isOtherSelected={!!selectedReturn && selectedReturn.id !== f.id} />
                                 ))}
                             </>
                         )}
+
+                        {/* ── Bottom booking panel ── */}
+                        {(results.outboundFlights.length > 0 || results.returnFlights.length > 0) && (() => {
+                            const hasReturn = results.returnFlights.length > 0 && tripDetails.tripType === 'roundtrip';
+                            const isComplete = !!selectedOutbound && (!hasReturn || !!selectedReturn);
+                            const totalPrice = ((selectedOutbound?.price ?? 0) + (selectedReturn?.price ?? 0)) * (tripDetails.adults + tripDetails.children);
+
+                            if (bookedFlightId && (results.returnFlights.length === 0 || bookedReturnFlightId)) {
+                                // Post-booking confirmation state
+                                return (
+                                    <Box sx={{ position: 'sticky', bottom: -16, mx: -2, mt: 2, p: 2, bgcolor: '#E8F5E9', borderTop: '2px solid #A5D6A7', boxShadow: '0 -4px 20px rgba(0,0,0,0.1)' }}>
+                                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                                <Typography sx={{ fontSize: 20 }}>✅</Typography>
+                                                <Box>
+                                                    <Typography variant="caption" fontWeight={700} color="#1B5E20" display="block">Flight booked!</Typography>
+                                                    <Typography variant="caption" color="#2E7D32">Ready to pick your hotel?</Typography>
+                                                </Box>
+                                            </Box>
+                                            <Button size="small" variant="contained" onClick={() => setActiveTab(1)}
+                                                sx={{ bgcolor: '#2E7D32', '&:hover': { bgcolor: '#1B5E20' }, textTransform: 'none', fontSize: '0.72rem', borderRadius: 2, whiteSpace: 'nowrap' }}>
+                                                View Hotels →
+                                            </Button>
+                                        </Box>
+                                    </Box>
+                                );
+                            }
+
+                            return (
+                                <Box sx={{
+                                    position: 'sticky', bottom: -16, mx: -2, mt: 2, p: 2,
+                                    bgcolor: 'background.paper',
+                                    borderTop: '2px solid',
+                                    borderColor: isComplete ? '#43A047' : 'divider',
+                                    boxShadow: '0 -4px 20px rgba(0,0,0,0.1)',
+                                }}>
+                                    <Typography variant="caption" fontWeight={700} color="text.secondary" sx={{ textTransform: 'uppercase', letterSpacing: 0.5, fontSize: '0.62rem', display: 'block', mb: 1.25 }}>
+                                        Your Selection
+                                    </Typography>
+
+                                    {/* Outbound slot */}
+                                    {selectedOutbound ? (
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.75, p: 1, borderRadius: 1.5, bgcolor: '#E0F2F1', border: '1px solid #80CBC4' }}>
+                                            <FlightTakeoffIcon sx={{ fontSize: 14, color: '#00695C', flexShrink: 0 }} />
+                                            <Box sx={{ flex: 1, minWidth: 0 }}>
+                                                <Typography variant="caption" fontWeight={700} color="#00695C" noWrap>
+                                                    {selectedOutbound.flightNumber} · {selectedOutbound.origin}→{selectedOutbound.destination}
+                                                </Typography>
+                                                <Typography variant="caption" color="text.secondary" display="block" sx={{ fontSize: '0.62rem' }}>
+                                                    {selectedOutbound.departureTime}–{selectedOutbound.arrivalTime} · {selectedOutbound.duration}
+                                                </Typography>
+                                            </Box>
+                                            <Typography variant="caption" fontWeight={700} color="#00695C" sx={{ flexShrink: 0 }}>
+                                                {formatPrice(selectedOutbound.price)}
+                                            </Typography>
+                                            <IconButton size="small" onClick={() => setSelectedOutbound(null)} sx={{ p: 0.25, flexShrink: 0 }}>
+                                                <CloseIcon sx={{ fontSize: 13 }} />
+                                            </IconButton>
+                                        </Box>
+                                    ) : (
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.75, p: 1, borderRadius: 1.5, border: '1.5px dashed', borderColor: 'divider' }}>
+                                            <FlightTakeoffIcon sx={{ fontSize: 14, color: 'text.disabled' }} />
+                                            <Typography variant="caption" color="text.disabled">Select an outbound flight above</Typography>
+                                        </Box>
+                                    )}
+
+                                    {/* Return slot */}
+                                    {hasReturn && (
+                                        selectedReturn ? (
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.75, p: 1, borderRadius: 1.5, bgcolor: '#E8F5E9', border: '1px solid #A5D6A7' }}>
+                                                <FlightLandIcon sx={{ fontSize: 14, color: '#2E7D32', flexShrink: 0 }} />
+                                                <Box sx={{ flex: 1, minWidth: 0 }}>
+                                                    <Typography variant="caption" fontWeight={700} color="#2E7D32" noWrap>
+                                                        {selectedReturn.flightNumber} · {selectedReturn.origin}→{selectedReturn.destination}
+                                                    </Typography>
+                                                    <Typography variant="caption" color="text.secondary" display="block" sx={{ fontSize: '0.62rem' }}>
+                                                        {selectedReturn.departureTime}–{selectedReturn.arrivalTime} · {selectedReturn.duration}
+                                                    </Typography>
+                                                </Box>
+                                                <Typography variant="caption" fontWeight={700} color="#2E7D32" sx={{ flexShrink: 0 }}>
+                                                    {formatPrice(selectedReturn.price)}
+                                                </Typography>
+                                                <IconButton size="small" onClick={() => setSelectedReturn(null)} sx={{ p: 0.25, flexShrink: 0 }}>
+                                                    <CloseIcon sx={{ fontSize: 13 }} />
+                                                </IconButton>
+                                            </Box>
+                                        ) : (
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.75, p: 1, borderRadius: 1.5, border: '1.5px dashed', borderColor: 'divider' }}>
+                                                <FlightLandIcon sx={{ fontSize: 14, color: 'text.disabled' }} />
+                                                <Typography variant="caption" color="text.disabled">Select a return flight above</Typography>
+                                            </Box>
+                                        )
+                                    )}
+
+                                    {/* Total + Book Now */}
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 1.25 }}>
+                                        {(selectedOutbound || selectedReturn) ? (
+                                            <Box>
+                                                <Typography variant="caption" color="text.secondary" display="block" sx={{ fontSize: '0.62rem' }}>Total</Typography>
+                                                <Typography variant="subtitle2" fontWeight={800} color={isComplete ? '#2E7D32' : 'text.primary'}>
+                                                    {formatPrice(totalPrice)}
+                                                </Typography>
+                                                {tripDetails.adults + tripDetails.children > 1 && (
+                                                    <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.6rem' }}>
+                                                        for {tripDetails.adults + tripDetails.children} travellers
+                                                    </Typography>
+                                                )}
+                                            </Box>
+                                        ) : (
+                                            <Typography variant="caption" color="text.disabled" sx={{ fontSize: '0.72rem' }}>
+                                                Select a flight to see total
+                                            </Typography>
+                                        )}
+                                        <Button
+                                            variant="contained"
+                                            disabled={!isComplete}
+                                            onClick={handleConfirmBooking}
+                                            sx={{ borderRadius: 2, textTransform: 'none', fontWeight: 700, px: 3, bgcolor: '#2E7D32', '&:hover': { bgcolor: '#1B5E20' } }}
+                                        >
+                                            Book Now →
+                                        </Button>
+                                    </Box>
+                                </Box>
+                            );
+                        })()}
                     </>
                 )}
 
@@ -1035,6 +1176,16 @@ export default function TravelAgentPage() {
                         {results.itinerary && <ItineraryCard itinerary={results.itinerary} />}
                     </>
                 )}
+
+                {/* Tab 6: Summary */}
+                {activeTab === 6 && (
+                    <>
+                        {!results.summary && (
+                            <EmptyState icon="✨" message="Your personalised trip brief will appear here once the Summary Agent synthesises all findings." />
+                        )}
+                        {results.summary && <SummaryCard summary={results.summary} />}
+                    </>
+                )}
             </Box>
 
             {/* AEP Events panel */}
@@ -1182,11 +1333,28 @@ export default function TravelAgentPage() {
                         </Box>
                     )}
 
+                    {/* Trip type toggle */}
+                    <Box sx={{ mb: 2.5 }}>
+                        <Typography variant="caption" fontWeight={700} color="text.secondary" sx={{ textTransform: 'uppercase', letterSpacing: 0.5, fontSize: '0.65rem', display: 'block', mb: 1 }}>
+                            Trip Type
+                        </Typography>
+                        <ToggleButtonGroup
+                            value={tripDetails.tripType}
+                            exclusive
+                            onChange={(_, v) => { if (v) setTripDetails(d => ({ ...d, tripType: v, returnDate: v === 'oneway' ? '' : d.returnDate })); }}
+                            size="small"
+                            fullWidth
+                        >
+                            <ToggleButton value="oneway" sx={{ textTransform: 'none', fontWeight: 600, fontSize: '0.8rem' }}>One Way</ToggleButton>
+                            <ToggleButton value="roundtrip" sx={{ textTransform: 'none', fontWeight: 600, fontSize: '0.8rem' }}>Round Trip</ToggleButton>
+                        </ToggleButtonGroup>
+                    </Box>
+
                     {/* Dates */}
                     <Typography variant="caption" fontWeight={700} color="text.secondary" sx={{ textTransform: 'uppercase', letterSpacing: 0.5, fontSize: '0.65rem', display: 'block', mb: 1 }}>
                         Travel Dates
                     </Typography>
-                    <Box sx={{ display: 'flex', gap: 2 }}>
+                    <Box sx={{ display: 'flex', gap: 2, mb: 2.5 }}>
                         <TextField
                             label="Departure *"
                             type="date"
@@ -1200,29 +1368,63 @@ export default function TravelAgentPage() {
                             InputLabelProps={{ shrink: true }}
                             inputProps={{ min: new Date().toISOString().split('T')[0] }}
                         />
-                        <TextField
-                            label="Return *"
-                            type="date"
-                            size="small"
-                            fullWidth
-                            required
-                            error={dateErrors.returnDate}
-                            helperText={dateErrors.returnDate ? 'Please select a return date' : ''}
-                            value={tripDetails.returnDate}
-                            onChange={e => { setTripDetails(d => ({ ...d, returnDate: e.target.value })); setDateErrors(err => ({ ...err, returnDate: false })); }}
-                            InputLabelProps={{ shrink: true }}
-                            inputProps={{ min: tripDetails.departureDate || new Date().toISOString().split('T')[0] }}
-                        />
+                        {tripDetails.tripType === 'roundtrip' && (
+                            <TextField
+                                label="Return *"
+                                type="date"
+                                size="small"
+                                fullWidth
+                                required
+                                error={dateErrors.returnDate}
+                                helperText={dateErrors.returnDate ? 'Please select a return date' : ''}
+                                value={tripDetails.returnDate}
+                                onChange={e => { setTripDetails(d => ({ ...d, returnDate: e.target.value })); setDateErrors(err => ({ ...err, returnDate: false })); }}
+                                InputLabelProps={{ shrink: true }}
+                                inputProps={{ min: tripDetails.departureDate || new Date().toISOString().split('T')[0] }}
+                            />
+                        )}
+                    </Box>
+
+                    {/* Cabin class + Travel purpose */}
+                    <Box sx={{ display: 'flex', gap: 2, mb: 2.5 }}>
+                        <FormControl size="small" fullWidth>
+                            <InputLabel>Cabin Class</InputLabel>
+                            <Select
+                                value={tripDetails.cabinClass}
+                                label="Cabin Class"
+                                onChange={e => setTripDetails(d => ({ ...d, cabinClass: e.target.value }))}
+                            >
+                                <MenuItem value="Economy">Economy</MenuItem>
+                                <MenuItem value="Premium Economy">Premium Economy</MenuItem>
+                                <MenuItem value="Business">Business</MenuItem>
+                            </Select>
+                        </FormControl>
+                        <FormControl size="small" fullWidth>
+                            <InputLabel>Travel Purpose</InputLabel>
+                            <Select
+                                value={tripDetails.travelPurpose}
+                                label="Travel Purpose"
+                                onChange={e => setTripDetails(d => ({ ...d, travelPurpose: e.target.value }))}
+                            >
+                                <MenuItem value="leisure">Leisure</MenuItem>
+                                <MenuItem value="business">Business</MenuItem>
+                                <MenuItem value="honeymoon">Honeymoon</MenuItem>
+                                <MenuItem value="family">Family</MenuItem>
+                                <MenuItem value="adventure">Adventure</MenuItem>
+                                <MenuItem value="business and leisure">Business + Leisure</MenuItem>
+                            </Select>
+                        </FormControl>
                     </Box>
 
                     {/* Summary pill */}
-                    {(tripDetails.departureDate || tripDetails.adults > 1 || tripDetails.children > 0) && (
-                        <Box sx={{ mt: 2, p: 1.25, borderRadius: 2, bgcolor: '#E3F2FD', border: '1px solid #BBDEFB', display: 'flex', alignItems: 'center', gap: 1 }}>
+                    {tripDetails.departureDate && (
+                        <Box sx={{ p: 1.25, borderRadius: 2, bgcolor: '#E3F2FD', border: '1px solid #BBDEFB', display: 'flex', alignItems: 'center', gap: 1 }}>
                             <DateRangeIcon sx={{ fontSize: 16, color: 'primary.main' }} />
                             <Typography variant="caption" color="primary.main" fontWeight={600}>
                                 {tripDetails.adults + tripDetails.children} traveller{tripDetails.adults + tripDetails.children !== 1 ? 's' : ''}
-                                {tripDetails.departureDate ? ` · ${new Date(tripDetails.departureDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}` : ''}
-                                {tripDetails.returnDate && tripDetails.departureDate ? ` → ${new Date(tripDetails.returnDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}` : ''}
+                                {` · ${tripDetails.cabinClass}`}
+                                {` · ${tripDetails.departureDate ? new Date(tripDetails.departureDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : ''}`}
+                                {tripDetails.tripType === 'roundtrip' && tripDetails.returnDate ? ` → ${new Date(tripDetails.returnDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}` : ''}
                             </Typography>
                         </Box>
                     )}

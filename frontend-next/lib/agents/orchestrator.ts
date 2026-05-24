@@ -29,6 +29,7 @@ import {
     GetWeatherInput,
     WeatherForecast,
     CreateItineraryInput,
+    TripSummary,
 } from './tools';
 
 // ─── Client ─────────────────────────────────────────────────────────────────
@@ -53,6 +54,7 @@ const AGENT_META: Record<string, { displayName: string; agentId: string }> = {
     get_destination_info: { displayName: 'Destination Agent', agentId: 'destination-agent' },
     get_weather:          { displayName: 'Weather Agent',     agentId: 'weather-agent' },
     create_itinerary:     { displayName: 'Itinerary Agent',   agentId: 'itinerary-agent' },
+    summarize_trip:       { displayName: 'Summary Agent',     agentId: 'summary-agent' },
 };
 
 const ALL_TOOLS = new Set(Object.keys(AGENT_META));
@@ -167,31 +169,54 @@ const OPENAI_TOOLS: ChatCompletionTool[] = [
             },
         },
     },
+    {
+        type: 'function',
+        function: {
+            name: 'summarize_trip',
+            description: 'Generate a comprehensive trip summary after all other agents have run — synthesises findings into an executive briefing with highlights, recommendations, and next steps',
+            parameters: {
+                type: 'object',
+                properties: {
+                    destination: { type: 'string', description: 'Destination city name' },
+                    traveler_name: { type: 'string', description: 'Traveller name from profile agent' },
+                    duration_days: { type: 'number', description: 'Trip duration in days' },
+                    travel_purpose: { type: 'string', description: 'Trip purpose (leisure, business, honeymoon, etc.)' },
+                    best_flight: { type: 'string', description: 'Best flight option summary — flight number, price, duration, why it is the top pick' },
+                    best_hotel: { type: 'string', description: 'Best hotel option summary — name, category, price per night, why it suits the traveller' },
+                    weather_summary: { type: 'string', description: 'Weather overview — season, average temperature, key conditions to expect' },
+                    itinerary_highlight: { type: 'string', description: 'Most exciting day or activity from the itinerary' },
+                    budget_estimate: { type: 'string', description: 'Overall budget estimate per person per day' },
+                },
+                required: ['destination', 'traveler_name', 'duration_days', 'travel_purpose'],
+            },
+        },
+    },
 ];
 
 // ─── Orchestrator system prompt ──────────────────────────────────────────────
 
-const SYSTEM_PROMPT = `You are a sophisticated multi-agent travel assistant for TLP Airways. Coordinate six specialist sub-agents to deliver comprehensive, personalised travel plans.
+const SYSTEM_PROMPT = `You are a sophisticated multi-agent travel assistant for TLP Airways. Coordinate seven specialist sub-agents to deliver comprehensive, personalised travel plans.
 
-**STRICT TOOL CALL ORDER — call ALL 6 tools, ONE per response, in this exact sequence:**
+**STRICT TOOL CALL ORDER — call ALL 7 tools, ONE per response, in this exact sequence:**
 1. get_user_profile — FIRST, always. Infer userName from the user's message or use "Guest". Pass the trip context.
 2. search_flights — SECOND. Use profile context for cabin class preference.
 3. search_hotels — THIRD. Pass travelerProfile summary from step 1.
 4. get_destination_info — FOURTH. Pass travelPurpose and travelerProfile.
 5. get_weather — FIFTH. Pass departure/return dates from the user's message.
 6. create_itinerary — SIXTH. Pass the full traveler_profile from step 1 to personalise the plan.
+7. summarize_trip — SEVENTH AND LAST. Synthesise key findings: pass best_flight (top-pick flight number, price, duration), best_hotel (top-pick name, category, price/night), weather_summary (season, temp range), itinerary_highlight (most exciting day or activity), and budget_estimate.
 
 **CRITICAL RULES:**
 - ONE tool call per response — never batch or parallelize
-- Call ALL 6 tools before writing any final text
+- Call ALL 7 tools before writing any final text
 - After each tool result, respond ONLY with the next tool call — no commentary between tools
-- Write your final summary ONLY after create_itinerary has returned
+- Write your final summary ONLY after summarize_trip has returned
 
 **IATA codes:**
 - Origins: Mumbai=BOM, Delhi=DEL, Bangalore=BLR, Chennai=MAA, Hyderabad=HYD, Kolkata=CCU
 - Destinations: Bali=DPS, Singapore=SIN, Dubai=DXB, London=LHR, Sydney=SYD, Bangkok=BKK, Tokyo=NRT, Paris=CDG, New York=JFK, Maldives=MLE, Kuala Lumpur=KUL, Hong Kong=HKG
 
-**Final summary (after all 6 tools):** 3 sentences max. Warm, concierge tone. Mention flight price range, hotel options, and itinerary duration. No tables, no bullet lists, no repeated data — everything is already in the right panel tabs.`;
+**Final summary (after all 7 tools):** 2 sentences max. Warm, concierge tone. The full summary is already in the Summary tab — just close with a personalised sentence inviting them to explore the tabs.`;
 
 // ─── Public types ────────────────────────────────────────────────────────────
 
@@ -290,6 +315,12 @@ export async function runOrchestrator(
                         const r = await runItinerarySubAgent(toolInput as CreateItineraryInput, client);
                         totalInput += r.inputTokens; totalOutput += r.outputTokens;
                         result = r.itinerary;
+                        break;
+                    }
+                    case 'summarize_trip': {
+                        const r = await runSummarySubAgent(toolInput, client);
+                        totalInput += r.inputTokens; totalOutput += r.outputTokens;
+                        result = r.summary;
                         break;
                     }
                     default:
@@ -409,7 +440,15 @@ async function runFlightSubAgent(
     input: SearchFlightsInput & { travelPurpose?: string; travelerProfile?: string },
     client: AzureOpenAI,
 ): Promise<{ data: any; inputTokens: number; outputTokens: number }> {
-    const rawData = searchFlights(input);
+    // Normalise: orchestrator sends camelCase keys (date, returnDate, cabinClass) but
+    // searchFlights expects snake_case (departure_date, return_date, cabin_class)
+    const normalised: SearchFlightsInput = {
+        ...input,
+        departure_date: input.departure_date || (input as any).date,
+        return_date: input.return_date || (input as any).returnDate,
+        cabin_class: input.cabin_class || (input as any).cabinClass,
+    };
+    const rawData = searchFlights(normalised);
 
     const allFlights = [...(rawData.outbound || []), ...(rawData.return_flights || [])];
     const flightSummaries = allFlights.map(f => ({
@@ -601,6 +640,7 @@ FORMAT: Respond ONLY with valid JSON — no markdown, no code fences:
     {
       "day": number,
       "title": "string (evocative day title)",
+      "image_query": "string (2-4 word image search query capturing the day's vibe, e.g. 'Bali temple sunrise', 'Singapore skyline night', 'Ubud rice terraces')",
       "activities": [
         {
           "time": "HH:MM",
@@ -634,6 +674,91 @@ async function runItinerarySubAgent(
         itinerary = { destination: input.destination, duration_days: durationDays, travel_purpose: input.travel_purpose, itinerary: [], packing_tips: [], budget_estimate: 'Contact us for a quote' };
     }
     return { itinerary, inputTokens, outputTokens };
+}
+
+// ─── 7. Summary Sub-Agent ────────────────────────────────────────────────────
+
+const SUMMARY_SYSTEM_PROMPT = `PERSONA: You are a senior travel consultant delivering a final executive briefing after your team of seven specialist agents has completed all research.
+
+TASK: Create a compelling, personalised trip summary that synthesises all findings into a clear, actionable executive overview.
+
+FORMAT: Respond ONLY with valid JSON — no markdown, no code fences:
+{
+  "executive_summary": "string (3-4 sentences: warm, concierge-quality summary of the complete trip plan — what makes it special for this specific traveller)",
+  "destination": "string",
+  "traveler_name": "string",
+  "duration_days": number,
+  "travel_purpose": "string",
+  "trip_highlights": [
+    { "icon": "✈️", "label": "Best Flight", "value": "string (flight number · duration · price)", "detail": "string (why it's the top pick)" },
+    { "icon": "🏨", "label": "Top Hotel", "value": "string (hotel name · category)", "detail": "string (price/night · key amenity)" },
+    { "icon": "🌤️", "label": "Weather", "value": "string (season · temperature range)", "detail": "string (one practical note)" },
+    { "icon": "📅", "label": "Itinerary", "value": "string (N-day plan type)", "detail": "string (highlight activity)" }
+  ],
+  "personalized_for": "string (loyalty tier + travel style, e.g. 'Gold tier honeymoon couple who loves fine dining')",
+  "total_estimate": "string (budget range per person per day)",
+  "top_recommendations": ["string (4 specific, actionable tips tailored to this trip and traveller — not generic advice)"],
+  "next_steps": ["string (3 clear, ordered action items the traveller should do right now)"],
+  "readiness_score": number (0-100, reflecting how complete and well-matched this trip plan is for the traveller)
+}`;
+
+async function runSummarySubAgent(
+    input: {
+        destination: string;
+        traveler_name: string;
+        duration_days: number;
+        travel_purpose: string;
+        best_flight?: string;
+        best_hotel?: string;
+        weather_summary?: string;
+        itinerary_highlight?: string;
+        budget_estimate?: string;
+    },
+    client: AzureOpenAI,
+): Promise<{ summary: TripSummary; inputTokens: number; outputTokens: number }> {
+    const userMsg = [
+        `Trip: ${input.duration_days}-day ${input.travel_purpose} trip to ${input.destination} for ${input.traveler_name}.`,
+        `Best flight: ${input.best_flight || 'See flights tab'}.`,
+        `Best hotel: ${input.best_hotel || 'See hotels tab'}.`,
+        `Weather: ${input.weather_summary || 'See weather tab'}.`,
+        `Itinerary highlight: ${input.itinerary_highlight || 'See itinerary tab'}.`,
+        `Budget estimate: ${input.budget_estimate || 'TBD'}.`,
+    ].join('\n');
+
+    const { text, inputTokens, outputTokens } = await callSubAgent(client, SUMMARY_SYSTEM_PROMPT, userMsg, 1500);
+    let summary: TripSummary;
+    try {
+        summary = JSON.parse(stripFences(text));
+    } catch {
+        summary = {
+            executive_summary: `Your ${input.duration_days}-day ${input.travel_purpose} trip to ${input.destination} has been fully planned by our specialist agents. Flights, hotels, weather forecasts, and a personalised day-by-day itinerary are ready for your review in the tabs on the right.`,
+            destination: input.destination,
+            traveler_name: input.traveler_name,
+            duration_days: input.duration_days,
+            travel_purpose: input.travel_purpose,
+            trip_highlights: [
+                { icon: '✈️', label: 'Best Flight', value: input.best_flight || 'See Flights tab', detail: 'Top-picked by Flight Agent' },
+                { icon: '🏨', label: 'Top Hotel', value: input.best_hotel || 'See Hotels tab', detail: 'Matched to your profile' },
+                { icon: '🌤️', label: 'Weather', value: input.weather_summary || 'See Weather tab', detail: 'Seasonal forecast ready' },
+                { icon: '📅', label: 'Itinerary', value: `${input.duration_days}-day plan`, detail: input.itinerary_highlight || 'Day-by-day schedule' },
+            ],
+            personalized_for: 'Tailored to your loyalty profile',
+            total_estimate: input.budget_estimate || 'See Budget tab',
+            top_recommendations: [
+                'Review the Itinerary tab for your day-by-day plan',
+                'Compare flight options and select your preferred timing',
+                'Check hotel amenities before booking',
+                'Review weather packing tips before departure',
+            ],
+            next_steps: [
+                'Select and book your preferred flight',
+                'Reserve your hotel room',
+                'Download the itinerary for offline access',
+            ],
+            readiness_score: 85,
+        };
+    }
+    return { summary, inputTokens, outputTokens };
 }
 
 // ─── Context compression ─────────────────────────────────────────────────────
@@ -696,6 +821,12 @@ function compressResult(toolName: string, result: any): any {
                     day: day.day, title: day.title,
                     activities: day.activities?.slice(0, 3).map((a: any) => `${a.time} ${a.activity}`),
                 })),
+            };
+        case 'summarize_trip':
+            return {
+                destination: result.destination, score: result.readiness_score,
+                summary: result.executive_summary?.slice(0, 120),
+                next_steps: result.next_steps?.slice(0, 2),
             };
         default:
             return result;

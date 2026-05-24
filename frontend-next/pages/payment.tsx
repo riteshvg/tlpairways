@@ -405,7 +405,11 @@ export default function PaymentPage() {
                                 </Typography>
                                 <Divider sx={{ mb: 3 }} />
                                 <form onSubmit={handleHotelPaymentSubmit}>
-                                    <RadioGroup value={paymentMethod} onChange={e => setPaymentMethod(e.target.value)} sx={{ mb: 2 }}>
+                                    <RadioGroup
+                                        value={paymentMethod}
+                                        onChange={e => { setPaymentMethod(e.target.value); setPaymentVendor(''); }}
+                                        sx={{ mb: 2 }}
+                                    >
                                         {[
                                             { value: 'credit', label: 'Credit Card' },
                                             { value: 'debit', label: 'Debit Card' },
@@ -415,16 +419,57 @@ export default function PaymentPage() {
                                             <FormControlLabel key={opt.value} value={opt.value} control={<Radio />} label={opt.label} />
                                         ))}
                                     </RadioGroup>
-                                    {(paymentMethod === 'credit' || paymentMethod === 'debit') && (
-                                        <Stack spacing={2} sx={{ mb: 2 }}>
-                                            <TextField fullWidth size="small" label="Card Number" placeholder="1234 5678 9012 3456" value={cardNumber} onChange={e => setCardNumber(e.target.value)} />
-                                            <Box sx={{ display: 'flex', gap: 2 }}>
-                                                <TextField fullWidth size="small" label="Expiry (MM/YY)" value={expiryDate} onChange={e => setExpiryDate(e.target.value)} />
-                                                <TextField fullWidth size="small" label="CVV" value={cvv} onChange={e => setCvv(e.target.value)} />
-                                            </Box>
-                                            <TextField fullWidth size="small" label="Name on Card" value={billingName} onChange={e => setBillingName(e.target.value)} />
-                                        </Stack>
-                                    )}
+
+                                    <Stack spacing={2} sx={{ mb: 2 }}>
+                                        <FormControl fullWidth size="small" required error={!!validationErrors.paymentVendor}>
+                                            <InputLabel>{paymentMethod === 'netbanking' ? 'Select Bank' : 'Card / Network'}</InputLabel>
+                                            <Select
+                                                value={paymentVendor}
+                                                label={paymentMethod === 'netbanking' ? 'Select Bank' : 'Card / Network'}
+                                                onChange={e => setPaymentVendor(e.target.value)}
+                                            >
+                                                {paymentVendors[paymentMethod]?.map((v: string) => (
+                                                    <MenuItem key={v} value={v}>{v}</MenuItem>
+                                                ))}
+                                            </Select>
+                                            {validationErrors.paymentVendor && <FormHelperText>{validationErrors.paymentVendor}</FormHelperText>}
+                                        </FormControl>
+
+                                        {(paymentMethod === 'credit' || paymentMethod === 'debit') && (
+                                            <>
+                                                <TextField fullWidth size="small" label="Card Number" placeholder="1234 5678 9012 3456"
+                                                    value={cardNumber} onChange={e => setCardNumber(e.target.value)}
+                                                    error={!!validationErrors.cardNumber} helperText={validationErrors.cardNumber}
+                                                    inputProps={{ maxLength: 16 }} />
+                                                <Box sx={{ display: 'flex', gap: 2 }}>
+                                                    <TextField fullWidth size="small" label="Expiry (MM/YY)"
+                                                        value={expiryDate} onChange={e => setExpiryDate(e.target.value)}
+                                                        error={!!validationErrors.expiryDate} helperText={validationErrors.expiryDate}
+                                                        inputProps={{ maxLength: 5 }} />
+                                                    <TextField fullWidth size="small" label="CVV" type="password"
+                                                        value={cvv} onChange={e => setCvv(e.target.value)}
+                                                        error={!!validationErrors.cvv} helperText={validationErrors.cvv}
+                                                        inputProps={{ maxLength: 4 }} />
+                                                </Box>
+                                                <TextField fullWidth size="small" label="Name on Card"
+                                                    value={billingName} onChange={e => setBillingName(e.target.value)}
+                                                    error={!!validationErrors.billingName} helperText={validationErrors.billingName} />
+                                            </>
+                                        )}
+
+                                        {paymentMethod === 'upi' && (
+                                            <TextField fullWidth size="small" label="UPI ID (e.g. user@bank)"
+                                                value={billingName} onChange={e => setBillingName(e.target.value)}
+                                                error={!!validationErrors.billingName} helperText={validationErrors.billingName} />
+                                        )}
+
+                                        {paymentMethod === 'netbanking' && paymentVendor && (
+                                            <Alert severity="info" sx={{ py: 0.5 }}>
+                                                You will be redirected to {paymentVendor} to complete payment.
+                                            </Alert>
+                                        )}
+                                    </Stack>
+
                                     <Button type="submit" variant="contained" fullWidth size="large" disabled={loading} sx={{ borderRadius: 2, textTransform: 'none', fontWeight: 700 }}>
                                         {loading ? <CircularProgress size={22} sx={{ color: 'white' }} /> : `Pay ${CURRENCY_CONFIG.formatPrice(hotelTotalPrice * 1.18)}`}
                                     </Button>

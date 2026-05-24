@@ -218,6 +218,7 @@ export interface CreateItineraryInput {
 export interface ItineraryDay {
     day: number;
     title: string;
+    image_query?: string;
     activities: Array<{
         time: string;
         activity: string;
@@ -343,6 +344,25 @@ export interface UserProfile {
     pastTrips: Array<{ destination: string; date: string; type: string }>;
     travelPersona: string;
     aepProfileNote: string;
+}
+
+export interface TripSummary {
+    executive_summary: string;
+    destination: string;
+    traveler_name: string;
+    duration_days: number;
+    travel_purpose: string;
+    trip_highlights: Array<{
+        icon: string;
+        label: string;
+        value: string;
+        detail: string;
+    }>;
+    personalized_for: string;
+    total_estimate: string;
+    top_recommendations: string[];
+    next_steps: string[];
+    readiness_score: number;
 }
 
 export function getUserProfile(input: GetUserProfileInput): UserProfile {

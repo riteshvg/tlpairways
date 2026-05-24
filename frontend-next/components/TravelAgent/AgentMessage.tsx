@@ -5,6 +5,8 @@ import ExploreIcon from '@mui/icons-material/Explore';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import PersonIcon from '@mui/icons-material/Person';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import WbSunnyIcon from '@mui/icons-material/WbSunny';
+import SummarizeIcon from '@mui/icons-material/Summarize';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -15,6 +17,8 @@ export type AgentId =
     | 'destination-agent'
     | 'itinerary-agent'
     | 'profile-agent'
+    | 'weather-agent'
+    | 'summary-agent'
     | 'user';
 
 interface AgentConfig {
@@ -32,6 +36,8 @@ const AGENT_CONFIGS: Record<AgentId, AgentConfig> = {
     'destination-agent': { label: 'Destination Agent', color: '#BF360C', bgColor: '#BF360C', bubbleBg: '#FFF8F0', icon: <ExploreIcon sx={{ fontSize: 15 }} /> },
     'itinerary-agent':   { label: 'Itinerary Agent',   color: '#2E7D32', bgColor: '#2E7D32', bubbleBg: '#F0FFF2', icon: <CalendarMonthIcon sx={{ fontSize: 15 }} /> },
     'profile-agent':     { label: 'Profile Agent',     color: '#37474F', bgColor: '#37474F', bubbleBg: '#F5F7F8', icon: <PersonIcon sx={{ fontSize: 15 }} /> },
+    'weather-agent':     { label: 'Weather Agent',     color: '#1565C0', bgColor: '#1565C0', bubbleBg: '#EFF5FF', icon: <WbSunnyIcon sx={{ fontSize: 15 }} /> },
+    'summary-agent':     { label: 'Summary Agent',     color: '#AD1457', bgColor: '#AD1457', bubbleBg: '#FFF0F5', icon: <SummarizeIcon sx={{ fontSize: 15 }} /> },
     user:                { label: 'You',               color: '#FFFFFF', bgColor: '#00695C', bubbleBg: '#00695C', icon: <PersonIcon sx={{ fontSize: 15 }} /> },
 };
 
